@@ -6,8 +6,12 @@ typedef DictionaryList = List<Map<String, dynamic>>;
 
 /// Supabase table base class
 abstract class SupabaseTable<T extends SupabaseDataRow> {
+  /// Supabase Table
+  SupabaseTable({SupabaseClient? client})
+      : _client = client ?? loadSupabaseClient();
+
   /// Supabase Client
-  SupabaseClient get _client => loadSupabaseClient();
+  final SupabaseClient _client;
 
   /// Table name
   String get tableName;
