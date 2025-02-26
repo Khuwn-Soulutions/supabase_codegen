@@ -1,3 +1,4 @@
+const getSchemaInfo = r'''
 CREATE OR REPLACE FUNCTION public.get_schema_info()
 RETURNS TABLE (
     table_name text,
@@ -45,3 +46,4 @@ $$;
 GRANT EXECUTE ON FUNCTION public.get_schema_info() TO anon;
 GRANT EXECUTE ON FUNCTION public.get_schema_info() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_schema_info() TO service_role;
+''';

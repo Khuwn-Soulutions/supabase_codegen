@@ -1,18 +1,9 @@
 import 'dart:io';
+import 'sql/sql.dart';
 
 void main() async {
   /// Variable to store sql functions
-  final functions = StringBuffer();
-
-  /// SQL Directory
-  final sqlDirectory = Directory('sql');
-
-  /// Write all files in the sql directory to the buffer
-  for (final file in sqlDirectory.listSync()) {
-    functions
-      ..write(File(file.path).readAsStringSync())
-      ..writeln('\n');
-  }
+  final functions = sqlFunctions.join('\n');
 
   /// Create new migration using supabase CLI
   final result = await Process.run(
@@ -26,7 +17,7 @@ void main() async {
   if (path.isEmpty) return;
 
   /// Write the sql functions to migration file
-  File(path).writeAsStringSync(functions.toString());
+  File(path).writeAsStringSync(functions);
 
   // Print result to shell
   // ignore: avoid_print
@@ -36,7 +27,7 @@ void main() async {
 /// Extract the path from the given [input]
 String extractPath(String input) {
   // Define a regular expression to match the path
-  final RegExp pathRegExp = RegExp(r'\b\w+/\w+/\d+_\w+\.sql\b');
+  final pathRegExp = RegExp(r'\b\w+/\w+/\d+_\w+\.sql\b');
 
   // Find the match in the input string
   final Match? match = pathRegExp.firstMatch(input);

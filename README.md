@@ -45,7 +45,7 @@ Out of the box, on each pull request and push, the CI `formats`, `lints`, and `t
 2. Create a `.env` file at the root of your project with your Supabase credentials. See [example.env](example.env).
 3. Create SQL functions in Supabase.  
    Options:
-   - Copy and run [get_schema_info](sql/get_schema_info.sql) and [get_enum_types](sql/get_enum_types.sql) in your Supabase project.
+   - Copy and run the sql from [get_schema_info](bin/sql/get_schema_info.dart) and [get_enum_types](bin/sql/get_enum_types.dart) in your Supabase project.
    - Create migration to apply to your local or remote database with `dart run supabase_codegen:add_codegen_functions` and apply the migration with [`supabase migration up`](https://supabase.com/docs/reference/cli/supabase-migration-up).  
    Note: this requires [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
 

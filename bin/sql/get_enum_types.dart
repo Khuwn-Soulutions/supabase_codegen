@@ -1,3 +1,4 @@
+const getEnumTypes = r'''
 CREATE OR REPLACE FUNCTION public.get_enum_types()
 RETURNS TABLE (
     enum_name text,
@@ -28,3 +29,4 @@ $$;
 GRANT EXECUTE ON FUNCTION public.get_enum_types() TO anon;
 GRANT EXECUTE ON FUNCTION public.get_enum_types() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_enum_types() TO service_role;
+''';
