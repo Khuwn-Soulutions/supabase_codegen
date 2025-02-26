@@ -8,3 +8,6 @@ pubspec.lock
 
 # Environment files
 .env*
+
+# Artefacts
+coverage/
