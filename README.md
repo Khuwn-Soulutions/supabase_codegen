@@ -21,7 +21,7 @@ OR
 Add the following to your pubspec.yaml
 
 ```yaml
-dependecies:
+dependencies:
   supabase_codegen:
     git:
       url: https://github.com/jwelmac/supabase_codegen.git
