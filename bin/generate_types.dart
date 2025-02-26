@@ -15,12 +15,16 @@ void main(List<String> args) async {
         defaultsTo: 'supabase/types',
       );
     final results = parser.parse(args);
+    final outputFolder = results.option(outputOption)!;
 
     /// Generate the types using hte command line options
     await generateSupabaseTypes(
       envFilePath: results.option(envOption)!,
-      outputFolder: results.option(outputOption)!,
+      outputFolder: outputFolder,
     );
+
+    /// Format generated files
+    await Process.run('dart', ['format', outputFolder]);
     exit(0);
   } on Exception catch (e) {
     // Use print to debug code
