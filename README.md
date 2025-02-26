@@ -10,14 +10,6 @@ Supabase Codegen generates type-safe Dart models from your Supabase tables autom
 
 **❗ In order to start using Supabase Codegen you must have the [Dart SDK][dart_install_link] installed on your machine.**
 
-Install via `dart pub add`:
-
-```sh
-dart pub add supabase_codegen
-```
-
-OR
-
 Add the following to your pubspec.yaml
 
 ```yaml
