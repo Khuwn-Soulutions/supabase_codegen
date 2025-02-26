@@ -49,7 +49,17 @@ Out of the box, on each pull request and push, the CI `formats`, `lints`, and `t
    - Create migration to apply to your local or remote database with `dart run supabase_codegen:add_codegen_functions` and apply the migration with [`supabase migration up`](https://supabase.com/docs/reference/cli/supabase-migration-up).  
    Note: this requires [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
 
-4. Run the generation script: `dart run supabase_codegen:generate_types`
+4. Run the generation script: `dart run supabase_codegen:generate_types`  
+Options:  
+
+- `--output` or `-o`: Folder to output generated files relative to project root. (Default: `supabase/types`)
+- `--env` or `-e`: Path to env file to read Supabase credentials. (Default: `.env`)
+
+Example:
+
+```bash
+dart run supabase_codegen:generate_types --output lib/types -e .env.production
+```
 
 ## 📦 Generated Types
 
