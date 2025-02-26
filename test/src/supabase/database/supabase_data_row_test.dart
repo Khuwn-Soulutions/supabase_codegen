@@ -1,12 +1,19 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 
+const roleField = 'role';
 final Map<String, dynamic> data = {
   'email': 'john@example.com',
   'acc_name': 'John Doe',
   'phone_number': '+1234567890',
   'contacts': ['me@them.com'],
+  roleField: 'admin',
 };
+
+enum Role {
+  admin,
+  user,
+}
 
 class UsersTable extends SupabaseTable<UsersRow> {
   @override
@@ -21,6 +28,9 @@ class UsersRow extends SupabaseDataRow {
 
   @override
   SupabaseTable get table => UsersTable();
+
+  Role get role => getField<Role>(roleField)!;
+  set role(Role value) => setField(roleField, value);
 }
 
 void main() {
@@ -59,6 +69,14 @@ void main() {
           expect(value, defaultValue);
         },
       );
+
+      test('gets Enum from field', () {
+        final value = user.getField<Role>(
+          roleField,
+          enumValues: Role.values,
+        );
+        expect(value, isA<Enum>());
+      });
     });
 
     group('getListField', () {
@@ -83,10 +101,18 @@ void main() {
       );
     });
 
-    test('setField can update a field in the row data', () {
-      final newValue = contacts.first;
-      user.setField(firstField, newValue);
-      expect(user.data[firstField], newValue);
+    group('setField', () {
+      test('can update a field in the row data', () {
+        final newValue = contacts.first;
+        user.setField(firstField, newValue);
+        expect(user.data[firstField], newValue);
+      });
+
+      test('can update an enum field', () {
+        const newValue = Role.user;
+        user.setField(roleField, newValue);
+        expect(user.data[roleField], newValue.name);
+      });
     });
 
     test('setListField can udpate a list field in the row data', () {

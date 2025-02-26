@@ -7,9 +7,11 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
+  collection: ^1.19.1
   dotenv: ^4.2.0
   latlng: ^2.0.7
   meta: ^1.16.0
+  path: ^1.9.1
   quiver: ^3.2.2
   supabase: ^2.6.3
 

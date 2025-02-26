@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/collection.dart';
@@ -21,12 +22,18 @@ abstract class SupabaseDataRow {
   String get tableName => table.tableName;
 
   /// Get the value of a field, returning the [defaultValue] if not found
-  T? getField<T>(String fieldName, {T? defaultValue}) =>
-      _supaDeserialize<T>(data[fieldName]) ?? defaultValue;
+  T? getField<T>(
+    String fieldName, {
+    T? defaultValue,
+    List<T> enumValues = const [],
+  }) =>
+      _supaDeserialize<T>(data[fieldName], enumValues: enumValues) ??
+      defaultValue;
 
   /// Set the value of a field in the [data]
-  void setField<T>(String fieldName, T? value) =>
-      data[fieldName] = supaSerialize<T>(value);
+  void setField<T>(String fieldName, T? value) {
+    data[fieldName] = supaSerialize<T>(value);
+  }
 
   /// Get a field within the [data] as a List
   List<T> getListField<T>(String fieldName) =>
@@ -59,11 +66,12 @@ ${data.entries.map(
 
   /// Serialize the [value] provided
   dynamic supaSerialize<T>(T? value) {
+    /// Handle null value
     if (value == null) {
       return null;
     }
 
-    switch (T) {
+    switch (value) {
       case DateTime _:
         return (value as DateTime).toIso8601String();
       case PostgresTime _:
@@ -71,6 +79,8 @@ ${data.entries.map(
       case LatLng _:
         final latLng = value as LatLng;
         return {'lat': latLng.latitude, 'lng': latLng.longitude};
+      case final Enum enumValue:
+        return enumValue.name;
       default:
         return value;
     }
@@ -83,11 +93,19 @@ ${data.entries.map(
   }
 
   /// Deserialize a value
-  T? _supaDeserialize<T>(dynamic value) {
+  T? _supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
+    /// Handle null value
     if (value == null) {
       return null;
     }
 
+    /// Handle enum deserialization
+    if (enumValues.isNotEmpty) {
+      return (enumValues as List<Enum>)
+          .firstWhereOrNull((val) => val.name == value) as T?;
+    }
+
+    /// Handle other types
     switch (T) {
       case const (int):
         return (value as num).round() as T?;
