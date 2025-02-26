@@ -1,4 +1,4 @@
 /// Supabase Codegen
 library;
 
-export 'src/generate_supabase_types.dart';
+export 'src/src.dart';
