@@ -10,15 +10,18 @@ import 'package:supabase/supabase.dart';
 late SupabaseClient client;
 
 /// Generate Supabase types
-Future<void> generateSupabaseTypes() async {
-  final dotenv = DotEnv()..load();
+Future<void> generateSupabaseTypes({
+  String envFilePath = '.env',
+}) async {
+  final dotenv = DotEnv()..load([envFilePath]);
   final hasKeys = dotenv.isEveryDefined(['SUPABASE_URL', 'SUPABASE_ANON_KEY']);
   if (!hasKeys) {
-    print('[GenerateTypes] Missing Supabase keys in .env file');
-    return;
+    throw Exception(
+      '[GenerateTypes] Missing Supabase keys in $envFilePath file',
+    );
   }
 
-// Use your existing config
+  // Get the config from env
   final supabaseUrl = dotenv['SUPABASE_URL']!;
   final supabaseAnonKey = dotenv['SUPABASE_ANON_KEY']!;
   print('[GenerateTypes] Starting type generation');
