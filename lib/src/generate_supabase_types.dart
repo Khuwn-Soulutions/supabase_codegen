@@ -128,11 +128,6 @@ Future<void> _generateDatabaseFiles(
   final databaseFile = File('$root/database.dart');
   final dbBuffer = StringBuffer()
     ..writeln("export 'enums/$enumsFileName.dart';");
-  // ..writeln(
-  //   "export 'package:supabase/supabase.dart';",
-  // )
-  // ..writeln("export 'row.dart';")
-  // ..writeln("export 'table.dart';\n");
 
   // Export all table files
   for (final tableName in tables.keys) {
@@ -159,8 +154,13 @@ Future<void> _generateTableFile(
   final file = File('${directory.path}/${tableName.toLowerCase()}.dart');
 
   final buffer = StringBuffer()
+    ..writeln(
+      '// Ignore public member docs for generated file\n'
+      '// ignore_for_file: public_member_api_docs\n',
+    )
     ..writeln("import 'package:supabase_codegen/supabase_codegen.dart';")
-    ..writeln('// Import enums if needed (2)\n// ignore: unused_import\n'
+    ..writeln(
+        '// Import enums if needed\n// ignore: unused_import, always_use_package_imports\n'
         "import '../database.dart';\n")
 
     // Generate Table class
