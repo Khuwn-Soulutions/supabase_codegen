@@ -15,7 +15,7 @@ late String root;
 /// Enums file name
 const enumsFileName = 'supabase_enums';
 
-// Formatted enums
+/// Formatted enums
 final formattedEnums = <String, String>{};
 
 /// Generate Supabase types
