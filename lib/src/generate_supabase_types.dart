@@ -20,8 +20,8 @@ final formattedEnums = <String, String>{};
 
 /// Generate Supabase types
 Future<void> generateSupabaseTypes({
-  String envFilePath = '.env',
-  String outputFolder = 'supabase/types',
+  required String envFilePath,
+  required String outputFolder,
 }) async {
   /// Set root folder
   root = outputFolder;
