@@ -1,0 +1,17 @@
+name: supabase_codegen
+description: Supabase Codegen
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  dotenv: ^4.2.0
+  supabase: ^2.6.3
+
+dev_dependencies:
+  very_good_analysis: ^7.0.0
+
+executables:
+  generate_types:
