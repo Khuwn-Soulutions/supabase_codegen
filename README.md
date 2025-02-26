@@ -16,6 +16,18 @@ Install via `dart pub add`:
 dart pub add supabase_codegen
 ```
 
+OR
+
+Add the following to your pubspec.yaml
+
+```yaml
+dependecies:
+  supabase_codegen:
+    git:
+      url: https://github.com/jwelmac/supabase_codegen.git
+      ref: main
+```
+
 ---
 
 ## Continuous Integration 🤖
