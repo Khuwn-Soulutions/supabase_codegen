@@ -35,7 +35,6 @@ Out of the box, on each pull request and push, the CI `formats`, `lints`, and `t
 
 ## 📋 Prerequisites
 
-- [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
 - Supabase project with tables
 - Dart/Flutter development environment
 - Environment configuration file (`.env`)
@@ -44,8 +43,13 @@ Out of the box, on each pull request and push, the CI `formats`, `lints`, and `t
 
 1. Install the package. See [Installation](#installation-)
 2. Create a `.env` file at the root of your project with your Supabase credentials. See [example.env](example.env).
-3. Setup SQL functions in Supabase. See [get_schema_info](sql/get_schema_info.sql) and [get_enum_types](sql/get_enum_types.sql).
-4. Run the generation script: `dart pub run supabase_codegen:generate_types`
+3. Create SQL functions in Supabase.  
+   Options:
+   - Copy and run [get_schema_info](sql/get_schema_info.sql) and [get_enum_types](sql/get_enum_types.sql) in your Supabase project.
+   - Create migration to apply to your local or remote database with `dart run supabase_codegen:add_codegen_functions` and apply the migration with [`supabase migration up`](https://supabase.com/docs/reference/cli/supabase-migration-up).  
+   Note: this requires [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
+
+4. Run the generation script: `dart run supabase_codegen:generate_types`
 
 ## 📦 Generated Types
 
