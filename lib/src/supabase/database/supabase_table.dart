@@ -67,17 +67,29 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   Future<T> insert(Map<String, dynamic> data) =>
       dbTable.insert(data).select().limit(1).single().then(createRow);
 
-  /// Update the rows that fulfill [matchingRows] with the [data] provided.
+  /// Update the rows that fulfill [matchingRows] with the
+  /// [data] or [row] provided.
   ///
-  /// If [returnRows] is true, then the updated rows will be converted to their
+  /// Notes:
+  /// - if both [data] or [row] is provided [data] will take precedence.
+  /// - If [returnRows] is true, then the updated rows will be converted to their
   /// [SupabaseDataRow] representation and returned as a List
   Future<List<T>> update({
-    required Map<String, dynamic> data,
     required PostgrestTransformBuilder<T> Function(
       PostgrestFilterBuilder<dynamic>,
     ) matchingRows,
+    Map<String, dynamic>? data,
+    T? row,
     bool returnRows = false,
   }) async {
+    /// Use row data
+    data ??= row?.data;
+
+    /// Stop if no data present
+    if (data == null) {
+      throw AssertionError('data or row must be provided for update');
+    }
+
     final update = matchingRows(dbTable.update(data));
     if (!returnRows) {
       await update;
