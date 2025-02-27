@@ -19,12 +19,15 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   /// Create a row
   T createRow(Map<String, dynamic> data);
 
+  /// Get the database table
+  SupabaseQueryBuilder get dbTable => _client.from(tableName);
+
   /// Cast rows as a list
   List<T> _rowsAsList(List<Map<String, dynamic>> rows) =>
       rows.map(createRow).toList();
 
-  PostgrestFilterBuilder<DictionaryList> _select() =>
-      _client.from(tableName).select();
+  /// Select all fields from the table
+  PostgrestFilterBuilder<DictionaryList> _select() => dbTable.select();
 
   /// Query rows using the [queryFn] provided, with an optional [limit]
   Future<List<T>> queryRows({
@@ -58,13 +61,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
 
   /// Insert the [data] into the table and return
   /// the [SupabaseDataRow] representation of that row
-  Future<T> insert(Map<String, dynamic> data) => _client
-      .from(tableName)
-      .insert(data)
-      .select()
-      .limit(1)
-      .single()
-      .then(createRow);
+  Future<T> insert(Map<String, dynamic> data) =>
+      dbTable.insert(data).select().limit(1).single().then(createRow);
 
   /// Update the rows that fulfill [matchingRows] with the [data] provided.
   ///
@@ -77,7 +75,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
     ) matchingRows,
     bool returnRows = false,
   }) async {
-    final update = matchingRows(_client.from(tableName).update(data));
+    final update = matchingRows(dbTable.update(data));
     if (!returnRows) {
       await update;
       return [];
@@ -95,7 +93,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
     ) matchingRows,
     bool returnRows = false,
   }) async {
-    final delete = matchingRows(_client.from(tableName).delete());
+    final delete = matchingRows(dbTable.delete());
     if (!returnRows) {
       await delete;
       return [];
