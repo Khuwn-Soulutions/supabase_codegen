@@ -59,6 +59,9 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
         return <T>[];
       }).then((r) => [if (r != null) createRow(r)]);
 
+  /// Insert a row into the table
+  Future<T> insertRow(T row) => insert(row.data);
+
   /// Insert the [data] into the table and return
   /// the [SupabaseDataRow] representation of that row
   Future<T> insert(Map<String, dynamic> data) =>
