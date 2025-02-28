@@ -3,6 +3,7 @@
 
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:supabase/supabase.dart';
 
@@ -150,74 +151,81 @@ Future<void> _generateTableFile(
 ) async {
   print('\n[GenerateTableFile] Generating table file for: $tableName');
 
-  final className = _formatClassName(tableName);
+  final className = tableName.toPascalCase();
+  final classDesc = tableName.toCapitalCase();
   final file = File('${directory.path}/${tableName.toLowerCase()}.dart');
 
   final buffer = StringBuffer()
-    ..writeln(
-      '// Ignore public member docs for generated file\n'
-      '// ignore_for_file: public_member_api_docs\n',
-    )
     ..writeln("import 'package:supabase_codegen/supabase_codegen.dart';")
-    ..writeln(
-        '// Import enums if needed\n// ignore: unused_import, always_use_package_imports\n'
-        "import '../database.dart';\n")
+    ..writeln('// Import enums if needed')
+    ..writeln('// ignore: unused_import, always_use_package_imports')
+    ..writeln("import '../database.dart';")
+    ..writeln()
 
     // Generate Table class
+    ..writeln('/// $classDesc Table')
     ..writeln(
       'class ${className}Table extends SupabaseTable<${className}Row> {',
     )
+    ..writeln('  /// Table Name')
     ..writeln('  @override')
     ..writeln("  String get tableName => '$tableName';")
-    ..writeln('\n  @override')
+    ..writeln()
+    ..writeln('    /// Create a [${className}Row] from the [data] provided')
+    ..writeln('  @override')
     ..writeln('  ${className}Row createRow(Map<String, dynamic> data) =>')
     ..writeln('      ${className}Row(data);')
-    ..writeln('}\n')
+    ..writeln('}')
+    ..writeln()
 
     // Generate Row class
+    ..writeln('/// $classDesc Row')
     ..writeln('class ${className}Row extends SupabaseDataRow {')
-    ..writeln('  const ${className}Row(super.data);\n')
+    ..writeln('  /// $classDesc Row')
+    ..writeln('  const ${className}Row(super.data);')
+    ..writeln()
+    ..writeln('  /// Get the [SupabaseTable] for this row')
     ..writeln('  @override')
     ..writeln('  SupabaseTable get table => ${className}Table();\n');
 
+  /// Store a map of the column name to type
+  final fieldNameTypeMap = <String, String>{};
+
   // Generate getters and setters for each column
   for (final column in columns) {
-    final fieldName = _formatFieldName(column['column_name'] as String);
     final columnName = column['column_name'] as String;
+    final fieldName = columnName.toCamelCase();
     final dartType = _getDartType(column);
     final isNullable = column['is_nullable'] == 'YES';
     final isArray = dartType.startsWith('List<');
+    fieldNameTypeMap[fieldName] = dartType;
 
     print('\n[GenerateTableFile] Processing column: $columnName');
     print('  UDT Name: $dartType');
     print('  Is Array: $isArray');
     print('  Field Name: $fieldName');
 
+    buffer.writeln('  /// ${fieldName.toCapitalCase()}');
     if (isArray) {
+      final genericType = _getGenericType(dartType);
       buffer
         ..writeln('  $dartType get $fieldName =>')
         ..writeln(
-          "      getListField<${_getGenericType(dartType)}>('$columnName') "
+          "      getListField<$genericType>('$columnName') "
           '?? const [];',
         )
         ..writeln(
           '  set $fieldName($dartType? value) => '
-          "setListField<${_getGenericType(dartType)}>('$columnName', value);",
+          "setListField<$genericType>('$columnName', value);",
         );
     } else {
-      if (isNullable) {
-        buffer
-          ..writeln('  $dartType? get $fieldName => '
-              "getField<$dartType>('$columnName');")
-          ..writeln('  set $fieldName($dartType? value) => '
-              "setField<$dartType>('$columnName', value);");
-      } else {
-        buffer
-          ..writeln('  $dartType get $fieldName => '
-              "getField<$dartType>('$columnName')!;")
-          ..writeln('  set $fieldName($dartType value) => '
-              "setField<$dartType>('$columnName', value);");
-      }
+      final question = isNullable ? '?' : '';
+      final hashBang = isNullable ? '' : '!';
+      buffer
+        ..writeln('  $dartType$question get $fieldName => '
+            "getField<$dartType>('$columnName')$hashBang;")
+        ..writeln('  set $fieldName($dartType$question value) => '
+            "setField<$dartType>('$columnName', value);");
     }
     buffer.writeln(); // Single newline between field pairs
   }
@@ -381,24 +389,6 @@ String deserializeField(Map<String, dynamic> column) {
   } else {
     return "data['$columnName'] as $dartType?";
   }
-}
-
-String _formatClassName(String tableName) {
-  return tableName
-      .split('_')
-      .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-      .join();
-}
-
-String _formatFieldName(String columnName) {
-  final words = columnName.split('_');
-  return words[0].toLowerCase() +
-      words
-          .sublist(1)
-          .map(
-            (word) => word[0].toUpperCase() + word.substring(1).toLowerCase(),
-          )
-          .join();
 }
 
 String _getDartType(Map<String, dynamic> column) {
