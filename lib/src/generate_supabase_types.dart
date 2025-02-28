@@ -189,7 +189,13 @@ Future<void> _generateTableFile(
     ..writeln('  SupabaseTable get table => ${className}Table();\n');
 
   /// Store a map of the column name to type
-  final fieldNameTypeMap = <String, String>{};
+  final fieldNameTypeMap = <String,
+      ({
+    String dartType,
+    bool isNullable,
+    bool hasDefault,
+    String columnName,
+  })>{};
 
   // Generate getters and setters for each column
   for (final column in columns) {
@@ -198,7 +204,13 @@ Future<void> _generateTableFile(
     final dartType = _getDartType(column);
     final isNullable = column['is_nullable'] == 'YES';
     final isArray = dartType.startsWith('List<');
-    fieldNameTypeMap[fieldName] = dartType;
+    final hasDefault = column['column_default'] != null;
+    fieldNameTypeMap[fieldName] = (
+      dartType: dartType,
+      isNullable: isNullable,
+      hasDefault: hasDefault,
+      columnName: columnName,
+    );
 
     print('\n[GenerateTableFile] Processing column: $columnName');
     print('  UDT Name: $dartType');
@@ -209,11 +221,8 @@ Future<void> _generateTableFile(
     if (isArray) {
       final genericType = _getGenericType(dartType);
       buffer
-        ..writeln('  $dartType get $fieldName =>')
-        ..writeln(
-          "      getListField<$genericType>('$columnName') "
-          '?? const [];',
-        )
+        ..writeln('  $dartType get $fieldName => '
+            "getListField<$genericType>('$columnName');")
         ..writeln(
           '  set $fieldName($dartType? value) => '
           "setListField<$genericType>('$columnName', value);",
@@ -221,16 +230,62 @@ Future<void> _generateTableFile(
     } else {
       final question = isNullable ? '?' : '';
       final hashBang = isNullable ? '' : '!';
+      final defaultValue =
+          hasDefault ? ', defaultValue: ${getDefaultValue(dartType)}' : '';
       buffer
         ..writeln('  $dartType$question get $fieldName => '
-            "getField<$dartType>('$columnName')$hashBang;")
+            "getField<$dartType>('$columnName'$defaultValue)$hashBang;")
         ..writeln('  set $fieldName($dartType$question value) => '
             "setField<$dartType>('$columnName', value);");
     }
     buffer.writeln(); // Single newline between field pairs
   }
 
-  buffer.writeln('}');
+  /// Write constructor to use fields
+  buffer
+    ..writeln('  /// $classDesc Row')
+    ..writeln('  // ignore: sort_constructors_first')
+    ..writeln('  factory ${className}Row.withFields({');
+
+  // Convert the map to a list of entries sorted with the required items first
+  final entries = fieldNameTypeMap.entries.toList()
+    ..sort((a, b) {
+      final aIsRequired = !a.value.isNullable && !a.value.hasDefault;
+      final bIsRequired = !b.value.isNullable && !b.value.hasDefault;
+
+      if (aIsRequired == bIsRequired) {
+        // Keep original order if both are required or both are optional
+        return 0;
+      } else if (aIsRequired) {
+        return -1; // Place required items first
+      } else {
+        return 1; // Place optional items after required items
+      }
+    });
+
+  /// Write fields
+  for (final entry in entries) {
+    final (:dartType, :isNullable, :hasDefault, :columnName) = entry.value;
+    final fieldName = entry.key;
+    final isOptional = isNullable || hasDefault;
+    final qualifier = isOptional ? '' : 'required';
+    final question = isOptional ? '?' : '';
+    buffer.writeln('    $qualifier $dartType$question $fieldName,');
+  }
+
+  /// Write redirect constructor
+  buffer.writeln('  })  => ${className}Row({');
+  for (final entry in entries) {
+    final (:dartType, :isNullable, :hasDefault, :columnName) = entry.value;
+    final fieldName = entry.key;
+    buffer.writeln("    '$columnName': $fieldName,");
+  }
+
+  /// Close the constructor and class
+  buffer
+    ..writeln('  });')
+    ..writeln()
+    ..writeln('}');
   await file.writeAsString(buffer.toString());
 }
 
@@ -349,6 +404,8 @@ String getDefaultValue(String dartType) {
       return 'false';
     case 'String':
       return "''";
+    case 'DateTime':
+      return 'DateTime.now()';
     default:
       if (dartType.startsWith('List<')) {
         return 'const []';
