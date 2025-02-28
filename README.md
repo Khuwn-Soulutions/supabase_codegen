@@ -70,27 +70,49 @@ dart run supabase_codegen:generate_types --output lib/types -e .env.production
 The generator will create strongly-typed models like this:
 
 ```dart
+/// Users Table
 class UsersTable extends SupabaseTable<UsersRow> {
+  /// Table Name
   @override
   String get tableName => 'users';
-  
+
+  /// Create a [UsersRow] from the [data] provided
   @override
   UsersRow createRow(Map<String, dynamic> data) => UsersRow(data);
 }
 
+/// Users Row
 class UsersRow extends SupabaseDataRow {
-  UsersRow(super.data);
-  
+  /// Users Row
+  const UsersRow(super.data);
+
+  /// Construct Users Row using fields
+  factory UsersRow.withFields({
+    String? id,
+    String? name,
+    DateTime? createdAt,
+  }) =>
+      UsersRow({
+        'id': id,
+        'name': name,
+        'created_at': createdAt,
+      });
+
+  /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => UsersTable();
-  
-  String get id => getField<String>('id')!;
+
+  /// Id
+  String get id => getField<String>('id', defaultValue: '')!;
   set id(String value) => setField<String>('id', value);
-  
+
+  /// Name
   String? get name => getField<String>('name');
   set name(String? value) => setField<String>('name', value);
-  
-  DateTime get createdAt => getField<DateTime>('created_at')!;
+
+  /// Created At
+  DateTime get createdAt =>
+      getField<DateTime>('created_at', defaultValue: DateTime.now())!;
   set createdAt(DateTime value) => setField<DateTime>('created_at', value);
 }
 ```
