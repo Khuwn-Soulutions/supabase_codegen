@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   args: ^2.6.0
+  change_case: ^2.2.0
   collection: ^1.19.1
   dotenv: ^4.2.0
   latlng: ^2.0.7
