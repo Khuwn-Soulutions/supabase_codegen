@@ -19,17 +19,20 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   /// Create a row
   T createRow(Map<String, dynamic> data);
 
+  /// Get the database table
+  SupabaseQueryBuilder get dbTable => _client.from(tableName);
+
   /// Cast rows as a list
   List<T> _rowsAsList(List<Map<String, dynamic>> rows) =>
       rows.map(createRow).toList();
 
-  PostgrestFilterBuilder<DictionaryList> _select() =>
-      _client.from(tableName).select();
+  /// Select all fields from the table
+  PostgrestFilterBuilder<DictionaryList> _select() => dbTable.select();
 
   /// Query rows using the [queryFn] provided, with an optional [limit]
   Future<List<T>> queryRows({
-    required PostgrestTransformBuilder<T> Function(
-      PostgrestFilterBuilder<dynamic>,
+    required PostgrestTransformBuilder<DictionaryList> Function(
+      PostgrestFilterBuilder<DictionaryList>,
     ) queryFn,
     int? limit,
   }) {
@@ -40,8 +43,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   }
 
   /// Query a single row using the [queryFn] provided
-  Future<List<T>> querySingleRow({
-    required PostgrestTransformBuilder<T> Function(
+  Future<T?> querySingleRow({
+    required PostgrestTransformBuilder<DictionaryList> Function(
       PostgrestFilterBuilder<DictionaryList>,
     ) queryFn,
   }) =>
@@ -53,31 +56,43 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
         // Debug Error
         // ignore: avoid_print
         print('Error querying row: $e');
-        return <T>[];
-      }).then((r) => [if (r != null) createRow(r)]);
+        return null;
+      }).then((r) => r != null ? createRow(r) : null);
+
+  /// Insert a row into the table
+  Future<T> insertRow(T row) => insert(row.data);
 
   /// Insert the [data] into the table and return
   /// the [SupabaseDataRow] representation of that row
-  Future<T> insert(Map<String, dynamic> data) => _client
-      .from(tableName)
-      .insert(data)
-      .select()
-      .limit(1)
-      .single()
-      .then(createRow);
+  Future<T> insert(Map<String, dynamic> data) async {
+    final row = await dbTable.insert(data).select().limit(1);
+    return createRow(row.first);
+  }
 
-  /// Update the rows that fulfill [matchingRows] with the [data] provided.
+  /// Update the rows that fulfill [matchingRows] with the
+  /// [data] or [row] provided.
   ///
-  /// If [returnRows] is true, then the updated rows will be converted to their
-  /// [SupabaseDataRow] representation and returned as a List
+  /// Notes:
+  /// - if both [data] or [row] is provided [data] will take precedence.
+  /// - If [returnRows] is true, then the updated rows will be converted to
+  /// their [SupabaseDataRow] representation and returned as a List
   Future<List<T>> update({
-    required Map<String, dynamic> data,
-    required PostgrestTransformBuilder<T> Function(
+    required PostgrestTransformBuilder<dynamic> Function(
       PostgrestFilterBuilder<dynamic>,
     ) matchingRows,
+    Map<String, dynamic>? data,
+    T? row,
     bool returnRows = false,
   }) async {
-    final update = matchingRows(_client.from(tableName).update(data));
+    /// Use row data
+    data ??= row?.data;
+
+    /// Stop if no data present
+    if (data == null) {
+      throw AssertionError('data or row must be provided for update');
+    }
+
+    final update = matchingRows(dbTable.update(data));
     if (!returnRows) {
       await update;
       return [];
@@ -90,12 +105,12 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   /// If [returnRows] is true, then the deleted rows will be converted to their
   /// [SupabaseDataRow] representation and returned as a List
   Future<List<T>> delete({
-    required PostgrestTransformBuilder<T> Function(
+    required PostgrestTransformBuilder<dynamic> Function(
       PostgrestFilterBuilder<dynamic>,
     ) matchingRows,
     bool returnRows = false,
   }) async {
-    final delete = matchingRows(_client.from(tableName).delete());
+    final delete = matchingRows(dbTable.delete());
     if (!returnRows) {
       await delete;
       return [];

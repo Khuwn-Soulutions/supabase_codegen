@@ -4,10 +4,10 @@ import '../mocks/mocks.dart';
 void main() {
   group('SupabaseDataRow', () {
     late UsersRow user;
-    final firstField = data.keys.first;
+    final firstField = userData.keys.first;
     const listField = 'contacts';
-    final contacts = data[listField] as List<String>;
-    setUp(() => user = UsersRow(data));
+    final contacts = userData[listField] as List<String>;
+    setUp(() => user = UsersRow(userData));
 
     test('it can be created with data', () {
       expect(user, isNotNull);
@@ -17,7 +17,7 @@ void main() {
       test('returns field when found', () {
         final value = user.getField<String>(firstField);
         expect(value, isNotNull);
-        expect(value, data[firstField]);
+        expect(value, userData[firstField]);
       });
 
       test('returns null if field not found', () {
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('== equates rows', () {
-      expect(user, UsersRow(data));
+      expect(user, UsersRow(userData));
     });
 
     test('hasCode returns hash', () {
