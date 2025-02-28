@@ -103,19 +103,15 @@ class UsersRow extends SupabaseDataRow {
 final userAccountsTable = UserAccountsTable();
 
 // Fetch a single user
-final users = await userAccountsTable.queryRows(
+final user = await userAccountsTable.querySingleRow(
   queryFn: (q) => q.eq('id', 123),
-  limit: 1,
 );
 
-if (users.isNotEmpty) {
-  final user = users.first;
-  // Access typed properties
-  print(user.email);
-  print(user.accName);
-  print(user.phoneNumber);
-  print(user.createdAt);
-}
+// Access typed properties
+print(user.email);
+print(user.accName);
+print(user.phoneNumber);
+print(user.createdAt);
 
 // Fetch multiple users
 final activeUsers = await userAccountsTable.queryRows(
