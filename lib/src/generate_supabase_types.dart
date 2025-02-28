@@ -301,8 +301,9 @@ Future<void> _generateTableFile({
           "setListField<$genericType>('$columnName', value);",
         );
     } else {
-      final question = isNullable && !hasDefault ? '?' : '';
-      final hashBang = isNullable ? '' : '!';
+      final isOptional = isNullable && !hasDefault;
+      final question = isOptional ? '?' : '';
+      final hashBang = isOptional ? '' : '!';
       final defaultValue =
           hasDefault ? ', defaultValue: ${getDefaultValue(dartType)}' : '';
       buffer
