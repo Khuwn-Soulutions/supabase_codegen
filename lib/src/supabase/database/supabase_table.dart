@@ -31,8 +31,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
 
   /// Query rows using the [queryFn] provided, with an optional [limit]
   Future<List<T>> queryRows({
-    required PostgrestTransformBuilder<T> Function(
-      PostgrestFilterBuilder<dynamic>,
+    required PostgrestTransformBuilder<DictionaryList> Function(
+      PostgrestFilterBuilder<DictionaryList>,
     ) queryFn,
     int? limit,
   }) {
@@ -43,8 +43,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   }
 
   /// Query a single row using the [queryFn] provided
-  Future<List<T>> querySingleRow({
-    required PostgrestTransformBuilder<T> Function(
+  Future<T?> querySingleRow({
+    required PostgrestTransformBuilder<DictionaryList> Function(
       PostgrestFilterBuilder<DictionaryList>,
     ) queryFn,
   }) =>
@@ -56,26 +56,28 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
         // Debug Error
         // ignore: avoid_print
         print('Error querying row: $e');
-        return <T>[];
-      }).then((r) => [if (r != null) createRow(r)]);
+        return null;
+      }).then((r) => r != null ? createRow(r) : null);
 
   /// Insert a row into the table
   Future<T> insertRow(T row) => insert(row.data);
 
   /// Insert the [data] into the table and return
   /// the [SupabaseDataRow] representation of that row
-  Future<T> insert(Map<String, dynamic> data) =>
-      dbTable.insert(data).select().limit(1).single().then(createRow);
+  Future<T> insert(Map<String, dynamic> data) async {
+    final row = await dbTable.insert(data).select().limit(1);
+    return createRow(row.first);
+  }
 
   /// Update the rows that fulfill [matchingRows] with the
   /// [data] or [row] provided.
   ///
   /// Notes:
   /// - if both [data] or [row] is provided [data] will take precedence.
-  /// - If [returnRows] is true, then the updated rows will be converted to their
-  /// [SupabaseDataRow] representation and returned as a List
+  /// - If [returnRows] is true, then the updated rows will be converted to
+  /// their [SupabaseDataRow] representation and returned as a List
   Future<List<T>> update({
-    required PostgrestTransformBuilder<T> Function(
+    required PostgrestTransformBuilder<dynamic> Function(
       PostgrestFilterBuilder<dynamic>,
     ) matchingRows,
     Map<String, dynamic>? data,
@@ -103,7 +105,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   /// If [returnRows] is true, then the deleted rows will be converted to their
   /// [SupabaseDataRow] representation and returned as a List
   Future<List<T>> delete({
-    required PostgrestTransformBuilder<T> Function(
+    required PostgrestTransformBuilder<dynamic> Function(
       PostgrestFilterBuilder<dynamic>,
     ) matchingRows,
     bool returnRows = false,
