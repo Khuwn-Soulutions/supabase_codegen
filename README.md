@@ -113,31 +113,52 @@ class UsersRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => UsersTable();
 
+  /// Email field name
+  static const String emailField = 'email';
+
   /// Email
-  String get email => getField<String>('email')!;
-  set email(String value) => setField<String>('email', value);
+  String get email => getField<String>(emailField)!;
+  set email(String value) => setField<String>(emailField, value);
+
+  /// Acc Name field name
+  static const String accNameField = 'acc_name';
 
   /// Acc Name
-  String? get accName => getField<String>('acc_name');
-  set accName(String? value) => setField<String>('acc_name', value);
+  String? get accName => getField<String>(accNameField);
+  set accName(String? value) => setField<String>(accNameField, value);
+
+  /// Phone Number field name
+  static const String phoneNumberField = 'phone_number';
 
   /// Phone Number
-  String? get phoneNumber => getField<String>('phone_number');
-  set phoneNumber(String? value) => setField<String>('phone_number', value);
+  String? get phoneNumber => getField<String>(phoneNumberField);
+  set phoneNumber(String? value) => setField<String>(phoneNumberField, value);
+
+  /// Contacts field name
+  static const String contactsField = 'contacts';
 
   /// Contacts
-  List<String> get contacts => getListField<String>('contacts');
-  set contacts(List<String>? value) => setListField<String>('contacts', value);
+  List<String> get contacts => getListField<String>(contactsField);
+  set contacts(List<String>? value) =>
+      setListField<String>(contactsField, value);
+
+  /// Created At field name
+  static const String createdAtField = 'created_at';
 
   /// Created At
   DateTime get createdAt =>
-      getField<DateTime>('created_at', defaultValue: DateTime.now())!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+  set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
+
+  /// Role field name
+  static const String roleField = 'role';
 
   /// Role
-  UserRole get role => getField<UserRole>('role', enumValues: UserRole.values)!;
-  set role(UserRole value) => setField<UserRole>('role', value);
+  UserRole get role =>
+      getField<UserRole>(roleField, enumValues: UserRole.values)!;
+  set role(UserRole value) => setField<UserRole>(roleField, value);
 }
+
 ```
 
 ## 🚀 Usage Examples
@@ -149,7 +170,7 @@ final usersTable = UsersTable();
 
 // Fetch a single user
 final user = await usersTable.querySingleRow(
-  queryFn: (q) => q.eq('id', 123),
+  queryFn: (q) => q.eq(UsersRow.idField, 123),
 );
 
 // Access typed properties
@@ -161,8 +182,8 @@ print(user.createdAt);
 // Fetch multiple users
 final adminUsers = await usersTable.queryRows(
   queryFn: (q) => q
-  .eq('role', UserRole.admin.name)
-  .order('email'),
+  .eq(UsersRow.roleField, UserRole.admin.name)
+  .order(UserRow.emailField),
 );
 
 // Work with typed objects
@@ -177,9 +198,9 @@ for (final user in adminUsers) {
 // Query with complex conditions
 final recentUsers = await usersTable.queryRows(
   queryFn: (q) => q
-  .gte('created_at', DateTime.now().subtract(Duration(days: 7)))
-  .ilike('email', '%@gmail.com')
-  .order('created_at', ascending: false),
+  .gte(UsersRow.createdAtField, DateTime.now().subtract(Duration(days: 7)))
+  .ilike(UsersRow.emailField, '%@gmail.com')
+  .order(UsersRow.createdAtField, ascending: false),
 );
 ```
 
@@ -190,10 +211,10 @@ final usersTable = UsersTable();
 
 // Create new record
 final adminUser = await usersTable.insert({
-  'email': 'john@example.com',
-  'role': UserRole.user.name,
-  'acc_name': 'John Doe',
-  'phone_number': '+1234567890',
+  UsersRow.emailField: 'john@example.com',
+  UsersRow.roleField: UserRole.user.name,
+  UsersRow.accNameField: 'John Doe',
+  UsersRow.phoneNumberField: '+1234567890',
 });
 
 // The returned object is already typed
@@ -215,7 +236,7 @@ await usersTable.update(
 // Update with return value
 final updatedUsers = await usersTable.update(
   data: {'role': UserRole.admin.name},
-  matchingRows: (q) => q.in_('id', [1, 2, 3]),
+  matchingRows: (q) => q.in_(UsersRow.idField, [1, 2, 3]),
   returnRows: true,
 );
 ```
@@ -227,12 +248,12 @@ final usersTable = UsersTable();
 
 // Delete single record
   await usersTable.delete(
-  matchingRows: (q) => q.eq('id', 123),
+  matchingRows: (q) => q.eq(UsersRow.idField, 123),
 );
 
 // Delete with return value
 final deletedUsers = await usersTable.delete(
-  matchingRows: (q) => q.eq('role', UserRole.user.name),
+  matchingRows: (q) => q.eq(UsersRow.roleField, UserRole.user.name),
   returnRows: true,
 );
 ```
