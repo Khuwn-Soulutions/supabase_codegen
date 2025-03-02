@@ -318,15 +318,23 @@ Future<void> _generateTableFile({
 
     final enumValues = isEnum ? ', enumValues: $dartType.values' : '';
 
-    buffer.writeln('  /// ${fieldName.toCapitalCase()}');
+    final fieldComment = fieldName.toCapitalCase();
+    final fieldColumnName = '${fieldName}Field';
+
+    /// Write static column name before fields
+    buffer
+      ..writeln('  /// $fieldComment field name')
+      ..writeln("  static const String $fieldColumnName = '$columnName';")
+      ..writeln()
+      ..writeln('  /// $fieldComment');
     if (isArray) {
       final genericType = _getGenericType(dartType);
       buffer
         ..writeln('  $dartType get $fieldName => '
-            "getListField<$genericType>('$columnName');")
+            'getListField<$genericType>($fieldColumnName);')
         ..writeln(
           '  set $fieldName($dartType? value) => '
-          "setListField<$genericType>('$columnName', value);",
+          'setListField<$genericType>($fieldColumnName, value);',
         );
     } else {
       final isOptional = isNullable && !hasDefault;
@@ -337,10 +345,10 @@ Future<void> _generateTableFile({
       buffer
         ..writeln(
           '  $dartType$question get $fieldName => '
-          "getField<$dartType>('$columnName'$enumValues$defaultValue)$bang;",
+          'getField<$dartType>($fieldColumnName$enumValues$defaultValue)$bang;',
         )
         ..writeln('  set $fieldName($dartType$question value) => '
-            "setField<$dartType>('$columnName', value);");
+            'setField<$dartType>($fieldColumnName, value);');
     }
     buffer.writeln(); // Single newline between field pairs
   }
