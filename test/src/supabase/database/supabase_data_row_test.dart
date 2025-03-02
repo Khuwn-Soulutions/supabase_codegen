@@ -65,7 +65,7 @@ void main() {
 
       test('gets Enum from field', () {
         final value = user.getField<UserRole>(
-          roleField,
+          UsersRow.roleField,
           enumValues: UserRole.values,
         );
         expect(value, isA<Enum>());
@@ -103,8 +103,8 @@ void main() {
 
       test('can update an enum field', () {
         const newValue = UserRole.user;
-        user.setField(roleField, newValue);
-        expect(user.data[roleField], newValue.name);
+        user.setField(UsersRow.roleField, newValue);
+        expect(user.data[UsersRow.roleField], newValue.name);
       });
     });
 

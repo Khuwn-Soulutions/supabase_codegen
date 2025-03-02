@@ -2,18 +2,15 @@ import 'package:supabase_codegen/supabase_codegen.dart';
 
 import 'supabase_client.mock.dart';
 
-const roleField = 'role';
-const emailField = 'email';
-
-final requiredUserKeys = [emailField, roleField];
+final requiredUserKeys = [UsersRow.emailField, UsersRow.roleField];
 
 final Map<String, dynamic> userData = {
-  emailField: 'john@example.com',
-  'acc_name': 'John Doe',
-  'phone_number': '+1234567890',
-  'contacts': ['me@them.com'],
-  roleField: 'admin',
-  'created_at': DateTime.now(),
+  UsersRow.emailField: 'john@example.com',
+  UsersRow.accNameField: 'John Doe',
+  UsersRow.phoneNumberField: '+1234567890',
+  UsersRow.contactsField: ['me@them.com'],
+  UsersRow.roleField: 'admin',
+  UsersRow.createdAtField: DateTime.now().toIso8601String(),
 };
 
 enum UserRole {
@@ -62,28 +59,48 @@ class UsersRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => UsersTable();
 
+  /// Email field name
+  static const String emailField = 'email';
+
   /// Email
-  String get email => getField<String>('email')!;
-  set email(String value) => setField<String>('email', value);
+  String get email => getField<String>(emailField)!;
+  set email(String value) => setField<String>(emailField, value);
+
+  /// Acc Name field name
+  static const String accNameField = 'acc_name';
 
   /// Acc Name
-  String? get accName => getField<String>('acc_name');
-  set accName(String? value) => setField<String>('acc_name', value);
+  String? get accName => getField<String>(accNameField);
+  set accName(String? value) => setField<String>(accNameField, value);
+
+  /// Phone Number field name
+  static const String phoneNumberField = 'phone_number';
 
   /// Phone Number
-  String? get phoneNumber => getField<String>('phone_number');
-  set phoneNumber(String? value) => setField<String>('phone_number', value);
+  String? get phoneNumber => getField<String>(phoneNumberField);
+  set phoneNumber(String? value) => setField<String>(phoneNumberField, value);
+
+  /// Contacts field name
+  static const String contactsField = 'contacts';
 
   /// Contacts
-  List<String> get contacts => getListField<String>('contacts');
-  set contacts(List<String>? value) => setListField<String>('contacts', value);
+  List<String> get contacts => getListField<String>(contactsField);
+  set contacts(List<String>? value) =>
+      setListField<String>(contactsField, value);
+
+  /// Created At field name
+  static const String createdAtField = 'created_at';
 
   /// Created At
   DateTime get createdAt =>
-      getField<DateTime>('created_at', defaultValue: DateTime.now())!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+  set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
+
+  /// Role field name
+  static const String roleField = 'role';
 
   /// Role
-  UserRole get role => getField<UserRole>('role', enumValues: UserRole.values)!;
-  set role(UserRole value) => setField<UserRole>('role', value);
+  UserRole get role =>
+      getField<UserRole>(roleField, enumValues: UserRole.values)!;
+  set role(UserRole value) => setField<UserRole>(roleField, value);
 }

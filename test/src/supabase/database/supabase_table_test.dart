@@ -45,7 +45,7 @@ void main() {
       test('can get single SupabaseDataRow using querySingleRow', () async {
         /// Query for the inserted data
         final row = await table.querySingleRow(
-          queryFn: (q) => q.eq(emailField, user.email),
+          queryFn: (q) => q.eq(UsersRow.emailField, user.email),
         );
         expect(row, isA<UsersRow>());
         expect(row, isNotNull);
@@ -54,7 +54,7 @@ void main() {
 
       test('can get List<SupabaseDataRow> using queryRows', () async {
         final rows = await table.queryRows(
-          queryFn: (q) => q.eq(roleField, user.role.name),
+          queryFn: (q) => q.eq(UsersRow.roleField, user.role.name),
         );
         expect(rows, isNotEmpty);
         expect(rows.first.data, userData);
@@ -65,7 +65,7 @@ void main() {
         const newEmail = 'me@them.com';
         final newData = {
           ...userData,
-          emailField: newEmail,
+          UsersRow.emailField: newEmail,
         };
 
         void testUpdatedResult() {
@@ -79,23 +79,23 @@ void main() {
 
         test('and by default does not return updated rows', () async {
           final updateResult = await table.update(
-            matchingRows: (q) => q.eq(emailField, user.email),
+            matchingRows: (q) => q.eq(UsersRow.emailField, user.email),
             data: newData,
           );
           expect(updateResult, isEmpty);
           final updatedUser = await mockSupabase
               .from(table.tableName)
               .select()
-              .eq(emailField, newEmail)
+              .eq(UsersRow.emailField, newEmail)
               .limit(1)
               .single();
-          expect(updatedUser[emailField], newEmail);
+          expect(updatedUser[UsersRow.emailField], newEmail);
         });
 
         group('with', () {
           test('data', () async {
             result = await table.update(
-              matchingRows: (q) => q.eq(emailField, user.email),
+              matchingRows: (q) => q.eq(UsersRow.emailField, user.email),
               data: newData,
               returnRows: true,
             );
@@ -104,7 +104,7 @@ void main() {
 
           test('SupabaseDataRow', () async {
             result = await table.update(
-              matchingRows: (q) => q.eq(emailField, user.email),
+              matchingRows: (q) => q.eq(UsersRow.emailField, user.email),
               row: UsersRow(newData),
               returnRows: true,
             );
@@ -115,7 +115,7 @@ void main() {
         test('and throws error if no data or row provided', () async {
           expect(
             table.update(
-              matchingRows: (q) => q.eq(emailField, user.email),
+              matchingRows: (q) => q.eq(UsersRow.emailField, user.email),
             ),
             throwsA(isA<AssertionError>()),
           );
@@ -125,7 +125,7 @@ void main() {
 
     test('can delete row', () async {
       await table.delete(
-        matchingRows: (q) => q.eq(roleField, user.role.name),
+        matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
         returnRows: true,
       );
     });
