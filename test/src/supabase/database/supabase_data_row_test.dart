@@ -9,8 +9,33 @@ void main() {
     final contacts = userData[listField] as List<String>;
     setUp(() => user = UsersRow(userData));
 
-    test('it can be created with data', () {
+    test('can be created with data', () {
       expect(user, isNotNull);
+    });
+
+    group('created with fields', () {
+      late UsersRow row;
+      setUp(() {
+        row = UsersRow.withFields(
+          role: user.role,
+          email: user.email,
+        );
+      });
+      test('has fields set to input', () {
+        expect(row, isNotNull);
+        expect(row.role, user.role);
+        expect(row.email, user.email);
+      });
+
+      /// This is important so that submitted data will have
+      /// default value (if present) for column set in the database
+      test('data map does not have optional fields', () {
+        for (final key in userData.keys) {
+          if (!requiredUserKeys.contains(key)) {
+            expect(row.data.containsKey(key), isFalse);
+          }
+        }
+      });
     });
 
     group('getField', () {
@@ -39,9 +64,9 @@ void main() {
       );
 
       test('gets Enum from field', () {
-        final value = user.getField<Role>(
-          roleField,
-          enumValues: Role.values,
+        final value = user.getField<UserRole>(
+          UsersRow.roleField,
+          enumValues: UserRole.values,
         );
         expect(value, isA<Enum>());
       });
@@ -77,9 +102,9 @@ void main() {
       });
 
       test('can update an enum field', () {
-        const newValue = Role.user;
-        user.setField(roleField, newValue);
-        expect(user.data[roleField], newValue.name);
+        const newValue = UserRole.user;
+        user.setField(UsersRow.roleField, newValue);
+        expect(user.data[UsersRow.roleField], newValue.name);
       });
     });
 

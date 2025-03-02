@@ -3,6 +3,7 @@
 
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:supabase/supabase.dart';
 
@@ -15,8 +16,21 @@ late String root;
 /// Enums file name
 const enumsFileName = 'supabase_enums';
 
-/// Formatted enums
+/// Map of enum type to formatted name
 final formattedEnums = <String, String>{};
+
+/// Column data type
+typedef ColumnData = ({
+  String dartType,
+  bool isNullable,
+  bool hasDefault,
+  String columnName,
+  bool isArray,
+  bool isEnum,
+});
+
+/// Field name type map
+typedef FieldNameTypeMap = Map<String, ColumnData>;
 
 /// Generate Supabase types
 Future<void> generateSupabaseTypes({
@@ -139,90 +153,209 @@ Future<void> _generateDatabaseFiles(
 
   // Generate individual table files
   for (final tableName in tables.keys) {
-    await _generateTableFile(tableName, tables[tableName]!, directory);
+    final columns = tables[tableName]!;
+
+    /// Store a map of the column name to type
+    final fieldNameTypeMap = <String, ColumnData>{};
+
+    // Generate a map of the field name to data for that field
+    for (final column in columns) {
+      final columnName = column['column_name'] as String;
+      final fieldName = columnName.toCamelCase();
+      final dartType = _getDartType(column);
+      final isNullable = column['is_nullable'] == 'YES';
+      final isArray = dartType.startsWith('List<');
+      final hasDefault = column['column_default'] != null;
+      final isEnum = formattedEnums[column['udt_name']] != null;
+
+      final columnData = (
+        dartType: dartType,
+        isNullable: isNullable,
+        hasDefault: hasDefault,
+        columnName: columnName,
+        isArray: isArray,
+        isEnum: isEnum,
+      );
+      fieldNameTypeMap[fieldName] = columnData;
+
+      print('\n[GenerateTableFile] Processing column: $columnName');
+      print('  Column data: $columnData');
+    }
+
+    await _generateTableFile(
+      tableName: tableName,
+      columns: columns,
+      directory: directory,
+      fieldNameTypeMap: fieldNameTypeMap,
+    );
   }
 }
 
-Future<void> _generateTableFile(
-  String tableName,
-  List<Map<String, dynamic>> columns,
-  Directory directory,
-) async {
+Future<void> _generateTableFile({
+  required String tableName,
+  required List<Map<String, dynamic>> columns,
+  required Directory directory,
+  required FieldNameTypeMap fieldNameTypeMap,
+}) async {
   print('\n[GenerateTableFile] Generating table file for: $tableName');
 
-  final className = _formatClassName(tableName);
+  final className = tableName.toPascalCase();
+  final classDesc = tableName.toCapitalCase();
   final file = File('${directory.path}/${tableName.toLowerCase()}.dart');
 
   final buffer = StringBuffer()
-    ..writeln(
-      '// Ignore public member docs for generated file\n'
-      '// ignore_for_file: public_member_api_docs\n',
-    )
     ..writeln("import 'package:supabase_codegen/supabase_codegen.dart';")
-    ..writeln(
-        '// Import enums if needed\n// ignore: unused_import, always_use_package_imports\n'
-        "import '../database.dart';\n")
+    ..writeln('// Import enums if needed')
+    ..writeln('// ignore: unused_import, always_use_package_imports')
+    ..writeln("import '../database.dart';")
+    ..writeln()
 
     // Generate Table class
+    ..writeln('/// $classDesc Table')
     ..writeln(
       'class ${className}Table extends SupabaseTable<${className}Row> {',
     )
+    ..writeln('  /// Table Name')
     ..writeln('  @override')
     ..writeln("  String get tableName => '$tableName';")
-    ..writeln('\n  @override')
+    ..writeln()
+    ..writeln('    /// Create a [${className}Row] from the [data] provided')
+    ..writeln('  @override')
     ..writeln('  ${className}Row createRow(Map<String, dynamic> data) =>')
     ..writeln('      ${className}Row(data);')
-    ..writeln('}\n')
+    ..writeln('}')
+    ..writeln()
 
     // Generate Row class
+    ..writeln('/// $classDesc Row')
     ..writeln('class ${className}Row extends SupabaseDataRow {')
-    ..writeln('  const ${className}Row(super.data);\n')
+    ..writeln('  /// $classDesc Row')
+    ..writeln('  const ${className}Row(super.data);')
+    ..writeln()
+
+    /// Write constructor to use fields
+    ..writeln('  /// Construct $classDesc Row using fields')
+    // ..writeln('  // ignore: sort_constructors_first')
+    ..writeln('  factory ${className}Row.withFields({');
+
+  // Convert the map to a list of entries sorted with the required items first
+  final entries = fieldNameTypeMap.entries.toList()
+    ..sort((a, b) {
+      final aIsRequired = !a.value.isNullable && !a.value.hasDefault;
+      final bIsRequired = !b.value.isNullable && !b.value.hasDefault;
+
+      if (aIsRequired == bIsRequired) {
+        // Keep original order if both are required or both are optional
+        return 0;
+      } else if (aIsRequired) {
+        return -1; // Place required items first
+      } else {
+        return 1; // Place optional items after required items
+      }
+    });
+
+  /// Write fields
+  for (final entry in entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
+    final fieldName = entry.key;
+    final isOptional = isNullable || hasDefault;
+    final qualifier = isOptional ? '' : 'required';
+    final question = isOptional ? '?' : '';
+    buffer.writeln('    $qualifier $dartType$question $fieldName,');
+  }
+
+  /// Write redirect constructor
+  buffer.writeln('  })  => ${className}Row({');
+  for (final entry in entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
+    final fieldName = entry.key;
+
+    /// Do not set the value for optional fields in data
+    /// This will ensure that they are registered as null in the database
+    /// or the default value set within the database
+    final isOptional = isNullable || hasDefault;
+    final ifNull = isOptional ? 'if ($fieldName != null) ' : '';
+
+    /// Write line to set the field in the data map to be sent to database
+    buffer.writeln(
+      "    $ifNull'$columnName': $fieldName${isEnum ? '.name' : ''},",
+    );
+  }
+
+  /// Close the constructor and class
+  buffer
+    ..writeln('  });')
+    ..writeln()
+    ..writeln('  /// Get the [SupabaseTable] for this row')
     ..writeln('  @override')
     ..writeln('  SupabaseTable get table => ${className}Table();\n');
 
   // Generate getters and setters for each column
-  for (final column in columns) {
-    final fieldName = _formatFieldName(column['column_name'] as String);
-    final columnName = column['column_name'] as String;
-    final dartType = _getDartType(column);
-    final isNullable = column['is_nullable'] == 'YES';
-    final isArray = dartType.startsWith('List<');
+  for (final entry in fieldNameTypeMap.entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
+    final fieldName = entry.key;
 
-    print('\n[GenerateTableFile] Processing column: $columnName');
-    print('  UDT Name: $dartType');
-    print('  Is Array: $isArray');
-    print('  Field Name: $fieldName');
+    final enumValues = isEnum ? ', enumValues: $dartType.values' : '';
 
+    final fieldComment = fieldName.toCapitalCase();
+    final fieldColumnName = '${fieldName}Field';
+
+    /// Write static column name before fields
+    buffer
+      ..writeln('  /// $fieldComment field name')
+      ..writeln("  static const String $fieldColumnName = '$columnName';")
+      ..writeln()
+      ..writeln('  /// $fieldComment');
     if (isArray) {
+      final genericType = _getGenericType(dartType);
       buffer
-        ..writeln('  $dartType get $fieldName =>')
-        ..writeln(
-          "      getListField<${_getGenericType(dartType)}>('$columnName') "
-          '?? const [];',
-        )
+        ..writeln('  $dartType get $fieldName => '
+            'getListField<$genericType>($fieldColumnName);')
         ..writeln(
           '  set $fieldName($dartType? value) => '
-          "setListField<${_getGenericType(dartType)}>('$columnName', value);",
+          'setListField<$genericType>($fieldColumnName, value);',
         );
     } else {
-      if (isNullable) {
-        buffer
-          ..writeln('  $dartType? get $fieldName => '
-              "getField<$dartType>('$columnName');")
-          ..writeln('  set $fieldName($dartType? value) => '
-              "setField<$dartType>('$columnName', value);");
-      } else {
-        buffer
-          ..writeln('  $dartType get $fieldName => '
-              "getField<$dartType>('$columnName')!;")
-          ..writeln('  set $fieldName($dartType value) => '
-              "setField<$dartType>('$columnName', value);");
-      }
+      final isOptional = isNullable && !hasDefault;
+      final question = isOptional ? '?' : '';
+      final bang = isOptional ? '' : '!';
+      final defaultValue =
+          hasDefault ? ', defaultValue: ${getDefaultValue(dartType)}' : '';
+      buffer
+        ..writeln(
+          '  $dartType$question get $fieldName => '
+          'getField<$dartType>($fieldColumnName$enumValues$defaultValue)$bang;',
+        )
+        ..writeln('  set $fieldName($dartType$question value) => '
+            'setField<$dartType>($fieldColumnName, value);');
     }
     buffer.writeln(); // Single newline between field pairs
   }
 
-  buffer.writeln('}');
+  buffer
+    ..writeln('}')
+    ..writeln();
   await file.writeAsString(buffer.toString());
 }
 
@@ -341,64 +474,14 @@ String getDefaultValue(String dartType) {
       return 'false';
     case 'String':
       return "''";
+    case 'DateTime':
+      return 'DateTime.now()';
     default:
       if (dartType.startsWith('List<')) {
         return 'const []';
       }
       return 'null';
   }
-}
-
-/// Helper to get the parameter type for a given Dart type.
-String getParamType(String dartType) {
-  switch (dartType) {
-    case 'int':
-    case 'double':
-    case 'bool':
-    case 'String':
-    case 'DateTime':
-      return dartType;
-
-    default:
-      if (dartType.startsWith('List<')) {
-        return 'DataStruct';
-      }
-      return 'String';
-  }
-}
-
-/// Helper to deserialize a field for a [column].
-String deserializeField(Map<String, dynamic> column) {
-  final dartType = _getDartType(column);
-  final columnName = column['column_name'] as String;
-
-  if (dartType.startsWith('List<')) {
-    return "getListField(data['$columnName'])";
-  } else if (dartType == 'int' || dartType == 'double') {
-    return "castToType<$dartType>(data['$columnName'])";
-  } else if (dartType == 'DateTime') {
-    return "data['$columnName'] as DateTime?";
-  } else {
-    return "data['$columnName'] as $dartType?";
-  }
-}
-
-String _formatClassName(String tableName) {
-  return tableName
-      .split('_')
-      .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-      .join();
-}
-
-String _formatFieldName(String columnName) {
-  final words = columnName.split('_');
-  return words[0].toLowerCase() +
-      words
-          .sublist(1)
-          .map(
-            (word) => word[0].toUpperCase() + word.substring(1).toLowerCase(),
-          )
-          .join();
 }
 
 String _getDartType(Map<String, dynamic> column) {
