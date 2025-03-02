@@ -14,6 +14,8 @@ SupabaseClient loadSupabaseClient() {
 /// Load the mock supabase client
 @visibleForTesting
 SupabaseClient loadMockSupabaseClient() {
+  // Hide warning as the method is marked visible for testing
+  // ignore: invalid_use_of_visible_for_testing_member
   return _client = mockSupabase;
 }
 
