@@ -268,7 +268,15 @@ Future<void> _generateTableFile({
     final (:dartType, :isNullable, :hasDefault, :columnName, :isArray) =
         entry.value;
     final fieldName = entry.key;
-    buffer.writeln("    '$columnName': $fieldName,");
+
+    /// Do not set the value for optional fields in data
+    /// This will ensure that they are registered as null in the database
+    /// or the default value set within the database
+    final isOptional = isNullable || hasDefault;
+    final ifNull = isOptional ? 'if ($fieldName != null) ' : '';
+
+    /// Write line to set the field in the data map to be sent to database
+    buffer.writeln("    $ifNull'$columnName': $fieldName,");
   }
 
   /// Close the constructor and class
