@@ -1,3 +1,4 @@
+import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 import '../mocks/mocks.dart';
 

@@ -1,7 +1,5 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
-import 'supabase_client.mock.dart';
-
 final requiredUserKeys = [UsersRow.emailField, UsersRow.roleField];
 
 final Map<String, dynamic> userData = {

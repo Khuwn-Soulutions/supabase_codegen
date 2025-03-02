@@ -1,5 +1,7 @@
 import 'package:dotenv/dotenv.dart';
+import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
+import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Cached client
 SupabaseClient? _client;
@@ -7,6 +9,14 @@ SupabaseClient? _client;
 /// Load the supabase client
 SupabaseClient loadSupabaseClient() {
   return _client ??= _loadClient();
+}
+
+/// Load the mock supabase client
+@visibleForTesting
+SupabaseClient loadMockSupabaseClient() {
+  // Hide warning as the method is marked visible for testing
+  // ignore: invalid_use_of_visible_for_testing_member
+  return _client = mockSupabase;
 }
 
 SupabaseClient _loadClient() {
