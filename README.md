@@ -70,6 +70,11 @@ dart run supabase_codegen:generate_types --output lib/types -e .env.production
 The generator will create strongly-typed models like this:
 
 ```dart
+enum UserRole {
+  admin,
+  user,
+}
+
 /// Users Table
 class UsersTable extends SupabaseTable<UsersRow> {
   /// Table Name
@@ -88,32 +93,50 @@ class UsersRow extends SupabaseDataRow {
 
   /// Construct Users Row using fields
   factory UsersRow.withFields({
-    String? id,
-    String? name,
+    required String email,
+    required UserRole role,
+    String? accName,
+    String? phoneNumber,
+    List<String>? contacts,
     DateTime? createdAt,
   }) =>
       UsersRow({
-        'id': id,
-        'name': name,
-        'created_at': createdAt,
+        'email': email,
+        'role': role.name,
+        if (accName != null) 'acc_name': accName,
+        if (phoneNumber != null) 'phone_number': phoneNumber,
+        if (contacts != null) 'contacts': contacts,
+        if (createdAt != null) 'created_at': createdAt,
       });
 
   /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => UsersTable();
 
-  /// Id
-  String get id => getField<String>('id', defaultValue: '')!;
-  set id(String value) => setField<String>('id', value);
+  /// Email
+  String get email => getField<String>('email')!;
+  set email(String value) => setField<String>('email', value);
 
-  /// Name
-  String? get name => getField<String>('name');
-  set name(String? value) => setField<String>('name', value);
+  /// Acc Name
+  String? get accName => getField<String>('acc_name');
+  set accName(String? value) => setField<String>('acc_name', value);
+
+  /// Phone Number
+  String? get phoneNumber => getField<String>('phone_number');
+  set phoneNumber(String? value) => setField<String>('phone_number', value);
+
+  /// Contacts
+  List<String> get contacts => getListField<String>('contacts');
+  set contacts(List<String>? value) => setListField<String>('contacts', value);
 
   /// Created At
   DateTime get createdAt =>
       getField<DateTime>('created_at', defaultValue: DateTime.now())!;
   set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+
+  /// Role
+  UserRole get role => getField<UserRole>('role', enumValues: UserRole.values)!;
+  set role(UserRole value) => setField<UserRole>('role', value);
 }
 ```
 
@@ -122,10 +145,10 @@ class UsersRow extends SupabaseDataRow {
 ### Reading Data
 
 ```dart
-final userAccountsTable = UserAccountsTable();
+final usersTable = UsersTable();
 
 // Fetch a single user
-final user = await userAccountsTable.querySingleRow(
+final user = await usersTable.querySingleRow(
   queryFn: (q) => q.eq('id', 123),
 );
 
@@ -136,14 +159,14 @@ print(user.phoneNumber);
 print(user.createdAt);
 
 // Fetch multiple users
-final activeUsers = await userAccountsTable.queryRows(
+final adminUsers = await usersTable.queryRows(
   queryFn: (q) => q
-  .eq('is_active', true)
+  .eq('role', UserRole.admin.name)
   .order('email'),
 );
 
 // Work with typed objects
-for (final user in activeUsers) {
+for (final user in adminUsers) {
   print('User ${user.id}:');
   print('- Email: ${user.email}');
   print('- Name: ${user.accName ?? "No name set"}');
@@ -152,7 +175,7 @@ for (final user in activeUsers) {
 }
 
 // Query with complex conditions
-final recentUsers = await userAccountsTable.queryRows(
+final recentUsers = await usersTable.queryRows(
   queryFn: (q) => q
   .gte('created_at', DateTime.now().subtract(Duration(days: 7)))
   .ilike('email', '%@gmail.com')
@@ -163,34 +186,35 @@ final recentUsers = await userAccountsTable.queryRows(
 ### Creating Records
 
 ```dart
-final userAccountsTable = UserAccountsTable();
+final usersTable = UsersTable();
 
 // Create new record
-final newUser = await userAccountsTable.insert({
+final adminUser = await usersTable.insert({
   'email': 'john@example.com',
+  'role': UserRole.user.name,
   'acc_name': 'John Doe',
   'phone_number': '+1234567890',
 });
 
 // The returned object is already typed
-print(newUser.email);
-print(newUser.accName);
+print(adminUser.email);
+print(adminUser.accName);
 ```
 
 ### Updating Records
 
 ```dart
-final userAccountsTable = UserAccountsTable();
+final usersTable = UsersTable();
 
 // Update by query
-await userAccountsTable.update(
+await usersTable.update(
   data: {'acc_name': 'Jane Doe'},
   matchingRows: (q) => q.eq('id', 123),
 );
 
 // Update with return value
-final updatedUsers = await userAccountsTable.update(
-  data: {'is_active': true},
+final updatedUsers = await usersTable.update(
+  data: {'role': UserRole.admin.name},
   matchingRows: (q) => q.in_('id', [1, 2, 3]),
   returnRows: true,
 );
@@ -199,16 +223,16 @@ final updatedUsers = await userAccountsTable.update(
 ### Deleting Records
 
 ```dart
-final userAccountsTable = UserAccountsTable();
+final usersTable = UsersTable();
 
 // Delete single record
-  await userAccountsTable.delete(
+  await usersTable.delete(
   matchingRows: (q) => q.eq('id', 123),
 );
 
 // Delete with return value
-final deletedUsers = await userAccountsTable.delete(
-  matchingRows: (q) => q.eq('is_active', false),
+final deletedUsers = await usersTable.delete(
+  matchingRows: (q) => q.eq('role', UserRole.user.name),
   returnRows: true,
 );
 ```
