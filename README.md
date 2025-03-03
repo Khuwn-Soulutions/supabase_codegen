@@ -142,6 +142,14 @@ class UsersRow extends SupabaseDataRow {
   set contacts(List<String>? value) =>
       setListField<String>(contactsField, value);
 
+  /// Role field name
+  static const String roleField = 'role';
+
+  /// Role
+  UserRole get role =>
+      getField<UserRole>(roleField, enumValues: UserRole.values)!;
+  set role(UserRole value) => setField<UserRole>(roleField, value);
+
   /// Created At field name
   static const String createdAtField = 'created_at';
 
@@ -150,13 +158,23 @@ class UsersRow extends SupabaseDataRow {
       getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
-  /// Role field name
-  static const String roleField = 'role';
-
-  /// Role
-  UserRole get role =>
-      getField<UserRole>(roleField, enumValues: UserRole.values)!;
-  set role(UserRole value) => setField<UserRole>(roleField, value);
+  /// Make a copy of the current [UsersRow] overriding the provided fields
+  UsersRow copyWith({
+    String? email,
+    UserRole? role,
+    String? accName,
+    String? phoneNumber,
+    List<String>? contacts,
+    DateTime? createdAt,
+  }) =>
+      UsersRow.withFields(
+        email: email ?? data['email'],
+        role: role ?? data['role'],
+        accName: accName ?? data['acc_name'],
+        phoneNumber: phoneNumber ?? data['phone_number'],
+        contacts: contacts ?? data['contacts'],
+        createdAt: createdAt ?? data['created_at'],
+      );
 }
 
 ```
