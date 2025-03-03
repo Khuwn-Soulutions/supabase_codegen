@@ -124,10 +124,12 @@ void main() {
     });
 
     test('== equates rows', () {
-      expect(user, UsersRow(userData));
+      final usersRow = UsersRow(userData);
+      expect(user, usersRow);
+      expect(user == usersRow, isTrue);
     });
 
-    test('hasCode returns hash', () {
+    test('hashCode returns hash', () {
       expect(user.hashCode, greaterThan(0));
     });
 
@@ -141,19 +143,18 @@ void main() {
       });
 
       test('overrides provided fields', () {
+        expect(copy == user, isFalse);
         expect(copy.email, someEmail);
         expect(copy.data['email'], someEmail);
       });
 
       test('preserves other fields', () {
-        expect(copy.accName, user.accName);
-        expect(copy.data['acc_name'], user.data['acc_name']);
+        for (final key in user.data.keys) {
+          if (key == 'email') continue;
 
-        expect(copy.phoneNumber, user.phoneNumber);
-        expect(copy.data['phone_number'], user.data['phone_number']);
-
-        expect(copy.contacts, user.contacts);
-        expect(copy.data['contacts'], user.data['contacts']);
+          expect(copy.data.containsKey(key), isTrue);
+          expect(copy.data[key], user.data[key]);
+        }
       });
     });
   });
