@@ -74,7 +74,6 @@ enum UserRole {
   admin,
   user,
 }
-
 /// Users Table
 class UsersTable extends SupabaseTable<UsersRow> {
   /// Table Name
@@ -95,6 +94,7 @@ class UsersRow extends SupabaseDataRow {
   factory UsersRow.withFields({
     required String email,
     required UserRole role,
+    String? id,
     String? accName,
     String? phoneNumber,
     List<String>? contacts,
@@ -103,6 +103,7 @@ class UsersRow extends SupabaseDataRow {
       UsersRow({
         'email': email,
         'role': role.name,
+        if (id != null) 'id': id,
         if (accName != null) 'acc_name': accName,
         if (phoneNumber != null) 'phone_number': phoneNumber,
         if (contacts != null) 'contacts': contacts,
@@ -112,6 +113,13 @@ class UsersRow extends SupabaseDataRow {
   /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => UsersTable();
+
+  /// Id field name
+  static const String idField = 'id';
+
+  /// Id
+  String get id => getField<String>(idField, defaultValue: '')!;
+  set id(String value) => setField<String>(idField, value);
 
   /// Email field name
   static const String emailField = 'email';
@@ -162,19 +170,21 @@ class UsersRow extends SupabaseDataRow {
   UsersRow copyWith({
     String? email,
     UserRole? role,
+    String? id,
     String? accName,
     String? phoneNumber,
     List<String>? contacts,
     DateTime? createdAt,
   }) =>
-      UsersRow.withFields(
-        email: email ?? data['email'],
-        role: role ?? data['role'],
-        accName: accName ?? data['acc_name'],
-        phoneNumber: phoneNumber ?? data['phone_number'],
-        contacts: contacts ?? data['contacts'],
-        createdAt: createdAt ?? data['created_at'],
-      );
+      UsersRow({
+        'email': email ?? data['email'],
+        'role': role?.name ?? data['role'],
+        'id': id ?? data['id'],
+        'acc_name': accName ?? data['acc_name'],
+        'phone_number': phoneNumber ?? data['phone_number'],
+        'contacts': contacts ?? data['contacts'],
+        'created_at': createdAt ?? data['created_at'],
+      });
 }
 
 ```
