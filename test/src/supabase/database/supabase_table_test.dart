@@ -42,6 +42,71 @@ void main() {
       });
     });
 
+    group('can upsert row', () {
+      const otherEmail = 'other@others.com';
+      final otherData = {
+        ...userData,
+        'email': otherEmail,
+      };
+
+      setUp(insertData);
+
+      test('updates data in table', () async {
+        final other = await table.upsert(otherData);
+        for (final key in user.data.keys) {
+          /// Fields changed
+          if (key == 'email') {
+            expect(other.data[key], isNot(user.data[key]));
+            expect(other.data[key], otherEmail);
+          }
+
+          /// Unchanged fields
+          else {
+            expect(other.data.containsKey(key), isTrue);
+            expect(other.data[key], user.data[key]);
+          }
+        }
+
+        final results = await table.queryRows(
+          queryFn: (q) => q.eq(UsersRow.idField, user.id),
+        );
+        expect(results.length, 1);
+
+        final check = results.first;
+        for (final key in user.data.keys) {
+          if (key == 'email') continue;
+
+          expect(check.data.containsKey(key), isTrue);
+          expect(check.data[key], user.data[key]);
+        }
+      });
+
+      test('inserts data in table', () async {
+        const otherId = 'other-id';
+        final before = await table.querySingleRow(
+          queryFn: (q) => q.eq(UsersRow.idField, otherId),
+        );
+        expect(before, isNull);
+        await table.upsert({
+          ...otherData,
+          'id': otherId,
+        });
+        final after = await table.querySingleRow(
+          queryFn: (q) => q.eq(UsersRow.idField, otherId),
+        );
+        expect(after, isNotNull);
+      });
+
+      test('updates data in table using upsertRow', () async {
+        await table.upsertRow(UsersRow(otherData));
+        final updated = await table.querySingleRow(
+          queryFn: (q) => q.eq(UsersRow.idField, user.id),
+        );
+        expect(updated, isNotNull);
+        expect(updated!.email, isNot(user.email));
+      });
+    });
+
     group('after insertion of data', () {
       setUp(insertData);
       test('can get single SupabaseDataRow using querySingleRow', () async {
