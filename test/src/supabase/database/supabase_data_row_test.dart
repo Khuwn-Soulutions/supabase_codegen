@@ -130,5 +130,31 @@ void main() {
     test('hasCode returns hash', () {
       expect(user.hashCode, greaterThan(0));
     });
+
+    group('copyWith ', () {
+      const someEmail = 'some-email';
+      late UsersRow copy;
+      setUp(() {
+        copy = user.copyWith(
+          email: someEmail,
+        );
+      });
+
+      test('overrides provided fields', () {
+        expect(copy.email, someEmail);
+        expect(copy.data['email'], someEmail);
+      });
+
+      test('preserves other fields', () {
+        expect(copy.accName, user.accName);
+        expect(copy.data['acc_name'], user.data['acc_name']);
+
+        expect(copy.phoneNumber, user.phoneNumber);
+        expect(copy.data['phone_number'], user.data['phone_number']);
+
+        expect(copy.contacts, user.contacts);
+        expect(copy.data['contacts'], user.data['contacts']);
+      });
+    });
   });
 }
