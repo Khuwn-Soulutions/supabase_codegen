@@ -1,7 +1,10 @@
+import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 import '../mocks/mocks.dart';
 
 void main() {
+  loadMockSupabaseClient();
+
   group('SupabaseDataRow', () {
     late UsersRow user;
     final firstField = userData.keys.first;
@@ -124,11 +127,38 @@ void main() {
     });
 
     test('== equates rows', () {
-      expect(user, UsersRow(userData));
+      final usersRow = UsersRow(userData);
+      expect(user, usersRow);
+      expect(user == usersRow, isTrue);
     });
 
-    test('hasCode returns hash', () {
+    test('hashCode returns hash', () {
       expect(user.hashCode, greaterThan(0));
+    });
+
+    group('copyWith ', () {
+      const someEmail = 'some-email';
+      late UsersRow copy;
+      setUp(() {
+        copy = user.copyWith(
+          email: someEmail,
+        );
+      });
+
+      test('overrides provided fields', () {
+        expect(copy == user, isFalse);
+        expect(copy.email, someEmail);
+        expect(copy.data['email'], someEmail);
+      });
+
+      test('preserves other fields', () {
+        for (final key in user.data.keys) {
+          if (key == 'email') continue;
+
+          expect(copy.data.containsKey(key), isTrue);
+          expect(copy.data[key], user.data[key]);
+        }
+      });
     });
   });
 }

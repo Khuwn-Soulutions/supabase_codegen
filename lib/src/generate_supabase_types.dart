@@ -200,6 +200,8 @@ Future<void> _generateTableFile({
   print('\n[GenerateTableFile] Generating table file for: $tableName');
 
   final className = tableName.toPascalCase();
+  final tableClass = '${className}Table';
+  final rowClass = '${className}Row';
   final classDesc = tableName.toCapitalCase();
   final file = File('${directory.path}/${tableName.toLowerCase()}.dart');
 
@@ -213,30 +215,30 @@ Future<void> _generateTableFile({
     // Generate Table class
     ..writeln('/// $classDesc Table')
     ..writeln(
-      'class ${className}Table extends SupabaseTable<${className}Row> {',
+      'class $tableClass extends SupabaseTable<$rowClass> {',
     )
     ..writeln('  /// Table Name')
     ..writeln('  @override')
     ..writeln("  String get tableName => '$tableName';")
     ..writeln()
-    ..writeln('    /// Create a [${className}Row] from the [data] provided')
+    ..writeln('    /// Create a [$rowClass] from the [data] provided')
     ..writeln('  @override')
-    ..writeln('  ${className}Row createRow(Map<String, dynamic> data) =>')
-    ..writeln('      ${className}Row(data);')
+    ..writeln('  $rowClass createRow(Map<String, dynamic> data) =>')
+    ..writeln('      $rowClass(data);')
     ..writeln('}')
     ..writeln()
 
     // Generate Row class
     ..writeln('/// $classDesc Row')
-    ..writeln('class ${className}Row extends SupabaseDataRow {')
+    ..writeln('class $rowClass extends SupabaseDataRow {')
     ..writeln('  /// $classDesc Row')
-    ..writeln('  const ${className}Row(super.data);')
+    ..writeln('  const $rowClass(super.data);')
     ..writeln()
 
     /// Write constructor to use fields
     ..writeln('  /// Construct $classDesc Row using fields')
     // ..writeln('  // ignore: sort_constructors_first')
-    ..writeln('  factory ${className}Row.withFields({');
+    ..writeln('  factory $rowClass.withFields({');
 
   // Convert the map to a list of entries sorted with the required items first
   final entries = fieldNameTypeMap.entries.toList()
@@ -296,13 +298,14 @@ Future<void> _generateTableFile({
     );
   }
 
-  /// Close the constructor and class
+  /// Close the constructor
   buffer
     ..writeln('  });')
     ..writeln()
     ..writeln('  /// Get the [SupabaseTable] for this row')
     ..writeln('  @override')
-    ..writeln('  SupabaseTable get table => ${className}Table();\n');
+    ..writeln('  SupabaseTable get table => $tableClass();')
+    ..writeln();
 
   // Generate getters and setters for each column
   for (final entry in fieldNameTypeMap.entries) {
@@ -353,7 +356,56 @@ Future<void> _generateTableFile({
     buffer.writeln(); // Single newline between field pairs
   }
 
+  /// Write the copyWith method
   buffer
+    ..writeln('/// Make a copy of the current [$rowClass] overriding '
+        'the provided fields')
+    ..writeln('  $rowClass copyWith({');
+
+  /// All fields as optional
+  for (final entry in entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
+    final fieldName = entry.key;
+
+    /// Write line to get the field as parameter
+    buffer.writeln(
+      '    $dartType? $fieldName,',
+    );
+  }
+
+  /// Close method
+  buffer
+    ..writeln('  }) =>')
+    ..writeln('    $rowClass({');
+
+  /// Overwrite the current data value with the incoming value
+  for (final entry in entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
+    final fieldName = entry.key;
+    final enumName = isEnum ? '?.name' : '';
+
+    buffer.writeln(
+      "      '$columnName': $fieldName$enumName ?? data['$columnName'],",
+    );
+  }
+
+  /// Close method
+  buffer
+    ..writeln('    });')
     ..writeln('}')
     ..writeln();
   await file.writeAsString(buffer.toString());
