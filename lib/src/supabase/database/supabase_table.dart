@@ -69,6 +69,40 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
     return createRow(row.first);
   }
 
+  /// Upsert a row into the table
+  Future<T> upsertRow(
+    T row, {
+    String? onConflict,
+    bool ignoreDuplicates = false,
+    bool defaultToNull = true,
+  }) =>
+      upsert(
+        row.data,
+        onConflict: onConflict,
+        ignoreDuplicates: ignoreDuplicates,
+        defaultToNull: defaultToNull,
+      );
+
+  /// Upsert the [data] in the table and return
+  /// the [SupabaseDataRow] representation of that row
+  Future<T> upsert(
+    Map<String, dynamic> data, {
+    String? onConflict,
+    bool ignoreDuplicates = false,
+    bool defaultToNull = true,
+  }) async {
+    final row = await dbTable
+        .upsert(
+          data,
+          onConflict: onConflict,
+          ignoreDuplicates: ignoreDuplicates,
+          defaultToNull: defaultToNull,
+        )
+        .select()
+        .limit(1);
+    return createRow(row.first);
+  }
+
   /// Update the rows that fulfill [matchingRows] with the
   /// [data] or [row] provided.
   ///
