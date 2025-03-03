@@ -1,4 +1,4 @@
-create type "public"."User_Role" as enum ('admin', 'user');
+CREATE TYPE "public"."User_Role" AS ENUM ('admin', 'user');
 
 create table "public"."test_generate" (
     "id" uuid not null default gen_random_uuid(),
@@ -16,7 +16,7 @@ create table "public"."users" (
     "acc_name" character varying(255),
     "phone_number" character varying(20),
     "contacts" text[],
-    "role" User_Role not null,
+    "role" "public"."User_Role" not null,
     "created_at" timestamp with time zone default CURRENT_TIMESTAMP
 );
 
@@ -118,5 +118,3 @@ grant trigger on table "public"."users" to "service_role";
 grant truncate on table "public"."users" to "service_role";
 
 grant update on table "public"."users" to "service_role";
-
-
