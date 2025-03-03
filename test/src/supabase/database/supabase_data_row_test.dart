@@ -1,7 +1,10 @@
+import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 import '../mocks/mocks.dart';
 
 void main() {
+  loadMockSupabaseClient();
+
   group('SupabaseDataRow', () {
     late UsersRow user;
     final firstField = userData.keys.first;
