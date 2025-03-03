@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 import '../mocks/mocks.dart';
 
 void main() {
+  loadMockSupabaseClient();
   final user = UsersRow(userData);
   final table = UsersTable();
 
