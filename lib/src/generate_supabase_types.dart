@@ -399,7 +399,8 @@ Future<void> _generateTableFile({
     final enumName = isEnum ? '?.name' : '';
 
     buffer.writeln(
-        "      '$columnName': $fieldName$enumName ?? data['$columnName'],");
+      "      '$columnName': $fieldName$enumName ?? data['$columnName'],",
+    );
   }
 
   /// Close method
