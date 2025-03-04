@@ -6,11 +6,21 @@ void main() {
   loadMockSupabaseClient();
   final user = UsersRow(userData);
   final table = UsersTable();
+  const otherEmail = 'other@others.com';
+  final otherData = {
+    ...userData,
+    'email': otherEmail,
+  };
 
   /// Insert data
-  Future<void> insertData() async {
-    await mockSupabase.from(table.tableName).insert(userData);
+  Future<void> insertData([Map<String, dynamic>? data]) async {
+    await mockSupabase.from(table.tableName).insert(data ?? userData);
   }
+
+  /// Find the user in the database
+  Future<UsersRow?> fetchUser() => table.querySingleRow(
+        queryFn: (q) => q.eq(UsersRow.idField, user.id),
+      );
 
   group('SupabaseTable', () {
     /// Reset the mock data after each test
@@ -18,6 +28,46 @@ void main() {
 
     /// Close the client at the end of all tests
     tearDownAll(mockSupabaseHttpClient.close);
+
+    group('querySingleRow', () {
+      test('returns single row', () async {
+        await insertData();
+        final result = await fetchUser();
+        expect(result, isNotNull);
+        expect(result!.id, user.id);
+      });
+
+      test('returns null if no data in table', () async {
+        final result = await fetchUser();
+        expect(result, isNull);
+      });
+    });
+
+    group('queryRows', () {
+      late List<UsersRow> result;
+      setUp(() async {
+        await insertData();
+        await insertData({
+          'id': 'other-id',
+          ...otherData,
+        });
+      });
+
+      test('returns a list of rows', () async {
+        result = await table.queryRows(
+          queryFn: (q) => q.eq(UsersRow.roleField, user.role.name),
+        );
+        expect(result.length, 2);
+      });
+
+      test('can be limited', () async {
+        result = await table.queryRows(
+          queryFn: (q) => q.eq(UsersRow.roleField, user.role.name),
+          limit: 1,
+        );
+        expect(result.length, 1);
+      });
+    });
 
     group('can insert row', () {
       dynamic result;
@@ -43,12 +93,6 @@ void main() {
     });
 
     group('can upsert row', () {
-      const otherEmail = 'other@others.com';
-      final otherData = {
-        ...userData,
-        'email': otherEmail,
-      };
-
       setUp(insertData);
 
       test('updates data in table', () async {

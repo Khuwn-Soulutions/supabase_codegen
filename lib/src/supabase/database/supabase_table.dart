@@ -55,7 +55,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
           .catchError((dynamic e) {
         // Debug Error
         // ignore: avoid_print
-        print('Error querying row: $e');
+        print('Error querying row: $e'); // coverage:ignore-line
         return null;
       }).then((r) => r != null ? createRow(r) : null);
 
