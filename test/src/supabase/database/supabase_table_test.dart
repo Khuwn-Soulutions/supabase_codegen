@@ -234,11 +234,30 @@ void main() {
       });
     });
 
-    test('can delete row', () async {
-      await table.delete(
-        matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
-        returnRows: true,
-      );
+    group('deleteRow', () {
+      test('can delete row', () async {
+        /// Insert data and check fetch result
+        await insertData();
+        final result = await fetchUser();
+        expect(result, isNotNull);
+
+        /// Remove the data from the database and check that its deleted
+        final deleted = await table.delete(
+          matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
+        );
+        expect(deleted, isEmpty);
+        final postDelete = await fetchUser();
+        expect(postDelete, isNull);
+      });
+
+      test('and can return deleted row', () async {
+        await insertData();
+        final deleted = await table.delete(
+          matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
+          returnRows: true,
+        );
+        expect(deleted.length, 1);
+      });
     });
   });
 }
