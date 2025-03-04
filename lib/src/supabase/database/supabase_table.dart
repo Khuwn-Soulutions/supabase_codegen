@@ -55,7 +55,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
           .catchError((dynamic e) {
         // Debug Error
         // ignore: avoid_print
-        print('Error querying row: $e');
+        print('Error querying row: $e'); // coverage:ignore-line
         return null;
       }).then((r) => r != null ? createRow(r) : null);
 
@@ -66,6 +66,40 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   /// the [SupabaseDataRow] representation of that row
   Future<T> insert(Map<String, dynamic> data) async {
     final row = await dbTable.insert(data).select().limit(1);
+    return createRow(row.first);
+  }
+
+  /// Upsert a row into the table
+  Future<T> upsertRow(
+    T row, {
+    String? onConflict,
+    bool ignoreDuplicates = false,
+    bool defaultToNull = true,
+  }) =>
+      upsert(
+        row.data,
+        onConflict: onConflict,
+        ignoreDuplicates: ignoreDuplicates,
+        defaultToNull: defaultToNull,
+      );
+
+  /// Upsert the [data] in the table and return
+  /// the [SupabaseDataRow] representation of that row
+  Future<T> upsert(
+    Map<String, dynamic> data, {
+    String? onConflict,
+    bool ignoreDuplicates = false,
+    bool defaultToNull = true,
+  }) async {
+    final row = await dbTable
+        .upsert(
+          data,
+          onConflict: onConflict,
+          ignoreDuplicates: ignoreDuplicates,
+          defaultToNull: defaultToNull,
+        )
+        .select()
+        .limit(1);
     return createRow(row.first);
   }
 

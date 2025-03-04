@@ -6,11 +6,21 @@ void main() {
   loadMockSupabaseClient();
   final user = UsersRow(userData);
   final table = UsersTable();
+  const otherEmail = 'other@others.com';
+  final otherData = {
+    ...userData,
+    'email': otherEmail,
+  };
 
   /// Insert data
-  Future<void> insertData() async {
-    await mockSupabase.from(table.tableName).insert(userData);
+  Future<void> insertData([Map<String, dynamic>? data]) async {
+    await mockSupabase.from(table.tableName).insert(data ?? userData);
   }
+
+  /// Find the user in the database
+  Future<UsersRow?> fetchUser() => table.querySingleRow(
+        queryFn: (q) => q.eq(UsersRow.idField, user.id),
+      );
 
   group('SupabaseTable', () {
     /// Reset the mock data after each test
@@ -18,6 +28,46 @@ void main() {
 
     /// Close the client at the end of all tests
     tearDownAll(mockSupabaseHttpClient.close);
+
+    group('querySingleRow', () {
+      test('returns single row', () async {
+        await insertData();
+        final result = await fetchUser();
+        expect(result, isNotNull);
+        expect(result!.id, user.id);
+      });
+
+      test('returns null if no data in table', () async {
+        final result = await fetchUser();
+        expect(result, isNull);
+      });
+    });
+
+    group('queryRows', () {
+      late List<UsersRow> result;
+      setUp(() async {
+        await insertData();
+        await insertData({
+          'id': 'other-id',
+          ...otherData,
+        });
+      });
+
+      test('returns a list of rows', () async {
+        result = await table.queryRows(
+          queryFn: (q) => q.eq(UsersRow.roleField, user.role.name),
+        );
+        expect(result.length, 2);
+      });
+
+      test('can be limited', () async {
+        result = await table.queryRows(
+          queryFn: (q) => q.eq(UsersRow.roleField, user.role.name),
+          limit: 1,
+        );
+        expect(result.length, 1);
+      });
+    });
 
     group('can insert row', () {
       dynamic result;
@@ -39,6 +89,65 @@ void main() {
       test('using insert with data', () async {
         result = await table.insert(userData);
         testResult();
+      });
+    });
+
+    group('can upsert row', () {
+      setUp(insertData);
+
+      test('updates data in table', () async {
+        final other = await table.upsert(otherData);
+        for (final key in user.data.keys) {
+          /// Fields changed
+          if (key == 'email') {
+            expect(other.data[key], isNot(user.data[key]));
+            expect(other.data[key], otherEmail);
+          }
+
+          /// Unchanged fields
+          else {
+            expect(other.data.containsKey(key), isTrue);
+            expect(other.data[key], user.data[key]);
+          }
+        }
+
+        final results = await table.queryRows(
+          queryFn: (q) => q.eq(UsersRow.idField, user.id),
+        );
+        expect(results.length, 1);
+
+        final check = results.first;
+        for (final key in user.data.keys) {
+          if (key == 'email') continue;
+
+          expect(check.data.containsKey(key), isTrue);
+          expect(check.data[key], user.data[key]);
+        }
+      });
+
+      test('inserts data in table', () async {
+        const otherId = 'other-id';
+        final before = await table.querySingleRow(
+          queryFn: (q) => q.eq(UsersRow.idField, otherId),
+        );
+        expect(before, isNull);
+        await table.upsert({
+          ...otherData,
+          'id': otherId,
+        });
+        final after = await table.querySingleRow(
+          queryFn: (q) => q.eq(UsersRow.idField, otherId),
+        );
+        expect(after, isNotNull);
+      });
+
+      test('updates data in table using upsertRow', () async {
+        await table.upsertRow(UsersRow(otherData));
+        final updated = await table.querySingleRow(
+          queryFn: (q) => q.eq(UsersRow.idField, user.id),
+        );
+        expect(updated, isNotNull);
+        expect(updated!.email, isNot(user.email));
       });
     });
 
@@ -125,11 +234,30 @@ void main() {
       });
     });
 
-    test('can delete row', () async {
-      await table.delete(
-        matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
-        returnRows: true,
-      );
+    group('deleteRow', () {
+      test('can delete row', () async {
+        /// Insert data and check fetch result
+        await insertData();
+        final result = await fetchUser();
+        expect(result, isNotNull);
+
+        /// Remove the data from the database and check that its deleted
+        final deleted = await table.delete(
+          matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
+        );
+        expect(deleted, isEmpty);
+        final postDelete = await fetchUser();
+        expect(postDelete, isNull);
+      });
+
+      test('and can return deleted row', () async {
+        await insertData();
+        final deleted = await table.delete(
+          matchingRows: (q) => q.eq(UsersRow.roleField, user.role.name),
+          returnRows: true,
+        );
+        expect(deleted.length, 1);
+      });
     });
   });
 }

@@ -12,6 +12,7 @@ create table "public"."test_generate" (
 alter table "public"."test_generate" enable row level security;
 
 create table "public"."users" (
+    "id" uuid not null default gen_random_uuid(),
     "email" character varying(255) not null,
     "acc_name" character varying(255),
     "phone_number" character varying(20),
@@ -25,15 +26,11 @@ alter table "public"."users" enable row level security;
 
 CREATE UNIQUE INDEX test_generate_pkey ON public.test_generate USING btree (id);
 
-CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
-
-CREATE UNIQUE INDEX users_pkey ON public.users USING btree (email);
+CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);
 
 alter table "public"."test_generate" add constraint "test_generate_pkey" PRIMARY KEY using index "test_generate_pkey";
 
 alter table "public"."users" add constraint "users_pkey" PRIMARY KEY using index "users_pkey";
-
-alter table "public"."users" add constraint "users_email_key" UNIQUE using index "users_email_key";
 
 grant delete on table "public"."test_generate" to "anon";
 
