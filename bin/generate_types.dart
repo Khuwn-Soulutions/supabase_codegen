@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:supabase_codegen/supabase_codegen.dart';
+import 'src/generate_supabase_types.dart';
 
 void main(List<String> args) async {
   try {

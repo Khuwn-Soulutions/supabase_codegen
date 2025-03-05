@@ -1,5 +1,6 @@
-import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
+
+import '../../../../bin/src/generate_supabase_types.dart';
 
 void main() {
   group('generateSupabaseTypes', () {
