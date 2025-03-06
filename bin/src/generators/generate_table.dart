@@ -120,12 +120,7 @@ void _writeRowClass({
     ..writeln('/// $classDesc Row')
     ..writeln('class $rowClass extends SupabaseDataRow {')
     ..writeln('  /// $classDesc Row')
-    ..writeln('  const $rowClass(super.data);')
-    ..writeln()
-
-    /// Write constructor to use fields
-    ..writeln('  /// Construct $classDesc Row using fields')
-    ..writeln('  factory $rowClass.withFields({');
+    ..writeln('  $rowClass({');
 
   for (final entry in entries) {
     final (
@@ -144,7 +139,7 @@ void _writeRowClass({
   }
 
   /// Write redirect constructor
-  buffer.writeln('  })  => ${className}Row({');
+  buffer.writeln('  }): super({');
   for (final entry in entries) {
     final (
       :dartType,
