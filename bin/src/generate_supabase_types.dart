@@ -15,6 +15,9 @@ late String root;
 /// Tag
 String tag = '';
 
+/// Version
+String version = '';
+
 /// Enums file name
 const enumsFileName = 'supabase_enums';
 
@@ -38,10 +41,18 @@ typedef FieldNameTypeMap = Map<String, ColumnData>;
 Future<void> generateSupabaseTypes({
   required String envFilePath,
   required String outputFolder,
+
+  /// Tags to add to file footer
   String fileTag = '',
+
+  /// current library version
+  String libVersion = '',
 }) async {
   /// Set tag
   tag = fileTag;
+
+  /// Set version
+  version = libVersion;
 
   /// Set root folder
   root = outputFolder;
