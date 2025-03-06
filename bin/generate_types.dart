@@ -1,26 +1,77 @@
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:supabase_codegen/supabase_codegen.dart';
+import 'package:logger/web.dart';
+import 'package:yaml/yaml.dart';
+import 'src/src.dart';
 
 void main(List<String> args) async {
   try {
     /// Parse options from command line
     const envOption = 'env';
     const outputOption = 'output';
+    const tagOption = 'tag';
+    const debugOption = 'debug';
+
+    /// Get default values from pubspec
+    final pubSpecFile = File('pubspec.yaml');
+    final pubspecContents = pubSpecFile.readAsStringSync();
+    final pubspec = loadYaml(pubspecContents) as YamlMap;
+    final codegenConfig = pubspec['supabase_codegen'] as YamlMap? ?? {};
+
+    /// Get the parser for the argument.
+    /// If an option is not set the default value will be extracted from
+    /// the pubspec file with a predefined fallback if not set in pubspec
     final parser = ArgParser()
-      ..addOption(envOption, abbr: envOption[0], defaultsTo: '.env')
+      // Env
+      ..addOption(
+        envOption,
+        abbr: envOption[0],
+        defaultsTo: codegenConfig[envOption] as String? ?? '.env',
+      )
+      // Output Folder
       ..addOption(
         outputOption,
         abbr: outputOption[0],
-        defaultsTo: 'supabase/types',
+        defaultsTo: codegenConfig[outputOption] as String? ?? 'supabase/types',
+      )
+      // Tag
+      ..addOption(
+        tagOption,
+        abbr: tagOption[0],
+        defaultsTo: codegenConfig[tagOption] as String? ?? '',
+      )
+      // Debug
+      ..addFlag(
+        debugOption,
+        abbr: debugOption[0],
+        defaultsTo: codegenConfig[debugOption] as bool? ?? false,
       );
     final results = parser.parse(args);
-    final outputFolder = results.option(outputOption)!;
 
-    /// Generate the types using hte command line options
+    // Pull out options
+    final envFilePath = results.option(envOption)!;
+    final outputFolder = results.option(outputOption)!;
+    final tag = results.option(tagOption)!;
+    final debug = results.flag(debugOption);
+
+    /// Set the log level if debug is true
+    final level = debug ? Level.all : Level.info;
+    logger = Logger(
+      level: level,
+      filter: ProductionFilter(),
+      printer: PrettyPrinter(
+        methodCount: 0,
+        excludeBox: {Level.debug: true, Level.info: true},
+        printEmojis: false,
+      ),
+    );
+
+    /// Generate the types using the command line options
     await generateSupabaseTypes(
-      envFilePath: results.option(envOption)!,
+      envFilePath: envFilePath,
       outputFolder: outputFolder,
+      fileTag: tag,
+      libVersion: pubspec['version'] as String,
     );
 
     /// Format generated files
