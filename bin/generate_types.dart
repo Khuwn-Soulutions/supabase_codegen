@@ -16,7 +16,7 @@ void main(List<String> args) async {
     final pubSpecFile = File('pubspec.yaml');
     final pubspecContents = pubSpecFile.readAsStringSync();
     final pubspec = loadYaml(pubspecContents) as YamlMap;
-    final codegenConfig = pubspec['supabase_codegen'] as YamlMap;
+    final codegenConfig = pubspec['supabase_codegen'] as YamlMap? ?? {};
 
     /// Get the parser for the argument.
     /// If an option is not set the default value will be extracted from
@@ -44,7 +44,7 @@ void main(List<String> args) async {
       ..addFlag(
         debugOption,
         abbr: debugOption[0],
-        defaultsTo: codegenConfig[debugOption] as bool,
+        defaultsTo: codegenConfig[debugOption] as bool? ?? false,
       );
     final results = parser.parse(args);
 
@@ -70,7 +70,7 @@ void main(List<String> args) async {
     await generateSupabaseTypes(
       envFilePath: envFilePath,
       outputFolder: outputFolder,
-      tag: tag,
+      fileTag: tag,
     );
 
     /// Format generated files

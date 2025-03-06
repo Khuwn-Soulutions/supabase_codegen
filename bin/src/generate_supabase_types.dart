@@ -12,6 +12,9 @@ late SupabaseClient client;
 /// Root directory path for generating files
 late String root;
 
+/// Tag
+String tag = '';
+
 /// Enums file name
 const enumsFileName = 'supabase_enums';
 
@@ -35,8 +38,11 @@ typedef FieldNameTypeMap = Map<String, ColumnData>;
 Future<void> generateSupabaseTypes({
   required String envFilePath,
   required String outputFolder,
-  String tag = '',
+  String fileTag = '',
 }) async {
+  /// Set tag
+  tag = fileTag;
+
   /// Set root folder
   root = outputFolder;
 
@@ -113,7 +119,7 @@ Future<void> generateSupabaseTypes({
     await generateSchemaFiles(tables);
 
     // Generate database files
-    await _generateDatabaseFiles(tables, tag: tag);
+    await _generateDatabaseFiles(tables);
 
     logger.i('[GenerateTypes] Successfully generated types');
   } catch (e) {
@@ -136,9 +142,8 @@ Future<void> _createDirectories() async {
 }
 
 Future<void> _generateDatabaseFiles(
-  Map<String, List<Map<String, dynamic>>> tables, {
-  String tag = '',
-}) async {
+  Map<String, List<Map<String, dynamic>>> tables,
+) async {
   logger
     ..i('[GenerateDatabaseFiles] Generating database files...')
     ..d('Writing files to $root');
@@ -147,14 +152,17 @@ Future<void> _generateDatabaseFiles(
 
   // Generate database.dart
   final databaseFile = File('$root/database.dart');
-  final dbBuffer = StringBuffer()
-    ..writeln("export 'enums/$enumsFileName.dart';");
+  final dbBuffer = StringBuffer();
+  writeHeader(dbBuffer);
+  dbBuffer.writeln("export 'enums/$enumsFileName.dart';");
 
   // Export all table files
   for (final tableName in tables.keys) {
     final fileName = tableName.toLowerCase();
     dbBuffer.writeln("export 'tables/$fileName.dart';");
   }
+
+  writeFooter(dbBuffer);
 
   await databaseFile.writeAsString(dbBuffer.toString());
 
@@ -195,7 +203,6 @@ Future<void> _generateDatabaseFiles(
       columns: columns,
       directory: directory,
       fieldNameTypeMap: fieldNameTypeMap,
-      tag: tag,
     );
   }
 }
