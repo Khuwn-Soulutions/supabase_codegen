@@ -98,7 +98,7 @@ void _writeTableClass({
     ..writeln('    /// Create a [$rowClass] from the [data] provided')
     ..writeln('  @override')
     ..writeln('  $rowClass createRow(Map<String, dynamic> data) =>')
-    ..writeln('      $rowClass(data);')
+    ..writeln('      $rowClass.fromJson(data);')
     ..writeln('}')
     ..writeln();
 }
@@ -166,7 +166,44 @@ void _writeRowClass({
   /// Close the constructor
   buffer
     ..writeln('  });')
-    ..writeln();
+    ..writeln()
+
+    /// Create the row from a json map
+    ..writeln('  /// Create $classDesc Row from a [data] map')
+    ..writeln('  factory $rowClass.fromJson(Map<String, dynamic> data) {')
+    ..writeln('    return $rowClass(');
+
+  for (final entry in entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
+    final fieldName = entry.key;
+
+    /// Do not set the value for optional fields in data
+    /// This will ensure that they are registered as null in the database
+    /// or the default value set within the database
+    final isOptional = isNullable || hasDefault;
+    final value = isEnum
+        ? "$dartType.values.byName(data['$columnName'] as String)"
+        : switch (dartType) {
+            'DateTime' => "data['$columnName'] == null ? null : "
+                "DateTime.parse(data['$columnName'] as String)",
+            _ => "data['$columnName'] as $dartType${isOptional ? '?' : ''}"
+          };
+
+    /// Write line to set the field in the data map to be sent to database
+    buffer.writeln(
+      '        $fieldName: $value,',
+    );
+  }
+  buffer
+    ..writeln('    );')
+    ..writeln('  }');
 
   // Generate getters and setters for each column
   _writeFields(
@@ -174,7 +211,6 @@ void _writeRowClass({
     buffer: buffer,
     tableClass: tableClass,
   );
-
   // Write copyWith
   _writeCopyWith(buffer: buffer, entries: entries, rowClass: rowClass);
 
