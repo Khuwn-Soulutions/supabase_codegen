@@ -52,18 +52,18 @@ Future<void> generateSupabaseTypes({
   // Get the config from env
   final supabaseUrl = dotenv['SUPABASE_URL']!;
   final supabaseAnonKey = dotenv['SUPABASE_ANON_KEY']!;
-  logger.d('[GenerateTypes] Starting type generation');
+  logger.i('[GenerateTypes] Starting type generation');
 
   client = SupabaseClient(supabaseUrl, supabaseAnonKey);
 
   try {
     // Get table information from Supabase
-    logger.d('[GenerateTypes] Fetching schema info...');
+    logger.i('[GenerateTypes] Fetching schema info...');
     final response = await client.rpc<dynamic>('get_schema_info');
 
     // Debug raw response
     logger
-      ..d('\n[GenerateTypes] Raw Schema Response: $response')
+      ..d('[GenerateTypes] Raw Schema Response: $response')
       ..d('Response type: ${response.runtimeType}');
 
     // Modified to handle direct List response
@@ -115,7 +115,7 @@ Future<void> generateSupabaseTypes({
     // Generate database files
     await _generateDatabaseFiles(tables, tag: tag);
 
-    logger.d('[GenerateTypes] Successfully generated types');
+    logger.i('[GenerateTypes] Successfully generated types');
   } catch (e) {
     logger.d('[GenerateTypes] Error generating types: $e');
     rethrow;
@@ -139,6 +139,10 @@ Future<void> _generateDatabaseFiles(
   Map<String, List<Map<String, dynamic>>> tables, {
   String tag = '',
 }) async {
+  logger
+    ..i('[GenerateDatabaseFiles] Generating database files...')
+    ..d('Writing files to $root');
+
   final directory = Directory('$root/tables');
 
   // Generate database.dart
@@ -182,7 +186,7 @@ Future<void> _generateDatabaseFiles(
       fieldNameTypeMap[fieldName] = columnData;
 
       logger
-        ..d('\n[GenerateTableFile] Processing column: $columnName')
+        ..d('[GenerateTableFile] Processing column: $columnName')
         ..d('  Column data: $columnData');
     }
 

@@ -10,7 +10,7 @@ Future<void> generateTableFile({
   required FieldNameTypeMap fieldNameTypeMap,
   required String tag,
 }) async {
-  logger.d('\n[GenerateTableFile] Generating table file for: $tableName');
+  logger.i('[GenerateTableFile] Generating file for: $tableName');
 
   final className = tableName.toPascalCase();
   final tableClass = '${className}Table';
@@ -91,6 +91,9 @@ void _writeTableClass({
   required String tableClass,
   required String rowClass,
 }) {
+  logger.i('Creating table class for: $tableName');
+
+  /// Create the table class
   buffer
     ..writeln('/// $classDesc Table')
     ..writeln('class $tableClass extends SupabaseTable<$rowClass> {')
@@ -116,6 +119,8 @@ void _writeRowClass({
   required FieldNameTypeMap fieldNameTypeMap,
   required String tableClass,
 }) {
+  logger.i('Creating row class for: $className');
+
   /// Start the row class
   buffer
     ..writeln('/// $classDesc Row')

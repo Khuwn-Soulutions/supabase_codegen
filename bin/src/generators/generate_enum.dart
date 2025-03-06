@@ -18,7 +18,7 @@ Future<void> generateEnumsFile(
     );
 
   // Fetch enum types from database
-  logger.d('[GenerateTypes] Fetching enum types from database...');
+  logger.i('[GenerateTypes] Fetching enum types from database...');
 
   try {
     // Query to get all enum types and their values
@@ -43,7 +43,7 @@ Future<void> generateEnumsFile(
     final enums = <String, List<String>>{};
 
     // Process the response data
-    logger.d('\n[GenerateTypes] Processing enum types:');
+    logger.d('[GenerateTypes] Processing enum types:');
     for (final row in enumData) {
       final enumName = row['enum_name'] as String;
       final enumValue = (row['enum_value'] as String).replaceAll('/', '_');
@@ -57,7 +57,7 @@ Future<void> generateEnumsFile(
       enums[enumName]!.add(enumValue);
     }
 
-    logger.d('\n[GenerateTypes] Final processed enums:');
+    logger.d('[GenerateTypes] Final processed enums:');
     enums.forEach((key, values) {
       logger.d('  $key: ${values.join(', ')}');
     });
@@ -67,7 +67,7 @@ Future<void> generateEnumsFile(
         word[0].toUpperCase() + word.substring(1).toLowerCase();
 
     // Generate each enum
-    logger.d('\n[GenerateTypes] Generating enum definitions:');
+    logger.d('[GenerateTypes] Generating enum definitions:');
     enums.forEach((enumName, values) {
       // Format enum name to PascalCase and remove Enum suffix
       final formattedEnumName = enumName
@@ -87,11 +87,12 @@ Future<void> generateEnumsFile(
     });
 
     await enumFile.writeAsString(buffer.toString());
-    logger.d('[GenerateTypes] Generated enums file successfully');
+    logger.i('[GenerateTypes] Generated enums file successfully');
   } catch (e, stackTrace) {
-    logger
-      ..d('[GenerateTypes] Error generating enums: $e')
-      ..d('[GenerateTypes] Stack trace: $stackTrace');
+    logger.e(
+      '[GenerateTypes] Error generating enums: $e',
+      stackTrace: stackTrace,
+    );
     rethrow;
   }
 }
