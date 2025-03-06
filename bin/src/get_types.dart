@@ -30,7 +30,10 @@ String getDartType(Map<String, dynamic> column) {
   }
 
   // Non-array types
-  return getBaseDartType(postgresType, column: column);
+  return getBaseDartType(
+    udtName.isEmpty ? postgresType : udtName,
+    column: column,
+  );
 }
 
 String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
