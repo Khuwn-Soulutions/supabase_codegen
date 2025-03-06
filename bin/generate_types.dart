@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:args/args.dart';
-import 'src/generate_supabase_types.dart';
+import 'src/src.dart';
 
 void main(List<String> args) async {
   try {
@@ -36,7 +36,7 @@ void main(List<String> args) async {
   } on Exception catch (e) {
     // Use print to debug code
     // ignore: avoid_print
-    print('Error: $e');
+    logger.d('Error: $e');
     exit(1);
   }
 }

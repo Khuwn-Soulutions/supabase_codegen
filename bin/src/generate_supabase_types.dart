@@ -1,6 +1,3 @@
-// Allow print statements for debugging
-// ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:change_case/change_case.dart';
@@ -55,18 +52,19 @@ Future<void> generateSupabaseTypes({
   // Get the config from env
   final supabaseUrl = dotenv['SUPABASE_URL']!;
   final supabaseAnonKey = dotenv['SUPABASE_ANON_KEY']!;
-  print('[GenerateTypes] Starting type generation');
+  logger.d('[GenerateTypes] Starting type generation');
 
   client = SupabaseClient(supabaseUrl, supabaseAnonKey);
 
   try {
     // Get table information from Supabase
-    print('[GenerateTypes] Fetching schema info...');
+    logger.d('[GenerateTypes] Fetching schema info...');
     final response = await client.rpc<dynamic>('get_schema_info');
 
     // Debug raw response
-    print('\n[GenerateTypes] Raw Schema Response: $response');
-    print('Response type: ${response.runtimeType}');
+    logger
+      ..d('\n[GenerateTypes] Raw Schema Response: $response')
+      ..d('Response type: ${response.runtimeType}');
 
     // Modified to handle direct List response
     final schemaData = List<Map<String, dynamic>>.from(
@@ -82,10 +80,11 @@ Future<void> generateSupabaseTypes({
     }
 
     // Debug response data
-    print('Count: ${schemaData.length}');
+    logger.d('Count: ${schemaData.length}');
     if (schemaData.isNotEmpty) {
-      print('First column sample:');
-      print(schemaData.first);
+      logger
+        ..d('First column sample:')
+        ..d(schemaData.first);
     }
 
     // Group columns by table
@@ -102,9 +101,9 @@ Future<void> generateSupabaseTypes({
     }
 
     // After fetching schema info
-    print('\n[GenerateTypes] Available tables:');
+    logger.d('\n[GenerateTypes] Available tables:');
     for (final tableName in tables.keys) {
-      print('  - $tableName');
+      logger.d('  - $tableName');
     }
 
     // Create necessary directories
@@ -116,9 +115,9 @@ Future<void> generateSupabaseTypes({
     // Generate database files
     await _generateDatabaseFiles(tables, tag: tag);
 
-    print('[GenerateTypes] Successfully generated types');
+    logger.d('[GenerateTypes] Successfully generated types');
   } catch (e) {
-    print('[GenerateTypes] Error generating types: $e');
+    logger.d('[GenerateTypes] Error generating types: $e');
     rethrow;
   } finally {
     await client.dispose();
@@ -182,8 +181,9 @@ Future<void> _generateDatabaseFiles(
       );
       fieldNameTypeMap[fieldName] = columnData;
 
-      print('\n[GenerateTableFile] Processing column: $columnName');
-      print('  Column data: $columnData');
+      logger
+        ..d('\n[GenerateTableFile] Processing column: $columnName')
+        ..d('  Column data: $columnData');
     }
 
     await generateTableFile(

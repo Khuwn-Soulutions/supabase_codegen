@@ -10,7 +10,7 @@ Future<void> generateTableFile({
   required FieldNameTypeMap fieldNameTypeMap,
   required String tag,
 }) async {
-  print('\n[GenerateTableFile] Generating table file for: $tableName');
+  logger.d('\n[GenerateTableFile] Generating table file for: $tableName');
 
   final className = tableName.toPascalCase();
   final tableClass = '${className}Table';
