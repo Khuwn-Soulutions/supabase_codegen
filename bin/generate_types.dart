@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:logger/web.dart';
+import 'package:yaml/yaml.dart';
 import 'src/src.dart';
 
 void main(List<String> args) async {
@@ -10,18 +11,44 @@ void main(List<String> args) async {
     const outputOption = 'output';
     const tagOption = 'tag';
     const debugOption = 'debug';
+
+    /// Get default values from pubspec
+    final pubSpecFile = File('pubspec.yaml');
+    final pubspecContents = pubSpecFile.readAsStringSync();
+    final pubspec = loadYaml(pubspecContents) as YamlMap;
+    final codegenConfig = pubspec['supabase_codegen'] as YamlMap;
+
+    /// Get the parser for the argument.
+    /// If an option is not set the default value will be extracted from
+    /// the pubspec file with a predefined fallback if not set in pubspec
     final parser = ArgParser()
-      ..addOption(envOption, abbr: envOption[0], defaultsTo: '.env')
+      // Env
+      ..addOption(
+        envOption,
+        abbr: envOption[0],
+        defaultsTo: codegenConfig[envOption] as String? ?? '.env',
+      )
+      // Output Folder
       ..addOption(
         outputOption,
         abbr: outputOption[0],
-        defaultsTo: 'supabase/types',
+        defaultsTo: codegenConfig[outputOption] as String? ?? 'supabase/types',
       )
-      ..addOption(tagOption, abbr: tagOption[0], defaultsTo: '')
-      ..addFlag(debugOption, abbr: debugOption[0]);
+      // Tag
+      ..addOption(
+        tagOption,
+        abbr: tagOption[0],
+        defaultsTo: codegenConfig[tagOption] as String? ?? '',
+      )
+      // Debug
+      ..addFlag(
+        debugOption,
+        abbr: debugOption[0],
+        defaultsTo: codegenConfig[debugOption] as bool,
+      );
     final results = parser.parse(args);
 
-    // Pull out optioins
+    // Pull out options
     final envFilePath = results.option(envOption)!;
     final outputFolder = results.option(outputOption)!;
     final tag = results.option(tagOption)!;
@@ -52,7 +79,7 @@ void main(List<String> args) async {
   } on Exception catch (e) {
     // Use print to debug code
     // ignore: avoid_print
-    logger.d('Error: $e');
+    print('Error: $e');
     exit(1);
   }
 }
