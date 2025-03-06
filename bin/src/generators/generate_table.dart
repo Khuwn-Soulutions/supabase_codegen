@@ -290,7 +290,7 @@ void _writeCopyWith({
 }) {
   /// Write the copyWith method
   buffer
-    ..writeln('/// Make a copy of the current [$rowClass] overriding '
+    ..writeln('  /// Make a copy of the current [$rowClass] overriding '
         'the provided fields')
     ..writeln('  $rowClass copyWith({');
 
@@ -315,25 +315,16 @@ void _writeCopyWith({
   /// Close method
   buffer
     ..writeln('  }) =>')
-    ..writeln('    $rowClass({');
+    ..writeln('    $rowClass(');
 
   /// Overwrite the current data value with the incoming value
   for (final entry in entries) {
-    final (
-      :dartType,
-      :isNullable,
-      :hasDefault,
-      :columnName,
-      :isArray,
-      :isEnum
-    ) = entry.value;
     final fieldName = entry.key;
-    final enumName = isEnum ? '?.name' : '';
 
     buffer.writeln(
-      "      '$columnName': $fieldName$enumName ?? data['$columnName'],",
+      '      $fieldName: $fieldName ?? this.$fieldName,',
     );
   }
 
-  buffer.writeln('    });');
+  buffer.writeln('    );');
 }
