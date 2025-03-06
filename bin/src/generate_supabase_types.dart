@@ -38,6 +38,7 @@ typedef FieldNameTypeMap = Map<String, ColumnData>;
 Future<void> generateSupabaseTypes({
   required String envFilePath,
   required String outputFolder,
+  String tag = '',
 }) async {
   /// Set root folder
   root = outputFolder;
@@ -113,7 +114,7 @@ Future<void> generateSupabaseTypes({
     await generateSchemaFiles(tables);
 
     // Generate database files
-    await _generateDatabaseFiles(tables);
+    await _generateDatabaseFiles(tables, tag: tag);
 
     print('[GenerateTypes] Successfully generated types');
   } catch (e) {
@@ -136,8 +137,9 @@ Future<void> _createDirectories() async {
 }
 
 Future<void> _generateDatabaseFiles(
-  Map<String, List<Map<String, dynamic>>> tables,
-) async {
+  Map<String, List<Map<String, dynamic>>> tables, {
+  String tag = '',
+}) async {
   final directory = Directory('$root/tables');
 
   // Generate database.dart
@@ -189,6 +191,7 @@ Future<void> _generateDatabaseFiles(
       columns: columns,
       directory: directory,
       fieldNameTypeMap: fieldNameTypeMap,
+      tag: tag,
     );
   }
 }

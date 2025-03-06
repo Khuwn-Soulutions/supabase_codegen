@@ -7,20 +7,27 @@ void main(List<String> args) async {
     /// Parse options from command line
     const envOption = 'env';
     const outputOption = 'output';
+    const tagOption = 'tag';
     final parser = ArgParser()
       ..addOption(envOption, abbr: envOption[0], defaultsTo: '.env')
       ..addOption(
         outputOption,
         abbr: outputOption[0],
         defaultsTo: 'supabase/types',
-      );
+      )
+      ..addOption(tagOption, abbr: tagOption[0], defaultsTo: '');
     final results = parser.parse(args);
-    final outputFolder = results.option(outputOption)!;
 
-    /// Generate the types using hte command line options
+    // Pull out optioins
+    final envFilePath = results.option(envOption)!;
+    final outputFolder = results.option(outputOption)!;
+    final tag = results.option(tagOption)!;
+
+    /// Generate the types using the command line options
     await generateSupabaseTypes(
-      envFilePath: results.option(envOption)!,
+      envFilePath: envFilePath,
       outputFolder: outputFolder,
+      tag: tag,
     );
 
     /// Format generated files
