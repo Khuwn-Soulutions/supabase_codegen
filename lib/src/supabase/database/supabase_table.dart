@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 
@@ -53,9 +54,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
           .select()
           .maybeSingle()
           .catchError((dynamic e) {
-        // Debug Error
-        // ignore: avoid_print
-        print('Error querying row: $e'); // coverage:ignore-line
+        Logger().e('Error querying row: $e'); // coverage:ignore-line
         return null;
       }).then((r) => r != null ? createRow(r) : null);
 
