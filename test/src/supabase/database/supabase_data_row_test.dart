@@ -10,7 +10,7 @@ void main() {
     final firstField = userData.keys.first;
     const listField = 'contacts';
     final contacts = userData[listField] as List<String>;
-    setUp(() => user = UsersRow(userData));
+    setUp(() => user = UsersRow.fromJson(userData));
 
     test('can be created with data', () {
       expect(user, isNotNull);
@@ -19,7 +19,7 @@ void main() {
     group('created with fields', () {
       late UsersRow row;
       setUp(() {
-        row = UsersRow.withFields(
+        row = UsersRow(
           role: user.role,
           email: user.email,
         );
@@ -127,7 +127,7 @@ void main() {
     });
 
     test('== equates rows', () {
-      final usersRow = UsersRow(userData);
+      final usersRow = UsersRow.fromJson(userData);
       expect(user, usersRow);
       expect(user == usersRow, isTrue);
     });
