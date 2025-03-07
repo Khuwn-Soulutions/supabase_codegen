@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:meta/meta.dart';
-import 'package:quiver/collection.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Supabase data row
@@ -62,7 +61,8 @@ ${data.entries.map(
 
   @override
   bool operator ==(Object other) =>
-      other is SupabaseDataRow && mapsEqual(other.data, data);
+      other is SupabaseDataRow &&
+      const DeepCollectionEquality().equals(other.data, data);
 
   /// Serialize the [value] provided
   dynamic supaSerialize<T>(T? value) {
