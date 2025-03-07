@@ -1,11 +1,15 @@
-CREATE TYPE "public"."User_Role" AS ENUM ('admin', 'user');
+create type "public"."User_Role" as enum ('admin', 'user');
 
 create table "public"."test_generate" (
     "id" uuid not null default gen_random_uuid(),
     "created_at" timestamp with time zone not null default now(),
     "is_nullable" text,
     "is_array" text[],
-    "is_not_nullable" text not null
+    "is_not_nullable" text not null,
+    "is_int" smallint,
+    "is_double" numeric,
+    "is_bool" boolean,
+    "is_json" jsonb
 );
 
 

@@ -120,6 +120,7 @@ enum UserRole {
   admin,
   user,
 }
+
 /// Users Table
 class UsersTable extends SupabaseTable<UsersRow> {
   /// Table Name
@@ -128,16 +129,13 @@ class UsersTable extends SupabaseTable<UsersRow> {
 
   /// Create a [UsersRow] from the [data] provided
   @override
-  UsersRow createRow(Map<String, dynamic> data) => UsersRow(data);
+  UsersRow createRow(Map<String, dynamic> data) => UsersRow.fromJson(data);
 }
 
 /// Users Row
 class UsersRow extends SupabaseDataRow {
   /// Users Row
-  const UsersRow(super.data);
-
-  /// Construct Users Row using fields
-  factory UsersRow.withFields({
+  UsersRow({
     required String email,
     required UserRole role,
     String? id,
@@ -145,16 +143,21 @@ class UsersRow extends SupabaseDataRow {
     String? phoneNumber,
     List<String>? contacts,
     DateTime? createdAt,
-  }) =>
-      UsersRow({
-        'email': email,
-        'role': role.name,
-        if (id != null) 'id': id,
-        if (accName != null) 'acc_name': accName,
-        if (phoneNumber != null) 'phone_number': phoneNumber,
-        if (contacts != null) 'contacts': contacts,
-        if (createdAt != null) 'created_at': createdAt,
-      });
+  }) : super({
+          'email': supaSerialize(email),
+          'role': supaSerialize(role),
+          if (id != null) 'id': supaSerialize(id),
+          if (accName != null) 'acc_name': supaSerialize(accName),
+          if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
+          if (contacts != null) 'contacts': supaSerialize(contacts),
+          if (createdAt != null) 'created_at': supaSerialize(createdAt),
+        });
+
+  /// Users Row
+  const UsersRow._(super.data);
+
+  /// Create Users Row from a [data] map
+  factory UsersRow.fromJson(Map<String, dynamic> data) => UsersRow._(data);
 
   /// Get the [SupabaseTable] for this row
   @override
@@ -222,15 +225,15 @@ class UsersRow extends SupabaseDataRow {
     List<String>? contacts,
     DateTime? createdAt,
   }) =>
-      UsersRow({
-        'email': email ?? data['email'],
-        'role': role?.name ?? data['role'],
-        'id': id ?? data['id'],
-        'acc_name': accName ?? data['acc_name'],
-        'phone_number': phoneNumber ?? data['phone_number'],
-        'contacts': contacts ?? data['contacts'],
-        'created_at': createdAt ?? data['created_at'],
-      });
+      UsersRow(
+        email: email ?? this.email,
+        role: role ?? this.role,
+        id: id ?? this.id,
+        accName: accName ?? this.accName,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        contacts: contacts ?? this.contacts,
+        createdAt: createdAt ?? this.createdAt,
+      );
 }
 
 ```

@@ -4,7 +4,7 @@ import '../mocks/mocks.dart';
 
 void main() {
   loadMockSupabaseClient();
-  final user = UsersRow(userData);
+  final user = UsersRow.fromJson(userData);
   final table = UsersTable();
   const otherEmail = 'other@others.com';
   final otherData = {
@@ -142,7 +142,7 @@ void main() {
       });
 
       test('updates data in table using upsertRow', () async {
-        await table.upsertRow(UsersRow(otherData));
+        await table.upsertRow(UsersRow.fromJson(otherData));
         final updated = await table.querySingleRow(
           queryFn: (q) => q.eq(UsersRow.idField, user.id),
         );
@@ -216,7 +216,7 @@ void main() {
           test('SupabaseDataRow', () async {
             result = await table.update(
               matchingRows: (q) => q.eq(UsersRow.emailField, user.email),
-              row: UsersRow(newData),
+              row: UsersRow.fromJson(newData),
               returnRows: true,
             );
             testUpdatedResult();

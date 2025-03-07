@@ -1,7 +1,7 @@
 import 'src.dart';
 
 String getDartType(Map<String, dynamic> column) {
-  final postgresType = column['data_type'] as String;
+  final postgresType = (column['data_type'] as String).toLowerCase();
   final udtName = column['udt_name'] as String? ?? '';
 
   // Improved array detection
@@ -30,11 +30,14 @@ String getDartType(Map<String, dynamic> column) {
   }
 
   // Non-array types
-  return getBaseDartType(postgresType, column: column);
+  return getBaseDartType(
+    postgresType == 'user-defined' ? postgresType : udtName,
+    column: column,
+  );
 }
 
 String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
-  switch (postgresType.toLowerCase()) {
+  switch (postgresType) {
     /// String
     case 'text':
     case 'varchar':

@@ -98,7 +98,7 @@ void _writeTableClass({
     ..writeln('    /// Create a [$rowClass] from the [data] provided')
     ..writeln('  @override')
     ..writeln('  $rowClass createRow(Map<String, dynamic> data) =>')
-    ..writeln('      $rowClass(data);')
+    ..writeln('      $rowClass.fromJson(data);')
     ..writeln('}')
     ..writeln();
 }
@@ -120,12 +120,7 @@ void _writeRowClass({
     ..writeln('/// $classDesc Row')
     ..writeln('class $rowClass extends SupabaseDataRow {')
     ..writeln('  /// $classDesc Row')
-    ..writeln('  const $rowClass(super.data);')
-    ..writeln()
-
-    /// Write constructor to use fields
-    ..writeln('  /// Construct $classDesc Row using fields')
-    ..writeln('  factory $rowClass.withFields({');
+    ..writeln('  $rowClass({');
 
   for (final entry in entries) {
     final (
@@ -144,7 +139,7 @@ void _writeRowClass({
   }
 
   /// Write redirect constructor
-  buffer.writeln('  })  => ${className}Row({');
+  buffer.writeln('  }): super({');
   for (final entry in entries) {
     final (
       :dartType,
@@ -164,14 +159,22 @@ void _writeRowClass({
 
     /// Write line to set the field in the data map to be sent to database
     buffer.writeln(
-      "    $ifNull'$columnName': $fieldName${isEnum ? '.name' : ''},",
+      "    $ifNull'$columnName': supaSerialize($fieldName),",
     );
   }
 
   /// Close the constructor
   buffer
     ..writeln('  });')
-    ..writeln();
+    ..writeln()
+    ..writeln('  /// $classDesc Row')
+    ..writeln('  const $rowClass._(super.data);')
+    ..writeln()
+
+    /// Create the row from a json map
+    ..writeln('  /// Create $classDesc Row from a [data] map')
+    ..writeln('  factory $rowClass.fromJson(Map<String, dynamic> data) => '
+        '$rowClass._(data);');
 
   // Generate getters and setters for each column
   _writeFields(
@@ -179,7 +182,6 @@ void _writeRowClass({
     buffer: buffer,
     tableClass: tableClass,
   );
-
   // Write copyWith
   _writeCopyWith(buffer: buffer, entries: entries, rowClass: rowClass);
 
@@ -259,7 +261,7 @@ void _writeCopyWith({
 }) {
   /// Write the copyWith method
   buffer
-    ..writeln('/// Make a copy of the current [$rowClass] overriding '
+    ..writeln('  /// Make a copy of the current [$rowClass] overriding '
         'the provided fields')
     ..writeln('  $rowClass copyWith({');
 
@@ -284,25 +286,16 @@ void _writeCopyWith({
   /// Close method
   buffer
     ..writeln('  }) =>')
-    ..writeln('    $rowClass({');
+    ..writeln('    $rowClass(');
 
   /// Overwrite the current data value with the incoming value
   for (final entry in entries) {
-    final (
-      :dartType,
-      :isNullable,
-      :hasDefault,
-      :columnName,
-      :isArray,
-      :isEnum
-    ) = entry.value;
     final fieldName = entry.key;
-    final enumName = isEnum ? '?.name' : '';
 
     buffer.writeln(
-      "      '$columnName': $fieldName$enumName ?? data['$columnName'],",
+      '      $fieldName: $fieldName ?? this.$fieldName,',
     );
   }
 
-  buffer.writeln('    });');
+  buffer.writeln('    );');
 }
