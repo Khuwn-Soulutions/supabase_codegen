@@ -190,11 +190,14 @@ void _writeRowClass({
     final isOptional = isNullable || hasDefault;
     final value = isEnum
         ? "$dartType.values.byName(data['$columnName'] as String)"
-        : switch (dartType) {
-            'DateTime' => "data['$columnName'] == null ? null : "
-                "DateTime.parse(data['$columnName'] as String)",
-            _ => "data['$columnName'] as $dartType${isOptional ? '?' : ''}"
-          };
+        : dartType.startsWith('List')
+            ? "data['$columnName'] == null ? null : "
+                "$dartType.from(data['$columnName'] as List<dynamic>)"
+            : switch (dartType) {
+                'DateTime' => "data['$columnName'] == null ? null : "
+                    "DateTime.parse(data['$columnName'] as String)",
+                _ => "data['$columnName'] as $dartType${isOptional ? '?' : ''}"
+              };
 
     /// Write line to set the field in the data map to be sent to database
     buffer.writeln(
