@@ -159,7 +159,7 @@ void _writeRowClass({
 
     /// Write line to set the field in the data map to be sent to database
     buffer.writeln(
-      "    $ifNull'$columnName': $fieldName${isEnum ? '.name' : ''},",
+      "    $ifNull'$columnName': supaSerialize($fieldName),",
     );
   }
 
