@@ -111,11 +111,11 @@ ${data.entries.map(
         return (value as num).round() as T?;
       case const (double):
         return (value as num).toDouble() as T?;
-      case DateTime _:
+      case const (DateTime):
         return DateTime.tryParse(value as String)?.toLocal() as T?;
-      case PostgresTime _:
+      case const (PostgresTime):
         return PostgresTime.tryParse(value as String) as T?;
-      case LatLng _:
+      case const (LatLng):
         final latLng =
             value is Map ? value : json.decode(value as String) as Map;
         final lat = latLng['lat'] ?? latLng['latitude'];
