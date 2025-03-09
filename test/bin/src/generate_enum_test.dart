@@ -49,7 +49,7 @@ void main() {
         enumRpc,
         (params, tables) => enumData,
       );
-      await generateEnumsFile(testEnumsDir);
+      await generateEnums(testEnumsDir);
 
       final enumFile = File('${testEnumsDir.path}/$enumsFileName.dart');
       expect(enumFile.existsSync(), isTrue);

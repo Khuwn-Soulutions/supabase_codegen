@@ -4,7 +4,7 @@ import 'package:change_case/change_case.dart';
 
 import '../src.dart';
 
-Future<void> generateEnumsFile(Directory enumsDir) async {
+Future<void> generateEnums(Directory enumsDir) async {
   final enumFile = File('${enumsDir.path}/$enumsFileName.dart');
   // Add header comment and imports
   final buffer = StringBuffer();
