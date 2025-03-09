@@ -15,8 +15,8 @@ void main() {
     const testEnumName = 'enum_test';
     const testOutputFolder = 'test/test_output_enums';
     logger = Logger(
-      level: Level.debug,
-      filter: DevelopmentFilter(),
+      level: Level.off,
+      filter: ProductionFilter(),
       printer: PrettyPrinter(
         methodCount: 0,
         excludeBox: {Level.debug: true, Level.info: true},
