@@ -71,7 +71,6 @@ void main(List<String> args) async {
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       fileTag: tag,
-      libVersion: pubspec['version'] as String,
     );
 
     /// Format generated files
