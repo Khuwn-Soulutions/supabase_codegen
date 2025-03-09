@@ -18,6 +18,4 @@ void writeFooter(StringBuffer buffer) {
   if (tag.isNotEmpty) {
     buffer.writeln('/// Tag: $tag');
   }
-
-  buffer.writeln();
 }
