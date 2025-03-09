@@ -240,6 +240,36 @@ class UsersRow extends SupabaseDataRow {
 
 ## 🚀 Usage Examples
 
+### Creating Records
+
+```dart
+final usersTable = UsersTable();
+
+// Create new record
+final adminUser = await usersTable.insert({
+  UsersRow.emailField: 'john@example.com',
+  UsersRow.roleField: UserRole.admin.name,
+  UsersRow.accNameField: 'John Doe',
+  UsersRow.phoneNumberField: '+1234567890',
+});
+
+// The returned object is already typed
+print(adminUser.email);
+print(adminUser.accName);
+
+/// Create new record with row object
+final user = UsersRow(
+  email: 'user@example.com',
+  role: UserRole.user,
+  accName: 'Regular User',
+  contacts: [
+    adminUser.email,
+  ],
+);
+
+await usersTable.insertRow(user);
+```
+
 ### Reading Data
 
 ```dart
@@ -279,24 +309,6 @@ final recentUsers = await usersTable.queryRows(
   .ilike(UsersRow.emailField, '%@gmail.com')
   .order(UsersRow.createdAtField, ascending: false),
 );
-```
-
-### Creating Records
-
-```dart
-final usersTable = UsersTable();
-
-// Create new record
-final adminUser = await usersTable.insert({
-  UsersRow.emailField: 'john@example.com',
-  UsersRow.roleField: UserRole.user.name,
-  UsersRow.accNameField: 'John Doe',
-  UsersRow.phoneNumberField: '+1234567890',
-});
-
-// The returned object is already typed
-print(adminUser.email);
-print(adminUser.accName);
 ```
 
 ### Updating Records
