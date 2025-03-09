@@ -5,7 +5,8 @@ void writeHeader(StringBuffer buffer) {
   buffer
     ..writeln('//')
     ..writeln('//  Generated file. Do not edit.')
-    ..writeln('//');
+    ..writeln('//')
+    ..writeln();
 }
 
 /// Write the file footer
