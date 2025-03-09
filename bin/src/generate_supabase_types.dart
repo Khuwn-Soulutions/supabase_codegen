@@ -134,12 +134,12 @@ Future<void> generateSupabaseTypes({
 
 Future<void> _createDirectories() async {
   final dirs = [
-    '$root/tables',
-    '$root/enums',
+    'tables',
+    'enums',
   ];
 
   for (final dir in dirs) {
-    await Directory(dir).create(recursive: true);
+    await Directory('$root/$dir').create(recursive: true);
   }
 }
 
