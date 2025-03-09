@@ -277,7 +277,7 @@ final usersTable = UsersTable();
 
 // Fetch a single user
 final user = await usersTable.querySingleRow(
-  queryFn: (q) => q.eq(UsersRow.idField, 123),
+  queryFn: (q) => q.eq(UsersRow.idField, '123'),
 );
 
 // Access typed properties
@@ -316,17 +316,28 @@ final recentUsers = await usersTable.queryRows(
 ```dart
 final usersTable = UsersTable();
 
-// Update by query
+// Update by query (with data)
 await usersTable.update(
   data: {'acc_name': 'Jane Doe'},
-  matchingRows: (q) => q.eq('id', 123),
+  matchingRows: (q) => q.eq('id', '123'),
 );
 
 // Update with return value
 final updatedUsers = await usersTable.update(
   data: {'role': UserRole.admin.name},
-  matchingRows: (q) => q.in_(UsersRow.idField, [1, 2, 3]),
+  matchingRows: (q) => q.in_(UsersRow.idField, ['1', '2', '3']),
   returnRows: true,
+);
+
+// Update by query (with row)
+await usersTable.update(
+  row: user.copyWith(
+    contacts: [
+      ...user.contacts,
+      'some_other_user@example.com',
+    ],
+  ),
+  matchingRows: (q) => q.eq(UsersRow.idField, user.id),
 );
 ```
 
@@ -336,7 +347,7 @@ final updatedUsers = await usersTable.update(
 final usersTable = UsersTable();
 
 // Delete single record
-  await usersTable.delete(
+await usersTable.delete(
   matchingRows: (q) => q.eq(UsersRow.idField, 123),
 );
 
