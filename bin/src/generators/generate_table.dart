@@ -299,3 +299,24 @@ void _writeCopyWith({
 
   buffer.writeln('    );');
 }
+
+/// Helper to get the default value for a given Dart type.
+String getDefaultValue(String dartType) {
+  switch (dartType) {
+    case 'int':
+      return '0';
+    case 'double':
+      return '0.0';
+    case 'bool':
+      return 'false';
+    case 'String':
+      return "''";
+    case 'DateTime':
+      return 'DateTime.now()';
+    default:
+      if (dartType.startsWith('List<')) {
+        return 'const []';
+      }
+      return 'null';
+  }
+}
