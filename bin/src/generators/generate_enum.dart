@@ -11,8 +11,6 @@ Future<void> generateEnums(Directory enumsDir) async {
 
   writeHeader(buffer);
 
-  buffer.writeln();
-
   // Fetch enum types from database
   logger.i('[GenerateTypes] Fetching enum types from database...');
 
@@ -53,14 +51,9 @@ Future<void> generateEnums(Directory enumsDir) async {
       enums[enumName]!.add(enumValue);
     }
 
-    logger.d('[GenerateTypes] Final processed enums:');
-    enums.forEach((key, values) {
-      logger.d('  $key: ${values.join(', ')}');
-    });
-
     // Generate each enum
     logger.d('[GenerateTypes] Generating enum definitions:');
-    enums.forEach((enumName, values) {
+    enums.forEach((enumName, values) async {
       // Format enum name to PascalCase and remove Enum suffix
       final formattedEnumName = enumName
           .split('_')
@@ -71,20 +64,38 @@ Future<void> generateEnums(Directory enumsDir) async {
       logger.d('  Processing: $enumName -> $formattedEnumName');
       formattedEnums[enumName] = formattedEnumName;
 
+      final enumBuffer = StringBuffer();
+      final fileName = formattedEnumName.toSnakeCase();
+      final enumFile = File('${enumsDir.path}/$fileName.dart');
+
+      /// Add header comment and imports
+      writeHeader(enumBuffer);
+
       /// Document and start enum declaration
-      buffer
+      enumBuffer
         ..writeln('/// ${formattedEnumName.toCapitalCase()} enum')
         ..writeln('enum $formattedEnumName {');
 
       /// Write enum fields
       for (final value in values) {
-        buffer.writeln('  $value,');
+        enumBuffer.writeln('  $value,');
       }
 
       /// Close enum declaration
-      buffer
+      enumBuffer
         ..writeln('}')
         ..writeln();
+
+      /// Write footer
+      writeFooter(enumBuffer);
+
+      /// Write file to disk
+      enumFile.writeAsStringSync(enumBuffer.toString());
+
+      logger.i('[GenerateTypes] Generated enum file: $fileName');
+
+      /// Write the filename to the main buffer file
+      buffer.writeln("export '$fileName.dart';");
     });
 
     /// Write footer
