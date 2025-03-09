@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import '../../../bin/src/src.dart';
+import '../../../../bin/src/src.dart';
 
 void main() {
   group('writeHeader and writeFooter', () {
