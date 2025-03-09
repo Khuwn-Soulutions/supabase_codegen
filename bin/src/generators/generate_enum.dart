@@ -82,12 +82,15 @@ Future<void> generateEnumsFile(Directory enumsDir) async {
       }
 
       /// Close enum declaration
-      buffer.writeln('}');
-
-      /// Write footer
-      writeFooter(buffer);
+      buffer
+        ..writeln('}')
+        ..writeln();
     });
 
+    /// Write footer
+    writeFooter(buffer);
+
+    /// Write file to disk
     await enumFile.writeAsString(buffer.toString());
     logger.i('[GenerateTypes] Generated enums file successfully');
   } catch (e, stackTrace) {
