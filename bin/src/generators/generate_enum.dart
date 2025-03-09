@@ -29,7 +29,7 @@ Future<void> generateEnumsFile(Directory enumsDir) async {
           :
           // Get data from the response if not a List
           // ignore: avoid_dynamic_calls
-          response.data as List,
+          response['data'] as List,
     );
 
     logger
