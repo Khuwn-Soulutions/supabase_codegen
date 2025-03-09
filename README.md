@@ -341,6 +341,33 @@ await usersTable.update(
 );
 ```
 
+### Upserting Records
+
+```dart
+final usersTable = UsersTable();
+
+// Upsert with data
+final otherAdmin = await usersTable.upsert(
+  {
+    UsersRow.idField: '123',
+    UsersRow.emailField: 'jane@example.com',
+    UsersRow.roleField: UserRole.admin.name,
+    UsersRow.accNameField: 'Jane Doe',
+  },
+);
+
+// Upsert with row
+final user = await usersTable.querySingleRow(
+  queryFn: (q) => q.eq(UsersRow.idField, '123'),
+);
+
+final updatedUser = await usersTable.upsertRow(
+  user.copyWith(role: User.admin),
+  onConflict: '${UsersRow.idField}, ${UsersRow.emailField}',
+);
+print(updatedUser.role); // UserRole.admin
+```
+
 ### Deleting Records
 
 ```dart
