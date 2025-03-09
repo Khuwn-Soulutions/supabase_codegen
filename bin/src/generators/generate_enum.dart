@@ -58,17 +58,13 @@ Future<void> generateEnumsFile(Directory enumsDir) async {
       logger.d('  $key: ${values.join(', ')}');
     });
 
-    /// Function to convert [word] to TitleCase
-    String toTitleCase(String word) =>
-        word[0].toUpperCase() + word.substring(1).toLowerCase();
-
     // Generate each enum
     logger.d('[GenerateTypes] Generating enum definitions:');
     enums.forEach((enumName, values) {
       // Format enum name to PascalCase and remove Enum suffix
       final formattedEnumName = enumName
           .split('_')
-          .map(toTitleCase)
+          .map((word) => word.toTitleCase())
           .join()
           .replaceAll(RegExp(r'Enum$'), '');
 
