@@ -83,7 +83,20 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
       );
 
   /// Upsert the [data] in the table and return
-  /// the [SupabaseDataRow] representation of that row
+  /// the [SupabaseDataRow] representation of that row.
+  ///
+  /// By specifying the [onConflict] parameter, you can make UPSERT work on
+  /// a column(s) that has a UNIQUE constraint.
+  /// [ignoreDuplicates] Specifies if duplicate rows should be ignored
+  /// and not inserted.
+  ///
+  /// When inserting multiple rows in bulk, [defaultToNull] is used to
+  /// set the values of fields missing in a proper subset of rows to be
+  /// either NULL or the default value of these columns.
+  /// Fields missing in all rows always use the default value of these columns.
+  ///
+  /// For single row insertions, missing fields will be set to default
+  /// values when applicable.
   Future<T> upsert(
     Map<String, dynamic> data, {
     String? onConflict,

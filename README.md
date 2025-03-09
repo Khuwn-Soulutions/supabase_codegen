@@ -240,6 +240,36 @@ class UsersRow extends SupabaseDataRow {
 
 ## 🚀 Usage Examples
 
+### Creating Records
+
+```dart
+final usersTable = UsersTable();
+
+// Create new record
+final adminUser = await usersTable.insert({
+  UsersRow.emailField: 'john@example.com',
+  UsersRow.roleField: UserRole.admin.name,
+  UsersRow.accNameField: 'John Doe',
+  UsersRow.phoneNumberField: '+1234567890',
+});
+
+// The returned object is already typed
+print(adminUser.email);
+print(adminUser.accName);
+
+/// Create new record with row object
+final user = UsersRow(
+  email: 'user@example.com',
+  role: UserRole.user,
+  accName: 'Regular User',
+  contacts: [
+    adminUser.email,
+  ],
+);
+
+await usersTable.insertRow(user);
+```
+
 ### Reading Data
 
 ```dart
@@ -247,7 +277,7 @@ final usersTable = UsersTable();
 
 // Fetch a single user
 final user = await usersTable.querySingleRow(
-  queryFn: (q) => q.eq(UsersRow.idField, 123),
+  queryFn: (q) => q.eq(UsersRow.idField, '123'),
 );
 
 // Access typed properties
@@ -281,41 +311,61 @@ final recentUsers = await usersTable.queryRows(
 );
 ```
 
-### Creating Records
-
-```dart
-final usersTable = UsersTable();
-
-// Create new record
-final adminUser = await usersTable.insert({
-  UsersRow.emailField: 'john@example.com',
-  UsersRow.roleField: UserRole.user.name,
-  UsersRow.accNameField: 'John Doe',
-  UsersRow.phoneNumberField: '+1234567890',
-});
-
-// The returned object is already typed
-print(adminUser.email);
-print(adminUser.accName);
-```
-
 ### Updating Records
 
 ```dart
 final usersTable = UsersTable();
 
-// Update by query
+// Update by query (with data)
 await usersTable.update(
   data: {'acc_name': 'Jane Doe'},
-  matchingRows: (q) => q.eq('id', 123),
+  matchingRows: (q) => q.eq('id', '123'),
 );
 
 // Update with return value
 final updatedUsers = await usersTable.update(
   data: {'role': UserRole.admin.name},
-  matchingRows: (q) => q.in_(UsersRow.idField, [1, 2, 3]),
+  matchingRows: (q) => q.in_(UsersRow.idField, ['1', '2', '3']),
   returnRows: true,
 );
+
+// Update by query (with row)
+await usersTable.update(
+  row: user.copyWith(
+    contacts: [
+      ...user.contacts,
+      'some_other_user@example.com',
+    ],
+  ),
+  matchingRows: (q) => q.eq(UsersRow.idField, user.id),
+);
+```
+
+### Upserting Records
+
+```dart
+final usersTable = UsersTable();
+
+// Upsert with data
+final otherAdmin = await usersTable.upsert(
+  {
+    UsersRow.idField: '123',
+    UsersRow.emailField: 'jane@example.com',
+    UsersRow.roleField: UserRole.admin.name,
+    UsersRow.accNameField: 'Jane Doe',
+  },
+);
+
+// Upsert with row
+final user = await usersTable.querySingleRow(
+  queryFn: (q) => q.eq(UsersRow.idField, '123'),
+);
+
+final updatedUser = await usersTable.upsertRow(
+  user.copyWith(role: User.admin),
+  onConflict: '${UsersRow.idField}, ${UsersRow.emailField}',
+);
+print(updatedUser.role); // UserRole.admin
 ```
 
 ### Deleting Records
@@ -324,7 +374,7 @@ final updatedUsers = await usersTable.update(
 final usersTable = UsersTable();
 
 // Delete single record
-  await usersTable.delete(
+await usersTable.delete(
   matchingRows: (q) => q.eq(UsersRow.idField, 123),
 );
 
