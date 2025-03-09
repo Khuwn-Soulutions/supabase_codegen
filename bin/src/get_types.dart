@@ -1,5 +1,6 @@
 import 'src.dart';
 
+/// Get the dart type for the provided [column]
 String getDartType(Map<String, dynamic> column) {
   final postgresType = (column['data_type'] as String).toLowerCase();
   final udtName = column['udt_name'] as String? ?? '';
@@ -36,6 +37,8 @@ String getDartType(Map<String, dynamic> column) {
   );
 }
 
+/// Get the base dart type for the [postgresType]
+/// considering the provided [column] data
 String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
   switch (postgresType) {
     /// String
