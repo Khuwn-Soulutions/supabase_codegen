@@ -269,8 +269,8 @@ void writeCopyWith({
 }) {
   /// Write the copyWith method
   buffer
-    ..writeln('  /// Make a copy of the current [$rowClass] overriding '
-        'the provided fields')
+    ..writeln('  /// Make a copy of the current [$rowClass] ')
+    ..writeln('  /// overriding the provided fields')
     ..writeln('  $rowClass copyWith({');
 
   /// All fields as optional

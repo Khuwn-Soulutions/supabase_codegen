@@ -15,10 +15,7 @@ Add the following to your pubspec.yaml
 
 ```yaml
 dev_dependencies:
-  supabase_codegen:
-    git:
-      url: https://github.com/Khuwn-Soulutions/supabase_codegen.git
-      ref: main
+  supabase_codegen: ^1.0.0
 ```
 
 ---

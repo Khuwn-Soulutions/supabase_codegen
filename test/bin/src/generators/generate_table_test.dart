@@ -139,7 +139,8 @@ class ItemRow extends SupabaseDataRow {
   List<String> get tags => getListField<String>(tagsField);
   set tags(List<String>? value) => setListField<String>(tagsField, value);
 
-  /// Make a copy of the current [ItemRow] overriding the provided fields
+  /// Make a copy of the current [ItemRow] 
+  /// overriding the provided fields
   ItemRow copyWith({
     List<String>? tags,
   }) =>
