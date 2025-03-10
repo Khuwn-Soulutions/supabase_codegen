@@ -78,7 +78,9 @@ Future<void> generateEnums(Directory enumsDir) async {
 
       /// Write enum fields
       for (final value in values) {
-        enumBuffer.writeln('  $value,');
+        enumBuffer
+          ..writeln('  /// $value')
+          ..writeln('  $value,');
       }
 
       /// Close enum declaration
