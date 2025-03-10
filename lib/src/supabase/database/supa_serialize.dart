@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:meta/meta.dart';
-import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Serialize the [value] provided
 @protected
@@ -15,8 +14,6 @@ dynamic supaSerialize<T>(T? value) {
   switch (value) {
     case DateTime _:
       return (value as DateTime).toIso8601String();
-    case PostgresTime _:
-      return (value as PostgresTime).toIso8601String();
     case LatLng _:
       final latLng = value as LatLng;
       return {'lat': latLng.latitude, 'lng': latLng.longitude};
@@ -56,8 +53,6 @@ T? supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
       return (value as num).toDouble() as T?;
     case const (DateTime):
       return DateTime.tryParse(value as String)?.toLocal() as T?;
-    case const (PostgresTime):
-      return PostgresTime.tryParse(value as String) as T?;
     case const (LatLng):
       final latLng = value is Map ? value : json.decode(value as String) as Map;
       final lat = latLng['lat'] ?? latLng['latitude'];
