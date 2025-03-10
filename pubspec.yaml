@@ -13,7 +13,7 @@ dependencies:
   latlng: ^2.0.7
   logger: ^2.5.0
   meta: ^1.16.0
-  mock_supabase_http_client: 0.0.3+2
+  mock_supabase_http_client: ^0.0.3+2
   path: ^1.9.1
   quiver: ^3.2.2
   supabase: ^2.6.3
