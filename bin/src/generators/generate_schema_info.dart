@@ -5,57 +5,12 @@ import 'package:meta/meta.dart';
 
 import '../src.dart';
 
+const tableBarrelFileName = '_tables.dart';
+
 /// Generate the schema info
 Future<void> generateSchemaInfo() async {
   try {
-    // Get table information from Supabase
-    logger.i('[GenerateTypes] Fetching schema info...');
-    final response = await client.rpc<dynamic>('get_schema_info');
-
-    // Debug raw response
-    logger
-      ..d('[GenerateTypes] Raw Schema Response: $response')
-      ..d('Response type: ${response.runtimeType}');
-
-    // Modified to handle direct List response
-    final schemaData = List<Map<String, dynamic>>.from(
-      response is List
-          ? response
-          // Get data from the response if not a List
-          // ignore: avoid_dynamic_calls
-          : response['data'] as List<dynamic>,
-    );
-
-    if (schemaData.isEmpty) {
-      throw Exception('Failed to fetch schema info: Empty response');
-    }
-
-    // Debug response data
-    logger.d('Table Count: ${schemaData.length}');
-    if (schemaData.isNotEmpty) {
-      logger
-        ..d('First column sample:')
-        ..d(schemaData.first);
-    }
-
-    // Group columns by table
-    final tables = <String, List<Map<String, dynamic>>>{};
-    for (final column in schemaData) {
-      final tableName = column['table_name'] as String;
-
-      if (!tableName.startsWith('_')) {
-        tables[tableName] = [
-          ...tables[tableName] ?? [],
-          column,
-        ];
-      }
-    }
-
-    // After fetching schema info
-    logger.d('\n[GenerateTypes] Available tables:');
-    for (final tableName in tables.keys) {
-      logger.d('  - $tableName');
-    }
+    final tables = await getSchemaTables();
 
     // Create necessary directories
     await createDirectories();
@@ -73,6 +28,61 @@ Future<void> generateSchemaInfo() async {
   } finally {
     await client.dispose();
   }
+}
+
+/// Get the schema tables
+@visibleForTesting
+Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
+  // Get table information from Supabase
+  logger.i('[GenerateTypes] Fetching schema info...');
+  final response = await client.rpc<dynamic>('get_schema_info');
+
+  // Debug raw response
+  logger
+    ..d('[GenerateTypes] Raw Schema Response: $response')
+    ..d('Response type: ${response.runtimeType}');
+
+  // Modified to handle direct List response
+  final schemaData = List<Map<String, dynamic>>.from(
+    response is List
+        ? response
+        // Get data from the response if not a List
+        // ignore: avoid_dynamic_calls
+        : response['data'] as List<dynamic>,
+  );
+
+  if (schemaData.isEmpty) {
+    throw Exception('Failed to fetch schema info: Empty response');
+  }
+
+  // Debug response data
+  logger.d('Table Count: ${schemaData.length}');
+  if (schemaData.isNotEmpty) {
+    logger
+      ..d('First column sample:')
+      ..d(schemaData.first);
+  }
+
+  // Group columns by table
+  final tables = <String, List<Map<String, dynamic>>>{};
+  for (final column in schemaData) {
+    final tableName = column['table_name'] as String;
+
+    if (!tableName.startsWith('_')) {
+      tables[tableName] = [
+        ...tables[tableName] ?? [],
+        column,
+      ];
+    }
+  }
+
+  // After fetching schema info
+  logger.d('\n[GenerateTypes] Available tables:');
+  for (final tableName in tables.keys) {
+    logger.d('  - $tableName');
+  }
+
+  return tables;
 }
 
 /// Create the necessary directories
@@ -101,7 +111,17 @@ Future<void> generateDatabaseFiles(
   await generateTables(tables, directory);
 
   // Generate table barrel file
-  final tableBarrelFile = File('${directory.path}/_tables.dart');
+  await generateTableBarrelFile(directory, tables);
+}
+
+/// Generate the table barrel file in the provided [directory] for the
+/// extracted [tables]
+@visibleForTesting
+Future<void> generateTableBarrelFile(
+  Directory directory,
+  Map<String, List<Map<String, dynamic>>> tables,
+) async {
+  final tableBarrelFile = File('${directory.path}/$tableBarrelFileName');
   final tableBarrelBuffer = StringBuffer();
 
   writeHeader(tableBarrelBuffer);
@@ -111,7 +131,7 @@ Future<void> generateDatabaseFiles(
   }
   writeFooter(tableBarrelBuffer);
 
-  await tableBarrelFile.writeAsString(tableBarrelBuffer.toString());
+  tableBarrelFile.writeAsStringSync(tableBarrelBuffer.toString());
 
   // Generate database.dart
   final databaseFile = File('$root/database.dart');
@@ -119,10 +139,10 @@ Future<void> generateDatabaseFiles(
   writeHeader(dbBuffer);
   dbBuffer
     ..writeln("export 'enums/$enumsFileName.dart';")
-    ..writeln("export 'tables/_tables.dart';");
+    ..writeln("export 'tables/$tableBarrelFileName';");
   writeFooter(dbBuffer);
 
-  await databaseFile.writeAsString(dbBuffer.toString());
+  databaseFile.writeAsStringSync(dbBuffer.toString());
 }
 
 /// Generate the [tables] as individual files in the provided [directory]
