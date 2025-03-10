@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import '../../../../bin/src/generate_supabase_types.dart';
+import '../../bin/src/generate_supabase_types.dart';
 
 void main() {
   group('generateSupabaseTypes', () {
