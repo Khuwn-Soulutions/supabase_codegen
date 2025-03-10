@@ -1,7 +1,6 @@
 name: supabase_codegen
 description: Supabase Codegen
-version: 0.1.0+1
-publish_to: none
+version: 1.0.0
 
 environment:
   sdk: ^3.5.0
