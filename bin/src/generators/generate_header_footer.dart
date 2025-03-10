@@ -5,7 +5,8 @@ void writeHeader(StringBuffer buffer) {
   buffer
     ..writeln('//')
     ..writeln('//  Generated file. Do not edit.')
-    ..writeln('//');
+    ..writeln('//')
+    ..writeln();
 }
 
 /// Write the file footer
@@ -18,6 +19,4 @@ void writeFooter(StringBuffer buffer) {
   if (tag.isNotEmpty) {
     buffer.writeln('/// Tag: $tag');
   }
-
-  buffer.writeln();
 }

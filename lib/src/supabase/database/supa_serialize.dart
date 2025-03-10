@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:meta/meta.dart';
-import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Serialize the [value] provided
 @protected
@@ -15,11 +14,9 @@ dynamic supaSerialize<T>(T? value) {
   switch (value) {
     case DateTime _:
       return (value as DateTime).toIso8601String();
-    case PostgresTime _:
-      return (value as PostgresTime).toIso8601String();
     case LatLng _:
       final latLng = value as LatLng;
-      return {'lat': latLng.latitude, 'lng': latLng.longitude};
+      return {'lat': latLng.latitude.degrees, 'lng': latLng.longitude.degrees};
     case final Enum enumValue:
       return enumValue.name;
     default:
@@ -29,9 +26,9 @@ dynamic supaSerialize<T>(T? value) {
 
 /// Serialize a list
 @protected
-List<T>? supaSerializeList<T>(List<T>? value) {
+List<dynamic>? supaSerializeList<T>(List<T>? value) {
   final values = value?.map((v) => supaSerialize<T>(v));
-  return values == null ? null : List<T>.from(values);
+  return values == null ? null : List<dynamic>.from(values);
 }
 
 /// Deserialize a value
@@ -56,8 +53,6 @@ T? supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
       return (value as num).toDouble() as T?;
     case const (DateTime):
       return DateTime.tryParse(value as String)?.toLocal() as T?;
-    case const (PostgresTime):
-      return PostgresTime.tryParse(value as String) as T?;
     case const (LatLng):
       final latLng = value is Map ? value : json.decode(value as String) as Map;
       final lat = latLng['lat'] ?? latLng['latitude'];
@@ -72,10 +67,14 @@ T? supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
 
 /// Deserialize a list
 @protected
-List<T>? supaDeserializeList<T>(dynamic value) => value is List
-    ? value
-        .map((v) => supaDeserialize<T>(v))
-        .where((v) => v != null)
-        .map((v) => v as T)
-        .toList()
-    : null;
+List<T>? supaDeserializeList<T>(
+  dynamic value, {
+  List<T> enumValues = const [],
+}) =>
+    value is List
+        ? value
+            .map((v) => supaDeserialize<T>(v, enumValues: enumValues))
+            .where((v) => v != null)
+            .map((v) => v as T)
+            .toList()
+        : null;

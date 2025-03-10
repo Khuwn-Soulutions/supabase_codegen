@@ -9,7 +9,7 @@ Future<void> generateSchemaFiles(
   await enumsDir.create(recursive: true);
 
   // Generate enums file
-  await generateEnumsFile(tables, enumsDir);
+  await generateEnums(enumsDir);
 
   logger.d('[GenerateTypes] Successfully generated schema files');
 }

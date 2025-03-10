@@ -33,7 +33,7 @@ abstract class SupabaseDataRow {
 
   /// Get a field within the [data] as a List
   List<T> getListField<T>(String fieldName) =>
-      supaDeserializeList<T>(data[fieldName]) ?? [];
+      supaDeserializeList<T>(data[fieldName]) ?? <T>[];
 
   /// Set the List [value] of the [fieldName] within [data]
   void setListField<T>(String fieldName, List<T>? value) =>
