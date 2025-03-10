@@ -4,11 +4,12 @@ import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Cached client
-SupabaseClient? _client;
+@visibleForTesting
+SupabaseClient? supabaseClient;
 
 /// Load the supabase client
-SupabaseClient loadSupabaseClient() {
-  return _client ??= _loadClient();
+SupabaseClient loadSupabaseClient([String envPath = '.env']) {
+  return supabaseClient ??= loadClient(envPath);
 }
 
 /// Load the mock supabase client
@@ -16,11 +17,13 @@ SupabaseClient loadSupabaseClient() {
 SupabaseClient loadMockSupabaseClient() {
   // Hide warning as the method is marked visible for testing
   // ignore: invalid_use_of_visible_for_testing_member
-  return _client = mockSupabase;
+  return supabaseClient = mockSupabase;
 }
 
-SupabaseClient _loadClient() {
-  final dotenv = DotEnv()..load();
+/// Load the supabase client using environment variables
+@visibleForTesting
+SupabaseClient loadClient([String envPath = '.env']) {
+  final dotenv = DotEnv()..load([envPath]);
 
   /// Ensure all keys are present
   final keys = ['SUPABASE_URL', 'SUPABASE_KEY'];
