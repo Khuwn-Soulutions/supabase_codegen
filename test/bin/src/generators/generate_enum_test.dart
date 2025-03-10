@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:change_case/change_case.dart';
-import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
@@ -16,15 +15,7 @@ void main() {
     const testOutputFolder = 'test/test_output_enums';
     final fileMatchRegExp = RegExp("export '(?<file>.+)';");
 
-    logger = Logger(
-      level: Level.off,
-      filter: ProductionFilter(),
-      printer: PrettyPrinter(
-        methodCount: 0,
-        excludeBox: {Level.debug: true, Level.info: true},
-        printEmojis: false,
-      ),
-    );
+    logger = testLogger;
 
     setUp(() {
       client = mockSupabase;
