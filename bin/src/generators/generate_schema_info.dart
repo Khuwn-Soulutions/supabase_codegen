@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:change_case/change_case.dart';
+import 'package:meta/meta.dart';
 
 import '../src.dart';
 
@@ -30,7 +31,7 @@ Future<void> generateSchemaInfo() async {
     }
 
     // Debug response data
-    logger.d('Count: ${schemaData.length}');
+    logger.d('Table Count: ${schemaData.length}');
     if (schemaData.isNotEmpty) {
       logger
         ..d('First column sample:')
@@ -132,33 +133,8 @@ Future<void> generateTables(
   for (final tableName in tables.keys) {
     final columns = tables[tableName]!;
 
-    /// Store a map of the column name to type
-    final fieldNameTypeMap = <String, ColumnData>{};
-
     // Generate a map of the field name to data for that field
-    for (final column in columns) {
-      final columnName = column['column_name'] as String;
-      final fieldName = columnName.toCamelCase();
-      final dartType = getDartType(column);
-      final isNullable = column['is_nullable'] == 'YES';
-      final isArray = dartType.startsWith('List<');
-      final hasDefault = column['column_default'] != null;
-      final isEnum = formattedEnums[column['udt_name']] != null;
-
-      final columnData = (
-        dartType: dartType,
-        isNullable: isNullable,
-        hasDefault: hasDefault,
-        columnName: columnName,
-        isArray: isArray,
-        isEnum: isEnum,
-      );
-      fieldNameTypeMap[fieldName] = columnData;
-
-      logger
-        ..d('[GenerateTableFile] Processing column: $columnName')
-        ..d('  Column data: $columnData');
-    }
+    final fieldNameTypeMap = createFieldNameTypeMap(columns);
 
     await generateTableFile(
       tableName: tableName,
@@ -167,4 +143,37 @@ Future<void> generateTables(
       fieldNameTypeMap: fieldNameTypeMap,
     );
   }
+}
+
+/// Create a map of the field name to data for that field
+@visibleForTesting
+Map<String, ColumnData> createFieldNameTypeMap(
+  List<Map<String, dynamic>> columns,
+) {
+  /// Store a map of the column name to type
+  final fieldNameTypeMap = <String, ColumnData>{};
+  for (final column in columns) {
+    final columnName = column['column_name'] as String;
+    final fieldName = columnName.toCamelCase();
+    final dartType = getDartType(column);
+    final isNullable = column['is_nullable'] == 'YES';
+    final isArray = dartType.startsWith('List<');
+    final hasDefault = column['column_default'] != null;
+    final isEnum = formattedEnums[column['udt_name']] != null;
+
+    final columnData = (
+      dartType: dartType,
+      isNullable: isNullable,
+      hasDefault: hasDefault,
+      columnName: columnName,
+      isArray: isArray,
+      isEnum: isEnum,
+    );
+    fieldNameTypeMap[fieldName] = columnData;
+
+    logger
+      ..d('[GenerateTableFile] Processing column: $columnName')
+      ..d('  Column data: $columnData');
+  }
+  return fieldNameTypeMap;
 }
