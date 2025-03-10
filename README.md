@@ -14,7 +14,7 @@ Supabase Codegen generates type-safe Dart models from your Supabase tables autom
 Add the following to your pubspec.yaml
 
 ```yaml
-dev_dependencies:
+dependencies:
   supabase_codegen: ^1.0.0
 ```
 
