@@ -1,6 +1,7 @@
 /// Expected copy with result
 const expectedCopyWith = '''
-  /// Make a copy of the current [TestGenerateRow] overriding the provided fields
+  /// Make a copy of the current [TestGenerateRow] 
+  /// overriding the provided fields
   TestGenerateRow copyWith({
     String? isNotNullable,
     String? id,
