@@ -1,6 +1,7 @@
 name: supabase_codegen
 description: Supabase Codegen
 version: 1.0.0
+repository: https://github.com/Khuwn-Soulutions/supabase_codegen
 
 environment:
   sdk: ^3.5.0
