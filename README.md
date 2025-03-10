@@ -407,6 +407,24 @@ if (pilot != null) {
 }
 ```
 
+## Testing
+### Unit Tests
+
+To run the unit tests, use the following command:
+
+```bash
+dart test
+```
+
+### Using mocks
+
+To load a preconfigured mock supabase client for testing run `loadMockSupabaseClient()`  during `setUpAll` of your tests.  
+The variables `mockSupabase` and `mockSupabaseHttpClient` are available for use during testing.  
+See [supabase_table_test](test/src/supabase/database/supabase_table_test.dart) for an example of this in action.
+
+For further details about these mock clients see [MockSupabaseHttpClient](https://github.com/supabase-community/mock_supabase_http_client).
+
+
 ## 📝 Notes
 
 - Ensure your Supabase tables have proper primary keys defined
