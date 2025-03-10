@@ -16,7 +16,7 @@ dynamic supaSerialize<T>(T? value) {
       return (value as DateTime).toIso8601String();
     case LatLng _:
       final latLng = value as LatLng;
-      return {'lat': latLng.latitude, 'lng': latLng.longitude};
+      return {'lat': latLng.latitude.degrees, 'lng': latLng.longitude.degrees};
     case final Enum enumValue:
       return enumValue.name;
     default:
@@ -26,9 +26,9 @@ dynamic supaSerialize<T>(T? value) {
 
 /// Serialize a list
 @protected
-List<T>? supaSerializeList<T>(List<T>? value) {
+List<dynamic>? supaSerializeList<T>(List<T>? value) {
   final values = value?.map((v) => supaSerialize<T>(v));
-  return values == null ? null : List<T>.from(values);
+  return values == null ? null : List<dynamic>.from(values);
 }
 
 /// Deserialize a value
@@ -67,10 +67,14 @@ T? supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
 
 /// Deserialize a list
 @protected
-List<T>? supaDeserializeList<T>(dynamic value) => value is List
-    ? value
-        .map((v) => supaDeserialize<T>(v))
-        .where((v) => v != null)
-        .map((v) => v as T)
-        .toList()
-    : null;
+List<T>? supaDeserializeList<T>(
+  dynamic value, {
+  List<T> enumValues = const [],
+}) =>
+    value is List
+        ? value
+            .map((v) => supaDeserialize<T>(v, enumValues: enumValues))
+            .where((v) => v != null)
+            .map((v) => v as T)
+            .toList()
+        : null;
