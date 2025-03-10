@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:change_case/change_case.dart';
+import 'package:meta/meta.dart';
 
 import '../src.dart';
 
+/// Generate the complete table file for the table with [tableName] with
+/// [columns] to be written in the given [directory], considering the provided
+/// [fieldNameTypeMap]
 Future<void> generateTableFile({
   required String tableName,
   required List<Map<String, dynamic>> columns,
@@ -38,7 +42,7 @@ Future<void> generateTableFile({
   _writeImports(buffer);
 
   /// Generate Table class
-  _writeTableClass(
+  writeTableClass(
     buffer: buffer,
     tableName: tableName,
     classDesc: classDesc,
@@ -47,7 +51,7 @@ Future<void> generateTableFile({
   );
 
   /// Generate Row class
-  _writeRowClass(
+  writeRowClass(
     entries: entries,
     buffer: buffer,
     className: className,
@@ -78,7 +82,8 @@ void _writeImports(StringBuffer buffer) {
 }
 
 /// Generate the table class
-void _writeTableClass({
+@visibleForTesting
+void writeTableClass({
   required StringBuffer buffer,
   required String tableName,
   required String classDesc,
@@ -104,7 +109,8 @@ void _writeTableClass({
 }
 
 /// Write the row class
-void _writeRowClass({
+@visibleForTesting
+void writeRowClass({
   required List<MapEntry<String, ColumnData>> entries,
   required StringBuffer buffer,
   required String className,
@@ -133,9 +139,9 @@ void _writeRowClass({
     ) = entry.value;
     final fieldName = entry.key;
     final isOptional = isNullable || hasDefault;
-    final qualifier = isOptional ? '' : 'required';
+    final qualifier = isOptional ? '' : 'required ';
     final question = isOptional ? '?' : '';
-    buffer.writeln('    $qualifier $dartType$question $fieldName,');
+    buffer.writeln('    $qualifier$dartType$question $fieldName,');
   }
 
   /// Write redirect constructor
@@ -177,13 +183,13 @@ void _writeRowClass({
         '$rowClass._(data);');
 
   // Generate getters and setters for each column
-  _writeFields(
+  writeFields(
     fieldNameTypeMap: fieldNameTypeMap,
     buffer: buffer,
     tableClass: tableClass,
   );
   // Write copyWith
-  _writeCopyWith(buffer: buffer, entries: entries, rowClass: rowClass);
+  writeCopyWith(buffer: buffer, entries: entries, rowClass: rowClass);
 
   /// Close the class
   buffer
@@ -192,7 +198,8 @@ void _writeRowClass({
 }
 
 /// Generate getters and setters for each column (field) in row
-void _writeFields({
+@visibleForTesting
+void writeFields({
   required FieldNameTypeMap fieldNameTypeMap,
   required StringBuffer buffer,
   required String tableClass,
@@ -254,7 +261,8 @@ void _writeFields({
 }
 
 /// Write the copy with block
-void _writeCopyWith({
+@visibleForTesting
+void writeCopyWith({
   required StringBuffer buffer,
   required List<MapEntry<String, ColumnData>> entries,
   required String rowClass,
@@ -301,6 +309,7 @@ void _writeCopyWith({
 }
 
 /// Helper to get the default value for a given Dart type.
+@visibleForTesting
 String getDefaultValue(String dartType) {
   switch (dartType) {
     case 'int':
@@ -315,7 +324,8 @@ String getDefaultValue(String dartType) {
       return 'DateTime.now()';
     default:
       if (dartType.startsWith('List<')) {
-        return 'const []';
+        final genericType = getGenericType(dartType);
+        return 'const <$genericType>[]';
       }
       return 'null';
   }
