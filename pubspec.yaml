@@ -1,6 +1,7 @@
 name: supabase_codegen
-description: Supabase Codegen
-version: 1.0.0
+description: A codegen library that grabs and generates classes from Supabase tables and enums in Dart.
+homepage: https://github.com/Khuwn-Soulutions/supabase_codegen
+version: 1.0.1
 repository: https://github.com/Khuwn-Soulutions/supabase_codegen
 
 environment:
