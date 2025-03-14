@@ -80,6 +80,16 @@ If set, the tag will appear at the end of the files following the file generatio
 Enables debug logging to provide more verbose output during the type generation.  
 Example: `dart run supabase_codegen:generate_types -d`
 
+- `-s, --[no-]skip-footer`
+
+Skip the writing of the footer in the generated files.
+Example: `dart run supabase_codegen:generate_types --skip-footer`
+
+- `-h, --help`
+  
+Show command line usage options
+Example: `dart run supabase_codegen:generate_types --help`
+
 ## Configuration via pubspec.yaml
 Instead of providing the options via the command line, you can also set them in your `pubspec.yaml` file under the supabase_codegen key. This allows setting default values, and you only need to override them if needed from the command line.
 
