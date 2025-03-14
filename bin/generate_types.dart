@@ -11,7 +11,7 @@ void main(List<String> args) async {
     const outputOption = 'output';
     const tagOption = 'tag';
     const debugOption = 'debug';
-    const skipFooterOption = 'skip-footer';
+    const skipFooterOption = 'skipFooter';
     const helpOption = 'help';
 
     /// Get default values from pubspec
