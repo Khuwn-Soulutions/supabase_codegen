@@ -106,7 +106,8 @@ supabase_codegen:
   env: .env.development # Overrides default: .env
   output: lib/models/supabase # Overrides default: supabase/types
   tag: v1 # Overrides default: ''
-  debug: false # Overrides default: false
+  debug: true # Overrides default: false
+  skipFooter: true # Overrides default: false
 ```
 
 ### Explanation (See [Command Line Options](#command-line-options)):
