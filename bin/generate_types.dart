@@ -11,6 +11,7 @@ void main(List<String> args) async {
     const outputOption = 'output';
     const tagOption = 'tag';
     const debugOption = 'debug';
+    const skipFooterOption = 'skip-footer';
 
     /// Get default values from pubspec
     final pubSpecFile = File('pubspec.yaml');
@@ -45,6 +46,12 @@ void main(List<String> args) async {
         debugOption,
         abbr: debugOption[0],
         defaultsTo: codegenConfig[debugOption] as bool? ?? false,
+      )
+      // Skip footer
+      ..addFlag(
+        skipFooterOption,
+        abbr: skipFooterOption[0],
+        defaultsTo: codegenConfig[skipFooterOption] as bool? ?? false,
       );
     final results = parser.parse(args);
 
@@ -53,6 +60,7 @@ void main(List<String> args) async {
     final outputFolder = results.option(outputOption)!;
     final tag = results.option(tagOption)!;
     final debug = results.flag(debugOption);
+    final skipFooter = results.flag(skipFooterOption);
 
     /// Set the log level if debug is true
     final level = debug ? Level.all : Level.info;
@@ -71,6 +79,7 @@ void main(List<String> args) async {
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       fileTag: tag,
+      skipFooter: skipFooter,
     );
 
     /// Format generated files

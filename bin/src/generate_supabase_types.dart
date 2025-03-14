@@ -18,6 +18,9 @@ const enumsFileName = '_enums';
 /// Map of enum type to formatted name
 final formattedEnums = <String, String>{};
 
+/// Should the footer generation be skipped
+bool skipFooterWrite = false;
+
 /// Column data type
 typedef ColumnData = ({
   String dartType,
@@ -38,12 +41,18 @@ Future<void> generateSupabaseTypes({
 
   /// Tags to add to file footer
   String fileTag = '',
+
+  /// Should the footer be skipped
+  bool skipFooter = false,
 }) async {
   /// Set tag
   tag = fileTag;
 
   /// Set root folder
   root = outputFolder;
+
+  /// Set skip footer
+  skipFooterWrite = skipFooter;
 
   /// Load env keys
   final dotenv = DotEnv()..load([envFilePath]);
