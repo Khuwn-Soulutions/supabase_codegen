@@ -5,7 +5,16 @@ import 'package:yaml/yaml.dart';
 
 void main(List<String> args) async {
   final versionPart = args.first;
-  final logger = Logger()..i('Bumping version $versionPart');
+  final logger = Logger(
+    level: Level.all,
+    filter: ProductionFilter(),
+    printer: PrettyPrinter(
+      methodCount: 0,
+      excludeBox: {Level.debug: true, Level.info: true},
+    ),
+  )..i('Bumping version $versionPart');
+
+  /// Bump version
   final result = await Process.run('cider', ['bump', versionPart]);
   logger.i(result.stdout);
 
@@ -26,4 +35,15 @@ void main(List<String> args) async {
     ),
   );
   logger.i('Version file updated');
+
+  /// Overwrite the version in the README.md file
+  final readmeFile = File('README.md');
+  final readmeContents = readmeFile.readAsStringSync();
+  readmeFile.writeAsStringSync(
+    readmeContents.replaceAll(
+      RegExp(r'supabase_codegen: \^(.+)'),
+      'supabase_codegen: ^$version',
+    ),
+  );
+  logger.i('README.md updated');
 }

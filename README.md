@@ -14,7 +14,7 @@ Supabase Codegen generates type-safe Dart models from your Supabase tables autom
 Add the following to your pubspec.yaml
 
 ```yaml
-dev_dependencies:
+dependencies:
   supabase_codegen: ^1.0.0
 ```
 
@@ -80,6 +80,16 @@ If set, the tag will appear at the end of the files following the file generatio
 Enables debug logging to provide more verbose output during the type generation.  
 Example: `dart run supabase_codegen:generate_types -d`
 
+- `-s, --[no-]skip-footer`
+
+Skip the writing of the footer in the generated files.
+Example: `dart run supabase_codegen:generate_types --skip-footer`
+
+- `-h, --help`
+  
+Show command line usage options
+Example: `dart run supabase_codegen:generate_types --help`
+
 ## Configuration via pubspec.yaml
 Instead of providing the options via the command line, you can also set them in your `pubspec.yaml` file under the supabase_codegen key. This allows setting default values, and you only need to override them if needed from the command line.
 
@@ -96,7 +106,8 @@ supabase_codegen:
   env: .env.development # Overrides default: .env
   output: lib/models/supabase # Overrides default: supabase/types
   tag: v1 # Overrides default: ''
-  debug: false # Overrides default: false
+  debug: true # Overrides default: false
+  skipFooter: true # Overrides default: false
 ```
 
 ### Explanation (See [Command Line Options](#command-line-options)):
