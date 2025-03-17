@@ -15,6 +15,7 @@ class TestGenerateRow extends SupabaseDataRow {
     double? isDouble,
     bool? isBool,
     Map<String, dynamic>? isJson,
+    Status? status,
   }): super({
     'is_not_nullable': supaSerialize(isNotNullable),
     if (id != null) 'id': supaSerialize(id),
@@ -25,13 +26,14 @@ class TestGenerateRow extends SupabaseDataRow {
     if (isDouble != null) 'is_double': supaSerialize(isDouble),
     if (isBool != null) 'is_bool': supaSerialize(isBool),
     if (isJson != null) 'is_json': supaSerialize(isJson),
+    if (status != null) 'status': supaSerialize(status),
   });
 
   /// Test Generate Row
   const TestGenerateRow._(super.data);
 
   /// Create Test Generate Row from a [data] map
-  factory TestGenerateRow.fromJson(Map<String, dynamic> data) => TestGenerateRow._(data);
+  factory TestGenerateRow.fromJson(Map<String, dynamic> data) => TestGenerateRow._(data.cleaned);
 $expectedRowFields$expectedCopyWith}
 
 ''';

@@ -53,7 +53,8 @@ class UsersRow extends SupabaseDataRow {
   const UsersRow._(super.data);
 
   /// Create Users Row from a [data] map
-  factory UsersRow.fromJson(Map<String, dynamic> data) => UsersRow._(data);
+  factory UsersRow.fromJson(Map<String, dynamic> data) =>
+      UsersRow._(data.cleaned);
 
   /// Get the [SupabaseTable] for this row
   @override
@@ -111,7 +112,8 @@ class UsersRow extends SupabaseDataRow {
       getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
-  /// Make a copy of the current [UsersRow] overriding the provided fields
+  /// Make a copy of the current [UsersRow]
+  /// overriding the provided fields
   UsersRow copyWith({
     String? email,
     UserRole? role,
@@ -121,13 +123,13 @@ class UsersRow extends SupabaseDataRow {
     List<String>? contacts,
     DateTime? createdAt,
   }) =>
-      UsersRow(
-        email: email ?? this.email,
-        role: role ?? this.role,
-        id: id ?? this.id,
-        accName: accName ?? this.accName,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-        contacts: contacts ?? this.contacts,
-        createdAt: createdAt ?? this.createdAt,
-      );
+      UsersRow.fromJson({
+        'email': email ?? data['email'],
+        'role': role?.name ?? data['role'],
+        'id': id ?? data['id'],
+        'acc_name': accName ?? data['acc_name'],
+        'phone_number': phoneNumber ?? data['phone_number'],
+        'contacts': contacts ?? data['contacts'],
+        'created_at': createdAt ?? data['created_at'],
+      });
 }

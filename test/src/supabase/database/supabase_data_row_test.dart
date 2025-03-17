@@ -159,6 +159,19 @@ void main() {
           expect(copy.data[key], user.data[key]);
         }
       });
+
+      test('maintains empty fields in data', () async {
+        final original = UsersRow(email: 'email', role: UserRole.user);
+        expect(original.data.containsKey('id'), false);
+
+        const newEmail = 'newEmail';
+        final copy = original.copyWith(
+          email: newEmail,
+        );
+        expect(copy.email, newEmail);
+        expect(original.data.keys, copy.data.keys);
+        expect(copy.data.containsKey('id'), false);
+      });
     });
   });
 }

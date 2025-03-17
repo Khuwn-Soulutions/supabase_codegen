@@ -127,7 +127,7 @@ class ItemRow extends SupabaseDataRow {
   const ItemRow._(super.data);
 
   /// Create Item Row from a [data] map
-  factory ItemRow.fromJson(Map<String, dynamic> data) => ItemRow._(data);
+  factory ItemRow.fromJson(Map<String, dynamic> data) => ItemRow._(data.cleaned);
   /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => ItemTable();
@@ -144,9 +144,9 @@ class ItemRow extends SupabaseDataRow {
   ItemRow copyWith({
     List<String>? tags,
   }) =>
-    ItemRow(
-      tags: tags ?? this.tags,
-    );
+    ItemRow.fromJson({
+      'tags': tags ?? data['tags'],
+    });
 }
 
 ''';

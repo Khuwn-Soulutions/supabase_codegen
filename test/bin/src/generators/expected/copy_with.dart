@@ -12,16 +12,18 @@ const expectedCopyWith = '''
     double? isDouble,
     bool? isBool,
     Map<String, dynamic>? isJson,
+    Status? status,
   }) =>
-    TestGenerateRow(
-      isNotNullable: isNotNullable ?? this.isNotNullable,
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      isNullable: isNullable ?? this.isNullable,
-      isArray: isArray ?? this.isArray,
-      isInt: isInt ?? this.isInt,
-      isDouble: isDouble ?? this.isDouble,
-      isBool: isBool ?? this.isBool,
-      isJson: isJson ?? this.isJson,
-    );
+    TestGenerateRow.fromJson({
+      'is_not_nullable': isNotNullable ?? data['is_not_nullable'],
+      'id': id ?? data['id'],
+      'created_at': createdAt ?? data['created_at'],
+      'is_nullable': isNullable ?? data['is_nullable'],
+      'is_array': isArray ?? data['is_array'],
+      'is_int': isInt ?? data['is_int'],
+      'is_double': isDouble ?? data['is_double'],
+      'is_bool': isBool ?? data['is_bool'],
+      'is_json': isJson ?? data['is_json'],
+      'status': status?.name ?? data['status'],
+    });
 ''';
