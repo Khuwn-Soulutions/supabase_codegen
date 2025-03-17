@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../bin/generate_types.dart';
-import '../../bin/src/src.dart';
+import '../../../../bin/src/src.dart';
 
 // Mocking classes and functions
 class MockSupabaseCodeGenerator extends Mock implements SupabaseCodeGenerator {}
@@ -12,7 +11,7 @@ class MockSupabaseCodeGenerator extends Mock implements SupabaseCodeGenerator {}
 class MockFile extends Mock implements File {}
 
 void main() {
-  group('main', () {
+  group('runGenerateTypes', () {
     late MockSupabaseCodeGenerator mockGenerator;
     late MockFile mockPubspecFile;
 
@@ -158,48 +157,6 @@ void main() {
         runGenerateTypes(args, generator: mockGenerator),
         throwsA(isA<Exception>()),
       );
-    });
-
-    test('getPubspecConfig returns correct config', () {
-      // Arrange
-      const pubspecContent = '''
-        name: test_package
-        supabase_codegen:
-          env: .testenv
-          output: test/output
-          tag: testtag
-          debug: true
-          skipFooter: true
-      ''';
-
-      // Mock File.readAsStringSync
-      when(() => mockPubspecFile.readAsStringSync()).thenReturn(pubspecContent);
-
-      // Act
-      final result = getPubspecConfig(mockPubspecFile);
-
-      // Assert
-      expect(result['env'], '.testenv');
-      expect(result['output'], 'test/output');
-      expect(result['tag'], 'testtag');
-      expect(result['debug'], true);
-      expect(result['skipFooter'], true);
-    });
-
-    test('getPubspecConfig returns empty config if no supabase_codegen key',
-        () {
-      // Arrange
-      const pubspecContent = '''
-        name: test_package
-      ''';
-      // Mock File.readAsStringSync
-      when(() => mockPubspecFile.readAsStringSync()).thenReturn(pubspecContent);
-
-      // Act
-      final result = getPubspecConfig(mockPubspecFile);
-
-      // Assert
-      expect(result, isEmpty);
     });
   });
 }
