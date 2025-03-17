@@ -53,7 +53,8 @@ class UsersRow extends SupabaseDataRow {
   const UsersRow._(super.data);
 
   /// Create Users Row from a [data] map
-  factory UsersRow.fromJson(Map<String, dynamic> data) => UsersRow._(data);
+  factory UsersRow.fromJson(Map<String, dynamic> data) =>
+      UsersRow._(data.cleaned);
 
   /// Get the [SupabaseTable] for this row
   @override

@@ -33,7 +33,7 @@ class TestGenerateRow extends SupabaseDataRow {
   const TestGenerateRow._(super.data);
 
   /// Create Test Generate Row from a [data] map
-  factory TestGenerateRow.fromJson(Map<String, dynamic> data) => TestGenerateRow._(data);
+  factory TestGenerateRow.fromJson(Map<String, dynamic> data) => TestGenerateRow._(data.cleaned);
 $expectedRowFields$expectedCopyWith}
 
 ''';
