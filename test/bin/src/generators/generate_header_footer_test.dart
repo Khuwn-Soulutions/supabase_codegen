@@ -9,6 +9,10 @@ void main() {
       writeHeader(buffer);
       expect(buffer.toString(), contains('//'));
       expect(buffer.toString(), contains('Generated file. Do not edit.'));
+      expect(
+        buffer.toString(),
+        contains('// ignore_for_file: require_trailing_commas'),
+      );
     });
 
     group('writeFooter writes', () {
