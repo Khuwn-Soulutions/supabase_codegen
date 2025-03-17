@@ -27,16 +27,15 @@ Map<String, dynamic> getPubspecConfig([File? file]) {
   return Map<String, dynamic>.from(codegenConfig);
 }
 
-void main(List<String> args) async {
-  await runGenerateTypes(args);
-}
-
 /// Generate the supabase types using the [args] provided
 Future<String?> runGenerateTypes(
   List<String> args, {
   SupabaseCodeGenerator generator = const SupabaseCodeGenerator(),
   File? pubspecFile,
 }) async {
+  /// Are we running in test mode
+  final isRunningInTest = Platform.script.path.contains('test.dart');
+
   try {
     /// Parse options from command line
     const envOption = 'env';
@@ -90,10 +89,15 @@ Future<String?> runGenerateTypes(
 
     // Check for help and print usage
     if (results.wasParsed(helpOption)) {
+      // Return value instead of printing in test
+      if (isRunningInTest) return parser.usage;
+
+      // coverage:ignore-start
       // Use print to display usage
       // ignore: avoid_print
       print(parser.usage);
       exit(0);
+      // coverage:ignore-end
     }
 
     /// Get config values
@@ -137,13 +141,23 @@ Future<String?> runGenerateTypes(
       skipFooter: skipFooter,
     );
 
+    // coverage:ignore-start
+    if (isRunningInTest) return null;
+
     /// Format generated files
     await Process.run('dart', ['format', outputFolder]);
+
     exit(0);
+    // coverage:ignore-end
   } on Exception catch (e) {
+    // In test rethrow error to confirm code block executed
+    if (isRunningInTest) rethrow;
+
+    // coverage:ignore-start
     // Use print to debug code
     // ignore: avoid_print
     print('Error: $e');
     exit(1);
+    // coverage:ignore-end
   }
 }
