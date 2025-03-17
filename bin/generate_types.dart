@@ -4,9 +4,38 @@ import 'package:logger/web.dart';
 import 'package:yaml/yaml.dart';
 import 'src/src.dart';
 
-void main(
+/// Main function
+void main(List<String> args) async {
+  await runGenerateTypes(args);
+}
+
+/// Default option values
+const defaultValues = {
+  'env': '.env',
+  'output': 'supabase/types',
+  'tag': '',
+  'debug': false,
+  'skipFooter': false,
+};
+
+/// Get the code genreator configuration from the root pubspec.yaml file
+Map<String, dynamic> getPubspecConfig([File? file]) {
+  final pubSpecFile = file ?? File('pubspec.yaml');
+  final pubspecContents = pubSpecFile.readAsStringSync();
+  final pubspec = loadYaml(pubspecContents) as YamlMap;
+  final codegenConfig = pubspec['supabase_codegen'] as YamlMap? ?? {};
+  return Map<String, dynamic>.from(codegenConfig);
+}
+
+void main(List<String> args) async {
+  await runGenerateTypes(args);
+}
+
+/// Generate the supabase types using the [args] provided
+Future<String?> runGenerateTypes(
   List<String> args, {
   SupabaseCodeGenerator generator = const SupabaseCodeGenerator(),
+  File? pubspecFile,
 }) async {
   try {
     /// Parse options from command line
@@ -16,12 +45,6 @@ void main(
     const debugOption = 'debug';
     const skipFooterOption = 'skipFooter';
     const helpOption = 'help';
-
-    /// Get default values from pubspec
-    final pubSpecFile = File('pubspec.yaml');
-    final pubspecContents = pubSpecFile.readAsStringSync();
-    final pubspec = loadYaml(pubspecContents) as YamlMap;
-    final codegenConfig = pubspec['supabase_codegen'] as YamlMap? ?? {};
 
     /// Get the parser for the argument.
     /// If an option is not set the default value will be extracted from
@@ -37,35 +60,30 @@ void main(
       ..addOption(
         envOption,
         abbr: envOption[0],
-        defaultsTo: codegenConfig[envOption] as String? ?? '.env',
         help: 'Path to .env file',
       )
       // Output Folder
       ..addOption(
         outputOption,
         abbr: outputOption[0],
-        defaultsTo: codegenConfig[outputOption] as String? ?? 'supabase/types',
         help: 'Path to output folder',
       )
       // Tag
       ..addOption(
         tagOption,
         abbr: tagOption[0],
-        defaultsTo: codegenConfig[tagOption] as String? ?? '',
         help: 'Tag to add to generated files',
       )
       // Debug
       ..addFlag(
         debugOption,
         abbr: debugOption[0],
-        defaultsTo: codegenConfig[debugOption] as bool? ?? false,
         help: 'Enable debug logging',
       )
       // Skip footer
       ..addFlag(
         skipFooterOption,
         abbr: skipFooterOption[0],
-        defaultsTo: codegenConfig[skipFooterOption] as bool? ?? false,
         help: 'Skip footer generation',
       );
     final results = parser.parse(args);
@@ -78,12 +96,26 @@ void main(
       exit(0);
     }
 
+    /// Get config values
+    final codegenConfig = getPubspecConfig(pubspecFile);
+
+    /// Helper function to get option value
+    String optionValueFor(String option) => results.wasParsed(option)
+        ? results.option(option)!
+        : (codegenConfig[option] as String?) ??
+            defaultValues[option]!.toString();
+
+    /// Helper function to get flag value
+    bool flagValueFor(String option) => results.wasParsed(option)
+        ? results.flag(option)
+        : (codegenConfig[option] as bool?) ?? defaultValues[option]! as bool;
+
     // Pull out options
-    final envFilePath = results.option(envOption)!;
-    final outputFolder = results.option(outputOption)!;
-    final tag = results.option(tagOption)!;
-    final debug = results.flag(debugOption);
-    final skipFooter = results.flag(skipFooterOption);
+    final envFilePath = optionValueFor(envOption);
+    final outputFolder = optionValueFor(outputOption);
+    final tag = optionValueFor(tagOption);
+    final debug = flagValueFor(debugOption);
+    final skipFooter = flagValueFor(skipFooterOption);
 
     /// Set the log level if debug is true
     final level = debug ? Level.all : Level.info;
