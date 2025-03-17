@@ -180,7 +180,7 @@ void writeRowClass({
     /// Create the row from a json map
     ..writeln('  /// Create $classDesc Row from a [data] map')
     ..writeln('  factory $rowClass.fromJson(Map<String, dynamic> data) => '
-        '$rowClass._(data);');
+        '$rowClass._(data.cleaned);');
 
   // Generate getters and setters for each column
   writeFields(
