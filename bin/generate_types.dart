@@ -4,7 +4,10 @@ import 'package:logger/web.dart';
 import 'package:yaml/yaml.dart';
 import 'src/src.dart';
 
-void main(List<String> args) async {
+void main(
+  List<String> args, {
+  SupabaseCodeGenerator generator = const SupabaseCodeGenerator(),
+}) async {
   try {
     /// Parse options from command line
     const envOption = 'env';
@@ -95,7 +98,7 @@ void main(List<String> args) async {
     );
 
     /// Generate the types using the command line options
-    await generateSupabaseTypes(
+    await generator.generateSupabaseTypes(
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       fileTag: tag,
