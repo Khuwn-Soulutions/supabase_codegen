@@ -74,6 +74,14 @@ const FieldNameTypeMap testFieldNameTypeMap = {
     isArray: false,
     isEnum: false,
   ),
+  'status': (
+    dartType: 'Status',
+    isNullable: true,
+    hasDefault: false,
+    columnName: 'status',
+    isArray: false,
+    isEnum: true,
+  ),
 };
 
 /// Test [FieldNameTypeMap] entries

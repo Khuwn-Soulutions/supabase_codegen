@@ -144,9 +144,9 @@ class ItemRow extends SupabaseDataRow {
   ItemRow copyWith({
     List<String>? tags,
   }) =>
-    ItemRow(
-      tags: tags ?? this.tags,
-    );
+    ItemRow.fromJson({
+      'tags': tags ?? data['tags'],
+    });
 }
 
 ''';

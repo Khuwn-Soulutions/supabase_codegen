@@ -67,4 +67,11 @@ const expectedRowFields = '''
   Map<String, dynamic>? get isJson => getField<Map<String, dynamic>>(isJsonField);
   set isJson(Map<String, dynamic>? value) => setField<Map<String, dynamic>>(isJsonField, value);
 
+  /// Status field name
+  static const String statusField = 'status';
+
+  /// Status
+  Status? get status => getField<Status>(statusField, enumValues: Status.values);
+  set status(Status? value) => setField<Status>(statusField, value);
+
 ''';
