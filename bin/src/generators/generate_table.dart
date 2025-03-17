@@ -294,18 +294,26 @@ void writeCopyWith({
   /// Close method
   buffer
     ..writeln('  }) =>')
-    ..writeln('    $rowClass(');
+    ..writeln('    $rowClass.fromJson({');
 
   /// Overwrite the current data value with the incoming value
   for (final entry in entries) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = entry.value;
     final fieldName = entry.key;
 
     buffer.writeln(
-      '      $fieldName: $fieldName ?? this.$fieldName,',
+      "      '$columnName': $fieldName${isEnum ? '?.name' : ''} ?? data['$columnName'],",
     );
   }
 
-  buffer.writeln('    );');
+  buffer.writeln('    });');
 }
 
 /// Helper to get the default value for a given Dart type.
