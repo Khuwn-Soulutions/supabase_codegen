@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../../../../bin/src/src.dart';
@@ -116,6 +117,54 @@ void main() {
             generator: mockGenerator,
             pubspecFile: mockPubspecFile,
           );
+
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              envFilePath: envFilePath,
+              outputFolder: outputFolder,
+              fileTag: fileTag,
+              skipFooter: skipFooter,
+            ),
+          ).called(1);
+          verifyNever(() => mockPubspecFile.readAsStringSync());
+        });
+
+        test('config file given on command line', () async {
+          final customConfigFile = File(
+            path.join(Directory.current.path, 'test/custom_config.yaml'),
+          );
+
+          // Arrange
+          final args = <String>[
+            '--${CmdOption.configYaml}',
+            customConfigFile.path,
+          ];
+
+          // Mock File.readAsStringSync
+          when(() => mockPubspecFile.readAsStringSync()).thenReturn('');
+          when(() => mockPubspecFile.existsSync()).thenReturn(true);
+
+          const envFilePath = '.env';
+          const outputFolder = '.dart_tool/types';
+          const fileTag = 'v1.0.1';
+          const skipFooter = true;
+
+          customConfigFile.writeAsStringSync('''
+            env: $envFilePath
+            output: $outputFolder
+            tag: $fileTag
+            skipFooter: $skipFooter
+          ''');
+
+          // Act
+          await runGenerateTypes(
+            args,
+            generator: mockGenerator,
+            pubspecFile: mockPubspecFile,
+          );
+
+          customConfigFile.deleteSync();
 
           // Assert
           verify(
