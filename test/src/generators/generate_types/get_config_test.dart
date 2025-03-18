@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
-
-import '../../../../bin/src/generate_types/get_config.dart';
 
 // Mocking classes and functions
 class MockFile extends Mock implements File {}

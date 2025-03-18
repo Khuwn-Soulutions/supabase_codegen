@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
-
-import '../../../../bin/src/src.dart';
 
 void main() {
   group('createFieldNameTypeMap', () {

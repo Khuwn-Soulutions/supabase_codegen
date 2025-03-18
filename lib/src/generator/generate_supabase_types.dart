@@ -1,7 +1,7 @@
 import 'package:dotenv/dotenv.dart';
 import 'package:supabase/supabase.dart';
 
-import 'src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Supabase client instance to generate types.
 late SupabaseClient client;
@@ -70,6 +70,7 @@ class SupabaseCodeGenerator {
     }
 
     // Get the config from env
+    // coverage:ignore-start
     final supabaseUrl = dotenv['SUPABASE_URL']!;
     final supabaseAnonKey = dotenv['SUPABASE_ANON_KEY']!;
     logger.i('[GenerateTypes] Starting type generation');
@@ -77,5 +78,6 @@ class SupabaseCodeGenerator {
     client = SupabaseClient(supabaseUrl, supabaseAnonKey);
 
     await generateSchemaInfo();
+    // coverage:ignore-end
   }
 }

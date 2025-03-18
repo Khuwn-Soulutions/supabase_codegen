@@ -1,4 +1,4 @@
-import 'src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Get the dart type for the provided [column]
 String getDartType(Map<String, dynamic> column) {
@@ -95,7 +95,7 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
   }
 }
 
-// Helper to extract generic type from List<T>
+/// Helper to extract generic type from a List
 String getGenericType(String listType) {
   final match = RegExp('List<(.+)>').firstMatch(listType);
   return match?.group(1) ?? 'dynamic';

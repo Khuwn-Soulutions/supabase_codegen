@@ -1,4 +1,4 @@
-import '../src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Write the file header
 void writeHeader(StringBuffer buffer) {

@@ -1,6 +1,6 @@
+import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
 
-import '../../../../bin/src/src.dart';
 import 'expected/expected.dart';
 
 void main() {

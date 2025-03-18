@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
+import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
-
-import '../../../../bin/src/src.dart';
 
 // Mocking classes and functions
 class MockSupabaseCodeGenerator extends Mock implements SupabaseCodeGenerator {}
