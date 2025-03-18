@@ -14,10 +14,16 @@ void main() {
   group('runGenerateTypes', () {
     late MockSupabaseCodeGenerator mockGenerator;
     late MockFile mockPubspecFile;
+    final configFile = File(defaultValues['config-yaml']! as String);
 
     setUp(() {
       mockGenerator = MockSupabaseCodeGenerator();
       mockPubspecFile = MockFile();
+
+      if (configFile.existsSync()) {
+        /// Remove config file
+        configFile.deleteSync();
+      }
 
       when(
         () => mockGenerator.generateSupabaseTypes(
@@ -32,60 +38,103 @@ void main() {
     tearDown(() {
       reset(mockGenerator);
       reset(mockPubspecFile);
+
+      if (configFile.existsSync()) {
+        /// Remove config file
+        configFile.deleteSync();
+      }
     });
 
-    test('it calls generateSupabaseTypes with correct defaults', () async {
-      // Arrange
-      final args = <String>[];
+    group('it calls generateSupabaseTypes with', () {
+      test('correct defaults', () async {
+        // Arrange
+        final args = <String>[];
 
-      // Act
-      await runGenerateTypes(args, generator: mockGenerator);
+        // Act
+        await runGenerateTypes(args, generator: mockGenerator);
 
-      // Assert
-      verify(
-        () => mockGenerator.generateSupabaseTypes(
-          envFilePath: '.env',
-          outputFolder: 'supabase/types',
-        ),
-      ).called(1);
-    });
+        // Assert
+        verify(
+          () => mockGenerator.generateSupabaseTypes(
+            envFilePath: '.env',
+            outputFolder: 'supabase/types',
+          ),
+        ).called(1);
+      });
 
-    test(
-        'it calls generateSupabaseTypes with correct parameters '
-        'from command line', () async {
-      // Arrange
-      final args = [
-        '--env',
-        '.testenv',
-        '--output',
-        'test/output',
-        '--tag',
-        'testtag',
-        '--debug',
-        '--skipFooter',
-      ];
+      group('correct parameters from', () {
+        test('command line', () async {
+          // Arrange
+          final args = [
+            '--env',
+            '.testenv',
+            '--output',
+            'test/output',
+            '--tag',
+            'testtag',
+            '--debug',
+            '--skipFooter',
+          ];
 
-      // Act
-      await runGenerateTypes(args, generator: mockGenerator);
+          // Act
+          await runGenerateTypes(args, generator: mockGenerator);
 
-      // Assert
-      verify(
-        () => mockGenerator.generateSupabaseTypes(
-          envFilePath: '.testenv',
-          outputFolder: 'test/output',
-          fileTag: 'testtag',
-          skipFooter: true,
-        ),
-      ).called(1);
-    });
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              envFilePath: '.testenv',
+              outputFolder: 'test/output',
+              fileTag: 'testtag',
+              skipFooter: true,
+            ),
+          ).called(1);
+        });
 
-    test('it calls generateSupabaseTypes with correct parameters from pubspec',
-        () async {
-      // Arrange
-      final args = <String>[];
+        test('default config file if found', () async {
+          // Arrange
+          final args = <String>[];
 
-      // Mock File.readAsStringSync
-      when(() => mockPubspecFile.readAsStringSync()).thenReturn('''
+          // Mock File.readAsStringSync
+          when(() => mockPubspecFile.readAsStringSync()).thenReturn('');
+          when(() => mockPubspecFile.existsSync()).thenReturn(true);
+
+          const envFilePath = '.env';
+          const outputFolder = '.dart_tool/types';
+          const fileTag = 'v1.0.1';
+          const skipFooter = true;
+
+          configFile.writeAsStringSync('''
+            env: $envFilePath
+            output: $outputFolder
+            tag: $fileTag
+            skipFooter: $skipFooter
+          ''');
+
+          // Act
+          await runGenerateTypes(
+            args,
+            generator: mockGenerator,
+            pubspecFile: mockPubspecFile,
+          );
+
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              envFilePath: envFilePath,
+              outputFolder: outputFolder,
+              fileTag: fileTag,
+              skipFooter: skipFooter,
+            ),
+          ).called(1);
+          verifyNever(() => mockPubspecFile.readAsStringSync());
+        });
+
+        test('pubspec if no config file found and has correct key', () async {
+          // Arrange
+          final args = <String>[];
+
+          // Mock File.readAsStringSync
+          when(() => mockPubspecFile.readAsStringSync()).thenReturn('''
       name: test_package
       supabase_codegen:
         env: .pubspecenv
@@ -94,24 +143,26 @@ void main() {
         debug: true
         skipFooter: true
       ''');
-      when(() => mockPubspecFile.existsSync()).thenReturn(true);
+          when(() => mockPubspecFile.existsSync()).thenReturn(true);
 
-      // Act
-      await runGenerateTypes(
-        args,
-        generator: mockGenerator,
-        pubspecFile: mockPubspecFile,
-      );
+          // Act
+          await runGenerateTypes(
+            args,
+            generator: mockGenerator,
+            pubspecFile: mockPubspecFile,
+          );
 
-      // Assert
-      verify(
-        () => mockGenerator.generateSupabaseTypes(
-          envFilePath: '.pubspecenv',
-          outputFolder: 'pubspec/output',
-          fileTag: 'pubspectag',
-          skipFooter: true,
-        ),
-      ).called(1);
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              envFilePath: '.pubspecenv',
+              outputFolder: 'pubspec/output',
+              fileTag: 'pubspectag',
+              skipFooter: true,
+            ),
+          ).called(1);
+        });
+      });
     });
 
     test('it returns usage and exits when --help is provided', () async {
@@ -124,6 +175,7 @@ void main() {
       expect(usage, isNotNull);
       for (final entry in defaultValues.entries) {
         expect(usage, contains(entry.key));
+        expect(usage, contains(entry.value));
       }
 
       // Assert
@@ -138,7 +190,7 @@ void main() {
       );
     });
 
-    test('it throws error if generateSupabaseTypes throws an exception',
+    test('it catches error if generateSupabaseTypes throws an exception',
         () async {
       // Arrange
       final args = <String>[];
