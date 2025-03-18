@@ -80,7 +80,7 @@ Future<String?> runGenerateTypes(
     }
 
     /// Get config values
-    final codegenConfig = getPubspecConfig(pubspecFile);
+    final codegenConfig = getPubspecConfig(file: pubspecFile);
 
     /// Helper function to get option value
     String optionValueFor(String option) => results.wasParsed(option)
