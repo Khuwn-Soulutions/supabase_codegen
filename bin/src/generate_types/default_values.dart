@@ -1,7 +1,9 @@
+import 'cmd_option.dart';
+
 /// Default option values
 const defaultValues = <String, dynamic>{
-  'env': '.env',
-  'output': 'supabase/types',
-  'tag': '',
-  'config-yaml': '.supabase_codegen.yaml',
+  CmdOption.env: '.env',
+  CmdOption.output: 'supabase/types',
+  CmdOption.tag: '',
+  CmdOption.configYaml: '.supabase_codegen.yaml',
 };

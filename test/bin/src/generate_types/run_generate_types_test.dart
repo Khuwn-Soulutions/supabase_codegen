@@ -73,7 +73,7 @@ void main() {
             '--tag',
             'testtag',
             '--debug',
-            '--skipFooter',
+            '--skip-footer',
           ];
 
           // Act

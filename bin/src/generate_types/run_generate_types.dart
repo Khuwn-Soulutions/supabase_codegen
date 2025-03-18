@@ -17,71 +17,62 @@ Future<String?> runGenerateTypes(
   final isRunningInTest = Platform.script.path.contains('test.dart');
 
   try {
-    /// Parse options from command line
-    const envOption = 'env';
-    const outputOption = 'output';
-    const tagOption = 'tag';
-    const debugOption = 'debug';
-    const skipFooterOption = 'skipFooter';
-    const helpOption = 'help';
-    const configYamlOption = 'config-yaml';
-
     /// Get the parser for the argument.
     /// If an option is not set the default value will be extracted from
     /// the pubspec file with a predefined fallback if not set in pubspec
     final parser = ArgParser()
       // Help
       ..addFlag(
-        helpOption,
-        abbr: helpOption[0],
+        CmdOption.help,
+        abbr: CmdOption.help[0],
         help: 'Show help',
       )
       // Env
       ..addOption(
-        envOption,
-        abbr: envOption[0],
-        defaultsTo: defaultValues[envOption] as String,
+        CmdOption.env,
+        abbr: CmdOption.env[0],
+        defaultsTo: defaultValues[CmdOption.env] as String,
         help: 'Path to .env file',
       )
       // Output Folder
       ..addOption(
-        outputOption,
-        abbr: outputOption[0],
-        defaultsTo: defaultValues[outputOption] as String,
+        CmdOption.output,
+        abbr: CmdOption.output[0],
+        defaultsTo: defaultValues[CmdOption.output] as String,
         help: 'Path to output folder',
       )
       // Tag
       ..addOption(
-        tagOption,
-        abbr: tagOption[0],
-        defaultsTo: defaultValues[tagOption] as String,
+        CmdOption.tag,
+        abbr: CmdOption.tag[0],
+        defaultsTo: defaultValues[CmdOption.tag] as String,
         help: 'Tag to add to generated files',
       )
       // Config yaml path
       ..addOption(
-        configYamlOption,
-        defaultsTo: defaultValues[configYamlOption] as String,
-        abbr: configYamlOption[0],
+        CmdOption.configYaml,
+        defaultsTo: defaultValues[CmdOption.configYaml] as String,
+        abbr: CmdOption.configYaml[0],
         help: 'Path to config yaml file. \n'
             'If not specified, reads from keys under '
             'supabase_codegen in pubspec.yaml',
       )
       // Debug
       ..addFlag(
-        debugOption,
-        abbr: debugOption[0],
+        CmdOption.debug,
+        abbr: CmdOption.debug[0],
         help: 'Enable debug logging',
       )
       // Skip footer
       ..addFlag(
-        skipFooterOption,
-        abbr: skipFooterOption[0],
+        CmdOption.skipFooter,
+        abbr: CmdOption.skipFooter[0],
         help: 'Skip footer generation',
       );
     final results = parser.parse(args);
 
     // Check for help and print usage
-    if (results.wasParsed(helpOption)) {
+    if (results.wasParsed(CmdOption.help)) {
       // Return value instead of printing in test
       if (isRunningInTest) return parser.usage;
 
@@ -94,7 +85,7 @@ Future<String?> runGenerateTypes(
     }
 
     /// Get config values
-    final configFilePath = results.option(configYamlOption)!;
+    final configFilePath = results.option(CmdOption.configYaml)!;
     final codegenConfig = getCodegenConfig(
       configFile: File(configFilePath),
       pubspecFile: pubspecFile,
@@ -113,11 +104,11 @@ Future<String?> runGenerateTypes(
             parser.defaultFor(option)! as bool;
 
     // Pull out options
-    final envFilePath = optionValueFor(envOption);
-    final outputFolder = optionValueFor(outputOption);
-    final tag = optionValueFor(tagOption);
-    final debug = flagValueFor(debugOption);
-    final skipFooter = flagValueFor(skipFooterOption);
+    final envFilePath = optionValueFor(CmdOption.env);
+    final outputFolder = optionValueFor(CmdOption.output);
+    final tag = optionValueFor(CmdOption.tag);
+    final debug = flagValueFor(CmdOption.debug);
+    final skipFooter = flagValueFor(CmdOption.skipFooter);
 
     /// Set the log level if debug is true
     final level = debug ? Level.all : Level.info;
