@@ -2,7 +2,7 @@ import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
 /// Logger
-late final Logger logger;
+late Logger logger;
 
 /// Test logger
 @visibleForTesting
