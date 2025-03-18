@@ -161,8 +161,10 @@ void main() {
         when(() => mockPubspecFile.existsSync()).thenReturn(false);
 
         // Act
-        final result =
-            getCodegenConfig(mockConfigFile, pubspecFile: mockPubspecFile);
+        final result = getCodegenConfig(
+          configFile: mockConfigFile,
+          pubspecFile: mockPubspecFile,
+        );
 
         // Assert
         expect(result['env'], '.configenv');
@@ -190,8 +192,10 @@ void main() {
         when(() => mockPubspecFile.existsSync()).thenReturn(true);
 
         // Act
-        final result =
-            getCodegenConfig(mockConfigFile, pubspecFile: mockPubspecFile);
+        final result = getCodegenConfig(
+          configFile: mockConfigFile,
+          pubspecFile: mockPubspecFile,
+        );
 
         // Assert
         expect(result['env'], '.pubspecenv');

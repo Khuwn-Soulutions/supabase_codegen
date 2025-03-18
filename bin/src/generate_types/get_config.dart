@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:yaml/yaml.dart';
 
 /// Get the code generator configuration
-Map<String, dynamic> getCodegenConfig(File configFile, {File? pubspecFile}) {
+Map<String, dynamic> getCodegenConfig({
+  required File configFile,
+  File? pubspecFile,
+}) {
   return configFile.existsSync()
       ? extractCodegenConfig(configFile)
       : getPubspecConfig(file: pubspecFile);
@@ -22,8 +25,8 @@ Map<String, dynamic> getPubspecConfig({
 
 /// Extract the configuration from the provided [file]
 Map<String, dynamic> extractCodegenConfig(File file, {String key = ''}) {
-  final pubspecContents = file.readAsStringSync();
-  final pubspec = loadYaml(pubspecContents) as YamlMap;
+  final configFileContents = file.readAsStringSync();
+  final pubspec = loadYaml(configFileContents) as YamlMap;
   final codegenConfig = key.isEmpty ? pubspec : pubspec[key] as YamlMap? ?? {};
   return Map<String, dynamic>.from(codegenConfig);
 }
