@@ -133,6 +133,7 @@ supabase_codegen:
 `output`: Sets the default output folder.  
 `tag`: Sets the default tag that will be added to the generated files.  
 `debug`: Sets the default for debug logging.  
+`skipFooter`: Skip the writing of the footer in the generated files.
 
 ### Priority 
 The command line options have higher priority than the options defined in the pubspec.yaml.
