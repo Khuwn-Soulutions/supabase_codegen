@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:change_case/change_case.dart';
 import 'package:logger/logger.dart';
 import '../src.dart';
 
@@ -23,6 +24,7 @@ Future<String?> runGenerateTypes(
     const debugOption = 'debug';
     const skipFooterOption = 'skipFooter';
     const helpOption = 'help';
+    const configYamlOption = 'config-yaml';
 
     /// Get the parser for the argument.
     /// If an option is not set the default value will be extracted from
@@ -38,19 +40,31 @@ Future<String?> runGenerateTypes(
       ..addOption(
         envOption,
         abbr: envOption[0],
+        defaultsTo: defaultValues[envOption] as String,
         help: 'Path to .env file',
       )
       // Output Folder
       ..addOption(
         outputOption,
         abbr: outputOption[0],
+        defaultsTo: defaultValues[outputOption] as String,
         help: 'Path to output folder',
       )
       // Tag
       ..addOption(
         tagOption,
         abbr: tagOption[0],
+        defaultsTo: defaultValues[tagOption] as String,
         help: 'Tag to add to generated files',
+      )
+      // Config yaml path
+      ..addOption(
+        configYamlOption,
+        defaultsTo: defaultValues[configYamlOption] as String,
+        abbr: configYamlOption[0],
+        help: 'Path to config yaml file. \n'
+            'If not specified, reads from keys under '
+            'supabase_codegen in pubspec.yaml',
       )
       // Debug
       ..addFlag(
@@ -80,18 +94,23 @@ Future<String?> runGenerateTypes(
     }
 
     /// Get config values
-    final codegenConfig = getPubspecConfig(file: pubspecFile);
+    final configFilePath = results.option(configYamlOption)!;
+    final codegenConfig = getCodegenConfig(
+      configFile: File(configFilePath),
+      pubspecFile: pubspecFile,
+    );
 
     /// Helper function to get option value
     String optionValueFor(String option) => results.wasParsed(option)
         ? results.option(option)!
-        : (codegenConfig[option] as String?) ??
-            defaultValues[option]!.toString();
+        : (codegenConfig[option.toCamelCase()] as String?) ??
+            parser.defaultFor(option)! as String;
 
     /// Helper function to get flag value
     bool flagValueFor(String option) => results.wasParsed(option)
         ? results.flag(option)
-        : (codegenConfig[option] as bool?) ?? defaultValues[option]! as bool;
+        : (codegenConfig[option.toCamelCase()] as bool?) ??
+            parser.defaultFor(option)! as bool;
 
     // Pull out options
     final envFilePath = optionValueFor(envOption);

@@ -1,8 +1,7 @@
 /// Default option values
-const defaultValues = {
+const defaultValues = <String, dynamic>{
   'env': '.env',
   'output': 'supabase/types',
   'tag': '',
-  'debug': false,
-  'skipFooter': false,
+  'config-yaml': '.supabase_codegen.yaml',
 };
