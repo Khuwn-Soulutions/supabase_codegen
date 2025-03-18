@@ -75,6 +75,12 @@ If set, the tag will appear at the end of the files following the file generatio
 /// Tag: v2
 ```
 
+- `-c, --config-yaml  <config yaml path>`       
+
+Path to config yaml file, defaults to ".supabase_codegen.yaml".  
+If not specified, reads from keys under `supabase_codegen` in `pubspec.yaml`.  
+See [Yaml configuration](#yaml-configuration)
+
 - `-d, --debug` (Default: false):
 
 Enables debug logging to provide more verbose output during the type generation.  
@@ -90,8 +96,19 @@ Example: `dart run supabase_codegen:generate_types --skip-footer`
 Show command line usage options
 Example: `dart run supabase_codegen:generate_types --help`
 
-## Configuration via pubspec.yaml
-Instead of providing the options via the command line, you can also set them in your `pubspec.yaml` file under the supabase_codegen key. This allows setting default values, and you only need to override them if needed from the command line.
+## Yaml configuration
+Instead of providing the options via the command line, you can also set them in a yaml file.
+This can be either in the config yaml file (default `.supabase_codegen.yaml`) or in your `pubspec.yaml` file under the `supabase_codegen` key. 
+This allows setting default values, and you only need to override them if needed from the command line.
+
+Example config file e.g. `.supabase_codegen.yaml`
+```yaml
+env: .env.development # Overrides default: .env
+output: lib/models/supabase # Overrides default: supabase/types
+tag: v1 # Overrides default: ''
+debug: true # Overrides default: false
+skipFooter: true # Overrides default: false
+```
 
 Here's an example of how to configure the options in `pubspec.yaml`:
 
