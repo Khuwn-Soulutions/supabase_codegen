@@ -136,7 +136,12 @@ supabase_codegen:
 `skipFooter`: Skip the writing of the footer in the generated files.
 
 ### Priority 
-The command line options have higher priority than the options defined in the pubspec.yaml.
+The command line options have higher priority than the options defined in the yaml configuration.
+
+*Order:*  
+command line options   
+ -> configuration yaml (default: `.supabase_codegen.yaml`)  
+ -> pubspec.yaml (key: `supabase_codegen`)
 
 ## 📦 Generated Types
 
