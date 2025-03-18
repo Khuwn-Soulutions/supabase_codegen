@@ -94,6 +94,7 @@ void main() {
         debug: true
         skipFooter: true
       ''');
+      when(() => mockPubspecFile.existsSync()).thenReturn(true);
 
       // Act
       await runGenerateTypes(
