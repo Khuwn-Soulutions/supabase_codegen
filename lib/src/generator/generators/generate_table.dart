@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
 
-import '../src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Generate the complete table file for the table with [tableName] with
 /// [columns] to be written in the given [directory], considering the provided
@@ -309,7 +309,8 @@ void writeCopyWith({
     final fieldName = entry.key;
 
     buffer.writeln(
-      "      '$columnName': $fieldName${isEnum ? '?.name' : ''} ?? data['$columnName'],",
+      "      '$columnName': $fieldName${isEnum ? '?.name' : ''} "
+      "?? data['$columnName'],",
     );
   }
 

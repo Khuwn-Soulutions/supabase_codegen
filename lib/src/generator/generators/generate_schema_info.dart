@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
 
-import '../src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
+/// Table barrel file name
 const tableBarrelFileName = '_tables.dart';
 
 /// Generate the schema info

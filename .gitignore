@@ -10,4 +10,5 @@ pubspec.lock
 .env*
 
 # Artefacts
-coverage/
+coverage/*
+.failed_tracker

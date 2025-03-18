@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:change_case/change_case.dart';
 
-import '../src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
+/// Generate enums
 Future<void> generateEnums(Directory enumsDir) async {
   final enumFile = File('${enumsDir.path}/$enumsFileName.dart');
   // Add header comment and imports

@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:change_case/change_case.dart';
 import 'package:logger/logger.dart';
-import '../src.dart';
-
-///
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Generate the supabase types using the [args] provided
 Future<String?> runGenerateTypes(
@@ -14,7 +12,8 @@ Future<String?> runGenerateTypes(
   File? pubspecFile,
 }) async {
   /// Are we running in test mode
-  final isRunningInTest = Platform.script.path.contains('test.dart');
+  final isRunningInTest = Platform.script.path.contains('test.dart') ||
+      Platform.environment['FLUTTER_TEST'] == 'true';
 
   try {
     /// Get the parser for the argument.

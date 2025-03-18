@@ -1,4 +1,4 @@
-import 'cmd_option.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Default option values
 const defaultValues = <String, dynamic>{

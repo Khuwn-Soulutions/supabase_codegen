@@ -1,4 +1,4 @@
-import '../../../../../bin/src/src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Test [FieldNameTypeMap]
 const FieldNameTypeMap testFieldNameTypeMap = {

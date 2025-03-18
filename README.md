@@ -15,7 +15,7 @@ Add the following to your pubspec.yaml
 
 ```yaml
 dependencies:
-  supabase_codegen: ^1.0.0
+  supabase_codegen: ^1.1.0
 ```
 
 ---
@@ -117,7 +117,7 @@ name: my_supabase_app
 description: A sample Supabase app.
 
 dev_dependencies:
-  supabase_codegen: ^latest_version
+  supabase_codegen: ^1.1.0
 
 supabase_codegen:
   env: .env.development # Overrides default: .env

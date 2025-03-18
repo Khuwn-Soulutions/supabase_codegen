@@ -1,7 +1,10 @@
 import 'dart:io';
 
-import '../src.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
+// coverage:ignore-file
+
+/// Generate schema files
 Future<void> generateSchemaFiles(
   Map<String, List<Map<String, dynamic>>> tables,
 ) async {
