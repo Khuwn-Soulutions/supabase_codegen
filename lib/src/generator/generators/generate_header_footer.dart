@@ -6,7 +6,8 @@ void writeHeader(StringBuffer buffer) {
     ..writeln('//')
     ..writeln('//  Generated file. Do not edit.')
     ..writeln('//')
-    ..writeln('// ignore_for_file: require_trailing_commas')
+    ..writeln('// ignore_for_file: require_trailing_commas, '
+        'constant_identifier_names')
     ..writeln();
 }
 

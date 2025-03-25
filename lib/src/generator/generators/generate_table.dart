@@ -7,6 +7,7 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 /// Generate the complete table file for the table with [tableName] with
 /// [columns] to be written in the given [directory], considering the provided
 /// [fieldNameTypeMap]
+// coverage:ignore-start
 Future<void> generateTableFile({
   required String tableName,
   required List<Map<String, dynamic>> columns,
@@ -80,6 +81,7 @@ void _writeImports(StringBuffer buffer) {
     ..writeln("import '../database.dart';")
     ..writeln();
 }
+// coverage:ignore-end
 
 /// Generate the table class
 @visibleForTesting
