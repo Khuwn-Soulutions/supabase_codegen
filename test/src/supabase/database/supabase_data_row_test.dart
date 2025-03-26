@@ -16,6 +16,12 @@ void main() {
       expect(user, isNotNull);
     });
 
+    test('toJson returns data', () {
+      final json = user.toJson();
+      expect(json, isNotNull);
+      expect(json, userData);
+    });
+
     group('created with fields', () {
       late UsersRow row;
       setUp(() {

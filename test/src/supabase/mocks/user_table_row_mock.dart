@@ -56,6 +56,9 @@ class UsersRow extends SupabaseDataRow {
   factory UsersRow.fromJson(Map<String, dynamic> data) =>
       UsersRow._(data.cleaned);
 
+  /// Get the Json representation of the row
+  Map<String, dynamic> toJson() => data;
+
   /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => UsersTable();
