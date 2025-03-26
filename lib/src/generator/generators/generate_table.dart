@@ -208,6 +208,9 @@ void writeFields({
 }) {
   /// Write the table getter
   buffer
+    ..writeln('  /// Get the Json representation of the row')
+    ..writeln('  Map<String, dynamic> toJson() => data;')
+    ..writeln()
     ..writeln('  /// Get the [SupabaseTable] for this row')
     ..writeln('  @override')
     ..writeln('  SupabaseTable get table => $tableClass();')
