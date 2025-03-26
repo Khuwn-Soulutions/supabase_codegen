@@ -1,5 +1,8 @@
 /// Expected row fields
 const expectedRowFields = '''
+  /// Get the Json representation of the row
+  Map<String, dynamic> toJson() => data;
+
   /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => TestGenerateTable();
