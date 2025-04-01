@@ -1,3 +1,14 @@
+## 1.2.0 - 2025-04-01
+
+### Features
+
+- toJson method added to generated row data class
+
+## Bug Fixes
+
+- suppress analyzer warnings for capitalized enum members
+- DateTime not correctly copied in copyWith
+
 ## 1.1.0 - 2025-03-18
 
 ### Features
