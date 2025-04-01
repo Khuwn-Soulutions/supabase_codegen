@@ -26,7 +26,7 @@ void main(List<String> args) async {
   logger.i('New version: $version');
 
   /// Overwrite version in src/version.dart
-  final versionFile = File('bin/src/version.dart');
+  final versionFile = File('lib/src/generator/version.dart');
   final versionContents = versionFile.readAsStringSync();
   versionFile.writeAsStringSync(
     versionContents.replaceAll(
