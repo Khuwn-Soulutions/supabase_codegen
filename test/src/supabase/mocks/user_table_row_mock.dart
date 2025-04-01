@@ -56,6 +56,9 @@ class UsersRow extends SupabaseDataRow {
   factory UsersRow.fromJson(Map<String, dynamic> data) =>
       UsersRow._(data.cleaned);
 
+  /// Get the Json representation of the row
+  Map<String, dynamic> toJson() => data;
+
   /// Get the [SupabaseTable] for this row
   @override
   SupabaseTable get table => UsersTable();
@@ -124,12 +127,12 @@ class UsersRow extends SupabaseDataRow {
     DateTime? createdAt,
   }) =>
       UsersRow.fromJson({
-        'email': email ?? data['email'],
-        'role': role?.name ?? data['role'],
-        'id': id ?? data['id'],
-        'acc_name': accName ?? data['acc_name'],
-        'phone_number': phoneNumber ?? data['phone_number'],
-        'contacts': contacts ?? data['contacts'],
-        'created_at': createdAt ?? data['created_at'],
+        'email': supaSerialize(email) ?? data['email'],
+        'role': supaSerialize(role) ?? data['role'],
+        'id': supaSerialize(id) ?? data['id'],
+        'acc_name': supaSerialize(accName) ?? data['acc_name'],
+        'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
+        'contacts': supaSerialize(contacts) ?? data['contacts'],
+        'created_at': supaSerialize(createdAt) ?? data['created_at'],
       });
 }

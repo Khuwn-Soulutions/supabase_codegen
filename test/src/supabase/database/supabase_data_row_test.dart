@@ -16,6 +16,12 @@ void main() {
       expect(user, isNotNull);
     });
 
+    test('toJson returns data', () {
+      final json = user.toJson();
+      expect(json, isNotNull);
+      expect(json, userData);
+    });
+
     group('created with fields', () {
       late UsersRow row;
       setUp(() {
@@ -137,23 +143,36 @@ void main() {
     });
 
     group('copyWith ', () {
-      const someEmail = 'some-email';
+      final fieldsToCopy = [
+        UsersRow.emailField,
+        UsersRow.contactsField,
+        UsersRow.createdAtField,
+      ];
+      final userToCopy = UsersRow(
+        email: 'email',
+        role: UserRole.user,
+        contacts: const ['user1', 'user2'],
+        createdAt: DateTime.now(),
+      );
       late UsersRow copy;
       setUp(() {
         copy = user.copyWith(
-          email: someEmail,
+          email: userToCopy.email,
+          contacts: userToCopy.contacts,
+          createdAt: userToCopy.createdAt,
         );
       });
 
       test('overrides provided fields', () {
         expect(copy == user, isFalse);
-        expect(copy.email, someEmail);
-        expect(copy.data['email'], someEmail);
+        for (final field in fieldsToCopy) {
+          expect(copy.data[field], userToCopy.data[field]);
+        }
       });
 
       test('preserves other fields', () {
         for (final key in user.data.keys) {
-          if (key == 'email') continue;
+          if (fieldsToCopy.contains(key)) continue;
 
           expect(copy.data.containsKey(key), isTrue);
           expect(copy.data[key], user.data[key]);

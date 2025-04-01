@@ -26,7 +26,7 @@ void main(List<String> args) async {
   logger.i('New version: $version');
 
   /// Overwrite version in src/version.dart
-  final versionFile = File('bin/src/version.dart');
+  final versionFile = File('lib/src/generator/version.dart');
   final versionContents = versionFile.readAsStringSync();
   versionFile.writeAsStringSync(
     versionContents.replaceAll(
@@ -40,10 +40,15 @@ void main(List<String> args) async {
   final readmeFile = File('README.md');
   final readmeContents = readmeFile.readAsStringSync();
   readmeFile.writeAsStringSync(
-    readmeContents.replaceAll(
-      RegExp(r'supabase_codegen: \^(.+)'),
-      'supabase_codegen: ^$version',
-    ),
+    readmeContents
+        .replaceAll(
+          RegExp(r'supabase_codegen: \^(.+)'),
+          'supabase_codegen: ^$version',
+        )
+        .replaceAll(
+          RegExp(r'supabase_codegen \((.+)\)'),
+          'supabase_codegen ($version)',
+        ),
   );
   logger.i('README.md updated');
 }

@@ -10,7 +10,8 @@ void main() {
       expect(buffer.toString(), contains('Generated file. Do not edit.'));
       expect(
         buffer.toString(),
-        contains('// ignore_for_file: require_trailing_commas'),
+        contains('// ignore_for_file: require_trailing_commas, '
+            'constant_identifier_names'),
       );
     });
 

@@ -7,6 +7,7 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 /// Generate the complete table file for the table with [tableName] with
 /// [columns] to be written in the given [directory], considering the provided
 /// [fieldNameTypeMap]
+// coverage:ignore-start
 Future<void> generateTableFile({
   required String tableName,
   required List<Map<String, dynamic>> columns,
@@ -80,6 +81,7 @@ void _writeImports(StringBuffer buffer) {
     ..writeln("import '../database.dart';")
     ..writeln();
 }
+// coverage:ignore-end
 
 /// Generate the table class
 @visibleForTesting
@@ -206,6 +208,9 @@ void writeFields({
 }) {
   /// Write the table getter
   buffer
+    ..writeln('  /// Get the Json representation of the row')
+    ..writeln('  Map<String, dynamic> toJson() => data;')
+    ..writeln()
     ..writeln('  /// Get the [SupabaseTable] for this row')
     ..writeln('  @override')
     ..writeln('  SupabaseTable get table => $tableClass();')
@@ -309,7 +314,7 @@ void writeCopyWith({
     final fieldName = entry.key;
 
     buffer.writeln(
-      "      '$columnName': $fieldName${isEnum ? '?.name' : ''} "
+      "      '$columnName': supaSerialize($fieldName) "
       "?? data['$columnName'],",
     );
   }

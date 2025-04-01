@@ -9,6 +9,7 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 const tableBarrelFileName = '_tables.dart';
 
 /// Generate the schema info
+// coverage:ignore-start
 Future<void> generateSchemaInfo() async {
   try {
     final tables = await getSchemaTables();
@@ -30,6 +31,7 @@ Future<void> generateSchemaInfo() async {
     await client.dispose();
   }
 }
+// coverage:ignore-end
 
 /// Get the schema tables
 @visibleForTesting
@@ -86,6 +88,7 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   return tables;
 }
 
+// coverage:ignore-start
 /// Create the necessary directories
 Future<void> createDirectories() async {
   final dirs = [
@@ -114,6 +117,7 @@ Future<void> generateDatabaseFiles(
   // Generate table barrel file
   await generateTableBarrelFile(directory, tables);
 }
+// coverage:ignore-end
 
 /// Generate the table barrel file in the provided [directory] for the
 /// extracted [tables]
@@ -146,6 +150,7 @@ Future<void> generateTableBarrelFile(
   databaseFile.writeAsStringSync(dbBuffer.toString());
 }
 
+// coverage:ignore-start
 /// Generate the [tables] as individual files in the provided [directory]
 Future<void> generateTables(
   Map<String, List<Map<String, dynamic>>> tables,
@@ -165,6 +170,7 @@ Future<void> generateTables(
     );
   }
 }
+// coverage:ignore-end
 
 /// Create a map of the field name to data for that field
 @visibleForTesting
