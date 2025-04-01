@@ -127,12 +127,12 @@ class UsersRow extends SupabaseDataRow {
     DateTime? createdAt,
   }) =>
       UsersRow.fromJson({
-        'email': email ?? data['email'],
-        'role': role?.name ?? data['role'],
-        'id': id ?? data['id'],
-        'acc_name': accName ?? data['acc_name'],
-        'phone_number': phoneNumber ?? data['phone_number'],
-        'contacts': contacts ?? data['contacts'],
-        'created_at': createdAt ?? data['created_at'],
+        'email': supaSerialize(email) ?? data['email'],
+        'role': supaSerialize(role) ?? data['role'],
+        'id': supaSerialize(id) ?? data['id'],
+        'acc_name': supaSerialize(accName) ?? data['acc_name'],
+        'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
+        'contacts': supaSerialize(contacts) ?? data['contacts'],
+        'created_at': supaSerialize(createdAt) ?? data['created_at'],
       });
 }
