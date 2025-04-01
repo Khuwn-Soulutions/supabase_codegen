@@ -151,7 +151,7 @@ class ItemRow extends SupabaseDataRow {
     List<String>? tags,
   }) =>
     ItemRow.fromJson({
-      'tags': tags ?? data['tags'],
+      'tags': supaSerialize(tags) ?? data['tags'],
     });
 }
 

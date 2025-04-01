@@ -314,7 +314,7 @@ void writeCopyWith({
     final fieldName = entry.key;
 
     buffer.writeln(
-      "      '$columnName': $fieldName${isEnum ? '?.name' : ''} "
+      "      '$columnName': supaSerialize($fieldName) "
       "?? data['$columnName'],",
     );
   }
