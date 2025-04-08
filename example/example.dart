@@ -1,4 +1,4 @@
-import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:logger/logger.dart';
 
 import 'generated/database.dart';
 
@@ -19,7 +19,7 @@ Future<void> main() async {
   });
 
 // The returned object is already typed
-  logger
+  Logger()
     ..i('Email: ${adminUser.email}')
     ..i('Name: ${adminUser.accName}');
 
