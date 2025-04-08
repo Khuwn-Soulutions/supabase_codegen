@@ -12,3 +12,5 @@ pubspec.lock
 # Artefacts
 coverage/*
 .failed_tracker
+.flutter-plugins-dependencies
+.flutter-plugins
