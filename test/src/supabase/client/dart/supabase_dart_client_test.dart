@@ -2,15 +2,17 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
-import 'package:supabase_codegen/supabase_codegen.dart';
+import 'package:supabase_codegen/src/supabase/client/dart/supabase_dart_client.dart';
+import 'package:supabase_codegen/src/supabase/client/supabase_client.mock.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Supabase Client', () {
+  group('Supabase (Dart) Client', () {
     final envPath = path.join(Directory.current.path, 'test', '.env');
+    late SupabaseCodegenClient codegenClient;
 
     setUp(() {
-      supabaseClient = null;
+      codegenClient = SupabaseCodegenClient();
     });
 
     tearDown(() {
@@ -34,27 +36,27 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
 
     test('loadSupabaseClient returns a SupabaseClient', () {
       writeEnvFile();
-      final client = loadSupabaseClient(envPath);
+      final client = codegenClient.loadSupabaseClient(envPath);
       expect(client, isA<SupabaseClient>());
     });
 
     test('loadSupabaseClient caches the client', () {
       writeEnvFile();
-      final client1 = loadSupabaseClient(envPath);
-      final client2 = loadSupabaseClient(envPath);
+      final client1 = codegenClient.loadSupabaseClient(envPath);
+      final client2 = codegenClient.loadSupabaseClient(envPath);
       expect(client1, equals(client2));
     });
 
     test('loadMockSupabaseClient returns mockSupabase', () {
-      final client = loadMockSupabaseClient();
+      final client = codegenClient.loadMockSupabaseClient();
       expect(client, equals(mockSupabase));
     });
 
-    test('loadClient returns a SupabaseClient', () {
+    test('loadClient returns a SupabaseClient', () async {
       writeEnvFile();
 
       // Call the function under test
-      final client = loadClient(envPath);
+      final client = await codegenClient.loadClient(envPath);
 
       // Expect a valid client
       expect(client, isA<SupabaseClient>());
@@ -64,23 +66,29 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       writeEnvFile(url: '', key: '');
 
       // Call the function under test
-      expect(() => loadClient(envPath), throwsException);
+      expect(() => codegenClient.loadClient(envPath), throwsException);
     });
 
     test('setClient sets the supabaseClient', () {
-      setClient(SupabaseClient('supabaseUrl', 'supabaseKey'));
+      codegenClient.setClient(SupabaseClient('supabaseUrl', 'supabaseKey'));
       // Expect a valid client
-      expect(supabaseClient, isA<SupabaseClient>());
+      expect(codegenClient.supabaseClient, isA<SupabaseClient>());
     });
 
-    test('createClient creates client with the url and key provided', () {
+    test('createClient creates client with the url and key provided', () async {
       final url = Uri.parse('https://example.com');
       const key = '09876543234567';
-      createClient(url.toString(), key);
+      await codegenClient.createClient(url.toString(), key);
       // Expect a valid client
-      expect(supabaseClient, isA<SupabaseClient>());
-      expect(supabaseClient!.auth.headers['Authorization'], contains(key));
-      expect(supabaseClient!.realtime.endPoint, contains(url.host));
+      expect(codegenClient.supabaseClient, isA<SupabaseClient>());
+      expect(
+        codegenClient.supabaseClient!.auth.headers['Authorization'],
+        contains(key),
+      );
+      expect(
+        codegenClient.supabaseClient!.realtime.endPoint,
+        contains(url.host),
+      );
     });
   });
 }
