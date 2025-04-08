@@ -60,6 +60,11 @@ void main() {
         expect(result.length, 2);
       });
 
+      test('returns all rows when no queryFn is provided', () async {
+        result = await table.queryRows();
+        expect(result.length, 2);
+      });
+
       test('can be limited', () async {
         result = await table.queryRows(
           queryFn: (q) => q.eq(UsersRow.roleField, user.role.name),
