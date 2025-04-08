@@ -66,5 +66,21 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       // Call the function under test
       expect(() => loadClient(envPath), throwsException);
     });
+
+    test('setClient sets the supabaseClient', () {
+      setClient(SupabaseClient('supabaseUrl', 'supabaseKey'));
+      // Expect a valid client
+      expect(supabaseClient, isA<SupabaseClient>());
+    });
+
+    test('createClient creates client with the url and key provided', () {
+      final url = Uri.parse('https://example.com');
+      const key = '09876543234567';
+      createClient(url.toString(), key);
+      // Expect a valid client
+      expect(supabaseClient, isA<SupabaseClient>());
+      expect(supabaseClient!.auth.headers['Authorization'], contains(key));
+      expect(supabaseClient!.realtime.endPoint, contains(url.host));
+    });
   });
 }
