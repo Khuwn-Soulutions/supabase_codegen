@@ -4,12 +4,14 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:supabase_codegen/supabase_codegen.dart' show envKeys;
 import 'package:test/test.dart';
 
 class MockGeneratorUtils extends Mock implements SupabaseCodeGeneratorUtils {}
 
 void main() {
   late SupabaseCodeGenerator generator;
+  logger = testLogger;
   group('generateSupabaseTypes', () {
     generator = const SupabaseCodeGenerator();
     test('it throws an error when env file not found', () {
@@ -34,7 +36,7 @@ void main() {
         }
       });
 
-      test('throws an error if it does not contain ${envKeys.url}', () async {
+      test('throws an error if it does not contain ${envKeys.url}', () {
         expect(
           generator.generateSupabaseTypes(
             envFilePath: envFile.path,
@@ -78,16 +80,8 @@ void main() {
           late MockGeneratorUtils mockUtils;
 
           setUp(() {
-            logger = testLogger;
             mockUtils = MockGeneratorUtils();
             generator = SupabaseCodeGenerator(utils: mockUtils);
-          });
-
-          test('with provided ${envKeys.url} and ${envKeys.anonKey}', () async {
-            envFile.writeAsStringSync('''
-            ${envKeys.url}=$url
-            ${envKeys.anonKey}=$anonKey
-          ''');
             when(mockUtils.generateSchema).thenAnswer((_) async {});
             when(() => mockUtils.createClient(any<String>(), any<String>()))
                 .thenAnswer(
@@ -96,6 +90,13 @@ void main() {
                 inv.positionalArguments[1] as String,
               ),
             );
+          });
+
+          test('with provided ${envKeys.url} and ${envKeys.anonKey}', () async {
+            envFile.writeAsStringSync('''
+            ${envKeys.url}=$url
+            ${envKeys.anonKey}=$anonKey
+          ''');
             await generator.generateSupabaseTypes(
               envFilePath: envFile.path,
               outputFolder: '',
@@ -111,14 +112,6 @@ void main() {
             ${envKeys.anonKey}=$anonKey
             ${envKeys.key}=$key
           ''');
-            when(mockUtils.generateSchema).thenAnswer((_) async {});
-            when(() => mockUtils.createClient(any<String>(), any<String>()))
-                .thenAnswer(
-              (inv) => SupabaseClient(
-                inv.positionalArguments[0] as String,
-                inv.positionalArguments[1] as String,
-              ),
-            );
             await generator.generateSupabaseTypes(
               envFilePath: envFile.path,
               outputFolder: '',
@@ -133,14 +126,6 @@ void main() {
             ${envKeys.url}=$url
             ${envKeys.key}=$key
           ''');
-            when(mockUtils.generateSchema).thenAnswer((_) async {});
-            when(() => mockUtils.createClient(any<String>(), any<String>()))
-                .thenAnswer(
-              (inv) => SupabaseClient(
-                inv.positionalArguments[0] as String,
-                inv.positionalArguments[1] as String,
-              ),
-            );
             await generator.generateSupabaseTypes(
               envFilePath: envFile.path,
               outputFolder: '',
