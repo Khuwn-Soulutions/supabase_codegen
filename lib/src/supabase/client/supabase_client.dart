@@ -12,7 +12,7 @@ SupabaseClient setClient(SupabaseClient client) => supabaseClient = client;
 
 /// Create the supabase client with the provided [url] and [key]
 SupabaseClient createClient(String url, String key) =>
-    supabaseClient = SupabaseClient(url, key);
+    setClient(SupabaseClient(url, key));
 
 /// Load the supabase client
 SupabaseClient loadSupabaseClient([String envPath = '.env']) {
