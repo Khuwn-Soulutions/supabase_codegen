@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
 
 import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:supabase_codegen/supabase_codegen.dart' show envKeys;
 
 /// Supabase client instance to generate types.
 late SupabaseClient client;
@@ -34,13 +35,6 @@ typedef ColumnData = ({
 
 /// Field name type map
 typedef FieldNameTypeMap = Map<String, ColumnData>;
-
-/// Env Keys
-const envKeys = (
-  url: 'SUPABASE_URL',
-  key: 'SUPABASE_KEY',
-  anonKey: 'SUPABASE_ANON_KEY',
-);
 
 /// Supabase code gnerator utils class
 @visibleForTesting
