@@ -37,7 +37,7 @@ class MockSupabaseCodegenClient extends SupabaseCodegenClient {
 
 void main() {
   group('Supabase (Flutter) Client', () {
-    final envPath = path.join(Directory.current.path, 'test', '.env');
+    final envPath = path.join(Directory.current.path, 'test', 'config.env');
     late MockSupabaseCodegenClient codegenClient;
     TestWidgetsFlutterBinding.ensureInitialized();
 
