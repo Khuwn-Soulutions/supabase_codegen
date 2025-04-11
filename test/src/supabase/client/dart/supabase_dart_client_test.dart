@@ -56,7 +56,7 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       writeEnvFile();
 
       // Call the function under test
-      final client = await codegenClient.loadClient(envPath);
+      final client = await codegenClient.loadClientFromEnv(envPath);
 
       // Expect a valid client
       expect(client, isA<SupabaseClient>());
@@ -66,7 +66,7 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       writeEnvFile(url: '', key: '');
 
       // Call the function under test
-      expect(() => codegenClient.loadClient(envPath), throwsException);
+      expect(() => codegenClient.loadClientFromEnv(envPath), throwsException);
     });
 
     test('setClient sets the supabaseClient', () {

@@ -99,7 +99,7 @@ SUPABASE_KEY=$key'
         'returns a SupabaseClient after client loaded',
         () async {
           writeEnvFile();
-          await codegenClient.loadClient(envPath);
+          await codegenClient.loadClientFromEnv(envPath);
           final client = codegenClient.loadSupabaseClient();
           expect(client, isA<SupabaseClient>());
         },
@@ -107,7 +107,7 @@ SUPABASE_KEY=$key'
 
       test('caches the client', () async {
         writeEnvFile();
-        await codegenClient.loadClient(envPath);
+        await codegenClient.loadClientFromEnv(envPath);
         final client1 = codegenClient.loadSupabaseClient(envPath);
         final client2 = codegenClient.loadSupabaseClient(envPath);
         expect(client1, equals(client2));
@@ -126,7 +126,7 @@ SUPABASE_KEY=$key'
         writeEnvFile();
 
         // Call the function under test
-        final client = await codegenClient.loadClient(envPath);
+        final client = await codegenClient.loadClientFromEnv(envPath);
 
         // Expect a valid client
         expect(client, isA<SupabaseClient>());
@@ -137,7 +137,7 @@ SUPABASE_KEY=$key'
 
         // Call the function under test
         expect(
-          () => codegenClient.loadClient(envPath),
+          () => codegenClient.loadClientFromEnv(envPath),
           throwsA(isA<EmptyEnvFileError>()),
         );
       });
@@ -147,7 +147,7 @@ SUPABASE_KEY=$key'
 
         // Call the function under test
         expect(
-          () => codegenClient.loadClient(envPath),
+          () => codegenClient.loadClientFromEnv(envPath),
           throwsA(isA<Exception>()),
         );
       });
