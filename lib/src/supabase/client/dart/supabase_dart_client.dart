@@ -8,6 +8,10 @@ import 'dotenv_extension.dart';
 
 /// Supabase Codegen Client
 class SupabaseCodegenClient implements SupabaseCodegenClientBase {
+  /// Default env path
+  @override
+  final defaultEnvPath = '.env';
+
   /// Client type
   @override
   @visibleForTesting

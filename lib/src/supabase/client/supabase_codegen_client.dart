@@ -3,6 +3,9 @@ import 'package:supabase/supabase.dart';
 
 /// Supabase Codegen Client
 abstract class SupabaseCodegenClientBase {
+  /// Default env path
+  final String defaultEnvPath = '';
+
   /// Client type
   @visibleForTesting
   String platform = '';

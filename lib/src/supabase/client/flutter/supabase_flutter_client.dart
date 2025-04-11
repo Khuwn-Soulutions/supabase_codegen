@@ -14,6 +14,10 @@ import 'flutter_dotenv_extension.dart';
 
 /// Supabase Codegen Client
 class SupabaseCodegenClient implements SupabaseCodegenClientBase {
+  /// Default env path
+  @override
+  final defaultEnvPath = 'config.env';
+
   /// Client type
   @override
   @visibleForTesting
