@@ -3,10 +3,10 @@ import 'package:supabase_codegen/src/supabase/client/supabase_env_keys.dart';
 
 /// Dotenv extension
 extension DotenvExtension on DotEnv {
-  /// Does the dotenv have the required keys loaded
-  Future<({String supabaseUrl, String supabaseKey})> extractKeys([
-    String envPath = '.env',
-  ]) async {
+  /// Extract the required keys from the environment file at [envPath]
+  Future<({String supabaseUrl, String supabaseKey})> extractKeys(
+    String envPath,
+  ) async {
     await load(fileName: envPath);
     final hasUrl = isEveryDefined([envKeys.url]);
     if (!hasUrl) {
