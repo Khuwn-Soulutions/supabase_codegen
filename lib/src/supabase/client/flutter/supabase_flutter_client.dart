@@ -48,6 +48,14 @@ class SupabaseCodegenClient implements SupabaseCodegenClientBase {
     return setClient(Supabase.instance.client);
   }
 
+  /// Load the supabase client using environment variables
+  @override
+  Future<SupabaseClient> loadClientFromEnv([String? envPath]) async {
+    final (:supabaseUrl, :supabaseKey) =
+        await DotEnv().extractKeys(envPath ?? defaultEnvPath);
+    return createClient(supabaseUrl, supabaseKey);
+  }
+
   /// Init Supabase
   @visibleForTesting
   Future<void> initSupabase({
@@ -65,16 +73,9 @@ class SupabaseCodegenClient implements SupabaseCodegenClientBase {
     supabaseInitialized = true;
   }
 
-  /// Load the supabase client using environment variables
-  @override
-  Future<SupabaseClient> loadClient([String envPath = '.env']) async {
-    final (:supabaseUrl, :supabaseKey) = await DotEnv().extractKeys(envPath);
-    return createClient(supabaseUrl, supabaseKey);
-  }
-
   /// Load the supabase client
   @override
-  SupabaseClient loadSupabaseClient([String envPath = '.env']) {
+  SupabaseClient loadSupabaseClient([String? envPath]) {
     if (supabaseClient == null) {
       throw AssertionError('You must call createClient or loadClient first');
     }

@@ -36,16 +36,16 @@ class SupabaseCodegenClient implements SupabaseCodegenClientBase {
   Future<SupabaseClient> createClient(String url, String key) async =>
       setClient(SupabaseClient(url, key));
 
-  /// Load the supabase client using environment variables
+  /// Load the supabase client using environment variables at [envPath]
   @override
   @visibleForTesting
-  Future<SupabaseClient> loadClient([String envPath = '.env']) async =>
-      _loadClientFromEnv(envPath);
+  Future<SupabaseClient> loadClientFromEnv([String? envPath]) async =>
+      _loadClientFromEnv(envPath ?? defaultEnvPath);
 
   /// Load the supabase client
   @override
-  SupabaseClient loadSupabaseClient([String envPath = '.env']) {
-    return supabaseClient ??= _loadClientFromEnv(envPath);
+  SupabaseClient loadSupabaseClient([String? envPath]) {
+    return supabaseClient ??= _loadClientFromEnv(envPath ?? defaultEnvPath);
   }
 
   /// Load the mock supabase client

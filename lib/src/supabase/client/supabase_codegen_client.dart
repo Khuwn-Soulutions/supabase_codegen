@@ -26,10 +26,10 @@ abstract class SupabaseCodegenClientBase {
 
   /// Load the supabase client using environment variables
   @visibleForTesting
-  Future<SupabaseClient> loadClient([String envPath = '.env']);
+  Future<SupabaseClient> loadClientFromEnv([String? envPath]);
 
   /// Load the supabase client
-  SupabaseClient loadSupabaseClient([String envPath = '.env']);
+  SupabaseClient loadSupabaseClient([String? envPath]);
 
   /// Load the mock supabase client
   @visibleForTesting
