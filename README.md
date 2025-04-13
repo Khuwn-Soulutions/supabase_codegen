@@ -41,7 +41,7 @@ dependencies:
    Note: this requires [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
 
 1. Create an [environment file](#environment-file) at the root of your project with your Supabase credentials.
-1. Add any necessay configuration for type generation. See [Yaml configuration](#yaml-configuration).
+1. Add any necessary configuration for type generation. See [Yaml configuration](#yaml-configuration).
 
 ## Environment file  
 
