@@ -1,5 +1,5 @@
 name: supabase_codegen_example
-description: "Supabase Codegen Example Flutter Project"
+description: "Supabase Codegen Example Flutter"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -24,6 +24,8 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
+  assets:
+    - config.env
 
 # Supabase codegen configuration
 supabase_codegen:

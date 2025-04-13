@@ -47,3 +47,6 @@ app.*.map.json
 # Generated files/folders
 lib/types
 supabase/migrations/*_add_codegen_functions.sql
+
+# Environment files
+*.env*
