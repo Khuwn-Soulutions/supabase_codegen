@@ -1,3 +1,9 @@
+## 1.3.0 - 2025-04-13
+
+### Features
+- add Flutter support
+- implement example Flutter project
+
 ## 1.2.0 - 2025-04-01
 
 ### Features
