@@ -143,6 +143,18 @@ void main() {
         // Assert
         expect(result['name'], 'supabase_codegen');
       });
+
+      test('returns empty map if file does not exist', () {
+        // Arrange
+        when(() => mockPubspecFile.existsSync()).thenReturn(false);
+        when(() => mockPubspecFile.readAsStringSync()).thenReturn('');
+
+        // Act
+        final result = getPubspecConfig(file: mockPubspecFile);
+
+        // Assert
+        expect(result, isEmpty);
+      });
     });
 
     group('getCodegenConfig', () {
