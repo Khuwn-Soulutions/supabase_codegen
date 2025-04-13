@@ -354,7 +354,7 @@ String getDefaultValue(
       '';
   final fallbackValue = fallback.isNotEmpty ? fallback : null;
 
-  logger.i(
+  logger.d(
     'Default value: $defaultValue, type: $dartType, fallback: $fallbackValue',
   );
 
@@ -393,7 +393,7 @@ String getDefaultValue(
                   },
                 )
                 .toList();
-        logger.i('Values: $values');
+        logger.d('Values: $values');
 
         return 'const <$genericType>[${values.join(', ')}]';
       }
