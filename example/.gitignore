@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Generated files/folders
+lib/types
+supabase/migrations/*_add_codegen_functions.sql
