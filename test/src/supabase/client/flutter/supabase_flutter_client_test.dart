@@ -89,12 +89,6 @@ SUPABASE_KEY=$key'
         },
       );
 
-      test('setClient sets the supabaseClient', () {
-        codegenClient.setClient(SupabaseClient('supabaseUrl', 'supabaseKey'));
-        // Expect a valid client
-        expect(codegenClient.supabaseClient, isA<SupabaseClient>());
-      });
-
       test(
         'returns a SupabaseClient after client loaded',
         () async {
@@ -114,6 +108,11 @@ SUPABASE_KEY=$key'
       });
     });
 
+    test('setClient sets the supabaseClient', () {
+      codegenClient.setClient(SupabaseClient('supabaseUrl', 'supabaseKey'));
+      expect(codegenClient.supabaseClient, isA<SupabaseClient>());
+    });
+
     test('loadMockSupabaseClient returns mockSupabase', () async {
       final client = codegenClient.loadMockSupabaseClient();
       expect(client, equals(mockSupabase));
@@ -121,7 +120,7 @@ SUPABASE_KEY=$key'
       await Future<void>.delayed(Duration.zero);
     });
 
-    group('loadClient', () {
+    group('loadClientFromEnv', () {
       test('returns a SupabaseClient', () async {
         writeEnvFile();
 
@@ -130,6 +129,10 @@ SUPABASE_KEY=$key'
 
         // Expect a valid client
         expect(client, isA<SupabaseClient>());
+        expect(
+          Supabase.instance.client,
+          equals(codegenClient.supabaseClient),
+        );
       });
 
       test('throws an Error when file is empty', () {
