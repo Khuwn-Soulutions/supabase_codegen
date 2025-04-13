@@ -7,5 +7,33 @@ This is an example project demonstrating the use of the [Supabase Codegen Librar
 
 ## Getting Started
 
-Start supabase project
-Setup database locally `supabase db reset`
+- Start supabase project: 
+```bash
+supabase start
+```
+
+- Add codegen functions: 
+```bash
+dart run supabase_codegen:add_codegen_functions
+```
+
+- Setup database locally  
+  This will [create the tables](supabase/migrations/20250412000032_setup_db.sql) in the database and add [sample data](supabase/seed.sql)
+```bash
+supabase db reset
+```  
+
+- Install dependencies: 
+```bash
+dart pub get
+```
+
+- Generate types: 
+```bash
+dart run supabase_codegen:generate_types
+```
+
+- Run project
+```bash
+flutter run [platform]
+```
