@@ -242,11 +242,18 @@ void writeFields({
       ..writeln("  static const String $fieldColumnName = '$columnName';")
       ..writeln()
       ..writeln('  /// $fieldComment');
+    final fallbackValue = hasDefault
+        ? ', defaultValue: ${getDefaultValue(
+            dartType,
+            defaultValue: defaultValue,
+            isEnum: isEnum,
+          )}'
+        : '';
     if (isArray) {
       final genericType = getGenericType(dartType);
       buffer
         ..writeln('  $dartType get $fieldName => '
-            'getListField<$genericType>($fieldColumnName);')
+            'getListField<$genericType>($fieldColumnName$fallbackValue);')
         ..writeln(
           '  set $fieldName($dartType? value) => '
           'setListField<$genericType>($fieldColumnName, value);',
@@ -255,13 +262,6 @@ void writeFields({
       final isOptional = isNullable && !hasDefault;
       final question = isOptional ? '?' : '';
       final bang = isOptional ? '' : '!';
-      final fallbackValue = hasDefault
-          ? ', defaultValue: ${getDefaultValue(
-              dartType,
-              defaultValue: defaultValue,
-              isEnum: isEnum,
-            )}'
-          : '';
       buffer
         ..writeln(
           '  $dartType$question get $fieldName => '
@@ -379,7 +379,23 @@ String getDefaultValue(
       // List
       if (dartType.startsWith('List<')) {
         final genericType = getGenericType(dartType);
-        return 'const <$genericType>[]';
+        // Replace the enclosing {} of sql list to get comma separated list
+        final fallbackList =
+            fallbackValue?.replaceAll(RegExp('[{}]'), '') ?? '';
+        final values = fallbackList.isEmpty
+            ? <String>[]
+            : fallbackList
+                .split(',')
+                .map(
+                  (item) => switch (genericType) {
+                    'String' => "'$item'",
+                    _ => item,
+                  },
+                )
+                .toList();
+        logger.i('Values: $values');
+
+        return 'const <$genericType>[${values.join(', ')}]';
       }
       // Map
       if (dartType == 'Map<String, dynamic>') {
