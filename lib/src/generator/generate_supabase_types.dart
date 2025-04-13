@@ -1,7 +1,9 @@
 import 'package:dotenv/dotenv.dart';
+import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
 
 import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:supabase_codegen/supabase_codegen.dart' show envKeys;
 
 /// Supabase client instance to generate types.
 late SupabaseClient client;
@@ -34,10 +36,31 @@ typedef ColumnData = ({
 /// Field name type map
 typedef FieldNameTypeMap = Map<String, ColumnData>;
 
+/// Supabase code gnerator utils class
+@visibleForTesting
+class SupabaseCodeGeneratorUtils {
+  /// Constructor
+  const SupabaseCodeGeneratorUtils();
+
+  /// Generate schema info
+  @visibleForTesting
+  Future<void> generateSchema() => generateSchemaInfo();
+
+  /// Create the supabase client
+  SupabaseClient createClient(String supabaseUrl, String supabaseKey) =>
+      SupabaseClient(supabaseUrl, supabaseKey);
+}
+
 /// Supabase code generator
 class SupabaseCodeGenerator {
   /// Constructor
-  const SupabaseCodeGenerator();
+  const SupabaseCodeGenerator({
+    this.utils = const SupabaseCodeGeneratorUtils(),
+  });
+
+  /// Utility class
+  @visibleForTesting
+  final SupabaseCodeGeneratorUtils utils;
 
   /// Generate Supabase types
   Future<void> generateSupabaseTypes({
@@ -61,23 +84,30 @@ class SupabaseCodeGenerator {
 
     /// Load env keys
     final dotenv = DotEnv()..load([envFilePath]);
-    final hasKeys =
-        dotenv.isEveryDefined(['SUPABASE_URL', 'SUPABASE_ANON_KEY']);
-    if (!hasKeys) {
+    final hasUrl = dotenv.isEveryDefined([envKeys.url]);
+    if (!hasUrl) {
       throw Exception(
-        '[GenerateTypes] Missing Supabase keys in $envFilePath file',
+        '[GenerateTypes] Missing ${envKeys.url} in $envFilePath file. ',
+      );
+    }
+
+    final supabaseKey = dotenv.getOrElse(
+      envKeys.anonKey,
+      () => dotenv[envKeys.key] ?? '',
+    );
+    if (supabaseKey.isEmpty) {
+      throw Exception(
+        '[GenerateTypes] Ensure that either ${envKeys.anonKey} '
+        'or ${envKeys.anonKey} is set to ensure access to the database',
       );
     }
 
     // Get the config from env
-    // coverage:ignore-start
-    final supabaseUrl = dotenv['SUPABASE_URL']!;
-    final supabaseAnonKey = dotenv['SUPABASE_ANON_KEY']!;
+    final supabaseUrl = dotenv[envKeys.url]!;
     logger.i('[GenerateTypes] Starting type generation');
 
-    client = SupabaseClient(supabaseUrl, supabaseAnonKey);
+    client = utils.createClient(supabaseUrl, supabaseKey);
 
-    await generateSchemaInfo();
-    // coverage:ignore-end
+    await utils.generateSchema();
   }
 }

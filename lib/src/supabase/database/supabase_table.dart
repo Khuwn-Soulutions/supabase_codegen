@@ -32,13 +32,13 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
 
   /// Query rows using the [queryFn] provided, with an optional [limit]
   Future<List<T>> queryRows({
-    required PostgrestTransformBuilder<DictionaryList> Function(
+    PostgrestTransformBuilder<DictionaryList> Function(
       PostgrestFilterBuilder<DictionaryList>,
-    ) queryFn,
+    )? queryFn,
     int? limit,
   }) {
     final select = _select();
-    var query = queryFn(select);
+    var query = queryFn != null ? queryFn(select) : select;
     query = limit != null ? query.limit(limit) : query;
     return query.select().then(_rowsAsList);
   }

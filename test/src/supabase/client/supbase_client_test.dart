@@ -9,10 +9,6 @@ void main() {
   group('Supabase Client', () {
     final envPath = path.join(Directory.current.path, 'test', '.env');
 
-    setUp(() {
-      supabaseClient = null;
-    });
-
     tearDown(() {
       final envFile = File(envPath);
       if (envFile.existsSync()) {
@@ -50,21 +46,30 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       expect(client, equals(mockSupabase));
     });
 
-    test('loadClient returns a SupabaseClient', () {
+    test('loadClientFromEnv returns a SupabaseClient', () async {
       writeEnvFile();
 
       // Call the function under test
-      final client = loadClient(envPath);
+      final client = await loadClientFromEnv(envPath);
 
       // Expect a valid client
       expect(client, isA<SupabaseClient>());
     });
 
-    test('loadClient throws an exception when keys are missing', () {
-      writeEnvFile(url: '', key: '');
+    test('setClient sets the supabaseClient', () {
+      final client = setClient(SupabaseClient('supabaseUrl', 'supabaseKey'));
+      // Expect a valid client
+      expect(client, isA<SupabaseClient>());
+    });
 
-      // Call the function under test
-      expect(() => loadClient(envPath), throwsException);
+    test('createClient creates client with the url and key provided', () async {
+      final url = Uri.parse('https://example.com');
+      const key = '09876543234567';
+      final client = await createClient(url.toString(), key);
+      // Expect a valid client
+      expect(client, isA<SupabaseClient>());
+      expect(client.auth.headers['Authorization'], contains(key));
+      expect(client.realtime.endPoint, contains(url.host));
     });
   });
 }
