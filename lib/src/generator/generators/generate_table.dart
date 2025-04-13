@@ -135,6 +135,7 @@ void writeRowClass({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -153,6 +154,7 @@ void writeRowClass({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -221,6 +223,7 @@ void writeFields({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -284,6 +287,7 @@ void writeCopyWith({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -307,6 +311,7 @@ void writeCopyWith({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum

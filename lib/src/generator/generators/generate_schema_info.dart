@@ -185,13 +185,15 @@ Map<String, ColumnData> createFieldNameTypeMap(
     final dartType = getDartType(column);
     final isNullable = column['is_nullable'] == 'YES';
     final isArray = dartType.startsWith('List<');
-    final hasDefault = column['column_default'] != null;
+    final defaultValue = column['column_default'];
+    final hasDefault = defaultValue != null;
     final isEnum = formattedEnums[column['udt_name']] != null;
 
     final columnData = (
       dartType: dartType,
       isNullable: isNullable,
       hasDefault: hasDefault,
+      defaultValue: defaultValue,
       columnName: columnName,
       isArray: isArray,
       isEnum: isEnum,
