@@ -31,3 +31,4 @@ flutter:
 # Supabase codegen configuration
 supabase_codegen:
   output: lib/types
+  env: config.env
