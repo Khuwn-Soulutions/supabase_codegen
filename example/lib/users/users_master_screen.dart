@@ -35,10 +35,6 @@ class _UsersMasterScreenState extends State<UsersMasterScreen> {
   Future<void> navigateToScreen(BuildContext context, Widget screen) =>
       Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
 
-  void _navigateToDetail(BuildContext context, UsersRow user) {
-    navigateToScreen(context, UsersDetailScreen(user: user));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +89,13 @@ class _UsersMasterScreenState extends State<UsersMasterScreen> {
                   title: Text(hasUserName ? user.accName! : user.email),
                   subtitle: hasUserName ? Text(user.email) : null,
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _navigateToDetail(context, user),
+                  onTap: () async {
+                    await navigateToScreen(
+                      context,
+                      UsersDetailScreen(user: user),
+                    );
+                    await _refreshUsers();
+                  },
                 );
               },
             ),
