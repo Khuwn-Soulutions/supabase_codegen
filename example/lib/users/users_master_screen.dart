@@ -32,11 +32,11 @@ class _UsersMasterScreenState extends State<UsersMasterScreen> {
     });
   }
 
+  Future<void> navigateToScreen(BuildContext context, Widget screen) =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+
   void _navigateToDetail(BuildContext context, UsersRow user) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UsersDetailScreen(user: user)),
-    );
+    navigateToScreen(context, UsersDetailScreen(user: user));
   }
 
   @override
@@ -102,8 +102,9 @@ class _UsersMasterScreenState extends State<UsersMasterScreen> {
       ),
       // Add a new user
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to an Add/Edit User screen
+        onPressed: () async {
+          await navigateToScreen(context, UsersEditScreen());
+          await _refreshUsers();
         },
         child: const Icon(Icons.add),
       ),
