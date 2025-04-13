@@ -19,6 +19,7 @@ dependencies:
 
 ## ✨ Features
 
+- NEW: Full support for Flutter with interoperability with [Supabase flutter](https://pub.dev/packages/supabase_flutter) package
 - Automatically generates Dart classes from Supabase tables
 - Creates type-safe models with full IDE support
 - Supports complex relationships and nested structures
