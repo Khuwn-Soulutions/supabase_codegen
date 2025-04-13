@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
@@ -135,6 +136,7 @@ void writeRowClass({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -153,6 +155,7 @@ void writeRowClass({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -221,6 +224,7 @@ void writeFields({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -238,11 +242,18 @@ void writeFields({
       ..writeln("  static const String $fieldColumnName = '$columnName';")
       ..writeln()
       ..writeln('  /// $fieldComment');
+    final fallbackValue = hasDefault
+        ? ', defaultValue: ${getDefaultValue(
+            dartType,
+            defaultValue: defaultValue,
+            isEnum: isEnum,
+          )}'
+        : '';
     if (isArray) {
       final genericType = getGenericType(dartType);
       buffer
         ..writeln('  $dartType get $fieldName => '
-            'getListField<$genericType>($fieldColumnName);')
+            'getListField<$genericType>($fieldColumnName$fallbackValue);')
         ..writeln(
           '  set $fieldName($dartType? value) => '
           'setListField<$genericType>($fieldColumnName, value);',
@@ -251,12 +262,12 @@ void writeFields({
       final isOptional = isNullable && !hasDefault;
       final question = isOptional ? '?' : '';
       final bang = isOptional ? '' : '!';
-      final defaultValue =
-          hasDefault ? ', defaultValue: ${getDefaultValue(dartType)}' : '';
       buffer
         ..writeln(
           '  $dartType$question get $fieldName => '
-          'getField<$dartType>($fieldColumnName$enumValues$defaultValue)$bang;',
+          'getField<$dartType>('
+          '$fieldColumnName$enumValues$fallbackValue'
+          ')$bang;',
         )
         ..writeln('  set $fieldName($dartType$question value) => '
             'setField<$dartType>($fieldColumnName, value);');
@@ -284,6 +295,7 @@ void writeCopyWith({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -307,6 +319,7 @@ void writeCopyWith({
       :dartType,
       :isNullable,
       :hasDefault,
+      :defaultValue,
       :columnName,
       :isArray,
       :isEnum
@@ -324,23 +337,73 @@ void writeCopyWith({
 
 /// Helper to get the default value for a given Dart type.
 @visibleForTesting
-String getDefaultValue(String dartType) {
+String getDefaultValue(
+  String dartType, {
+  dynamic defaultValue,
+  bool isEnum = false,
+}) {
+  final fallback = defaultValue
+          ?.toString()
+          // Serparate value from type
+          .split('::')
+          .first
+          // Remove all single quotes
+          .replaceAll("'", '')
+          // Remove all functions
+          .replaceAll(RegExp(r'\w+\(\)'), '') ??
+      '';
+  final fallbackValue = fallback.isNotEmpty ? fallback : null;
+
+  logger.d(
+    'Default value: $defaultValue, type: $dartType, fallback: $fallbackValue',
+  );
+
   switch (dartType) {
     case 'int':
-      return '0';
+      return fallbackValue ?? '0';
     case 'double':
-      return '0.0';
+      return fallbackValue ?? '0.0';
     case 'bool':
-      return 'false';
+      return fallbackValue ?? 'false';
     case 'String':
-      return "''";
+      return "'${fallbackValue ?? ""}'";
     case 'DateTime':
-      return 'DateTime.now()';
+      return DateTime.tryParse(fallbackValue ?? '') != null
+          ? "DateTime.parse('$fallbackValue')"
+          : 'DateTime.now()';
     default:
+      // Enum
+      if (isEnum) {
+        return fallbackValue != null ? '$dartType.$fallbackValue' : 'null';
+      }
+      // List
       if (dartType.startsWith('List<')) {
         final genericType = getGenericType(dartType);
-        return 'const <$genericType>[]';
+        // Replace the enclosing {} of sql list to get comma separated list
+        final fallbackList =
+            fallbackValue?.replaceAll(RegExp('[{}]'), '') ?? '';
+        final values = fallbackList.isEmpty
+            ? <String>[]
+            : fallbackList
+                .split(',')
+                .map(
+                  (item) => switch (genericType) {
+                    'String' => "'$item'",
+                    _ => item,
+                  },
+                )
+                .toList();
+        logger.d('Values: $values');
+
+        return 'const <$genericType>[${values.join(', ')}]';
       }
+      // Map
+      if (dartType == 'Map<String, dynamic>') {
+        return jsonDecode(fallbackValue ?? '') != null
+            ? fallbackValue!.replaceAll('"', "'")
+            : '{}';
+      }
+
       return 'null';
   }
 }
