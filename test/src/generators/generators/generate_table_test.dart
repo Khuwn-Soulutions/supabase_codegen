@@ -6,8 +6,8 @@ import 'expected/expected.dart';
 void main() {
   logger = testLogger;
 
-  group('getDefaultValue', () {
-    test('should return correct default values', () {
+  group('getDefaultValue should return correct default values', () {
+    test('when no default value is provided', () {
       expect(getDefaultValue('int'), '0');
       expect(getDefaultValue('double'), '0.0');
       expect(getDefaultValue('bool'), 'false');
@@ -15,6 +15,50 @@ void main() {
       expect(getDefaultValue('DateTime'), 'DateTime.now()');
       expect(getDefaultValue('List<String>'), 'const <String>[]');
       expect(getDefaultValue('UserStatus'), 'null');
+    });
+
+    test('when default value is provided', () {
+      final expected = {
+        'int': [(defaultValue: "'1'::smallint", value: '1')],
+        'double': [(defaultValue: "'0.1'::real", value: '0.1')],
+        'bool': [(defaultValue: 'true', value: 'true')],
+        'String': [
+          (defaultValue: "'N/A'::text", value: "'N/A'"),
+          (defaultValue: "''::text", value: "''"),
+          (defaultValue: 'gen_random_uuid()', value: "''"),
+        ],
+        'DateTime': [
+          (
+            defaultValue: "'2001-01-01 00:00:00+00'::timestamp with time zone",
+            value: "DateTime.parse('2001-01-01 00:00:00+00')"
+          ),
+          (
+            defaultValue: "(now() AT TIME ZONE 'utc'::text)",
+            value: 'DateTime.now()'
+          ),
+          (defaultValue: "(now()'::text)", value: 'DateTime.now()'),
+          (defaultValue: 'CURRENT_TIMESTAMP', value: 'DateTime.now()'),
+        ],
+        'Map<String, dynamic>': [
+          (defaultValue: "'{}'::jsonb", value: '{}'),
+          (defaultValue: "'{\"test\": 1}'::jsonb", value: "{'test': 1}"),
+        ],
+      };
+      for (final type in expected.keys) {
+        final values = expected[type]!;
+        for (final (:defaultValue, :value) in values) {
+          expect(getDefaultValue(type, defaultValue: defaultValue), value);
+        }
+      }
+
+      expect(
+        getDefaultValue(
+          'UserStatus',
+          defaultValue: "'online'::\"User_Status\"",
+          isEnum: true,
+        ),
+        'UserStatus.online',
+      );
     });
   });
 
@@ -48,6 +92,7 @@ void main() {
           dartType: 'UserStatus',
           isNullable: false,
           hasDefault: false,
+          defaultValue: null,
           columnName: 'status',
           isArray: false,
           isEnum: true,
@@ -101,6 +146,7 @@ void main() {
           dartType: 'List<String>',
           isNullable: false,
           hasDefault: false,
+          defaultValue: null,
           columnName: 'tags',
           isArray: true,
           isEnum: false,
