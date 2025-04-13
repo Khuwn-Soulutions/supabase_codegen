@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
@@ -254,12 +255,19 @@ void writeFields({
       final isOptional = isNullable && !hasDefault;
       final question = isOptional ? '?' : '';
       final bang = isOptional ? '' : '!';
-      final defaultValue =
-          hasDefault ? ', defaultValue: ${getDefaultValue(dartType)}' : '';
+      final fallbackValue = hasDefault
+          ? ', defaultValue: ${getDefaultValue(
+              dartType,
+              defaultValue: defaultValue,
+              isEnum: isEnum,
+            )}'
+          : '';
       buffer
         ..writeln(
           '  $dartType$question get $fieldName => '
-          'getField<$dartType>($fieldColumnName$enumValues$defaultValue)$bang;',
+          'getField<$dartType>('
+          '$fieldColumnName$enumValues$fallbackValue'
+          ')$bang;',
         )
         ..writeln('  set $fieldName($dartType$question value) => '
             'setField<$dartType>($fieldColumnName, value);');
@@ -329,23 +337,57 @@ void writeCopyWith({
 
 /// Helper to get the default value for a given Dart type.
 @visibleForTesting
-String getDefaultValue(String dartType) {
+String getDefaultValue(
+  String dartType, {
+  dynamic defaultValue,
+  bool isEnum = false,
+}) {
+  final fallback = defaultValue
+          ?.toString()
+          // Serparate value from type
+          .split('::')
+          .first
+          // Remove all single quotes
+          .replaceAll("'", '')
+          // Remove all functions
+          .replaceAll(RegExp(r'\w+\(\)'), '') ??
+      '';
+  final fallbackValue = fallback.isNotEmpty ? fallback : null;
+
+  logger.i(
+    'Default value: $defaultValue, type: $dartType, fallback: $fallbackValue',
+  );
+
   switch (dartType) {
     case 'int':
-      return '0';
+      return fallbackValue ?? '0';
     case 'double':
-      return '0.0';
+      return fallbackValue ?? '0.0';
     case 'bool':
-      return 'false';
+      return fallbackValue ?? 'false';
     case 'String':
-      return "''";
+      return "'${fallbackValue ?? ""}'";
     case 'DateTime':
-      return 'DateTime.now()';
+      return DateTime.tryParse(fallbackValue ?? '') != null
+          ? "DateTime.parse('$fallbackValue')"
+          : 'DateTime.now()';
     default:
+      // Enum
+      if (isEnum) {
+        return fallbackValue != null ? '$dartType.$fallbackValue' : 'null';
+      }
+      // List
       if (dartType.startsWith('List<')) {
         final genericType = getGenericType(dartType);
         return 'const <$genericType>[]';
       }
+      // Map
+      if (dartType == 'Map<String, dynamic>') {
+        return jsonDecode(fallbackValue ?? '') != null
+            ? fallbackValue!.replaceAll('"', "'")
+            : '{}';
+      }
+
       return 'null';
   }
 }
