@@ -40,15 +40,10 @@ void main(List<String> args) async {
   final readmeFile = File('README.md');
   final readmeContents = readmeFile.readAsStringSync();
   readmeFile.writeAsStringSync(
-    readmeContents
-        .replaceAll(
-          RegExp(r'supabase_codegen: \^(.+)'),
-          'supabase_codegen: ^$version',
-        )
-        .replaceAll(
-          RegExp(r'supabase_codegen \((.+)\)'),
-          'supabase_codegen ($version)',
-        ),
+    readmeContents.replaceAll(
+      RegExp(r'supabase_codegen: \^(.+)'),
+      'supabase_codegen: ^$version',
+    ),
   );
   logger.i('README.md updated');
 }
