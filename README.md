@@ -1,15 +1,12 @@
 # Supabase Codegen
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 [![License: MIT][license_badge]][license_link]
 ![Coverage Status](./coverage_badge.svg)
 
 Supabase Codegen generates type-safe Dart models from your Supabase tables automatically!
 
 ## Installation 💻
-
-**❗ In order to start using Supabase Codegen you must have the [Dart SDK][dart_install_link] installed on your machine.**
 
 Add the following to your pubspec.yaml
 
@@ -22,6 +19,7 @@ dependencies:
 
 ## ✨ Features
 
+- NEW: Full support for Flutter with interoperability with [Supabase flutter](https://pub.dev/packages/supabase_flutter) package
 - Automatically generates Dart classes from Supabase tables
 - Creates type-safe models with full IDE support
 - Supports complex relationships and nested structures
@@ -31,27 +29,41 @@ dependencies:
 
 - Supabase project with tables
 - Dart/Flutter development environment
-- Environment configuration file (`.env`)
 
 ## 🛠️ Setup
 
 1. Install the package. See [Installation](#installation-)
-2. Create a `.env` file at the root of your project with your Supabase credentials. See [example.env](example.env).
-3. Create SQL functions in Supabase.  
+1. Create the SQL functions in Supabase to extract the types.  
    Options:
    - Copy and run the sql from [get_schema_info](bin/sql/get_schema_info.dart) and [get_enum_types](bin/sql/get_enum_types.dart) in your Supabase project.
+
    - Create migration to apply to your local or remote database with `dart run supabase_codegen:add_codegen_functions` and apply the migration with [`supabase migration up`](https://supabase.com/docs/reference/cli/supabase-migration-up).  
    Note: this requires [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
 
-4. Run the generation script: 
+1. Create an [environment file](#environment-file) at the root of your project with your Supabase credentials.
+1. Add any necessary configuration for type generation. See [Yaml configuration](#yaml-configuration).
+
+## Environment file  
+
+The environment file should contain the following.  
+  - `SUPABASE_URL`: The API url for your Supabase instance.
+  - `SUPABASE_ANON_KEY`: Anonymous key (Recommended for Flutter)  
+  OR
+  -  `SUPABASE_KEY`: Service Role key. (Not recommended for use in Flutter projects)
+
+If both `SUPABASE_ANON_KEY` and `SUPABASE_KEY` are present in the environment file `SUPABASE_ANON_KEY` will be used.
+
+## Generating types
+
+Run the generation script by executing the following. 
 
 ```bash 
 dart run supabase_codegen:generate_types
 ```  
 
-## Command Line Options  
+### Command Line Options  
 
-You can customize the type generation process with the following command-line options:
+The following command-line options can be used to customize the type generation process:
 
 - `-e, --env <env_file>` (Default: .env):
 
@@ -116,11 +128,15 @@ Here's an example of how to configure the options in `pubspec.yaml`:
 name: my_supabase_app
 description: A sample Supabase app.
 
-dev_dependencies:
+dependencies:
   supabase_codegen: ^1.2.0
 
+flutter:
+  assets:
+    - env.app
+
 supabase_codegen:
-  env: .env.development # Overrides default: .env
+  env: env.app # Overrides default: .env
   output: lib/models/supabase # Overrides default: supabase/types
   tag: v1 # Overrides default: ''
   debug: true # Overrides default: false
@@ -139,9 +155,73 @@ supabase_codegen:
 The command line options have higher priority than the options defined in the yaml configuration.
 
 *Order:*  
-command line options   
- -> configuration yaml (default: `.supabase_codegen.yaml`)  
- -> pubspec.yaml (key: `supabase_codegen`)
+1. command line options   
+1. configuration yaml (default: `.supabase_codegen.yaml`)  
+1. pubspec.yaml (key: `supabase_codegen`)
+
+
+## Client Configuration
+Before accessing the [generated types](#generated-types) in your application ensure that the Supabase client is configured for use.
+
+### Dart projects
+By default, at runtime the package will look for the [environment file](environment-file) at `.env` and load the client using the credentials contained there.
+If this matches your setup, no further changes are needed. 
+
+### Using credential values
+
+To create a client using the credential values the `createClient` function can be used as shown below.
+```dart
+await createClient('https://my.supabase.com...', 'my-super-safe-key');
+```
+
+### Load values from environment file
+
+To configure the client by loading the values from an [environment file](environment-file) the `loadClientFromEnv` function should be run specifying the path to the environment file if it differs from the default.
+
+```dart
+await loadClientFromEnv();
+```
+
+#### Flutter
+The default location for Flutter projects is `config.env`.
+  - Note: 
+    - If you are using another file. Ensure that it does not begin with `.` or it will not be loaded in Flutter. See [issue here](https://github.com/java-james/flutter_dotenv/issues/28).
+    - The environment file must be added to the `assets` section of your `pubspec.yaml` file to be loaded at runtime. See [example project](example/pubspec.yaml).
+    ```yaml
+      flutter:
+        ...
+        assets:
+          - config.env
+    ```
+    - Once loaded the client instance can be accessed at `Supabase.instance.client`.
+    ```dart
+    import 'package:supabase_flutter/supabase_flutter.dart';
+    import 'package:supabase_codegen/supabase_codegen.dart';
+
+    await loadClientFromEnv();
+    final supabase = Supabase.instance.client;
+
+    // Email and password sign up
+    await supabase.auth.signUp(
+      email: email,
+      password: password,
+    );
+    ```
+
+### Setting the client
+
+A previously created SupabaseClient can be provided to the `setClient` method to set the client for use by the [generated types](#generated-types).
+
+```dart
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_codegen/supabase_codegen.dart';
+
+await Supabase.initialize(
+  url: SUPABASE_URL,
+  anonKey: SUPABASE_ANON_KEY,
+);
+setClient(Supabase.instance.client);
+```
 
 ## 📦 Generated Types
 
