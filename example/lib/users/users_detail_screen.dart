@@ -78,6 +78,39 @@ class _UsersDetailScreenState extends State<UsersDetailScreen> {
             icon: const Icon(Icons.delete),
             onPressed: () {
               /* Show delete confirmation */
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Delete User'),
+                    content: const Text(
+                      'Are you sure you want to delete this user?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          /// Delete user
+                          await _usersTable.delete(
+                            matchingRows:
+                                (q) => q.eq(UsersRow.idField, _user.id),
+                          );
+
+                          if (context.mounted) {
+                            Navigator.of(
+                              context,
+                            ).popUntil((route) => route.isFirst);
+                          }
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],
