@@ -161,6 +161,7 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         title: Text('${_isEditing ? 'Edit' : 'Add'} User'),
         actions: [
           if (_isLoading)
