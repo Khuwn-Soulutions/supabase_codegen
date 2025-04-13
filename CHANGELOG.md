@@ -1,3 +1,14 @@
+## 1.3.1 - 2025-04-13
+
+### Bug Fixes
+- add http dependency
+
+## 1.3.0 - 2025-04-13
+
+### Features
+- add Flutter support
+- implement example Flutter project
+
 ## 1.2.0 - 2025-04-01
 
 ### Features

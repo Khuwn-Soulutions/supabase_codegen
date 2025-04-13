@@ -65,8 +65,8 @@ void main() {
       String key = '1234567',
     }) {
       final contents = '''
-SUPABASE_URL=$url'
-SUPABASE_KEY=$key'
+SUPABASE_URL=$url
+SUPABASE_KEY=$key
 ''';
       File(envPath).writeAsStringSync(contents);
     }
@@ -145,13 +145,29 @@ SUPABASE_KEY=$key'
         );
       });
 
-      test('throws an exception when keys are missing', () {
-        File(envPath).writeAsStringSync('NOT_USED = value');
+      test('throws an exception when required values are missing', () {
+        writeEnvFile(url: '', key: '');
 
         // Call the function under test
         expect(
           () => codegenClient.loadClientFromEnv(envPath),
           throwsA(isA<Exception>()),
+        );
+      });
+
+      test('when no key is provided', () {
+        writeEnvFile(key: '');
+
+        // Call the function under test
+        expect(
+          () => codegenClient.loadClientFromEnv(envPath),
+          throwsA(
+            isA<Exception>().having(
+              (e) => e.toString(),
+              'message',
+              contains('Ensure that either'),
+            ),
+          ),
         );
       });
     });

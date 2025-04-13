@@ -62,11 +62,29 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       expect(client, isA<SupabaseClient>());
     });
 
-    test('loadClient throws an exception when keys are missing', () {
-      writeEnvFile(url: '', key: '');
+    group('loadClientFromEnv throws an exception when', () {
+      test('required values are missing', () {
+        writeEnvFile(url: '', key: '');
 
-      // Call the function under test
-      expect(() => codegenClient.loadClientFromEnv(envPath), throwsException);
+        // Call the function under test
+        expect(() => codegenClient.loadClientFromEnv(envPath), throwsException);
+      });
+
+      test('when no key is provided', () {
+        writeEnvFile(key: '');
+
+        // Call the function under test
+        expect(
+          () => codegenClient.loadClientFromEnv(envPath),
+          throwsA(
+            isA<Exception>().having(
+              (e) => e.toString(),
+              'message',
+              contains('Ensure that either'),
+            ),
+          ),
+        );
+      });
     });
 
     test('setClient sets the supabaseClient', () {
