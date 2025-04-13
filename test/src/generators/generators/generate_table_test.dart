@@ -43,6 +43,14 @@ void main() {
           (defaultValue: "'{}'::jsonb", value: '{}'),
           (defaultValue: "'{\"test\": 1}'::jsonb", value: "{'test': 1}"),
         ],
+        'List<String>': [
+          (defaultValue: "'{}'::text[]", value: 'const <String>[]'),
+          (defaultValue: "'{a,b}'::text[]", value: "const <String>['a', 'b']"),
+        ],
+        'List<int>': [
+          (defaultValue: "'{}'::smallint[]", value: 'const <int>[]'),
+          (defaultValue: "'{1,2}'::smallint[]", value: 'const <int>[1, 2]'),
+        ],
       };
       for (final type in expected.keys) {
         final values = expected[type]!;
