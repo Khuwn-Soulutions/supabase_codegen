@@ -59,14 +59,13 @@ class UsersDetailScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        // Use ListView for potentially long content or many fields
         child: ListView(
           children: [
             _buildDetailRow('ID', user.id),
             _buildDetailRow('Email', user.email),
             _buildDetailRow('Account Name', user.accName),
             _buildDetailRow('Phone Number', user.phoneNumber),
-            _buildDetailRow('Role', user.role.name), // Display enum name
+            _buildDetailRow('Role', user.role.name),
             _buildDetailRow('Created At', _formatDate(user.createdAt)),
             const SizedBox(height: 10),
             const Text(
@@ -81,8 +80,15 @@ class UsersDetailScreen extends StatelessWidget {
             else
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
-                // Display list items, potentially formatting them better
-                child: Text(user.contacts.join(', ')),
+                child: Column(
+                  children:
+                      user.contacts.map((contact) {
+                        return ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(contact),
+                        );
+                      }).toList(),
+                ),
               ),
           ],
         ),
