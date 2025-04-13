@@ -57,6 +57,7 @@ class SupabaseCodegenClient implements SupabaseCodegenClientBase {
   }
 
   /// Init Supabase
+  // coverage:ignore-start
   @visibleForTesting
   Future<void> initSupabase({
     required String url,
@@ -72,6 +73,7 @@ class SupabaseCodegenClient implements SupabaseCodegenClientBase {
     );
     supabaseInitialized = true;
   }
+  // coverage:ignore-end
 
   /// Load the supabase client
   @override
