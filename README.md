@@ -12,7 +12,7 @@ Add the following to your pubspec.yaml
 
 ```yaml
 dependencies:
-  supabase_codegen: ^1.3.0
+  supabase_codegen: ^1.4.0
 ```
 
 ---
@@ -24,6 +24,7 @@ dependencies:
 - Creates type-safe models with full IDE support
 - Supports complex relationships and nested structures
 - Generates getters and setters for all fields
+- Field getter fallback to non-function default values set in the database
 
 ## 📋 Prerequisites
 
@@ -128,7 +129,7 @@ name: my_supabase_app
 description: A sample Supabase app.
 
 dependencies:
-  supabase_codegen: ^1.3.0
+  supabase_codegen: ^1.4.0
 
 flutter:
   assets:
@@ -319,7 +320,11 @@ class UsersRow extends SupabaseDataRow {
 
   /// Role
   UserRole get role =>
-      getField<UserRole>(roleField, enumValues: UserRole.values)!;
+      getField<UserRole>(
+        roleField,
+        enumValues: UserRole.values,
+        defaultValue: UserRole.user,
+      )!;
   set role(UserRole value) => setField<UserRole>(roleField, value);
 
   /// Created At field name

@@ -101,6 +101,15 @@ void main() {
           expect(value, isEmpty);
         },
       );
+
+      test('returns default value if field not found', () {
+        final value = user.getListField<String>(
+          'list-not-found',
+          defaultValue: contacts,
+        );
+        expect(value, isNotNull);
+        expect(value, contacts);
+      });
     });
 
     group('setField', () {
