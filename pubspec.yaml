@@ -12,8 +12,6 @@ dependencies:
   change_case: ^2.2.0
   collection: ^1.19.1
   dotenv: ^4.2.0
-  flutter:
-    sdk: flutter
   flutter_dotenv: ^5.2.1
   http: ^1.3.0
   latlng: ^2.0.7
