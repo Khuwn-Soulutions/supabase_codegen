@@ -1,7 +1,5 @@
 import 'dart:io';
 
-// Ignore as it should be present in packages that will use this functionality
-// ignore: depend_on_referenced_packages
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
