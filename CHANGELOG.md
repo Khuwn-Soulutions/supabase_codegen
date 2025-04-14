@@ -1,13 +1,16 @@
-## 1.3.1 - 2025-04-13
+## 1.4.0 - 2025-04-13
 
-### Bug Fixes
-- add http dependency
+## Features
+- return non-function default values set in database for unset fields in generated row class
 
 ## 1.3.0 - 2025-04-13
 
 ### Features
 - add Flutter support
 - implement example Flutter project
+
+### Bug Fixes
+- add http dependency
 
 ## 1.2.0 - 2025-04-01
 

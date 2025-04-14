@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
-// Imported for testing
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/src/supabase/client/flutter/supabase_flutter_client.dart';
