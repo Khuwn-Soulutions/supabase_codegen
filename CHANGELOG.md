@@ -1,6 +1,6 @@
 ## 1.4.0 - 2025-04-13
 
-## Features
+### Features
 - return non-function default values set in database for unset fields in generated row class
 
 ## 1.3.0 - 2025-04-13
