@@ -18,7 +18,7 @@
 
 - toJson method added to generated row data class
 
-## Bug Fixes
+### Bug Fixes
 
 - suppress analyzer warnings for capitalized enum members
 - DateTime not correctly copied in copyWith
