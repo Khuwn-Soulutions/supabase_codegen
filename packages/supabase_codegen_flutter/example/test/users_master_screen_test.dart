@@ -7,11 +7,8 @@ import 'package:supabase_codegen_example/types/tables/users.dart';
 
 void main() {
   group('Users Master Screen ', () {
-    MockSupabaseCodegenClient mockClient;
-
     setUpAll(() async {
-      mockClient = MockSupabaseCodegenClient();
-      await mockClient.loadMockSupabaseClient();
+      await loadMockSupabaseClient();
     });
 
     testWidgets('displays all users', (WidgetTester tester) async {
