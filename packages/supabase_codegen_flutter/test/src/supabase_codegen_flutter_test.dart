@@ -21,15 +21,17 @@ void main() {
     });
 
     test('when client setup has a supabase instance', () async {
-      // Assign
-      await loadMockSupabaseClient();
+      final mockClient = MockSupabaseCodegenClient();
+      await mockClient.loadMockSupabaseClient();
 
       // Assert
       expect(SupabaseCodegenFlutter.supabase, isNotNull);
       expect(SupabaseCodegenFlutter.supabase.client, Supabase.instance.client);
 
       // Clean up created instance
-      await SupabaseCodegenFlutter.supabase.dispose();
+      if (mockClient.supabaseInitialized) {
+        await Supabase.instance.dispose();
+      }
     });
   });
 }
