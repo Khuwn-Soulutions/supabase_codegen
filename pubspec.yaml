@@ -10,6 +10,7 @@ workspace:
 
 dev_dependencies:
   melos: ^7.0.0-dev.8
+  very_good_analysis: ^7.0.0
 
 # Melos configuration
 melos:
