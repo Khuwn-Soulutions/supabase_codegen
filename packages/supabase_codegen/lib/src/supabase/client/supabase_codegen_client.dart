@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
 
@@ -22,16 +24,16 @@ abstract class SupabaseCodegenClientBase {
   SupabaseClient setClient(SupabaseClient client);
 
   /// Create the supabase client with the provided [url] and [key]
-  Future<SupabaseClient> createClient(String url, String key);
+  FutureOr<SupabaseClient> createClient(String url, String key);
 
   /// Load the supabase client using environment variables
   @visibleForTesting
-  Future<SupabaseClient> loadClientFromEnv([String? envPath]);
+  FutureOr<SupabaseClient> loadClientFromEnv([String? envPath]);
 
   /// Load the supabase client
   SupabaseClient loadSupabaseClient([String? envPath]);
 
   /// Load the mock supabase client
   @visibleForTesting
-  SupabaseClient loadMockSupabaseClient();
+  FutureOr<SupabaseClient> loadMockSupabaseClient();
 }

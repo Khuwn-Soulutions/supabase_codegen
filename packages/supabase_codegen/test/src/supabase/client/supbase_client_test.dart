@@ -50,7 +50,7 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       writeEnvFile();
 
       // Call the function under test
-      final client = await loadClientFromEnv(envPath);
+      final client = loadClientFromEnv(envPath);
 
       // Expect a valid client
       expect(client, isA<SupabaseClient>());
@@ -65,7 +65,7 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
     test('createClient creates client with the url and key provided', () async {
       final url = Uri.parse('https://example.com');
       const key = '09876543234567';
-      final client = await createClient(url.toString(), key);
+      final client = createClient(url.toString(), key);
       // Expect a valid client
       expect(client, isA<SupabaseClient>());
       expect(client.auth.headers['Authorization'], contains(key));

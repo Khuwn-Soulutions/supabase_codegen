@@ -9,14 +9,14 @@ final _client = SupabaseCodegenClient();
 SupabaseClient setClient(SupabaseClient client) => _client.setClient(client);
 
 /// Create the supabase client with the provided [url] and [key]
-Future<SupabaseClient> createClient(String url, String key) =>
+SupabaseClient createClient(String url, String key) =>
     _client.createClient(url, key);
 
 /// Load a new supabase client using environment variables at [envPath]
 ///
 /// The default path is the value of [SupabaseCodegenClient.defaultEnvPath]
 /// for the current environment
-Future<SupabaseClient> loadClientFromEnv([String? envPath]) async =>
+SupabaseClient loadClientFromEnv([String? envPath]) =>
     _client.loadClientFromEnv(envPath);
 
 /// Load the current instance of the [SupabaseClient].

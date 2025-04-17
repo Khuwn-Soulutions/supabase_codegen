@@ -2,9 +2,6 @@ import 'package:dotenv/dotenv.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
-// Ensure correct extract keys
-// ignore: always_use_package_imports
-import 'dotenv_extension.dart';
 
 /// Supabase Codegen Client
 class SupabaseCodegenClient implements SupabaseCodegenClientBase {
@@ -33,13 +30,12 @@ class SupabaseCodegenClient implements SupabaseCodegenClientBase {
 
   /// Create the supabase client with the provided [url] and [key]
   @override
-  Future<SupabaseClient> createClient(String url, String key) async =>
+  SupabaseClient createClient(String url, String key) =>
       setClient(SupabaseClient(url, key));
 
   /// Load the supabase client using environment variables at [envPath]
   @override
-  @visibleForTesting
-  Future<SupabaseClient> loadClientFromEnv([String? envPath]) async =>
+  SupabaseClient loadClientFromEnv([String? envPath]) =>
       _loadClientFromEnv(envPath ?? defaultEnvPath);
 
   /// Load the supabase client

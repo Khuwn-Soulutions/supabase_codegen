@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
-import 'package:supabase_codegen/src/supabase/client/dart/supabase_dart_client.dart';
-import 'package:supabase_codegen/src/supabase/client/supabase_client.mock.dart';
+import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -56,7 +55,7 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
       writeEnvFile();
 
       // Call the function under test
-      final client = await codegenClient.loadClientFromEnv(envPath);
+      final client = codegenClient.loadClientFromEnv(envPath);
 
       // Expect a valid client
       expect(client, isA<SupabaseClient>());
@@ -96,7 +95,7 @@ ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
     test('createClient creates client with the url and key provided', () async {
       final url = Uri.parse('https://example.com');
       const key = '09876543234567';
-      await codegenClient.createClient(url.toString(), key);
+      codegenClient.createClient(url.toString(), key);
       // Expect a valid client
       expect(codegenClient.supabaseClient, isA<SupabaseClient>());
       expect(

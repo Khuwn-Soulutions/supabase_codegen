@@ -53,8 +53,8 @@ void main() {
       });
 
       test(
-          'throws an error when ${supabaseEnvKeys.anonKey} or ${supabaseEnvKeys.key} not set',
-          () async {
+          'throws an error when ${supabaseEnvKeys.anonKey} or '
+          '${supabaseEnvKeys.key} not set', () async {
         envFile.writeAsStringSync('${supabaseEnvKeys.url}=http://db.com');
         expect(
           generator.generateSupabaseTypes(
@@ -94,8 +94,8 @@ void main() {
           });
 
           test(
-              'with provided ${supabaseEnvKeys.url} and ${supabaseEnvKeys.anonKey}',
-              () async {
+              'with provided ${supabaseEnvKeys.url} and '
+              '${supabaseEnvKeys.anonKey}', () async {
             envFile.writeAsStringSync('''
             ${supabaseEnvKeys.url}=$url
             ${supabaseEnvKeys.anonKey}=$anonKey
@@ -124,8 +124,8 @@ void main() {
           });
 
           test(
-              'with provided ${supabaseEnvKeys.key} if ${supabaseEnvKeys.anonKey} not provided',
-              () async {
+              'with provided ${supabaseEnvKeys.key} if '
+              '${supabaseEnvKeys.anonKey} not provided', () async {
             envFile.writeAsStringSync('''
             ${supabaseEnvKeys.url}=$url
             ${supabaseEnvKeys.key}=$key
