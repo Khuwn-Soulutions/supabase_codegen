@@ -5,13 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
-import 'package:supabase_codegen/supabase_codegen.dart' hide DotenvExtension;
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-// Ensure correct extract keys
-// ignore: always_use_package_imports
-import 'flutter_dotenv_extension.dart';
 
 /// Supabase Codegen Client
 class SupabaseCodegenFlutterClient implements SupabaseCodegenClientBase {
