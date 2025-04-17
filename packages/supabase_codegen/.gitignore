@@ -6,9 +6,6 @@
 build/
 pubspec.lock
 
-# Other folders
-.idea
-
 # Environment files
 .env*
 
