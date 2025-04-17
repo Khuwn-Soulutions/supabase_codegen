@@ -6,26 +6,26 @@ extension DotenvExtension on DotEnv {
   /// Extract the required keys from the environment file at [envPath]
   ({String supabaseUrl, String supabaseKey}) extractKeys(String envPath) {
     load([envPath]);
-    final hasUrl = isEveryDefined([envKeys.url]);
+    final hasUrl = isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
       throw Exception(
-        '[GenerateTypes] Missing ${envKeys.url} in $envPath file. ',
+        '[GenerateTypes] Missing ${supabaseEnvKeys.url} in $envPath file. ',
       );
     }
 
     final supabaseKey = getOrElse(
-      envKeys.anonKey,
-      () => this[envKeys.key] ?? '',
+      supabaseEnvKeys.anonKey,
+      () => this[supabaseEnvKeys.key] ?? '',
     );
     if (supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] Ensure that either ${envKeys.anonKey} '
-        'or ${envKeys.anonKey} is set to ensure access to the database',
+        '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} '
+        'or ${supabaseEnvKeys.anonKey} is set to ensure access to the database',
       );
     }
 
     // Get the config from env
-    final supabaseUrl = this[envKeys.url]!;
+    final supabaseUrl = this[supabaseEnvKeys.url]!;
     return (supabaseUrl: supabaseUrl, supabaseKey: supabaseKey);
   }
 }

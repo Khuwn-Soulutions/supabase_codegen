@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
-import 'package:supabase_codegen/supabase_codegen.dart' show envKeys;
+import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
 import 'package:test/test.dart';
 
 class MockGeneratorUtils extends Mock implements SupabaseCodeGeneratorUtils {}
@@ -36,7 +36,7 @@ void main() {
         }
       });
 
-      test('throws an error if it does not contain ${envKeys.url}', () {
+      test('throws an error if it does not contain ${supabaseEnvKeys.url}', () {
         expect(
           generator.generateSupabaseTypes(
             envFilePath: envFile.path,
@@ -46,15 +46,16 @@ void main() {
             isA<Exception>().having(
               (e) => e.toString(),
               'message',
-              contains('Missing ${envKeys.url}'),
+              contains('Missing ${supabaseEnvKeys.url}'),
             ),
           ),
         );
       });
 
-      test('throws an error when ${envKeys.anonKey} or ${envKeys.key} not set',
+      test(
+          'throws an error when ${supabaseEnvKeys.anonKey} or ${supabaseEnvKeys.key} not set',
           () async {
-        envFile.writeAsStringSync('${envKeys.url}=http://db.com');
+        envFile.writeAsStringSync('${supabaseEnvKeys.url}=http://db.com');
         expect(
           generator.generateSupabaseTypes(
             envFilePath: envFile.path,
@@ -64,8 +65,8 @@ void main() {
             isA<Exception>().having(
               (e) => e.toString(),
               'message',
-              contains('Ensure that either ${envKeys.anonKey} '
-                  'or ${envKeys.anonKey} is set'),
+              contains('Ensure that either ${supabaseEnvKeys.anonKey} '
+                  'or ${supabaseEnvKeys.anonKey} is set'),
             ),
           ),
         );
@@ -92,39 +93,42 @@ void main() {
             );
           });
 
-          test('with provided ${envKeys.url} and ${envKeys.anonKey}', () async {
-            envFile.writeAsStringSync('''
-            ${envKeys.url}=$url
-            ${envKeys.anonKey}=$anonKey
-          ''');
-            await generator.generateSupabaseTypes(
-              envFilePath: envFile.path,
-              outputFolder: '',
-            );
-            verify(() => mockUtils.createClient(url, anonKey)).called(1);
-          });
-
           test(
-              'with provided ${envKeys.anonKey} if both '
-              '${envKeys.anonKey} and ${envKeys.key} provided', () async {
-            envFile.writeAsStringSync('''
-            ${envKeys.url}=$url
-            ${envKeys.anonKey}=$anonKey
-            ${envKeys.key}=$key
-          ''');
-            await generator.generateSupabaseTypes(
-              envFilePath: envFile.path,
-              outputFolder: '',
-            );
-            verify(() => mockUtils.createClient(url, anonKey)).called(1);
-          });
-
-          test(
-              'with provided ${envKeys.key} if ${envKeys.anonKey} not provided',
+              'with provided ${supabaseEnvKeys.url} and ${supabaseEnvKeys.anonKey}',
               () async {
             envFile.writeAsStringSync('''
-            ${envKeys.url}=$url
-            ${envKeys.key}=$key
+            ${supabaseEnvKeys.url}=$url
+            ${supabaseEnvKeys.anonKey}=$anonKey
+          ''');
+            await generator.generateSupabaseTypes(
+              envFilePath: envFile.path,
+              outputFolder: '',
+            );
+            verify(() => mockUtils.createClient(url, anonKey)).called(1);
+          });
+
+          test(
+              'with provided ${supabaseEnvKeys.anonKey} if both '
+              '${supabaseEnvKeys.anonKey} and ${supabaseEnvKeys.key} provided',
+              () async {
+            envFile.writeAsStringSync('''
+            ${supabaseEnvKeys.url}=$url
+            ${supabaseEnvKeys.anonKey}=$anonKey
+            ${supabaseEnvKeys.key}=$key
+          ''');
+            await generator.generateSupabaseTypes(
+              envFilePath: envFile.path,
+              outputFolder: '',
+            );
+            verify(() => mockUtils.createClient(url, anonKey)).called(1);
+          });
+
+          test(
+              'with provided ${supabaseEnvKeys.key} if ${supabaseEnvKeys.anonKey} not provided',
+              () async {
+            envFile.writeAsStringSync('''
+            ${supabaseEnvKeys.url}=$url
+            ${supabaseEnvKeys.key}=$key
           ''');
             await generator.generateSupabaseTypes(
               envFilePath: envFile.path,

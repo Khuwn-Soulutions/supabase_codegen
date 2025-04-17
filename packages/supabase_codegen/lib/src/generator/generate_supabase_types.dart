@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
 
 import 'package:supabase_codegen/src/generator/generator.dart';
-import 'package:supabase_codegen/supabase_codegen.dart' show envKeys;
+import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
 
 /// Supabase client instance to generate types.
 late SupabaseClient client;
@@ -85,26 +85,26 @@ class SupabaseCodeGenerator {
 
     /// Load env keys
     final dotenv = DotEnv()..load([envFilePath]);
-    final hasUrl = dotenv.isEveryDefined([envKeys.url]);
+    final hasUrl = dotenv.isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
       throw Exception(
-        '[GenerateTypes] Missing ${envKeys.url} in $envFilePath file. ',
+        '[GenerateTypes] Missing ${supabaseEnvKeys.url} in $envFilePath file. ',
       );
     }
 
     final supabaseKey = dotenv.getOrElse(
-      envKeys.anonKey,
-      () => dotenv[envKeys.key] ?? '',
+      supabaseEnvKeys.anonKey,
+      () => dotenv[supabaseEnvKeys.key] ?? '',
     );
     if (supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] Ensure that either ${envKeys.anonKey} '
-        'or ${envKeys.anonKey} is set to ensure access to the database',
+        '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} '
+        'or ${supabaseEnvKeys.anonKey} is set to ensure access to the database',
       );
     }
 
     // Get the config from env
-    final supabaseUrl = dotenv[envKeys.url]!;
+    final supabaseUrl = dotenv[supabaseEnvKeys.url]!;
     logger.i('[GenerateTypes] Starting type generation');
 
     client = utils.createClient(supabaseUrl, supabaseKey);
