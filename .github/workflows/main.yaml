@@ -24,7 +24,8 @@ jobs:
       includes: "**/*.md"
       modified_files_only: false
 
-  build:
+  build_codegen:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       min_coverage: 85
+      working_directory: packages/supabase_codegen
