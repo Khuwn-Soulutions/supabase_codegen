@@ -7,7 +7,6 @@ environment:
 workspace:
   - packages/supabase_codegen
   - packages/supabase_codegen_flutter
-  - packages/supabase_codegen_flutter/example
 
 dev_dependencies:
   melos: ^7.0.0-dev.8
