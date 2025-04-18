@@ -147,19 +147,33 @@ void main() {
   });
 
   group('writeRowClass', () {
-    test('should generate correct row class with required and optional fields',
+    group('generates correct row class with required and optional fields in',
         () {
-      final buffer = StringBuffer();
-      writeRowClass(
-        entries: testFieldNameTypeMapEntries,
-        buffer: buffer,
-        className: expectedClassName,
-        classDesc: expectedClassDesc,
-        rowClass: expectedRowClassName,
-        fieldNameTypeMap: testFieldNameTypeMap,
-        tableClass: expectedTableClassName,
-      );
-      expect(buffer.toString(), expectedRowClass);
+      late StringBuffer buffer;
+      void setupRowBuffer() {
+        buffer = StringBuffer();
+        writeRowClass(
+          entries: testFieldNameTypeMapEntries,
+          buffer: buffer,
+          className: expectedClassName,
+          classDesc: expectedClassDesc,
+          rowClass: expectedRowClassName,
+          fieldNameTypeMap: testFieldNameTypeMap,
+          tableClass: expectedTableClassName,
+        );
+      }
+
+      test('Dart', () {
+        setupRowBuffer();
+        expect(buffer.toString(), expectedRowClass);
+      });
+
+      test('Flutter', () {
+        forFlutterUsage = true;
+        setupRowBuffer();
+        forFlutterUsage = false;
+        expect(buffer.toString(), expectedFlutterRowClass);
+      });
     });
 
     test('should generate correct row class with array fields', () {

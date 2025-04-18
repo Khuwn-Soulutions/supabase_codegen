@@ -37,3 +37,6 @@ class TestGenerateRow extends SupabaseDataRow {
 $expectedRowFields$expectedCopyWith}
 
 ''';
+
+final expectedFlutterRowClass =
+    expectedRowClass.replaceAll('SupabaseDataRow', 'SupabaseFlutterDataRow');
