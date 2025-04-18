@@ -31,7 +31,7 @@ SupabaseClient loadSupabaseClient() {
 // ignore: invalid_use_of_visible_for_testing_member
 @visibleForTesting
 Future<SupabaseClient> loadMockSupabaseClient() async {
-  _client = MockSupabaseCodegenClient();
+  _client = MockSupabaseCodegenFlutterClient();
   // Only exposed in tests
   // ignore: invalid_use_of_visible_for_testing_member
   await _client.loadMockSupabaseClient();

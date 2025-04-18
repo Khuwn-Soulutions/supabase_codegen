@@ -101,9 +101,9 @@ class MockAsyncStorage extends GotrueAsyncStorage {
   }
 }
 
-/// Mock Supabase Codegen Client
+/// Mock Supabase Codegen Flutter Client
 @visibleForTesting
-class MockSupabaseCodegenClient extends SupabaseCodegenFlutterClient {
+class MockSupabaseCodegenFlutterClient extends SupabaseCodegenFlutterClient {
   @override
   Future<void> initSupabase({
     required String url,
