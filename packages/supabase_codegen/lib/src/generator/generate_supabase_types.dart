@@ -38,6 +38,7 @@ typedef ColumnData = ({
 typedef FieldNameTypeMap = Map<String, ColumnData>;
 
 /// Supabase code gnerator utils class
+// coverage:ignore-start
 @visibleForTesting
 class SupabaseCodeGeneratorUtils {
   /// Constructor
@@ -51,6 +52,7 @@ class SupabaseCodeGeneratorUtils {
   SupabaseClient createClient(String supabaseUrl, String supabaseKey) =>
       SupabaseClient(supabaseUrl, supabaseKey);
 }
+// coverage:ignore-end
 
 /// Supabase code generator
 class SupabaseCodeGenerator {
