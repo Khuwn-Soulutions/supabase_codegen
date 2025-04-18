@@ -76,11 +76,15 @@ class MockLocalStorage extends LocalStorage {
   Future<bool> hasAccessToken() async => true;
   @override
   Future<void> persistSession(String persistSessionString) async {}
+
+// coverage:ignore-start
   @override
   Future<void> removePersistedSession() async {}
+// coverage:ignore-end
 }
 
 /// Copied from package:supabase_flutter/test/widget_test_stubs.dart
+// coverage:ignore-start
 @visibleForTesting
 class MockAsyncStorage extends GotrueAsyncStorage {
   final Map<String, String> _map = {};
@@ -100,6 +104,7 @@ class MockAsyncStorage extends GotrueAsyncStorage {
     _map[key] = value;
   }
 }
+// coverage:ignore-end
 
 /// Mock Supabase Codegen Flutter Client
 @visibleForTesting
