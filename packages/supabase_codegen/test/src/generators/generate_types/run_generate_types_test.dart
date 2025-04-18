@@ -31,6 +31,7 @@ void main() {
           outputFolder: any(named: 'outputFolder'),
           fileTag: any(named: 'fileTag'),
           skipFooter: any(named: 'skipFooter'),
+          forFlutter: any(named: 'forFlutter'),
         ),
       ).thenAnswer((_) async => {});
     });
@@ -56,8 +57,8 @@ void main() {
         // Assert
         verify(
           () => mockGenerator.generateSupabaseTypes(
-            envFilePath: '.env',
-            outputFolder: 'supabase/types',
+            envFilePath: defaultValues[CmdOption.env] as String,
+            outputFolder: defaultValues[CmdOption.output] as String,
           ),
         ).called(1);
       });
@@ -65,13 +66,16 @@ void main() {
       group('correct parameters from', () {
         test('command line', () async {
           // Arrange
+          const envFilePath = '.testenv';
+          const output = 'test/output';
+          const testTag = 'testtag';
           final args = [
             '--env',
-            '.testenv',
+            envFilePath,
             '--output',
-            'test/output',
+            output,
             '--tag',
-            'testtag',
+            testTag,
             '--debug',
             '--skip-footer',
           ];
@@ -82,9 +86,9 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: '.testenv',
-              outputFolder: 'test/output',
-              fileTag: 'testtag',
+              envFilePath: envFilePath,
+              outputFolder: output,
+              fileTag: testTag,
               skipFooter: true,
             ),
           ).called(1);
@@ -207,6 +211,42 @@ void main() {
               outputFolder: 'pubspec/output',
               fileTag: 'pubspectag',
               skipFooter: true,
+            ),
+          ).called(1);
+        });
+      });
+
+      group('forFlutter', () {
+        test('false by default', () async {
+          // Act
+          await runGenerateTypes([], generator: mockGenerator);
+
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              envFilePath: defaultValues[CmdOption.env] as String,
+              outputFolder: defaultValues[CmdOption.output] as String,
+              // Explicit check
+              // ignore: avoid_redundant_argument_values
+              forFlutter: false,
+            ),
+          ).called(1);
+        });
+
+        test('true if set to true', () async {
+          // Act
+          await runGenerateTypes(
+            [],
+            generator: mockGenerator,
+            forFlutter: true,
+          );
+
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              envFilePath: defaultValues[CmdOption.env] as String,
+              outputFolder: defaultValues[CmdOption.output] as String,
+              forFlutter: true,
             ),
           ).called(1);
         });
