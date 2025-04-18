@@ -91,6 +91,9 @@ class SupabaseCodeGenerator {
     /// Set skip footer
     skipFooterWrite = skipFooter;
 
+    /// Set flutter usage
+    forFlutterUsage = forFlutter;
+
     /// Load env keys
     final dotenv = DotEnv()..load([envFilePath]);
     final hasUrl = dotenv.isEveryDefined([supabaseEnvKeys.url]);
