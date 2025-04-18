@@ -87,16 +87,6 @@ class SupabaseCodegenFlutterClient implements SupabaseCodegenClientBase {
   /// Load the mock supabase client
   @override
   @visibleForTesting
-  Future<SupabaseClient> loadMockSupabaseClient() async {
-    await initSupabase(
-      url: 'url',
-      key: 'key',
-      // Used within testing only
-      // ignore: invalid_use_of_visible_for_testing_member
-      httpClient: mockSupabaseHttpClient,
-    );
-    // Hide warning as the method is marked visible for testing
-    // ignore: invalid_use_of_visible_for_testing_member
-    return setClient(Supabase.instance.client = mockSupabase);
-  }
+  Future<SupabaseClient> loadMockSupabaseClient() =>
+      createClient('https://example.com', 'anon-key');
 }
