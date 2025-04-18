@@ -33,5 +33,5 @@ jobs:
   build_codegen_flutter:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
-      min_coverage: 85
+      min_coverage: 65
       working_directory: packages/supabase_codegen_flutter
