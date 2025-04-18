@@ -70,6 +70,21 @@ void main() {
     });
   });
 
+  group('writeImports should generate correct imports', () {
+    test('for dart', () {
+      final buffer = StringBuffer();
+      writeImports(buffer);
+      expect(buffer.toString(), contains(expectedDartImports));
+    });
+    test('for flutter', () {
+      final buffer = StringBuffer();
+      forFlutterUsage = true;
+      writeImports(buffer);
+      expect(buffer.toString(), contains(expectedFlutterImports));
+      forFlutterUsage = false;
+    });
+  });
+
   group('writeCopyWith', () {
     test('should generate correct copyWith method', () {
       final buffer = StringBuffer();
