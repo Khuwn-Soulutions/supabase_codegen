@@ -129,10 +129,12 @@ void writeRowClass({
 }) {
   logger.i('Creating row class for: $className');
 
+  final rowSuperClass = 'Supabase${forFlutterUsage ? 'Flutter' : ''}DataRow';
+
   /// Start the row class
   buffer
     ..writeln('/// $classDesc Row')
-    ..writeln('class $rowClass extends SupabaseDataRow {')
+    ..writeln('class $rowClass extends $rowSuperClass {')
     ..writeln('  /// $classDesc Row')
     ..writeln('  $rowClass({');
 
