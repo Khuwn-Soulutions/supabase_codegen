@@ -21,7 +21,7 @@ void main() {
     });
 
     test('when client setup has a supabase instance', () async {
-      final mockClient = MockSupabaseCodegenClient();
+      final mockClient = MockSupabaseCodegenFlutterClient();
       await mockClient.loadMockSupabaseClient();
 
       // Assert

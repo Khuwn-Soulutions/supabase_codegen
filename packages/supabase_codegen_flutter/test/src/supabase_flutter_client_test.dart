@@ -10,11 +10,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() {
   group('Supabase (Flutter) Client', () {
     final envPath = path.join(Directory.current.path, 'test', 'config.env');
-    late MockSupabaseCodegenClient mockClient;
+    late MockSupabaseCodegenFlutterClient mockClient;
     TestWidgetsFlutterBinding.ensureInitialized();
 
     setUp(() {
-      mockClient = MockSupabaseCodegenClient();
+      mockClient = MockSupabaseCodegenFlutterClient();
     });
 
     tearDown(() async {
