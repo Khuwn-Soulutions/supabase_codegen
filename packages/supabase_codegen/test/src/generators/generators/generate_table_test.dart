@@ -229,20 +229,51 @@ class ItemRow extends SupabaseDataRow {
     });
   });
 
-  group('writeTableClass', () {
-    test('should generate correct table class', () {
-      final buffer = StringBuffer();
+  group('writeTableClass should generate correct table class for', () {
+    late StringBuffer buffer;
+    const tableName = 'users';
+    const classDesc = 'User';
+    const tableClass = 'UserTable';
+    const rowClass = 'UserRow';
+
+    void setUpBuffer() {
+      buffer = StringBuffer();
       writeTableClass(
         buffer: buffer,
-        tableName: 'users',
-        classDesc: 'User',
-        tableClass: 'UserTable',
-        rowClass: 'UserRow',
+        tableName: tableName,
+        classDesc: classDesc,
+        tableClass: tableClass,
+        rowClass: rowClass,
       );
+    }
 
+    test('Dart', () {
+      setUpBuffer();
       const expected = '''
 /// User Table
 class UserTable extends SupabaseTable<UserRow> {
+  /// Table Name
+  @override
+  String get tableName => 'users';
+
+    /// Create a [UserRow] from the [data] provided
+  @override
+  UserRow createRow(Map<String, dynamic> data) =>
+      UserRow.fromJson(data);
+}
+
+''';
+      expect(buffer.toString(), expected);
+    });
+
+    test('Flutter', () {
+      forFlutterUsage = true;
+      setUpBuffer();
+      forFlutterUsage = false;
+
+      const expected = '''
+/// User Table
+class UserTable extends SupabaseFlutterTable<UserRow> {
   /// Table Name
   @override
   String get tableName => 'users';
