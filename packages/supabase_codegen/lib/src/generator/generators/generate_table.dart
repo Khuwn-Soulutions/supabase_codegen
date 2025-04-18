@@ -98,10 +98,12 @@ void writeTableClass({
 }) {
   logger.i('Creating table class for: $tableName');
 
+  final supabaseTable = 'Supabase${forFlutterUsage ? 'Flutter' : ''}Table';
+
   /// Create the table class
   buffer
     ..writeln('/// $classDesc Table')
-    ..writeln('class $tableClass extends SupabaseTable<$rowClass> {')
+    ..writeln('class $tableClass extends $supabaseTable<$rowClass> {')
     ..writeln('  /// Table Name')
     ..writeln('  @override')
     ..writeln("  String get tableName => '$tableName';")
