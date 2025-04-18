@@ -10,6 +10,7 @@ Future<String?> runGenerateTypes(
   List<String> args, {
   SupabaseCodeGenerator generator = const SupabaseCodeGenerator(),
   File? pubspecFile,
+  bool forFlutter = false,
 }) async {
   /// Are we running in test mode
   final isRunningInTest = Platform.script.path.contains('test.dart') ||
@@ -127,6 +128,7 @@ Future<String?> runGenerateTypes(
       outputFolder: outputFolder,
       fileTag: tag,
       skipFooter: skipFooter,
+      forFlutter: forFlutter,
     );
 
     // coverage:ignore-start

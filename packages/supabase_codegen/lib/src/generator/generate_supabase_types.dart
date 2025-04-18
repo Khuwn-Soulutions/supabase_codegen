@@ -23,6 +23,9 @@ final formattedEnums = <String, String>{};
 /// Should the footer generation be skipped
 bool skipFooterWrite = false;
 
+/// Are the types being generated for Flutter usage
+bool forFlutterUsage = false;
+
 /// Column data type
 typedef ColumnData = ({
   String dartType,
@@ -75,6 +78,9 @@ class SupabaseCodeGenerator {
 
     /// Should the footer be skipped
     bool skipFooter = false,
+
+    /// Is this for Flutter usage
+    bool forFlutter = false,
   }) async {
     /// Set tag
     tag = fileTag;
