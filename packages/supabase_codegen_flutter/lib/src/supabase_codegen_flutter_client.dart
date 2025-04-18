@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// Imported for testing
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
@@ -12,7 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseCodegenFlutterClient implements SupabaseCodegenClientBase {
   /// Default env path
   @override
-  final defaultEnvPath = 'config.env';
+  final defaultEnvPath = defaultEnvFile;
 
   /// Client type
   @override

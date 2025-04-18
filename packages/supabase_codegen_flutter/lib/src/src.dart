@@ -1,4 +1,5 @@
 export 'database/database.dart';
+export 'default_env.dart';
 export 'flutter_dotenv_extension.dart';
 export 'mocks/mocks.dart';
 export 'supabase_client.dart';
