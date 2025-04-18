@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:logger/logger.dart';
 
 import 'sql/sql.dart';
 
@@ -23,7 +22,7 @@ void main() async {
 
   // Print result to shell
   // ignore: avoid_print
-  Logger().d('Migration file created at: $path');
+  print('Migration file created at: $path');
 }
 
 /// Extract the path from the given [input]
