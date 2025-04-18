@@ -23,3 +23,8 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^1.0.4
   very_good_analysis: ^7.0.0
+
+
+executables:
+  generate_types:
+  add_codegen_functions:
