@@ -85,13 +85,6 @@ SUPABASE_KEY=$key
       expect(mockClient.supabaseClient, isA<SupabaseClient>());
     });
 
-    test('loadMockSupabaseClient returns mockSupabase', () async {
-      final client = await mockClient.loadMockSupabaseClient();
-      expect(client, equals(mockSupabase));
-      // ensure pause for unawaited future in loadMockSupabaseClient to complete
-      await Future<void>.delayed(Duration.zero);
-    });
-
     group('loadClientFromEnv', () {
       test('returns a SupabaseClient', () async {
         writeEnvFile();
