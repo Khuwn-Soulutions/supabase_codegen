@@ -41,7 +41,7 @@ Future<void> generateTableFile({
     });
 
   /// Write imports
-  _writeImports(buffer);
+  writeImports(buffer);
 
   /// Generate Table class
   writeTableClass(
@@ -71,12 +71,15 @@ Future<void> generateTableFile({
 }
 
 /// Write the package imports
-void _writeImports(StringBuffer buffer) {
+@visibleForTesting
+void writeImports(StringBuffer buffer) {
   writeHeader(buffer);
+
+  final packageName = 'supabase_codegen${forFlutterUsage ? '_flutter' : ''}';
 
   /// Write imports
   buffer
-    ..writeln("import 'package:supabase_codegen/supabase_codegen.dart';")
+    ..writeln("import 'package:$packageName/$packageName.dart';")
     ..writeln('// Import enums if needed')
     ..writeln('// ignore: unused_import, always_use_package_imports')
     ..writeln("import '../database.dart';")
