@@ -14,12 +14,13 @@ void writeHeader(StringBuffer buffer) {
 
 /// Write the file footer
 void writeFooter(StringBuffer buffer) {
-  if (skipFooterWrite) return;
-
-  buffer.writeln('/// Date: ${DateTime.now()}');
-
   // Write tag
   if (tag.isNotEmpty) {
     buffer.writeln('/// Tag: $tag');
   }
+
+  // Write date
+  if (skipFooterWrite) return;
+
+  buffer.writeln('/// Date: ${DateTime.now()}');
 }
