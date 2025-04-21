@@ -1,28 +1,59 @@
 import 'dart:io';
 
-import 'package:flutter_test/flutter_test.dart';
+import 'package:supabase_codegen/init/init_functions/env.dart';
+import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
-import '../../bin/init_functions/env.dart';
 
 void main() {
   group('env.dart', () {
     group('validateEnvFile', () {
-      test('returns true for valid env file', () {
-        final file = File('test.env')
-          ..writeAsStringSync(
-            'SUPABASE_URL=https://example.com\nSUPABASE_ANON_KEY=abc123',
-          );
-        expect(validateEnvFile('test.env'), isTrue);
-        file.deleteSync();
+      late File file;
+      setUp(() {
+        file = File('test.env');
+      });
+
+      tearDown(() {
+        if (file.existsSync()) {
+          file.deleteSync();
+        }
+      });
+
+      group('returns true for valid env file', () {
+        tearDown(() {
+          expect(validateEnvFile('test.env'), isTrue);
+        });
+        test('with url and anon key', () {
+          file.writeAsStringSync('''
+SUPABASE_URL=https://example.com
+SUPABASE_ANON_KEY=abc123
+''');
+        });
+
+        test('with url and key', () {
+          file.writeAsStringSync('''
+SUPABASE_URL=https://example.com
+SUPABASE_KEY=abc123
+''');
+        });
+
+        test('with url and key with other variables', () {
+          file.writeAsStringSync('''
+SUPABASE_URL=https://example.com
+# Other variables
+FOO=bar
+
+# Supabase key
+SUPABASE_KEY=abc123
+''');
+        });
       });
 
       test('returns false for invalid env file', () {
-        final file = File('test.env')
-          ..writeAsStringSync(
-            'SUPABASE_URL=https://example.com\nINVALID_KEY=abc123',
-          );
+        file.writeAsStringSync('''
+SUPABASE_URL=https://example.com
+INVALID_KEY=abc123
+''');
         expect(validateEnvFile('test.env'), isFalse);
-        file.deleteSync();
       });
     });
 

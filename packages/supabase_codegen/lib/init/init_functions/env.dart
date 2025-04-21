@@ -4,14 +4,20 @@
 import 'dart:io';
 
 import 'package:dcli/dcli.dart';
-import 'package:supabase_codegen_flutter/src/default_env.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 
 import 'package:yaml/yaml.dart';
 
 /// Configure env file
-Future<String> configureEnv() async {
+Future<String> configureEnv({
+  bool forFlutter = false,
+  String? defaultEnvPath,
+}) async {
   // Get the value by prompt
-  final envPath = ask(blue('Path to env file:'), defaultValue: defaultEnvFile);
+  final envPath = ask(
+    blue('Path to env file:'),
+    defaultValue: defaultEnvPath ?? defaultValues[CmdOption.env] as String,
+  );
 
   // confirm that the file exists
   if (!exists(envPath)) {
@@ -28,6 +34,9 @@ Future<String> configureEnv() async {
   }
 
   print(green('Env file validated ✅'));
+
+  // Return current path if not for flutter
+  if (!forFlutter) return envPath;
 
   // Ask the user if they wish to load the supabase client using the env file
   final loadClientWithEnv = confirm(
@@ -95,8 +104,9 @@ bool createEnvFile(
 bool validateEnvFile(String envPath) {
   final contents = read(envPath).toParagraph();
   return RegExp(
-    r'^SUPABASE_URL=.*$\r?\n^SUPABASE_ANON_KEY=.*$',
+    r'^SUPABASE_URL\s*=\s*.*$.*^SUPABASE(_ANON)?_KEY\s*=\s*.*$',
     multiLine: true,
+    dotAll: true,
   ).hasMatch(contents);
 }
 
