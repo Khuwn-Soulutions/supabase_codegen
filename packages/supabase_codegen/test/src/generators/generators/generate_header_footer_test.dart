@@ -36,10 +36,25 @@ void main() {
         expect(buffer.toString(), isNot(contains('Tag:')));
       });
 
-      test('no footer when skipFooter is true', () {
-        skipFooterWrite = true;
+      group('when skipFooter is true', () {
+        setUp(() {
+          skipFooterWrite = true;
+        });
+        test('no date', () {
+          writeFooter(buffer);
+          expect(buffer.toString(), isEmpty);
+        });
+        test('tag if provided', () {
+          tag = 'test_tag';
+          writeFooter(buffer);
+          expect(buffer.toString(), contains('Tag: test_tag'));
+        });
+      });
+
+      test('date when skipFooter is false', () {
         writeFooter(buffer);
-        expect(buffer.toString(), isEmpty);
+        expect(buffer.toString(), isNotEmpty);
+        expect(buffer.toString(), contains('Date:'));
       });
     });
   });
