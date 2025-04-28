@@ -143,7 +143,7 @@ $assetsEntry
   if (assets == null) {
     pubspecPath.write(
       pubSpecContents.replaceFirst(
-        RegExp('^flutter:', multiLine: true),
+        RegExp('^flutter:\r?\n', multiLine: true),
         'flutter:\n$assetsEntry',
       ),
     );
