@@ -139,6 +139,24 @@ flutter:
         checkPubSpecContents();
       });
 
+      test('adds env file to pubspec.yaml with flutter in dependencies',
+          () async {
+        File(pubspecPath).writeAsStringSync('''
+name: test
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+# Flutter section
+flutter:
+''');
+        final result =
+            await addEnvFileToAssets(testEnv, pubspecPath: pubspecPath);
+        expect(result, isTrue);
+        checkPubSpecContents();
+      });
+
       test('does not add if env file already present in assets', () async {
         File(pubspecPath).writeAsStringSync('''
 name: test
