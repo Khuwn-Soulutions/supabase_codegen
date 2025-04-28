@@ -54,7 +54,7 @@ Future<String?> runGenerateTypes(
         defaultsTo: defaultValues[CmdOption.configYaml] as String,
         abbr: CmdOption.configYaml[0],
         help: 'Path to config yaml file. \n'
-            'If not specified, reads from keys under '
+            'If not specified, reads from .supabase_codegen.yaml or keys under '
             'supabase_codegen in pubspec.yaml',
       )
       // Debug
