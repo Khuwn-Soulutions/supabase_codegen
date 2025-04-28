@@ -33,3 +33,4 @@ dev_dependencies:
 executables:
   generate_types:
   add_codegen_functions:
+  init:
