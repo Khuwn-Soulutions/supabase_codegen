@@ -142,7 +142,10 @@ $assetsEntry
   /// Write assets directly under flutter
   if (assets == null) {
     pubspecPath.write(
-      pubSpecContents.replaceFirst('flutter:', 'flutter:\n$assetsEntry'),
+      pubSpecContents.replaceFirst(
+        RegExp('^flutter:', multiLine: true),
+        'flutter:\n$assetsEntry',
+      ),
     );
     return true;
   }
