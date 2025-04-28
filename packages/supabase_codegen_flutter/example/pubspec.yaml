@@ -31,8 +31,3 @@ flutter:
   uses-material-design: true
   assets:
     - config.env
-
-# Supabase codegen configuration
-supabase_codegen:
-  output: lib/types
-  env: config.env
