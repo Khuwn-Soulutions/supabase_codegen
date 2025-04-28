@@ -1,0 +1,4 @@
+# Supabase codegen config.
+# See https://pub.dev/packages/supabase_codegen#yaml-configuration for more info
+env: config.env
+output: lib/types
