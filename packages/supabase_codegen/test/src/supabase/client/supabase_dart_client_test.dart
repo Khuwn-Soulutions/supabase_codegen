@@ -7,7 +7,8 @@ import 'package:test/test.dart';
 
 void main() {
   group('Supabase (Dart) Client', () {
-    final envPath = path.join(Directory.current.path, 'test', '.env');
+    final envPath =
+        path.join(Directory.current.path, 'test', 'dart_client.env');
     late SupabaseCodegenClient codegenClient;
 
     setUp(() {
