@@ -2,17 +2,13 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var buffer = StringBuffer();
-
   setUp(() {
-    buffer = StringBuffer();
     skipFooterWrite = false;
   });
 
-  tearDown(buffer.clear);
-
   group('writeHeader and writeFooter', () {
     test('writeHeader writes correct header', () {
+      final buffer = StringBuffer();
       writeHeader(buffer);
       expect(buffer.toString(), contains('//'));
       expect(buffer.toString(), contains('Generated file. Do not edit.'));
@@ -27,12 +23,14 @@ void main() {
 
     group('writeFooter writes', () {
       test('correct footer with tag', () {
+        final buffer = StringBuffer();
         tag = 'test_tag';
         writeFooter(buffer);
         expect(buffer.toString(), contains('Tag: test_tag'));
       });
 
       test('correct footer without tag', () {
+        final buffer = StringBuffer();
         tag = '';
         writeFooter(buffer);
         expect(buffer.toString(), isNot(contains('Tag:')));
@@ -43,10 +41,12 @@ void main() {
           skipFooterWrite = true;
         });
         test('no date', () {
+          final buffer = StringBuffer();
           writeFooter(buffer);
           expect(buffer.toString(), isEmpty);
         });
         test('tag if provided', () {
+          final buffer = StringBuffer();
           tag = 'test_tag';
           writeFooter(buffer);
           expect(buffer.toString(), contains('Tag: test_tag'));
@@ -54,6 +54,7 @@ void main() {
       });
 
       test('date when skipFooter is false', () {
+        final buffer = StringBuffer();
         writeFooter(buffer);
         expect(buffer.toString(), isNotEmpty);
         expect(buffer.toString(), contains('Date:'));
