@@ -117,6 +117,7 @@ Future<bool> addEnvFileToAssets(
 }) async {
   final pubSpecContents = read(pubspecPath).toParagraph();
   final pubspec = loadYaml(pubSpecContents) as YamlMap;
+  final pubSpecFile = File(pubspecPath);
 
   final assetsEntry = '''
   assets:
@@ -126,7 +127,7 @@ Future<bool> addEnvFileToAssets(
   /// Write full flutter entry if no flutter
   final flutter = pubspec['flutter'] as YamlMap?;
   if (!pubspec.containsKey('flutter')) {
-    pubspecPath.write(
+    pubSpecFile.writeAsStringSync(
       '''
 $pubSpecContents
 
@@ -141,12 +142,11 @@ $assetsEntry
 
   /// Write assets directly under flutter
   if (assets == null) {
-    pubspecPath.write(
-      pubSpecContents.replaceFirst(
-        RegExp('^flutter:\r?\n', multiLine: true),
-        'flutter:\n$assetsEntry',
-      ),
+    final newPubSpec = pubSpecContents.replaceFirst(
+      RegExp(r'^flutter:.*$', multiLine: true),
+      'flutter:\n$assetsEntry',
     );
+    pubSpecFile.writeAsStringSync(newPubSpec);
     return true;
   }
 
@@ -154,7 +154,8 @@ $assetsEntry
   if (assets.contains(envPath)) return false;
 
   /// Add env path directly under assets
-  pubspecPath
-      .write(pubSpecContents.replaceFirst('assets:', assetsEntry.trim()));
+  pubSpecFile.writeAsStringSync(
+    pubSpecContents.replaceFirst('assets:', assetsEntry.trim()),
+  );
   return true;
 }
