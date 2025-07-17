@@ -124,8 +124,9 @@ class MockSupabaseCodegenFlutterClient extends SupabaseCodegenFlutterClient {
         localStorage: MockLocalStorage(),
         pkceAsyncStorage: MockAsyncStorage(),
       ),
-      httpClient: httpClient,
+      httpClient: httpClient ?? mockSupabaseHttpClient,
     );
+    setClient(Supabase.instance.client);
     supabaseInitialized = true;
   }
 }
