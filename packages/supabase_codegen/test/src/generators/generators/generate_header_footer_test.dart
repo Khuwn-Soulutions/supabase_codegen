@@ -9,6 +9,8 @@ void main() {
     skipFooterWrite = false;
   });
 
+  tearDown(buffer.clear);
+
   group('writeHeader and writeFooter', () {
     test('writeHeader writes correct header', () {
       writeHeader(buffer);
