@@ -87,8 +87,8 @@ void main() {
       });
 
       test(
-          'throws exception when supabase key is missing in env file and platform env',
-          () {
+          'throws exception when supabase key is missing in env file '
+          'and platform env', () {
         // Create a temporary .env file for testing
         File(envPath).writeAsStringSync('${supabaseEnvKeys.url}=$supabaseUrl');
 
@@ -99,8 +99,9 @@ void main() {
               (e) => e.toString(),
               'message',
               contains(
-                '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} or '
-                '${supabaseEnvKeys.anonKey} is set to ensure access to the database',
+                '[GenerateTypes] Ensure that either '
+                '${supabaseEnvKeys.anonKey} or ${supabaseEnvKeys.anonKey} is '
+                'set to ensure access to the database',
               ),
             ),
           ),
@@ -132,8 +133,8 @@ void main() {
       });
 
       test(
-          'returns supabase URL and key from platform env when anon key is not defined but key is',
-          () {
+          'returns supabase URL and key from platform env when '
+          'anon key is not defined but key is', () {
         env.remove(supabaseEnvKeys.anonKey);
         env[supabaseEnvKeys.key] = supabaseKey;
 
@@ -148,8 +149,8 @@ void main() {
       });
 
       test(
-          'returns supabase URL and key from platform env when anon key is not defined but key alias is',
-          () {
+          'returns supabase URL and key from platform env when anon key '
+          'is not defined but key alias is', () {
         env.remove(supabaseEnvKeys.anonKey);
         env[supabaseEnvKeys.key] = supabaseKey;
 
