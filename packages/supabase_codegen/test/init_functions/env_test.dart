@@ -95,7 +95,7 @@ INVALID_KEY=abc123
     });
 
     group('addEnvFileToAssets', () {
-      const testEnv = 'env.test';
+      const testEnv = 'env-dart.test.env';
       const pubspecPath = 'test/test_pubspec.yaml';
       final pubspecFile = File(pubspecPath);
 
