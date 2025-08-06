@@ -1,24 +1,19 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// {@template supabase_codegen_flutter}
-/// Supabase Codegen Flutter Package
-/// {@endtemplate}
-class SupabaseCodegenFlutter {
-  /// Supabase instance
-  static Supabase get supabase => Supabase.instance;
+/// Supabase instance
+Supabase get supabase => Supabase.instance;
 
-  /// Client instance
-  static SupabaseClient get client => supabase.client;
+/// Client instance
+SupabaseClient get supabaseClient => supabase.client;
 
-  /// Auth client instance
-  static GoTrueClient get auth => client.auth;
+/// Auth client instance
+GoTrueClient get authClient => supabaseClient.auth;
 
-  /// Realtime client instance
-  static RealtimeClient get realtime => client.realtime;
+/// Realtime client instance
+RealtimeClient get realtimeClient => supabaseClient.realtime;
 
-  /// Storage client instance
-  static SupabaseStorageClient get storage => client.storage;
+/// Storage client instance
+SupabaseStorageClient get storageClient => supabaseClient.storage;
 
-  /// Functions client instance
-  static FunctionsClient get functions => client.functions;
-}
+/// Functions client instance
+FunctionsClient get functionsClient => supabaseClient.functions;

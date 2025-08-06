@@ -8,7 +8,7 @@ void main() {
     test('when client not setup throws an assertion error', () async {
       // Assert
       expect(
-        () => SupabaseCodegenFlutter.supabase,
+        () => supabase,
         throwsA(
           isA<AssertionError>().having(
             (e) => e.toString(),
@@ -24,8 +24,8 @@ void main() {
       await mockClient.loadMockSupabaseClient();
 
       // Assert
-      expect(SupabaseCodegenFlutter.supabase, isNotNull);
-      expect(SupabaseCodegenFlutter.supabase.client, Supabase.instance.client);
+      expect(supabase, isNotNull);
+      expect(supabaseClient, Supabase.instance.client);
 
       // Clean up created instance
       if (mockClient.supabaseInitialized) {
