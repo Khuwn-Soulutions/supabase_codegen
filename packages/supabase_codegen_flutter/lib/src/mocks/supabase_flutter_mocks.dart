@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Copied from package:supabase_flutter/test/utils.dart
 /// Construct session data for a given expiration date

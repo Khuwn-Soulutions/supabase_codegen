@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Supabase Codegen Client
 class SupabaseCodegenFlutterClient implements SupabaseCodegenClientBase {

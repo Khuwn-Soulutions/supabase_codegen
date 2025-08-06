@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Client to use for loading
 SupabaseCodegenFlutterClient _client = SupabaseCodegenFlutterClient();
