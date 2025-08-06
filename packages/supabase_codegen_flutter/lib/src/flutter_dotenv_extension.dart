@@ -4,9 +4,8 @@ import 'package:supabase_codegen/supabase_codegen.dart';
 /// Dotenv extension
 extension DotenvExtension on DotEnv {
   /// Extract the required keys from the environment file at [envPath]
-  Future<({String supabaseUrl, String supabaseKey})> extractKeys(
-    String envPath,
-  ) async {
+  Future<({String supabaseUrl, String supabaseKey, Map<String, String> env})>
+      extractKeys(String envPath) async {
     await load(fileName: envPath);
     final hasUrl = isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
@@ -28,6 +27,6 @@ extension DotenvExtension on DotEnv {
 
     // Get the config from env
     final supabaseUrl = get(supabaseEnvKeys.url);
-    return (supabaseUrl: supabaseUrl, supabaseKey: supabaseKey);
+    return (supabaseUrl: supabaseUrl, supabaseKey: supabaseKey, env: env);
   }
 }
