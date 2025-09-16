@@ -19,7 +19,6 @@ dependencies:
 
 ## ✨ Features
 
-- NEW: Full support for Flutter with interoperability with [Supabase flutter](https://pub.dev/packages/supabase_flutter) package
 - Automatically generates Dart classes from Supabase tables
 - Creates type-safe models with full IDE support
 - Supports complex relationships and nested structures
@@ -183,30 +182,15 @@ await loadClientFromEnv();
 ```
 
 #### Flutter
-The default location for Flutter projects is `config.env`.
-  - Note: 
-    - If you are using another file. Ensure that it does not begin with `.` or it will not be loaded in Flutter. See [issue here](https://github.com/java-james/flutter_dotenv/issues/28).
-    - The environment file must be added to the `assets` section of your `pubspec.yaml` file to be loaded at runtime. See [example project](example/pubspec.yaml).
-    ```yaml
-      flutter:
-        ...
-        assets:
-          - config.env
-    ```
-    - Once loaded the client instance can be accessed at `Supabase.instance.client`.
-    ```dart
-    import 'package:supabase_flutter/supabase_flutter.dart';
-    import 'package:supabase_codegen/supabase_codegen.dart';
+> **Note:** For Flutter projects, we recommend using the dedicated [`supabase_codegen_flutter`](https://pub.dev/packages/supabase_codegen_flutter) package, which provides Flutter-specific client management and better integration with the Flutter ecosystem.
 
-    await loadClientFromEnv();
-    final supabase = Supabase.instance.client;
+The `supabase_codegen_flutter` package includes:
+- Flutter-optimized client initialization
+- Automatic environment file loading from `config.env`
+- Convenient getters for Supabase services (auth, realtime, storage, functions)
+- Better integration with `supabase_flutter`
 
-    // Email and password sign up
-    await supabase.auth.signUp(
-      email: email,
-      password: password,
-    );
-    ```
+For detailed Flutter usage instructions, see the [supabase_codegen_flutter documentation](https://pub.dev/packages/supabase_codegen_flutter).
 
 ### Setting the client
 
