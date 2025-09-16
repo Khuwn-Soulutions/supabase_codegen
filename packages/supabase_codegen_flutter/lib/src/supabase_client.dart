@@ -25,6 +25,7 @@ Future<SupabaseClient> loadClientFromEnv([String? envPath]) async =>
 /// This should be called after [createClient] or [loadClientFromEnv]
 ///
 /// If no current instance, an [AssertionError] is thrown
+@protected
 SupabaseClient loadSupabaseClient() {
   return _client.loadSupabaseClient();
 }
