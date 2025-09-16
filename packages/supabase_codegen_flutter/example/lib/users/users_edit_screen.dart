@@ -244,7 +244,7 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
 
                   // UserRole (Required)
                   DropdownButtonFormField<UserRole>(
-                    value: _selectedRole,
+                    initialValue: _selectedRole,
                     decoration: const InputDecoration(
                       labelText: 'UserRole *',
                       border: OutlineInputBorder(),
