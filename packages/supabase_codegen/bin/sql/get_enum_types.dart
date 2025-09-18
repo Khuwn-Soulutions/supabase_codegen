@@ -5,7 +5,6 @@ RETURNS TABLE (
     enum_value text
 )
 LANGUAGE plpgsql
-SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
@@ -26,7 +25,5 @@ END;
 $$;
 
 -- Grant access to the function
-GRANT EXECUTE ON FUNCTION public.get_enum_types() TO anon;
-GRANT EXECUTE ON FUNCTION public.get_enum_types() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_enum_types() TO service_role;
 ''';
