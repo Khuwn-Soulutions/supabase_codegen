@@ -89,8 +89,10 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: |
+          # Install yq for robust YAML manipulation
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
           # Remove workspace resolution to isolate this package
-          sed -i 's/resolution: workspace/#resolution: workspace/' pubspec.yaml
+          yq -i 'del(.resolution)' pubspec.yaml
           dart pub get
 
       - name: ✨ Check Formatting
