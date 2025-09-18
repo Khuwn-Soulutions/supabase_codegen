@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   group('Supabase (Flutter) Client', () {

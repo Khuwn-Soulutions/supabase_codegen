@@ -9,8 +9,8 @@ workspace:
   - packages/supabase_codegen_flutter
 
 dev_dependencies:
-  melos: ^7.0.0-dev.8
-  very_good_analysis: ^7.0.0
+  melos: ^7.1.1
+  very_good_analysis: ^9.0.0
 
 # Melos configuration
 melos:
