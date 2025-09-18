@@ -42,6 +42,7 @@ void main() {
         });
         test('no date', () {
           final buffer = StringBuffer();
+          tag = '';
           writeFooter(buffer);
           expect(buffer.toString(), isEmpty);
         });
