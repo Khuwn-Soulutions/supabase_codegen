@@ -25,12 +25,9 @@ jobs:
       modified_files_only: false
 
   build_codegen:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/dart_package.yml@v1
+    uses: ./.github/workflows/supabase_codegen.yaml
     with:
       min_coverage: 85
-      setup: |
-        # Temporarily remove workspace resolution to isolate this package
-        sed -i 's/resolution: workspace/#resolution: workspace/' pubspec.yaml
       working_directory: packages/supabase_codegen
 
   build_codegen_flutter:
