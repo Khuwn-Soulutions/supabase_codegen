@@ -4,6 +4,9 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 /// Date line prefix
 const String _dateLinePrefix = '/// Date:';
 
+/// Regex to match the date line
+final _dateRegex = RegExp('$_dateLinePrefix .*\n');
+
 /// Write the file header
 void writeHeader(StringBuffer buffer) {
   buffer
@@ -31,8 +34,7 @@ void writeFooter(StringBuffer buffer) {
 
 /// Strip the date line from the content for comparison
 String _stripDateLine(String content) {
-  final dateRegex = RegExp('$_dateLinePrefix .*\n');
-  return content.replaceAll(dateRegex, '');
+  return content.replaceAll(_dateRegex, '');
 }
 
 /// Write the file if the content has changed,
