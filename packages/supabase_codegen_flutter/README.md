@@ -428,7 +428,7 @@ For further details about these mock clients see [MockSupabaseHttpClient](https:
 - Custom column types are supported through type converters
 - The package is optimized for Flutter development with automatic environment loading
 
-## � Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
