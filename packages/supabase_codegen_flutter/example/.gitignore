@@ -50,3 +50,4 @@ supabase/migrations/*_add_codegen_functions.sql
 
 # Environment files
 *.env*
+!.env.example

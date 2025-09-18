@@ -25,7 +25,12 @@ supabase db reset
 
 - Install dependencies: 
 ```bash
-dart pub get
+flutter pub get
+```
+
+- Copy `.env.example` to `.env` and update the values
+```bash
+cp .env.example .env
 ```
 
 - Generate types: 

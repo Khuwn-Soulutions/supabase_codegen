@@ -65,8 +65,8 @@ void main() {
             isA<Exception>().having(
               (e) => e.toString(),
               'message',
-              contains('Ensure that either ${supabaseEnvKeys.anonKey} '
-                  'or ${supabaseEnvKeys.anonKey} is set'),
+              contains('${supabaseEnvKeys.key} is required to access the '
+                  'database schema.'),
             ),
           ),
         );
@@ -94,21 +94,7 @@ void main() {
           });
 
           test(
-              'with provided ${supabaseEnvKeys.url} and '
-              '${supabaseEnvKeys.anonKey}', () async {
-            envFile.writeAsStringSync('''
-            ${supabaseEnvKeys.url}=$url
-            ${supabaseEnvKeys.anonKey}=$anonKey
-          ''');
-            await generator.generateSupabaseTypes(
-              envFilePath: envFile.path,
-              outputFolder: '',
-            );
-            verify(() => mockUtils.createClient(url, anonKey)).called(1);
-          });
-
-          test(
-              'with provided ${supabaseEnvKeys.anonKey} if both '
+              'with provided ${supabaseEnvKeys.key} if both '
               '${supabaseEnvKeys.anonKey} and ${supabaseEnvKeys.key} provided',
               () async {
             envFile.writeAsStringSync('''
@@ -120,7 +106,7 @@ void main() {
               envFilePath: envFile.path,
               outputFolder: '',
             );
-            verify(() => mockUtils.createClient(url, anonKey)).called(1);
+            verify(() => mockUtils.createClient(url, key)).called(1);
           });
 
           test(

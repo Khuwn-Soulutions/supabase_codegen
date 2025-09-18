@@ -103,14 +103,11 @@ class SupabaseCodeGenerator {
       );
     }
 
-    final supabaseKey = dotenv.getOrElse(
-      supabaseEnvKeys.anonKey,
-      () => dotenv[supabaseEnvKeys.key] ?? '',
-    );
-    if (supabaseKey.isEmpty) {
+    final supabaseKey = dotenv[supabaseEnvKeys.key];
+    if (supabaseKey == null || supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} '
-        'or ${supabaseEnvKeys.anonKey} is set to ensure access to the database',
+        '[GenerateTypes] ${supabaseEnvKeys.key} is required to access the '
+        'database schema.',
       );
     }
 
