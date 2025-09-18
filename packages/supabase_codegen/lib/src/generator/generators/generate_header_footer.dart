@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:meta/meta.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Date line prefix
@@ -33,7 +34,8 @@ void writeFooter(StringBuffer buffer) {
 }
 
 /// Strip the date line from the content for comparison
-String _stripDateLine(String content) {
+@visibleForTesting
+String stripDateLine(String content) {
   return content.replaceAll(_dateRegex, '');
 }
 
@@ -41,11 +43,11 @@ String _stripDateLine(String content) {
 /// ignoring the date line
 void writeFileIfChangedIgnoringDate(File file, StringBuffer buffer) {
   final newContent = buffer.toString();
-  final newContentStripped = _stripDateLine(newContent);
+  final newContentStripped = stripDateLine(newContent);
 
   if (file.existsSync()) {
     final existingContent = file.readAsStringSync();
-    final existingContentStripped = _stripDateLine(existingContent);
+    final existingContentStripped = stripDateLine(existingContent);
 
     if (newContentStripped != existingContentStripped) {
       file.writeAsStringSync(newContent);
