@@ -92,8 +92,8 @@ Future<void> generateEnums(Directory enumsDir) async {
       /// Write footer
       writeFooter(enumBuffer);
 
-      /// Write file to disk
-      enumFile.writeAsStringSync(enumBuffer.toString());
+      /// Write file to disk only if content is the same ignoring date
+      writeFileIfChangedIgnoringDate(enumFile, enumBuffer);
 
       logger.i('[GenerateTypes] Generated enum file: $fileName');
 
@@ -104,8 +104,8 @@ Future<void> generateEnums(Directory enumsDir) async {
     /// Write footer
     writeFooter(buffer);
 
-    /// Write file to disk
-    await enumFile.writeAsString(buffer.toString());
+    /// Write file to disk only if content is the same ignoring date
+    writeFileIfChangedIgnoringDate(enumFile, buffer);
     logger.i('[GenerateTypes] Generated enums file successfully');
   } catch (e, stackTrace) {
     logger.e(
