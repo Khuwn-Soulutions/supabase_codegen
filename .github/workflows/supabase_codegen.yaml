@@ -89,8 +89,11 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: |
-          cd ../../
-          dart run melos exec --scope supabase_codegen "dart pub get"
+          # Temporarily remove workspace resolution to isolate this package
+          sed -i 's/resolution: workspace/#resolution: workspace/' pubspec.yaml
+          dart pub get
+          # Restore workspace resolution
+          sed -i 's/#resolution: workspace/resolution: workspace/' pubspec.yaml
 
       - name: ✨ Check Formatting
         run: dart format --line-length ${{inputs.format_line_length}} --set-exit-if-changed ${{inputs.format_directories}}
