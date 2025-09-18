@@ -35,7 +35,7 @@ cp .env.example .env
 
 - Generate types: 
 ```bash
-dart run supabase_codegen:generate_types
+dart run supabase_codegen_flutter:generate_types
 ```
 
 - Run project
