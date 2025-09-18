@@ -66,7 +66,7 @@ Future<void> generateTableFile({
   /// Write the footer
   writeFooter(buffer);
 
-  /// Write the file to disk only if content is the same ignoring date
+  /// Write the file to disk only if the content has changed ignoring date
   writeFileIfChangedIgnoringDate(file, buffer);
 }
 

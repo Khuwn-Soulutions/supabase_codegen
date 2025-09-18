@@ -92,7 +92,7 @@ Future<void> generateEnums(Directory enumsDir) async {
       /// Write footer
       writeFooter(enumBuffer);
 
-      /// Write file to disk only if content is the same ignoring date
+      /// Write file to disk only if the content has changed ignoring date
       writeFileIfChangedIgnoringDate(enumFile, enumBuffer);
 
       logger.i('[GenerateTypes] Generated enum file: $fileName');
@@ -104,7 +104,7 @@ Future<void> generateEnums(Directory enumsDir) async {
     /// Write footer
     writeFooter(buffer);
 
-    /// Write file to disk only if content is the same ignoring date
+    /// Write file to disk only if the content has changed ignoring date
     writeFileIfChangedIgnoringDate(enumFile, buffer);
     logger.i('[GenerateTypes] Generated enums file successfully');
   } catch (e, stackTrace) {
