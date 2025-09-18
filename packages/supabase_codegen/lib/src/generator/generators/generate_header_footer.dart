@@ -1,4 +1,12 @@
+import 'dart:io';
+import 'package:meta/meta.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
+
+/// Date line prefix
+const String _dateLinePrefix = '/// Date:';
+
+/// Regex to match the date line
+final _dateRegex = RegExp('$_dateLinePrefix .*\n');
 
 /// Write the file header
 void writeHeader(StringBuffer buffer) {
@@ -22,5 +30,29 @@ void writeFooter(StringBuffer buffer) {
   // Write date
   if (skipFooterWrite) return;
 
-  buffer.writeln('/// Date: ${DateTime.now()}');
+  buffer.writeln('$_dateLinePrefix ${DateTime.now()}');
+}
+
+/// Strip the date line from the content for comparison
+@visibleForTesting
+String stripDateLine(String content) {
+  return content.replaceAll(_dateRegex, '');
+}
+
+/// Write the file if the content has changed,
+/// ignoring the date line
+void writeFileIfChangedIgnoringDate(File file, StringBuffer buffer) {
+  final newContent = buffer.toString();
+  final newContentStripped = stripDateLine(newContent);
+
+  if (file.existsSync()) {
+    final existingContent = file.readAsStringSync();
+    final existingContentStripped = stripDateLine(existingContent);
+
+    if (newContentStripped != existingContentStripped) {
+      file.writeAsStringSync(newContent);
+    }
+  } else {
+    file.writeAsStringSync(newContent);
+  }
 }

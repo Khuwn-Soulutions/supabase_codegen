@@ -136,7 +136,7 @@ Future<void> generateTableBarrelFile(
   }
   writeFooter(tableBarrelBuffer);
 
-  tableBarrelFile.writeAsStringSync(tableBarrelBuffer.toString());
+  writeFileIfChangedIgnoringDate(tableBarrelFile, tableBarrelBuffer);
 
   // Generate database.dart
   final databaseFile = File('$root/database.dart');
@@ -147,7 +147,7 @@ Future<void> generateTableBarrelFile(
     ..writeln("export 'tables/$tableBarrelFileName';");
   writeFooter(dbBuffer);
 
-  databaseFile.writeAsStringSync(dbBuffer.toString());
+  writeFileIfChangedIgnoringDate(databaseFile, dbBuffer);
 }
 
 // coverage:ignore-start

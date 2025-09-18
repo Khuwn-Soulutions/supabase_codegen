@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
 
@@ -59,6 +61,58 @@ void main() {
         writeFooter(buffer);
         expect(buffer.toString(), isNotEmpty);
         expect(buffer.toString(), contains('Date:'));
+      });
+    });
+
+    group('writeFileIfChangedIgnoringDate', () {
+      /// Setup the file and buffer for testing
+      (File, StringBuffer) setupFileAndBuffer() {
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final file = File('test_output_$timestamp.dart');
+        final buffer = StringBuffer();
+        writeHeader(buffer);
+        writeFooter(buffer);
+        return (file, buffer);
+      }
+
+      test('writes new file if it does not exist', () {
+        final (file, buffer) = setupFileAndBuffer();
+        writeFileIfChangedIgnoringDate(file, buffer);
+        expect(file.existsSync(), isTrue);
+        final content = file.readAsStringSync();
+        expect(content, contains('Generated file. Do not edit.'));
+        file.deleteSync();
+      });
+
+      test('does not rewrite file if content is the same ignoring date', () {
+        final (file, buffer) = setupFileAndBuffer();
+        writeFileIfChangedIgnoringDate(file, buffer);
+        final initialContent = stripDateLine(file.readAsStringSync());
+
+        final buffer2 = StringBuffer();
+        writeHeader(buffer2);
+        writeFooter(buffer2);
+        writeFileIfChangedIgnoringDate(file, buffer2);
+        final secondContent = stripDateLine(file.readAsStringSync());
+
+        expect(initialContent, equals(secondContent));
+        file.deleteSync();
+      });
+
+      test('rewrites file if content differs ignoring date', () {
+        final (file, buffer1) = setupFileAndBuffer();
+        writeFileIfChangedIgnoringDate(file, buffer1);
+        final initialContent = stripDateLine(file.readAsStringSync());
+
+        final buffer2 = StringBuffer();
+        writeHeader(buffer2);
+        buffer2.writeln('// Additional line to change content');
+        writeFooter(buffer2);
+        writeFileIfChangedIgnoringDate(file, buffer2);
+        final secondContent = stripDateLine(file.readAsStringSync());
+
+        expect(initialContent, isNot(equals(secondContent)));
+        file.deleteSync();
       });
     });
   });
