@@ -1,0 +1,111 @@
+# ---
+# This workflow is a modified version of the Dart package workflow from
+# Very Good Ventures, tailored specifically for the supabase_codegen package.
+name: Supabase Codegen Dart Package Workflow
+
+on:
+  workflow_call:
+    inputs:
+      analyze_directories:
+        required: false
+        type: string
+        default: "lib test"
+      concurrency:
+        required: false
+        type: number
+        default: 4
+      coverage_excludes:
+        required: false
+        type: string
+        default: ""
+      dart_sdk:
+        required: false
+        type: string
+        default: "stable"
+      format_directories:
+        required: false
+        type: string
+        default: "."
+      format_line_length:
+        required: false
+        type: string
+        default: "80"
+      min_coverage:
+        required: false
+        type: number
+        default: 100
+      platform:
+        required: false
+        type: string
+        default: "vm"
+      check_ignore:
+        required: false
+        type: boolean
+        default: false
+      report_on:
+        required: false
+        type: string
+        default: "lib"
+      runs_on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+      setup:
+        required: false
+        type: string
+        default: ""
+      working_directory:
+        required: false
+        type: string
+        default: "packages/supabase_codegen"
+      run_skipped:
+        required: false
+        type: boolean
+        default: false
+      no_example:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      ssh_key:
+        required: false
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: ${{inputs.runs_on}}
+
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+
+      - name: 🎯 Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{inputs.dart_sdk}}
+
+      - name: 📦 Install Dependencies
+        run: |
+          cd ../../
+          dart run melos exec --scope supabase_codegen "dart pub get"
+
+      - name: ✨ Check Formatting
+        run: dart format --line-length ${{inputs.format_line_length}} --set-exit-if-changed ${{inputs.format_directories}}
+
+      - name: 🕵️ Analyze
+        run: dart analyze --fatal-infos --fatal-warnings ${{inputs.analyze_directories}}
+
+      - name: 🧪 Run Tests
+        run: |
+          dart pub global activate coverage 1.2.0
+          dart test -j ${{inputs.concurrency}} --coverage=coverage --platform=${{inputs.platform}} ${{(inputs.run_skipped && '--run-skipped') || ''}} && dart pub global run coverage:format_coverage --lcov ${{(inputs.check_ignore && '--check-ignore') || ''}} --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=${{inputs.report_on}}
+
+      - name: 📊 Check Code Coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v3
+        with:
+          path: ${{inputs.working_directory}}/coverage/lcov.info
+          exclude: ${{inputs.coverage_excludes}}
+          min_coverage: ${{inputs.min_coverage}}
