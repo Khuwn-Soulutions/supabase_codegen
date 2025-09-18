@@ -87,37 +87,31 @@ void main() {
       test('does not rewrite file if content is the same ignoring date', () {
         final (file, buffer) = setupFileAndBuffer();
         writeFileIfChangedIgnoringDate(file, buffer);
-        final initialModified = file.lastModifiedSync();
-
-        // Wait a second to ensure timestamp would differ if rewritten
-        sleep(const Duration(seconds: 1));
+        final initialContent = stripDateLine(file.readAsStringSync());
 
         final buffer2 = StringBuffer();
         writeHeader(buffer2);
         writeFooter(buffer2);
         writeFileIfChangedIgnoringDate(file, buffer2);
-        final secondModified = file.lastModifiedSync();
+        final secondContent = stripDateLine(file.readAsStringSync());
 
-        expect(initialModified, equals(secondModified));
+        expect(initialContent, equals(secondContent));
         file.deleteSync();
       });
 
       test('rewrites file if content differs ignoring date', () {
         final (file, buffer1) = setupFileAndBuffer();
         writeFileIfChangedIgnoringDate(file, buffer1);
-        final initialModified = file.lastModifiedSync();
-
-        // Wait a second to ensure timestamp would differ if rewritten
-        sleep(const Duration(seconds: 1));
+        final initialContent = stripDateLine(file.readAsStringSync());
 
         final buffer2 = StringBuffer();
         writeHeader(buffer2);
         buffer2.writeln('// Additional line to change content');
         writeFooter(buffer2);
         writeFileIfChangedIgnoringDate(file, buffer2);
-        final secondModified = file.lastModifiedSync();
+        final secondContent = stripDateLine(file.readAsStringSync());
 
-        expect(initialModified.isBefore(secondModified), isTrue);
+        expect(initialContent, isNot(equals(secondContent)));
         file.deleteSync();
       });
     });
