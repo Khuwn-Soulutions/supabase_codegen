@@ -26,7 +26,7 @@ void writeFooter(StringBuffer buffer) {
   // Write date
   if (skipFooterWrite) return;
 
-  buffer.writeln('$_dateLinePrefix ${DateTime.now()}\n');
+  buffer.writeln('$_dateLinePrefix ${DateTime.now()}');
 }
 
 /// Strip the date line from the content for comparison
