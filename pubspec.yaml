@@ -1,39 +1,50 @@
-name: supabase_codegen
-description: A codegen library that grabs and generates classes from Supabase tables and enums in Dart.
-homepage: https://github.com/Khuwn-Soulutions/supabase_codegen
-version: 1.4.0
-repository: https://github.com/Khuwn-Soulutions/supabase_codegen
+name: supabase_codegen_packages
+publish_to: none
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.6.0
 
-dependencies:
-  args: ^2.6.0
-  change_case: ^2.2.0
-  collection: ^1.19.1
-  dotenv: ^4.2.0
-  flutter_dotenv: ^5.2.1
-  http: ^1.3.0
-  latlng: ^2.0.7
-  logger: ^2.5.0
-  meta: ^1.16.0
-  mock_supabase_http_client: ^0.0.3+2
-  path: ^1.9.1
-  quiver: ^3.2.2
-  supabase: ^2.6.3
-  supabase_flutter: ^2.8.4
-  yaml: ^3.1.3
+workspace:
+  - packages/supabase_codegen
+  - packages/supabase_codegen_flutter
 
 dev_dependencies:
-  flutter:
-    sdk: flutter
-  flutter_test:
-    sdk: flutter
-  mocktail: ^1.0.4
-  test: ^1.25.15
-  test_badge_gen: ^0.0.2
-  very_good_analysis: ^7.0.0
+  melos: ^7.1.1
+  very_good_analysis: ^10.0.0
 
-executables:
-  generate_types:
-  add_codegen_functions:
+# Melos configuration
+melos:
+  scripts:
+    test:
+      run: |
+        melos exec -c 4 --fail-fast -- \
+          "very_good test"
+      description: Run `very_good test` for a specific package.
+      packageFilters:
+        dirExists:
+          - test
+
+    test:coverage:
+      run: |
+        melos exec -c 4 --fail-fast -- \
+          "very_good test --coverage && remove_from_coverage -f ./coverage/lcov.info -r '\.g\.dart$'"
+      description: Run `very_good test` with coverage for a specific package.
+      packageFilters:
+        dirExists:
+          - test
+
+    coverage_badge:
+      run: |
+        melos exec -c 4 --fail-fast -- \
+          "badge-test gen --in=./coverage/lcov.info --out=./coverage_badge.svg"
+      description: Update the coverage badge for a specific package.
+      packageFilters:
+        dirExists:
+          - coverage
+
+    test:coverage_badge:
+      run: |
+        melos run test:coverage &&
+        melos run coverage_badge
+      description: Run test and update the coverage badge
+
