@@ -24,6 +24,9 @@ BEGIN
 END;
 $$;
 
+--- Revoke access to the function
+REVOKE EXECUTE ON FUNCTION public.get_enum_types FROM public, anon, authenticated;
+
 -- Grant access to the function
-GRANT EXECUTE ON FUNCTION public.get_enum_types() TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_enum_types TO service_role;
 ''';
