@@ -1,3 +1,15 @@
+## 2.0.0 - 2025-09-19
+
+### Breaking Changes
+- create separate supabase_codegen_flutter package
+
+### Features
+- modify generated files only if update required
+- always write tag to footer
+
+### Bug Fixes
+- revoke access to unauthorized roles for functions
+
 ## 1.4.0 - 2025-04-13
 
 ### Features

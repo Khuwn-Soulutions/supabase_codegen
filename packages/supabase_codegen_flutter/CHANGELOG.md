@@ -1,3 +1,7 @@
-# 0.1.0+1
+# 2.0.0 - 2025-09-19
 
-- feat: initial commit 🎉
+### Breaking Changes
+- create separate supabase_codegen_flutter package
+
+### Features
+- Flutter changes documentation
