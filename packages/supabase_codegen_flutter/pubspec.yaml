@@ -1,0 +1,30 @@
+name: supabase_codegen_flutter
+description: Supabase Codegen Flutter Package
+version: 2.0.0
+resolution: workspace
+
+
+environment:
+  sdk: ^3.5.0
+  flutter: ^3.24.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^6.0.0
+  http: ^1.5.0
+  meta: ^1.16.0
+  path: ^1.9.1
+  supabase_codegen: ^2.0.0
+  supabase_flutter: ^2.10.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^9.0.0
+
+
+executables:
+  generate_types:
+  add_codegen_functions:
