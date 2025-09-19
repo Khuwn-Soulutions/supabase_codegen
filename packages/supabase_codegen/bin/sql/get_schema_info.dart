@@ -41,6 +41,9 @@ BEGIN
 END;
 $$;
 
+--- Revoke access to the function
+REVOKE EXECUTE ON FUNCTION public.get_schema_info FROM public, anon, authenticated;
+
 -- Grant access to the function
-GRANT EXECUTE ON FUNCTION public.get_schema_info() TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_schema_info TO service_role;
 ''';
