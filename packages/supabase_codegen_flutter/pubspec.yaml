@@ -1,6 +1,8 @@
 name: supabase_codegen_flutter
 description: Supabase Codegen Flutter Package
+homepage: https://github.com/Khuwn-Soulutions/supabase_codegen
 version: 2.0.0
+repository: https://github.com/Khuwn-Soulutions/supabase_codegen/packages/supabase_codegen_flutter
 resolution: workspace
 
 
