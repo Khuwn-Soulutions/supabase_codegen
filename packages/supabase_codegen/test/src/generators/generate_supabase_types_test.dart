@@ -25,7 +25,8 @@ void main() {
     });
 
     group('with env file', () {
-      final envPath = path.join(Directory.current.path, 'test', '.env');
+      final envPath =
+          path.join(Directory.current.path, 'test', '.env-gen-test');
       late File envFile;
 
       setUp(() => envFile = File(envPath));
