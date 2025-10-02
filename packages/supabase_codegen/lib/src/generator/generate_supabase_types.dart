@@ -86,7 +86,7 @@ class SupabaseCodeGenerator {
     bool forFlutter = false,
 
     /// Overrides for table and column configurations
-    SchemaOverrides? overrides,
+    SchemaOverrides overrides = const {},
   }) async {
     /// Set tag
     tag = fileTag;
@@ -101,7 +101,7 @@ class SupabaseCodeGenerator {
     forFlutterUsage = forFlutter;
 
     /// Set overrides
-    schemaOverrides = overrides ?? {};
+    schemaOverrides = overrides;
 
     /// Load env keys
     final dotenv = DotEnv()..load([envFilePath]);
