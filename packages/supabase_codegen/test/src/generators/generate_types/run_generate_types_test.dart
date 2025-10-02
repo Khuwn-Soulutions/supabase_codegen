@@ -32,6 +32,7 @@ void main() {
           fileTag: any(named: 'fileTag'),
           skipFooter: any(named: 'skipFooter'),
           forFlutter: any(named: 'forFlutter'),
+          overrides: any(named: 'overrides'),
         ),
       ).thenAnswer((_) async => {});
     });

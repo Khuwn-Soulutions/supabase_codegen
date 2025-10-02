@@ -2,6 +2,7 @@
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf5235675f5f4d769f959ddc797ed998)](https://app.codacy.com/gh/Khuwn-Soulutions/supabase_codegen/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 A comprehensive suite of packages for generating type-safe Dart models from Supabase databases, supporting both pure Dart and Flutter applications.
 
