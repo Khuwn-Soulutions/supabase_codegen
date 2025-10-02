@@ -122,6 +122,10 @@ Future<String?> runGenerateTypes(
       ),
     );
 
+    // Extract overrides from config
+    final schemaOverrides = extractSchemaOverrides(codegenConfig);
+    logger.d('Schema Overrides: $schemaOverrides');
+
     /// Generate the types using the command line options
     await generator.generateSupabaseTypes(
       envFilePath: envFilePath,
@@ -129,6 +133,7 @@ Future<String?> runGenerateTypes(
       fileTag: tag,
       skipFooter: skipFooter,
       forFlutter: forFlutter,
+      overrides: schemaOverrides,
     );
 
     // coverage:ignore-start

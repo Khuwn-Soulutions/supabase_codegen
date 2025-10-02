@@ -158,9 +158,13 @@ Future<void> generateTables(
 ) async {
   for (final tableName in tables.keys) {
     final columns = tables[tableName]!;
+    final tableOverrides = schemaOverrides[tableName];
 
     // Generate a map of the field name to data for that field
-    final fieldNameTypeMap = createFieldNameTypeMap(columns);
+    final fieldNameTypeMap = createFieldNameTypeMap(
+      columns,
+      tableOverrides: tableOverrides,
+    );
 
     await generateTableFile(
       tableName: tableName,
@@ -175,17 +179,21 @@ Future<void> generateTables(
 /// Create a map of the field name to data for that field
 @visibleForTesting
 Map<String, ColumnData> createFieldNameTypeMap(
-  List<Map<String, dynamic>> columns,
-) {
+  List<Map<String, dynamic>> columns, {
+  TableOverrides? tableOverrides,
+}) {
   /// Store a map of the column name to type
   final fieldNameTypeMap = <String, ColumnData>{};
   for (final column in columns) {
     final columnName = column['column_name'] as String;
+    final columnOverride = tableOverrides?[columnName];
     final fieldName = columnName.toCamelCase();
-    final dartType = getDartType(column);
-    final isNullable = column['is_nullable'] == 'YES';
+    final dartType = columnOverride?.dataType ?? getDartType(column);
+    final isNullable =
+        columnOverride?.isNullable ?? column['is_nullable'] == 'YES';
     final isArray = dartType.startsWith('List<');
-    final defaultValue = column['column_default'];
+    final defaultValue =
+        columnOverride?.columnDefault ?? column['column_default'];
     final hasDefault = defaultValue != null;
     final isEnum = formattedEnums[column['udt_name']] != null;
 

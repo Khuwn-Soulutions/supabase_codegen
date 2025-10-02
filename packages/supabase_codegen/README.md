@@ -158,6 +158,46 @@ The command line options have higher priority than the options defined in the ya
 1. configuration yaml (default: `.supabase_codegen.yaml`)  
 1. pubspec.yaml (key: `supabase_codegen`)
 
+### Schema Overrides
+
+You can override the generated types for specific columns in your tables. This is useful when you want to use a custom Dart type for a column or modify its nullability.
+
+Overrides are defined under the `override` key in your `.supabase_codegen.yaml` or `pubspec.yaml` file.
+
+The structure for an override is as follows:
+
+```yaml
+override:
+  <table_name>:
+    <column_name>:
+      data_type: <Dart_type>
+      is_nullable: <true_or_false>
+      column_default: <default_value>
+```
+
+**Example:**
+
+In the following example, for the `test_table` table, the `id` column is made nullable and the `json_values` column's data type is changed to `dynamic`.
+
+```yaml
+supabase_codegen:
+  # ... other settings
+  override:
+    test_table:
+      id:
+        is_nullable: true
+      json_values:
+        data_type: dynamic
+```
+
+**Override Options:**
+
+For each column, you can specify the following override options:
+
+-   `data_type` (String): The Dart type to use for the column. Remember to include any necessary imports in the file where you use the generated code.
+-   `is_nullable` (bool): Whether the generated property should be nullable.
+-   `column_default` (dynamic): A default value for the property in the Dart class.
+
 
 ## Client Configuration
 Before accessing the [generated types](#generated-types) in your application ensure that the Supabase client is configured for use.

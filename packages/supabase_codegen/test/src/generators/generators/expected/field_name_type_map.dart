@@ -92,6 +92,15 @@ const FieldNameTypeMap testFieldNameTypeMap = {
     isArray: false,
     isEnum: true,
   ),
+  'isDynamic': (
+    dartType: 'dynamic',
+    isNullable: true,
+    hasDefault: false,
+    defaultValue: null,
+    columnName: 'is_dynamic',
+    isArray: false,
+    isEnum: false,
+  ),
 };
 
 /// Test [FieldNameTypeMap] entries
