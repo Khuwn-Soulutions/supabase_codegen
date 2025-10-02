@@ -77,4 +77,11 @@ const expectedRowFields = '''
   Status? get status => getField<Status>(statusField, enumValues: Status.values);
   set status(Status? value) => setField<Status>(statusField, value);
 
+  /// Is Dynamic field name
+  static const String isDynamicField = 'is_dynamic';
+
+  /// Is Dynamic
+  dynamic get isDynamic => getField<dynamic>(isDynamicField);
+  set isDynamic(dynamic value) => setField<dynamic>(isDynamicField, value);
+
 ''';
