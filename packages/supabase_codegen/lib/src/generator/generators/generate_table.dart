@@ -149,9 +149,9 @@ void writeRowClass({
       :isEnum
     ) = entry.value;
     final fieldName = entry.key;
-    final isOptional = isNullable || hasDefault;
+    final isOptional = dartType.isDynamic || isNullable || hasDefault;
     final qualifier = isOptional ? '' : 'required ';
-    final question = isOptional ? '?' : '';
+    final question = dartType.isNotDynamic && isOptional ? '?' : '';
     buffer.writeln('    $qualifier$dartType$question $fieldName,');
   }
 
@@ -266,9 +266,9 @@ void writeFields({
           'setListField<$genericType>($fieldColumnName, value);',
         );
     } else {
-      final isOptional = isNullable && !hasDefault;
+      final isOptional = dartType.isNotDynamic && isNullable && !hasDefault;
       final question = isOptional ? '?' : '';
-      final bang = isOptional ? '' : '!';
+      final bang = dartType.isDynamic || isOptional ? '' : '!';
       buffer
         ..writeln(
           '  $dartType$question get $fieldName => '
@@ -311,7 +311,7 @@ void writeCopyWith({
 
     /// Write line to get the field as parameter
     buffer.writeln(
-      '    $dartType? $fieldName,',
+      '    $dartType${dartType.isNotDynamic ? '?' : ''} $fieldName,',
     );
   }
 
