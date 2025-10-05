@@ -172,6 +172,24 @@ The command line options have higher priority than the options defined in the ya
 1. configuration yaml (default: `.supabase_codegen.yaml`)
 1. pubspec.yaml (key: `supabase_codegen`)
 
+### Postgres → Dart type mapping
+
+The generator maps common PostgreSQL types to Dart types by default. You can override any of these defaults using the configuration overrides (see [Schema Overrides](#schema-overrides)).
+
+| PostgreSQL type(s) | Dart type |
+| --- | --- |
+| text, varchar, char, uuid, character varying, name, bytea | String |
+| int2, int4, int8, integer, bigint | int |
+| float4, float8, decimal, numeric, double precision | double |
+| bool, boolean | bool |
+| timestamp, timestamptz, timestamp with time zone, timestamp without time zone | DateTime |
+| json, jsonb | dynamic |
+| user-defined (enums) | generated enum type (if available) or String |
+| arrays (e.g., text[], _int4, ARRAY) | List<baseType> (e.g. List<String>) |
+| default / unknown | String |
+
+Note: arrays are detected and mapped to `List<...>` where the inner type follows the mapping above. Enums (user-defined) will map to a generated Dart `enum` when present; otherwise they fall back to `String`.
+
 ### Schema Overrides
 
 You can override the generated types for specific columns in your tables. This is useful when you want to use a custom Dart type for a column or modify its nullability.
