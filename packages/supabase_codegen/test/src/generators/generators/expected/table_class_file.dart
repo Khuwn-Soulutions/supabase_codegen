@@ -14,7 +14,7 @@ class TestGenerateRow extends SupabaseDataRow {
     int? isInt,
     double? isDouble,
     bool? isBool,
-    Map<String, dynamic>? isJson,
+    dynamic isJson,
     Status? status,
     dynamic isDynamic,
   }): super({
