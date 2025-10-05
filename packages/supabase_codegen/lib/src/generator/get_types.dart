@@ -82,7 +82,7 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
     /// Map
     case 'json':
     case 'jsonb':
-      return 'Map<String, dynamic>';
+      return 'dynamic';
 
     /// Enum
     case 'user-defined':
