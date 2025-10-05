@@ -11,7 +11,7 @@ const expectedCopyWith = '''
     int? isInt,
     double? isDouble,
     bool? isBool,
-    Map<String, dynamic>? isJson,
+    dynamic isJson,
     Status? status,
     dynamic isDynamic,
   }) =>

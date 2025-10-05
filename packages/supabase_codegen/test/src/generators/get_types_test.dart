@@ -37,7 +37,7 @@ void main() {
       'timestamp with time zone',
       'timestamp without time zone',
     ],
-    'Map<String, dynamic>': [
+    'dynamic': [
       'json',
       'jsonb',
     ],
