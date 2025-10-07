@@ -1,2 +1,2 @@
 /// Current library version
-const version = '2.0.0';
+const version = '3.0.0';
