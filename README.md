@@ -63,7 +63,7 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
 
 4. **Generate types:**
    ```bash
-   dart run supabase_codegen:generate_types
+   dart run supabase_codegen_flutter:generate_types
    ```
 
 5. **Use in your app:**

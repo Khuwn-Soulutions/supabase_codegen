@@ -72,7 +72,7 @@ flutter:
 Run the generation script by executing the following.
 
 ```bash
-dart run supabase_codegen:generate_types
+dart run supabase_codegen_flutter:generate_types
 ```
 
 ### Command Line Options
@@ -82,17 +82,17 @@ The following command-line options can be used to customize the type generation 
 - `-e, --env <env_file>` (Default: config.env for Flutter):
 
 Specifies the path to the env file containing your Supabase credentials.
-Example: `dart run supabase_codegen:generate_types -e .env.local`
+Example: `dart run supabase_codegen_flutter:generate_types -e .env.local`
 
 - `-o, --output <output_folder>` (Default: supabase/types):
 
 Sets the directory where the generated type files will be placed.
-Example: `dart run supabase_codegen:generate_types -o lib/models/supabase`
+Example: `dart run supabase_codegen_flutter:generate_types -o lib/models/supabase`
 
 - `-t, --tag <tag>` (Default: ''):
 
 Adds a tag to the generated files to help with versioning or distinguishing between different schemas.
-Example: `dart run supabase_codegen:generate_types -t v2`
+Example: `dart run supabase_codegen_flutter:generate_types -t v2`
 
 If set, the tag will appear at the end of the files following the file generation timestamp like this
 ```dart
@@ -109,17 +109,17 @@ See [Yaml configuration](#yaml-configuration)
 - `-d, --debug` (Default: false):
 
 Enables debug logging to provide more verbose output during the type generation.
-Example: `dart run supabase_codegen:generate_types -d`
+Example: `dart run supabase_codegen_flutter:generate_types -d`
 
 - `-s, --[no-]skip-footer`
 
 Skip the writing of the footer in the generated files.
-Example: `dart run supabase_codegen:generate_types --skip-footer`
+Example: `dart run supabase_codegen_flutter:generate_types --skip-footer`
 
 - `-h, --help`
 
 Show command line usage options
-Example: `dart run supabase_codegen:generate_types --help`
+Example: `dart run supabase_codegen_flutter:generate_types --help`
 
 ## Yaml configuration
 Instead of providing the options via the command line, you can also set them in a yaml file.
