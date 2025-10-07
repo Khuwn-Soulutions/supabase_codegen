@@ -2,3 +2,9 @@
 # See https://pub.dev/packages/supabase_codegen#yaml-configuration for more info
 env: .env
 output: lib/types
+override:
+  test_table:
+    id:
+      is_nullable: true
+    json_values:
+      data_type: dynamic

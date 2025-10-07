@@ -26,6 +26,9 @@ bool skipFooterWrite = false;
 /// Are the types being generated for Flutter usage
 bool forFlutterUsage = false;
 
+/// Overrides for table and column configurations
+SchemaOverrides schemaOverrides = {};
+
 /// Column data type
 typedef ColumnData = ({
   String dartType,
@@ -81,6 +84,9 @@ class SupabaseCodeGenerator {
 
     /// Is this for Flutter usage
     bool forFlutter = false,
+
+    /// Overrides for table and column configurations
+    SchemaOverrides overrides = const {},
   }) async {
     /// Set tag
     tag = fileTag;
@@ -93,6 +99,9 @@ class SupabaseCodeGenerator {
 
     /// Set flutter usage
     forFlutterUsage = forFlutter;
+
+    /// Set overrides
+    schemaOverrides = overrides;
 
     /// Load env keys
     final dotenv = DotEnv()..load([envFilePath]);

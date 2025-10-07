@@ -26,7 +26,11 @@
     "upserting",
     "preconfigured",
     "Khuwn",
-    "Soulutions"
+    "Soulutions",
+    "Codacy",
+    "varchar",
+    "bytea",
+    "timestamptz",
   ],
   "ignoreWords": [
     "realtime"

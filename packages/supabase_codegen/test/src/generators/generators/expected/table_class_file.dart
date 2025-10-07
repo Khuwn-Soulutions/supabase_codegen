@@ -14,8 +14,9 @@ class TestGenerateRow extends SupabaseDataRow {
     int? isInt,
     double? isDouble,
     bool? isBool,
-    Map<String, dynamic>? isJson,
+    dynamic isJson,
     Status? status,
+    dynamic isDynamic,
   }): super({
     'is_not_nullable': supaSerialize(isNotNullable),
     if (id != null) 'id': supaSerialize(id),
@@ -27,6 +28,7 @@ class TestGenerateRow extends SupabaseDataRow {
     if (isBool != null) 'is_bool': supaSerialize(isBool),
     if (isJson != null) 'is_json': supaSerialize(isJson),
     if (status != null) 'status': supaSerialize(status),
+    if (isDynamic != null) 'is_dynamic': supaSerialize(isDynamic),
   });
 
   /// Test Generate Row

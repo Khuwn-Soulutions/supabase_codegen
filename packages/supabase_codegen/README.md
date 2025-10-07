@@ -12,7 +12,7 @@ Add the following to your pubspec.yaml
 
 ```yaml
 dependencies:
-  supabase_codegen: ^1.4.0
+  supabase_codegen: ^3.0.0
 ```
 
 ---
@@ -128,7 +128,7 @@ name: my_supabase_app
 description: A sample Supabase app.
 
 dependencies:
-  supabase_codegen: ^1.4.0
+  supabase_codegen: ^3.0.0
 
 flutter:
   assets:
@@ -157,6 +157,64 @@ The command line options have higher priority than the options defined in the ya
 1. command line options   
 1. configuration yaml (default: `.supabase_codegen.yaml`)  
 1. pubspec.yaml (key: `supabase_codegen`)
+
+### Postgres → Dart type mapping
+
+The generator maps common PostgreSQL types to Dart types by default. You can override any of these defaults using the configuration overrides (see [Schema Overrides](#schema-overrides)).
+
+| PostgreSQL type(s) | Dart type |
+| --- | --- |
+| text, varchar, char, uuid, character varying, name, bytea | String |
+| int2, int4, int8, integer, bigint | int |
+| float4, float8, decimal, numeric, double precision | double |
+| bool, boolean | bool |
+| timestamp, timestamptz, timestamp with time zone, timestamp without time zone | DateTime |
+| json, jsonb | dynamic |
+| user-defined (enums) | generated enum type (if available) or String |
+| arrays (e.g., text[], _int4, ARRAY) | List<baseType> (e.g. List<String>) |
+| default / unknown | String |
+
+Note: arrays are detected and mapped to `List<...>` where the inner type follows the mapping above. Enums (user-defined) will map to a generated Dart `enum` when present; otherwise they fall back to `String`.
+
+### Schema Overrides
+
+You can override the generated types for specific columns in your tables. This is useful when you want to use a custom Dart type for a column or modify its nullability.
+
+Overrides are defined under the `override` key in your `.supabase_codegen.yaml` or `pubspec.yaml` file.
+
+The structure for an override is as follows:
+
+```yaml
+override:
+  <table_name>:
+    <column_name>:
+      data_type: <Dart_type>
+      is_nullable: <true_or_false>
+      column_default: <default_value>
+```
+
+**Example:**
+
+In the following example, for the `test_table` table, the `id` column is made nullable and the `json_values` column's data type is changed to `dynamic`.
+
+```yaml
+supabase_codegen:
+  # ... other settings
+  override:
+    test_table:
+      id:
+        is_nullable: true
+      json_values:
+        data_type: dynamic
+```
+
+**Override Options:**
+
+For each column, you can specify the following override options:
+
+-   `data_type` (String): The Dart type to use for the column. Remember to include any necessary imports in the file where you use the generated code.
+-   `is_nullable` (bool): Whether the generated property should be nullable.
+-   `column_default` (dynamic): A default value for the property in the Dart class.
 
 
 ## Client Configuration

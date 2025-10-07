@@ -1,3 +1,11 @@
+## 3.0.0
+
+### Breaking Changes
+- json/jsonb mapped to dynamic type
+
+### Features
+- add schema overrides
+
 ## 2.0.0 - 2025-09-19
 
 ### Breaking Changes

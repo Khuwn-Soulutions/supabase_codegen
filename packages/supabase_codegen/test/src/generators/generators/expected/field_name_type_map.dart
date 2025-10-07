@@ -75,7 +75,7 @@ const FieldNameTypeMap testFieldNameTypeMap = {
     isEnum: false,
   ),
   'isJson': (
-    dartType: 'Map<String, dynamic>',
+    dartType: 'dynamic',
     isNullable: true,
     hasDefault: false,
     defaultValue: null,
@@ -91,6 +91,15 @@ const FieldNameTypeMap testFieldNameTypeMap = {
     columnName: 'status',
     isArray: false,
     isEnum: true,
+  ),
+  'isDynamic': (
+    dartType: 'dynamic',
+    isNullable: true,
+    hasDefault: false,
+    defaultValue: null,
+    columnName: 'is_dynamic',
+    isArray: false,
+    isEnum: false,
   ),
 };
 

@@ -11,8 +11,9 @@ const expectedCopyWith = '''
     int? isInt,
     double? isDouble,
     bool? isBool,
-    Map<String, dynamic>? isJson,
+    dynamic isJson,
     Status? status,
+    dynamic isDynamic,
   }) =>
     TestGenerateRow.fromJson({
       'is_not_nullable': supaSerialize(isNotNullable) ?? data['is_not_nullable'],
@@ -25,5 +26,6 @@ const expectedCopyWith = '''
       'is_bool': supaSerialize(isBool) ?? data['is_bool'],
       'is_json': supaSerialize(isJson) ?? data['is_json'],
       'status': supaSerialize(status) ?? data['status'],
+      'is_dynamic': supaSerialize(isDynamic) ?? data['is_dynamic'],
     });
 ''';
