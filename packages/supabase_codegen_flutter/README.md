@@ -278,15 +278,14 @@ The `supabase_codegen_flutter` package provides convenient access to Supabase se
 This file provides direct access to Supabase service instances:
 
 ```dart
-import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
-
+import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart'
 // Access Supabase services directly
-final supabase = supabase; // Supabase instance
-final client = supabaseClient; // SupabaseClient
-final auth = authClient; // GoTrueClient
-final realtime = realtimeClient; // RealtimeClient
-final storage = storageClient; // SupabaseStorageClient
-final functions = functionsClient; // FunctionsClient
+show  supabase, // Supabase instance
+      supabaseClient, // SupabaseClient
+      authClient, // GoTrueClient (authentication)
+      realtimeClient, // RealtimeClient
+      storageClient, // SupabaseStorageClient
+      functionsClient; // FunctionsClient
 ```
 
 ### `supabase_client.dart`
@@ -298,7 +297,6 @@ import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart'
 show env, // Map<String, String> of loaded environment variables
      createClient, 
      loadClientFromEnv, 
-     loadSupabaseClient, 
      setClient, 
      loadMockSupabaseClient;
 
@@ -333,7 +331,7 @@ enum UserRole {
 }
 
 /// Users Table
-class UsersTable extends SupabaseTable<UsersRow> {
+class UsersTable extends SupabaseFlutterTable<UsersRow> {
   /// Table Name
   @override
   String get tableName => 'users';
@@ -344,20 +342,32 @@ class UsersTable extends SupabaseTable<UsersRow> {
 }
 
 /// Users Row
-class UsersRow extends SupabaseDataRow {
+class UsersRow extends SupabaseFlutterDataRow {
   /// Users Row
   UsersRow({
-    /* Lines 250-256 omitted */
+    required String email,
+    required UserRole role,
+    String? id,
+    String? accName,
+    String? phoneNumber,
+    List<String>? contacts,
     DateTime? createdAt,
   }) : super({
-          /* Lines 258-266 omitted */
+          'email': supaSerialize(email),
+          'role': supaSerialize(role),
+          if (id != null) 'id': supaSerialize(id),
+          if (accName != null) 'acc_name': supaSerialize(accName),
+          if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
+          if (contacts != null) 'contacts': supaSerialize(contacts),
+          if (createdAt != null) 'created_at': supaSerialize(createdAt),
+        });
 
   /// Users Row
   const UsersRow._(super.data);
 
   /// Create Users Row from a [data] map
   factory UsersRow.fromJson(Map<String, dynamic> data) =>
-      /* Lines 272-273 omitted */
+      UsersRow._(data.cleaned);
 
   /// Get the Json representation of the row
   Map<String, dynamic> toJson() => data;
@@ -373,6 +383,76 @@ class UsersRow extends SupabaseDataRow {
   String get id => getField<String>(idField, defaultValue: '')!;
   set id(String value) => setField<String>(idField, value);
 
+  /// Email field name
+  static const String emailField = 'email';
+
+  /// Email
+  String get email => getField<String>(emailField)!;
+  set email(String value) => setField<String>(emailField, value);
+
+  /// Acc Name field name
+  static const String accNameField = 'acc_name';
+
+  /// Acc Name
+  String? get accName => getField<String>(accNameField);
+  set accName(String? value) => setField<String>(accNameField, value);
+
+  /// Phone Number field name
+  static const String phoneNumberField = 'phone_number';
+
+  /// Phone Number
+  String? get phoneNumber => getField<String>(phoneNumberField);
+  set phoneNumber(String? value) => setField<String>(phoneNumberField, value);
+
+  /// Contacts field name
+  static const String contactsField = 'contacts';
+
+  /// Contacts
+  List<String> get contacts => getListField<String>(contactsField);
+  set contacts(List<String>? value) =>
+      setListField<String>(contactsField, value);
+
+  /// Role field name
+  static const String roleField = 'role';
+
+  /// Role
+  UserRole get role =>
+      getField<UserRole>(
+        roleField,
+        enumValues: UserRole.values,
+        defaultValue: UserRole.user,
+      )!;
+  set role(UserRole value) => setField<UserRole>(roleField, value);
+
+  /// Created At field name
+  static const String createdAtField = 'created_at';
+
+  /// Created At
+  DateTime get createdAt =>
+      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+  set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
+
+  /// Make a copy of the current [UsersRow]
+  /// overriding the provided fields
+  UsersRow copyWith({
+    String? email,
+    UserRole? role,
+    String? id,
+    String? accName,
+    String? phoneNumber,
+    List<String>? contacts,
+    DateTime? createdAt,
+  }) =>
+      UsersRow.fromJson({
+        'email': email ?? data['email'],
+        'role': role?.name ?? data['role'],
+        'id': id ?? data['id'],
+        'acc_name': accName ?? data['acc_name'],
+        'phone_number': phoneNumber ?? data['phone_number'],
+        'contacts': contacts ?? data['contacts'],
+        'created_at': createdAt ?? data['created_at'],
+      });
+}
 
 ```
 
@@ -405,6 +485,18 @@ final adminUser = await usersTable.insert({
 // The returned object is already typed
 print(adminUser.email);
 print(adminUser.role);
+
+/// Create new record with row object
+final user = UsersRow(
+  email: 'user@example.com',
+  role: UserRole.user,
+  accName: 'Regular User',
+  contacts: [
+    adminUser.email,
+  ],
+);
+
+await usersTable.insertRow(user);
 ```
 
 ### Reading Data
