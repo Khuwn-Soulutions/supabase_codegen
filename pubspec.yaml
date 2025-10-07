@@ -9,6 +9,7 @@ workspace:
   - packages/supabase_codegen_flutter
 
 dev_dependencies:
+  logger: ^2.6.2
   melos: ^7.1.1
   very_good_analysis: ^10.0.0
 
@@ -47,4 +48,3 @@ melos:
         melos run test:coverage &&
         melos run coverage_badge
       description: Run test and update the coverage badge
-
