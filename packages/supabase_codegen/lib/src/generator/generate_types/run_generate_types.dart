@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:change_case/change_case.dart';
-import 'package:logger/logger.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:talker/talker.dart';
 
 /// Generate the supabase types using the [args] provided
 Future<String?> runGenerateTypes(
@@ -111,20 +111,20 @@ Future<String?> runGenerateTypes(
     final skipFooter = flagValueFor(CmdOption.skipFooter);
 
     /// Set the log level if debug is true
-    final level = debug ? Level.all : Level.info;
-    logger = Logger(
-      level: level,
-      filter: ProductionFilter(),
-      printer: PrettyPrinter(
-        methodCount: 0,
-        excludeBox: {Level.debug: true, Level.info: true},
-        printEmojis: false,
+    final level = debug ? LogLevel.verbose : LogLevel.info;
+    talker = Talker(
+      logger: TalkerLogger(
+        formatter: const ColoredLoggerFormatter(),
+        settings: TalkerLoggerSettings(
+          level: level,
+          lineSymbol: '',
+        ),
       ),
     );
 
     // Extract overrides from config
     final schemaOverrides = extractSchemaOverrides(codegenConfig);
-    logger.d('Schema Overrides: $schemaOverrides');
+    talker.debug('Schema Overrides: $schemaOverrides');
 
     /// Generate the types using the command line options
     await generator.generateSupabaseTypes(

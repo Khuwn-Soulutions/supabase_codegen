@@ -14,5 +14,5 @@ Future<void> generateSchemaFiles(
   // Generate enums file
   await generateEnums(enumsDir);
 
-  logger.d('[GenerateTypes] Successfully generated schema files');
+  logger.debug('[GenerateTypes] Successfully generated schema files');
 }

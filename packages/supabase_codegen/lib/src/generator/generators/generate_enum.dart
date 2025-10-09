@@ -13,11 +13,11 @@ Future<void> generateEnums(Directory enumsDir) async {
   writeHeader(buffer);
 
   // Fetch enum types from database
-  logger.i('[GenerateTypes] Fetching enum types from database...');
+  logger.info('[GenerateTypes] Fetching enum types from database...');
 
   try {
     // Query to get all enum types and their values
-    logger.d('[GenerateTypes] Executing RPC call to get_enum_types...');
+    logger.debug('[GenerateTypes] Executing RPC call to get_enum_types...');
     final response = await client.rpc<dynamic>('get_enum_types');
 
     // Modified to handle direct List response
@@ -32,28 +32,28 @@ Future<void> generateEnums(Directory enumsDir) async {
     );
 
     logger
-      ..d('[GenerateTypes] Raw enum response data:')
-      ..d(enumData);
+      ..debug('[GenerateTypes] Raw enum response data:')
+      ..debug(enumData);
 
     final enums = <String, List<String>>{};
 
     // Process the response data
-    logger.d('[GenerateTypes] Processing enum types:');
+    logger.debug('[GenerateTypes] Processing enum types:');
     for (final row in enumData) {
       final enumName = row['enum_name'] as String;
       final enumValue = (row['enum_value'] as String).replaceAll('/', '_');
 
-      logger.d('  Found enum: $enumName with value: $enumValue');
+      logger.debug('  Found enum: $enumName with value: $enumValue');
 
       if (!enums.containsKey(enumName)) {
         enums[enumName] = [];
-        logger.d('  Created new enum list for: $enumName');
+        logger.debug('  Created new enum list for: $enumName');
       }
       enums[enumName]!.add(enumValue);
     }
 
     // Generate each enum
-    logger.d('[GenerateTypes] Generating enum definitions:');
+    logger.debug('[GenerateTypes] Generating enum definitions:');
     enums.forEach((enumName, values) async {
       // Format enum name to PascalCase and remove Enum suffix
       final formattedEnumName = enumName
@@ -62,7 +62,7 @@ Future<void> generateEnums(Directory enumsDir) async {
           .join()
           .replaceAll(RegExp(r'Enum$'), '');
 
-      logger.d('  Processing: $enumName -> $formattedEnumName');
+      logger.debug('  Processing: $enumName -> $formattedEnumName');
       formattedEnums[enumName] = formattedEnumName;
 
       final enumBuffer = StringBuffer();
@@ -95,7 +95,7 @@ Future<void> generateEnums(Directory enumsDir) async {
       /// Write file to disk only if the content has changed ignoring date
       writeFileIfChangedIgnoringDate(enumFile, enumBuffer);
 
-      logger.i('[GenerateTypes] Generated enum file: $fileName');
+      logger.info('[GenerateTypes] Generated enum file: $fileName');
 
       /// Write the filename to the main buffer file
       buffer.writeln("export '$fileName.dart';");
@@ -106,11 +106,12 @@ Future<void> generateEnums(Directory enumsDir) async {
 
     /// Write file to disk only if the content has changed ignoring date
     writeFileIfChangedIgnoringDate(enumFile, buffer);
-    logger.i('[GenerateTypes] Generated enums file successfully');
+    logger.info('[GenerateTypes] Generated enums file successfully');
   } catch (e, stackTrace) {
-    logger.e(
+    logger.error(
       '[GenerateTypes] Error generating enums: $e',
-      stackTrace: stackTrace,
+      e,
+      stackTrace,
     );
     rethrow;
   }
