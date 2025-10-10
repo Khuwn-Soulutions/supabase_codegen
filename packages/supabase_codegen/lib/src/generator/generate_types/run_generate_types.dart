@@ -112,7 +112,7 @@ Future<String?> runGenerateTypes(
 
     /// Set the log level if debug is true
     final level = debug ? LogLevel.verbose : LogLevel.info;
-    talker = Talker(
+    logger = Talker(
       logger: TalkerLogger(
         formatter: const ColoredLoggerFormatter(),
         settings: TalkerLoggerSettings(
@@ -124,7 +124,7 @@ Future<String?> runGenerateTypes(
 
     // Extract overrides from config
     final schemaOverrides = extractSchemaOverrides(codegenConfig);
-    talker.debug('Schema Overrides: $schemaOverrides');
+    logger.debug('Schema Overrides: $schemaOverrides');
 
     /// Generate the types using the command line options
     await generator.generateSupabaseTypes(

@@ -1,10 +1,16 @@
+import 'package:meta/meta.dart';
 import 'package:talker/talker.dart';
 
 /// A simple logger that uses the talker package.
-late final Talker talker;
-
-/// The global logger instance
-Talker get logger => talker;
+late Talker logger;
 
 /// Test logger instance
-final Talker testLogger = Talker();
+@visibleForTesting
+final Talker testLogger = Talker(
+  logger: TalkerLogger(
+    formatter: const ColoredLoggerFormatter(),
+    settings: TalkerLoggerSettings(
+      lineSymbol: '',
+    ),
+  ),
+);
