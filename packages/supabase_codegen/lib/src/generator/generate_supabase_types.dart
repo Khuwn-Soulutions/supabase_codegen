@@ -122,7 +122,7 @@ class SupabaseCodeGenerator {
 
     // Get the config from env
     final supabaseUrl = dotenv[supabaseEnvKeys.url]!;
-    logger.i('[GenerateTypes] Starting type generation');
+    logger.info('[GenerateTypes] Starting type generation');
 
     client = utils.createClient(supabaseUrl, supabaseKey);
 

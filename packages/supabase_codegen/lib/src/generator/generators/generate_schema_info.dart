@@ -23,9 +23,9 @@ Future<void> generateSchemaInfo() async {
     // Generate database files
     await generateDatabaseFiles(tables);
 
-    logger.i('[GenerateTypes] Successfully generated types');
+    logger.info('[GenerateTypes] Successfully generated types');
   } catch (e) {
-    logger.d('[GenerateTypes] Error generating types: $e');
+    logger.debug('[GenerateTypes] Error generating types: $e');
     rethrow;
   } finally {
     await client.dispose();
@@ -37,13 +37,13 @@ Future<void> generateSchemaInfo() async {
 @visibleForTesting
 Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   // Get table information from Supabase
-  logger.i('[GenerateTypes] Fetching schema info...');
+  logger.info('[GenerateTypes] Fetching schema info...');
   final response = await client.rpc<dynamic>('get_schema_info');
 
   // Debug raw response
   logger
-    ..d('[GenerateTypes] Raw Schema Response: $response')
-    ..d('Response type: ${response.runtimeType}');
+    ..debug('[GenerateTypes] Raw Schema Response: $response')
+    ..debug('Response type: ${response.runtimeType}');
 
   // Modified to handle direct List response
   final schemaData = List<Map<String, dynamic>>.from(
@@ -59,11 +59,11 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   }
 
   // Debug response data
-  logger.d('Table Count: ${schemaData.length}');
+  logger.debug('Table Count: ${schemaData.length}');
   if (schemaData.isNotEmpty) {
     logger
-      ..d('First column sample:')
-      ..d(schemaData.first);
+      ..debug('First column sample:')
+      ..debug(schemaData.first);
   }
 
   // Group columns by table
@@ -80,9 +80,9 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   }
 
   // After fetching schema info
-  logger.d('\n[GenerateTypes] Available tables:');
+  logger.debug('\n[GenerateTypes] Available tables:');
   for (final tableName in tables.keys) {
-    logger.d('  - $tableName');
+    logger.debug('  - $tableName');
   }
 
   return tables;
@@ -106,8 +106,8 @@ Future<void> generateDatabaseFiles(
   Map<String, List<Map<String, dynamic>>> tables,
 ) async {
   logger
-    ..i('[GenerateDatabaseFiles] Generating database files...')
-    ..d('Writing files to $root');
+    ..info('[GenerateDatabaseFiles] Generating database files...')
+    ..debug('Writing files to $root');
 
   final directory = Directory('$root/tables');
 
@@ -209,8 +209,8 @@ Map<String, ColumnData> createFieldNameTypeMap(
     fieldNameTypeMap[fieldName] = columnData;
 
     logger
-      ..d('[GenerateTableFile] Processing column: $columnName')
-      ..d('  Column data: $columnData');
+      ..debug('[GenerateTableFile] Processing column: $columnName')
+      ..debug('  Column data: $columnData');
   }
   return fieldNameTypeMap;
 }

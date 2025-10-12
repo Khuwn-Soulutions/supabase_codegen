@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:logger/logger.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
+import 'package:talker/talker.dart';
 
 import 'generated/database.dart';
 
 /// Example of generated classes usage
 Future<void> main() async {
-  final logger = Logger()..i('Loading mock supabase client');
+  final talker = Talker()..info('Loading mock supabase client');
 
   // Testing usage
   // ignore: invalid_use_of_visible_for_testing_member
@@ -15,7 +15,7 @@ Future<void> main() async {
 
   final usersTable = UsersTable();
 
-  logger.i('Creating user...');
+  talker.info('Creating user...');
 
   /// Create new record
   final adminUser = await usersTable.insert({
@@ -26,9 +26,9 @@ Future<void> main() async {
   });
 
   /// The returned object is already typed
-  logger
-    ..i('User email:${adminUser.email}')
-    ..i('User name: ${adminUser.accName ?? ''}');
+  talker
+    ..info('User email:${adminUser.email}')
+    ..info('User name: ${adminUser.accName ?? ''}');
 
   /// Create new record with row object
   final user = UsersRow(
@@ -45,6 +45,6 @@ Future<void> main() async {
   /// Get all users
   final users = await usersTable.queryRows();
 
-  logger.i('Users: $users');
+  talker.info('Users: $users');
   exit(0);
 }

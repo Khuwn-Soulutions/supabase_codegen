@@ -1,27 +1,20 @@
 import 'dart:io';
 
-import 'package:logger/logger.dart';
+import 'package:talker/talker.dart';
 
-/// Logger instance
-final logger = Logger(
-  level: Level.all,
-  filter: ProductionFilter(),
-  printer: PrettyPrinter(
-    methodCount: 0,
-    excludeBox: {Level.debug: true, Level.info: true},
-  ),
-);
+/// talker instance
+final talker = Talker();
 
 void main(List<String> args) async {
   if (args.isEmpty) {
-    logger.e(
+    talker.error(
       'No version provided. Usage: dart scripts/bump_version.dart <version>',
     );
     exit(1);
   }
 
   final version = args.first;
-  logger.i('Bumping version to $version');
+  talker.info('Bumping version to $version');
 
   /// Overwrite version file
   updateVersionFile(version);
@@ -31,7 +24,7 @@ void main(List<String> args) async {
 
   /// Overwrite the supabase_codegen version
   updateSupabaseCodegenVersion(version);
-  logger.i('Version bump to $version complete!');
+  talker.info('Version bump to $version complete!');
 }
 
 /// Supabase Codegen path
@@ -51,7 +44,7 @@ void updateVersionFile(String version) {
       "const version = '$version';",
     ),
   );
-  logger.i('Version file updated');
+  talker.info('Version file updated');
 }
 
 /// Overwrite the version in the pubspec.yaml file(s)
@@ -65,7 +58,7 @@ void updatePubspecVersion(String version) {
         'version: $version',
       ),
     );
-    logger.i('pubspec.yaml at $path updated');
+    talker.info('pubspec.yaml at $path updated');
   }
 }
 
@@ -85,6 +78,6 @@ void updateSupabaseCodegenVersion(String version) {
         'supabase_codegen: ^$version',
       ),
     );
-    logger.i('supabase_codegen version in ${file.path} updated');
+    talker.info('supabase_codegen version in ${file.path} updated');
   }
 }
