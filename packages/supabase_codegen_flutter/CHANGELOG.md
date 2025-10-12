@@ -1,3 +1,8 @@
+## 3.0.1
+
+### Breaking Changes
+- bump supabase_codegen dependency to 3.0.1
+
 ## 3.0.0
 
 ### Breaking Changes
