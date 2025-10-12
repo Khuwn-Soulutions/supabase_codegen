@@ -1,17 +1,16 @@
-import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
+import 'package:talker/talker.dart';
 
-/// Logger
-late Logger logger;
+/// A simple logger that uses the talker package.
+late Talker logger;
 
-/// Test logger
+/// Test logger instance
 @visibleForTesting
-final Logger testLogger = Logger(
-  level: Level.off,
-  filter: ProductionFilter(),
-  printer: PrettyPrinter(
-    methodCount: 0,
-    excludeBox: {Level.debug: true, Level.info: true},
-    printEmojis: false,
+final Talker testLogger = Talker(
+  logger: TalkerLogger(
+    formatter: const ColoredLoggerFormatter(),
+    settings: TalkerLoggerSettings(
+      lineSymbol: '',
+    ),
   ),
 );

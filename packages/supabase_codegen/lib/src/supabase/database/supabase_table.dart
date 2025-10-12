@@ -1,6 +1,6 @@
-import 'package:logger/logger.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
+import 'package:talker/talker.dart';
 
 /// A list of dictionaries (`Map<String, dynamic>`)
 typedef DictionaryList = List<Map<String, dynamic>>;
@@ -54,7 +54,7 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
           .select()
           .maybeSingle()
           .catchError((dynamic e) {
-        Logger().e('Error querying row: $e'); // coverage:ignore-line
+        Talker().error('Error querying row: $e'); // coverage:ignore-line
         return null;
       }).then((r) => r != null ? createRow(r) : null);
 

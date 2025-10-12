@@ -15,7 +15,7 @@ Future<void> generateTableFile({
   required Directory directory,
   required FieldNameTypeMap fieldNameTypeMap,
 }) async {
-  logger.i('[GenerateTableFile] Generating file for: $tableName');
+  logger.info('[GenerateTableFile] Generating file for: $tableName');
 
   final className = tableName.toPascalCase();
   final tableClass = '${className}Table';
@@ -96,7 +96,7 @@ void writeTableClass({
   required String tableClass,
   required String rowClass,
 }) {
-  logger.i('Creating table class for: $tableName');
+  logger.info('Creating table class for: $tableName');
 
   final supabaseTable = 'Supabase${forFlutterUsage ? 'Flutter' : ''}Table';
 
@@ -127,7 +127,7 @@ void writeRowClass({
   required FieldNameTypeMap fieldNameTypeMap,
   required String tableClass,
 }) {
-  logger.i('Creating row class for: $className');
+  logger.info('Creating row class for: $className');
 
   final rowSuperClass = 'Supabase${forFlutterUsage ? 'Flutter' : ''}DataRow';
 
@@ -361,7 +361,7 @@ String getDefaultValue(
       '';
   final fallbackValue = fallback.isNotEmpty ? fallback : null;
 
-  logger.d(
+  logger.debug(
     'Default value: $defaultValue, type: $dartType, fallback: $fallbackValue',
   );
 
@@ -400,7 +400,7 @@ String getDefaultValue(
                   },
                 )
                 .toList();
-        logger.d('Values: $values');
+        logger.debug('Values: $values');
 
         return 'const <$genericType>[${values.join(', ')}]';
       }
