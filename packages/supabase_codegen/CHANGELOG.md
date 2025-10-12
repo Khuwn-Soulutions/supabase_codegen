@@ -1,3 +1,8 @@
+## 3.0.1
+
+### Features
+- replace logger usage with talker to ensure wasm compatibility
+
 ## 3.0.0
 
 ### Breaking Changes
