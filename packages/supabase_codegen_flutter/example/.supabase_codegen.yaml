@@ -7,4 +7,4 @@ override:
     id:
       is_nullable: true
     json_values:
-      data_type: dynamic
+      data_type: List<Map<String, dynamic>>
