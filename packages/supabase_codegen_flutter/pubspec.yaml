@@ -1,5 +1,5 @@
 name: supabase_codegen_flutter
-description: Supabase Codegen Flutter Package
+description: A codegen library that grabs and generates classes from Supabase tables and enums for Flutter.
 homepage: https://github.com/Khuwn-Soulutions/supabase_codegen
 version: 3.0.1
 repository: https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen_flutter
