@@ -5,7 +5,6 @@ version: 3.0.1
 repository: https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen_flutter
 resolution: workspace
 
-
 environment:
   sdk: ^3.5.0
   flutter: ">=3.24.0"
@@ -15,17 +14,17 @@ dependencies:
     sdk: flutter
   flutter_dotenv: ^6.0.0
   http: ^1.5.0
+  # Flutter test requires 1.16.0
   meta: ^1.16.0
   path: ^1.9.1
   supabase_codegen: ^3.0.1
-  supabase_flutter: ^2.10.1
+  supabase_flutter: ^2.10.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0
-
 
 executables:
   generate_types:
