@@ -1,4 +1,9 @@
-import 'package:supabase/supabase.dart';
+import 'package:supabase/supabase.dart'
+    show
+        PostgrestFilterBuilder,
+        PostgrestTransformBuilder,
+        SupabaseClient,
+        SupabaseQueryBuilder;
 import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:talker/talker.dart';
 

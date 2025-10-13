@@ -1,4 +1,8 @@
-import 'package:supabase/supabase.dart';
+import 'package:supabase/supabase.dart'
+    show
+        PostgrestFilterBuilder,
+        SupabaseStreamBuilder,
+        SupabaseStreamFilterBuilder;
 
 /// Applies a filter if the [value] is not `null`.
 /// Otherwise, returns the builder unchanged.

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:supabase/supabase.dart';
+import 'package:supabase/supabase.dart' show SupabaseClient;
 
 /// Supabase Codegen Client
 abstract class SupabaseCodegenClientBase {
