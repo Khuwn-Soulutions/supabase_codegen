@@ -2,11 +2,12 @@ name: supabase_codegen_packages
 publish_to: none
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.9.0
 
 workspace:
   - packages/supabase_codegen
   - packages/supabase_codegen_flutter
+  - packages/supabase_codegen_serverpod
 
 dev_dependencies:
   melos: ^7.2.0
