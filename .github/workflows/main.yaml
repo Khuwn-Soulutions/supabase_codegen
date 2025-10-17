@@ -35,3 +35,6 @@ jobs:
     with:
       min_coverage: 65
       working_directory: packages/supabase_codegen_flutter
+
+  pana:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/pana.yml@v1
