@@ -12,16 +12,13 @@ const tableBarrelFileName = '_tables.dart';
 // coverage:ignore-start
 Future<void> generateSchemaInfo() async {
   try {
-    final tables = await getSchemaTables();
-
     // Create necessary directories
     await createDirectories();
 
     // Generate schema files
     await generateSchemaFiles();
 
-    // Generate database files
-    await generateDatabaseFiles(tables);
+    await generateSchemaTables();
 
     logger.info('[GenerateTypes] Successfully generated types');
   } catch (e) {
@@ -32,6 +29,13 @@ Future<void> generateSchemaInfo() async {
   }
 }
 // coverage:ignore-end
+
+/// Generate tables for the schema
+Future<void> generateSchemaTables() async {
+  final tables = await getSchemaTables();
+  // Generate database files
+  await generateDatabaseFiles(tables);
+}
 
 /// Get the schema tables
 @visibleForTesting
