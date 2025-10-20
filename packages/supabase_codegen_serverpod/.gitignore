@@ -5,3 +5,12 @@
 .packages
 build/
 pubspec.lock
+
+# Environment files
+.env*
+
+# Artefacts
+coverage/*
+.failed_tracker
+.flutter-plugins-dependencies
+.flutter-plugins
