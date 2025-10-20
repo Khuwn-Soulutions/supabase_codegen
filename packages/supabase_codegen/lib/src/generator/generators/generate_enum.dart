@@ -10,11 +10,73 @@ Future<void> generateEnums(Directory enumsDir) async {
   // Add header comment and imports
   final buffer = StringBuffer();
 
+  /// Write the header to the barrel file
   writeHeader(buffer);
 
+  try {
+    final enums = await processEnums();
+
+    // Generate each enum
+    logger.debug('[GenerateTypes] Generating enum definitions:');
+    enums.forEach((enumName, values) async {
+      final formattedEnumName = formattedEnums[enumName]!;
+      final enumBuffer = StringBuffer();
+      final fileName = formattedEnumName.toSnakeCase();
+      final enumFile = File('${enumsDir.path}/$fileName.dart');
+
+      /// Add header comment and imports
+      writeHeader(enumBuffer);
+
+      /// Document and start enum declaration
+      enumBuffer
+        ..writeln('/// ${formattedEnumName.toCapitalCase()} enum')
+        ..writeln('enum $formattedEnumName {');
+
+      /// Write enum fields
+      for (final value in values) {
+        enumBuffer
+          ..writeln('  /// $value')
+          ..writeln('  $value,');
+      }
+
+      /// Close enum declaration
+      enumBuffer
+        ..writeln('}')
+        ..writeln();
+
+      /// Write footer
+      writeFooter(enumBuffer);
+
+      /// Write file to disk only if the content has changed ignoring date
+      writeFileIfChangedIgnoringDate(enumFile, enumBuffer);
+
+      logger.info('[GenerateTypes] Generated enum file: $fileName');
+
+      /// Write the filename to the main buffer file
+      buffer.writeln("export '$fileName.dart';");
+    });
+
+    /// Write footer
+    writeFooter(buffer);
+
+    /// Write file to disk only if the content has changed ignoring date
+    writeFileIfChangedIgnoringDate(enumFile, buffer);
+    logger.info('[GenerateTypes] Generated enums file successfully');
+  } catch (e, stackTrace) {
+    logger.error(
+      '[GenerateTypes] Error generating enums: $e',
+      e,
+      stackTrace,
+    );
+    rethrow;
+  }
+}
+
+/// Process the enums populating the [formattedEnums] and returning the
+/// all enums as a map of the enum name to the list of values
+Future<Map<String, List<String>>> processEnums() async {
   // Fetch enum types from database
   logger.info('[GenerateTypes] Fetching enum types from database...');
-
   try {
     // Query to get all enum types and their values
     logger.debug('[GenerateTypes] Executing RPC call to get_enum_types...');
@@ -64,52 +126,11 @@ Future<void> generateEnums(Directory enumsDir) async {
 
       logger.debug('  Processing: $enumName -> $formattedEnumName');
       formattedEnums[enumName] = formattedEnumName;
-
-      final enumBuffer = StringBuffer();
-      final fileName = formattedEnumName.toSnakeCase();
-      final enumFile = File('${enumsDir.path}/$fileName.dart');
-
-      /// Add header comment and imports
-      writeHeader(enumBuffer);
-
-      /// Document and start enum declaration
-      enumBuffer
-        ..writeln('/// ${formattedEnumName.toCapitalCase()} enum')
-        ..writeln('enum $formattedEnumName {');
-
-      /// Write enum fields
-      for (final value in values) {
-        enumBuffer
-          ..writeln('  /// $value')
-          ..writeln('  $value,');
-      }
-
-      /// Close enum declaration
-      enumBuffer
-        ..writeln('}')
-        ..writeln();
-
-      /// Write footer
-      writeFooter(enumBuffer);
-
-      /// Write file to disk only if the content has changed ignoring date
-      writeFileIfChangedIgnoringDate(enumFile, enumBuffer);
-
-      logger.info('[GenerateTypes] Generated enum file: $fileName');
-
-      /// Write the filename to the main buffer file
-      buffer.writeln("export '$fileName.dart';");
     });
-
-    /// Write footer
-    writeFooter(buffer);
-
-    /// Write file to disk only if the content has changed ignoring date
-    writeFileIfChangedIgnoringDate(enumFile, buffer);
-    logger.info('[GenerateTypes] Generated enums file successfully');
+    return enums;
   } catch (e, stackTrace) {
     logger.error(
-      '[GenerateTypes] Error generating enums: $e',
+      '[GenerateTypes] Error while processing enums: $e',
       e,
       stackTrace,
     );
