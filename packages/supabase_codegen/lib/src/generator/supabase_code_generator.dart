@@ -34,7 +34,6 @@ SchemaOverrides schemaOverrides = {};
 
 /// Supabase code generator utils class
 // coverage:ignore-start
-@visibleForTesting
 class SupabaseCodeGeneratorUtils {
   /// Constructor
   const SupabaseCodeGeneratorUtils();
