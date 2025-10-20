@@ -2,4 +2,4 @@
 /// from your Supabase tables and enums
 library;
 
-export 'src/supabase_codegen_serverpod.dart';
+export 'src/src.dart';
