@@ -27,7 +27,10 @@ bool skipFooterWrite = false;
 bool forFlutterUsage = false;
 
 /// Package code is being generated from
-String packageName = 'supabase_codegen';
+String defaultPackageName = 'supabase_codegen';
+
+/// Package code is being generated from
+String packageName = defaultPackageName;
 
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
