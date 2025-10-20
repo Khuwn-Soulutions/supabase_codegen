@@ -26,6 +26,9 @@ bool skipFooterWrite = false;
 /// Are the types being generated for Flutter usage
 bool forFlutterUsage = false;
 
+/// Package code is being generated from
+String packageName = 'supabase_codegen';
+
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
 
