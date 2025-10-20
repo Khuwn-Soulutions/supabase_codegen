@@ -77,13 +77,13 @@ void main() {
     });
 
     test('should correctly map enum columns to ColumnData', () {
-      // Assuming you have a formattedEnums entry for 'my_enum'
-      formattedEnums['my_enum'] = 'MyEnum';
+      // Assuming you have a formattedEnums entry for 'my_values'
+      formattedEnums['my_values'] = 'MyValues';
       final columns = [
         {
           'column_name': 'enum_field',
           'data_type': 'user-defined',
-          'udt_name': 'my_enum',
+          'udt_name': 'my_values',
           'is_nullable': 'YES',
           'column_default': null,
         },
@@ -92,7 +92,7 @@ void main() {
       final result = createFieldNameTypeMap(columns);
 
       expect(result.length, equals(1));
-      expect(result['enumField']?.dartType, equals('MyEnum'));
+      expect(result['enumField']?.dartType, equals('MyValues'));
       expect(result['enumField']?.isNullable, isTrue);
       expect(result['enumField']?.hasDefault, isFalse);
       expect(result['enumField']?.columnName, equals('enum_field'));
@@ -100,7 +100,7 @@ void main() {
       expect(result['enumField']?.isEnum, isTrue);
 
       //Clean up for other test
-      formattedEnums.remove('my_enum');
+      formattedEnums.remove('my_values');
     });
 
     test('should correctly map camel case column names', () {
@@ -273,7 +273,7 @@ void main() {
         ],
       };
 
-      await generateTableBarrelFile(testTablesDir, tables);
+      await generateTableBarrelFile(tables, testTablesDir);
 
       final barrelFile = File('${testTablesDir.path}/$tableBarrelFileName');
       expect(barrelFile.existsSync(), isTrue);
@@ -310,7 +310,7 @@ void main() {
         ..createSync()
         ..writeAsStringSync('// Dummy enums file');
 
-      await generateTableBarrelFile(testTablesDir, tables);
+      await generateTableBarrelFile(tables, testTablesDir);
 
       final databaseFile = File('${testRootDir.path}/database.dart');
       expect(databaseFile.existsSync(), isTrue);
@@ -328,7 +328,7 @@ void main() {
 
     test('generates empty table barrel file when no tables', () async {
       final tables = <String, List<Map<String, dynamic>>>{};
-      await generateTableBarrelFile(testTablesDir, tables);
+      await generateTableBarrelFile(tables, testTablesDir);
 
       final barrelFile = File('${testTablesDir.path}/$tableBarrelFileName');
       expect(barrelFile.existsSync(), isTrue);
