@@ -2,11 +2,24 @@ import 'dart:io';
 
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 
 import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Table barrel file name
 const tableBarrelFileName = '_tables.dart';
+
+/// Tables directory name
+const tablesDirectoryName = 'tables';
+
+/// Tables directory
+final tablesDirectory = Directory(path.join(root, tablesDirectoryName));
+
+/// Enums directory name
+const enumsDirectoryName = 'enums';
+
+/// Enums directory
+final enumsDirectory = Directory(path.join(root, enumsDirectoryName));
 
 /// Generate the schema info
 // coverage:ignore-start
@@ -93,14 +106,17 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
 
 // coverage:ignore-start
 /// Create the necessary directories
-Future<void> createDirectories() async {
+Future<void> createDirectories({
+  Directory? tablesDir,
+  Directory? enumsDir,
+}) async {
   final dirs = [
-    'tables',
-    'enums',
+    tablesDir ?? tablesDirectory,
+    enumsDir ?? enumsDirectory,
   ];
 
   for (final dir in dirs) {
-    await Directory('$root/$dir').create(recursive: true);
+    await dir.create(recursive: true);
   }
 }
 
@@ -112,13 +128,11 @@ Future<void> generateDatabaseFiles(
     ..info('[GenerateDatabaseFiles] Generating database files...')
     ..debug('Writing files to $root');
 
-  final directory = Directory('$root/tables');
-
   // Generate individual table files
-  await generateTables(tables, directory);
+  await generateTables(tables);
 
   // Generate table barrel file
-  await generateTableBarrelFile(directory, tables);
+  await generateTableBarrelFile(tables);
 }
 // coverage:ignore-end
 
@@ -126,10 +140,11 @@ Future<void> generateDatabaseFiles(
 /// extracted [tables]
 @visibleForTesting
 Future<void> generateTableBarrelFile(
-  Directory directory,
-  Map<String, List<Map<String, dynamic>>> tables,
-) async {
-  final tableBarrelFile = File('${directory.path}/$tableBarrelFileName');
+  Map<String, List<Map<String, dynamic>>> tables, [
+  Directory? directory,
+]) async {
+  final tablesDir = directory ?? tablesDirectory;
+  final tableBarrelFile = File(path.join(tablesDir.path, tableBarrelFileName));
   final tableBarrelBuffer = StringBuffer();
 
   writeHeader(tableBarrelBuffer);
@@ -156,9 +171,10 @@ Future<void> generateTableBarrelFile(
 // coverage:ignore-start
 /// Generate the [tables] as individual files in the provided [directory]
 Future<void> generateTables(
-  Map<String, List<Map<String, dynamic>>> tables,
-  Directory directory,
-) async {
+  Map<String, List<Map<String, dynamic>>> tables, [
+  Directory? directory,
+]) async {
+  final tablesDir = directory ?? tablesDirectory;
   for (final tableName in tables.keys) {
     final columns = tables[tableName]!;
     final tableOverrides = schemaOverrides[tableName];
@@ -172,7 +188,7 @@ Future<void> generateTables(
     await generateTableFile(
       tableName: tableName,
       columns: columns,
-      directory: directory,
+      directory: tablesDir,
       fieldNameTypeMap: fieldNameTypeMap,
     );
   }
