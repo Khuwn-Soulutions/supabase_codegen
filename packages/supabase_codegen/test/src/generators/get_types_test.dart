@@ -18,6 +18,8 @@ void main() {
       'int4',
       'int8',
       'integer',
+    ],
+    'BigInt': [
       'bigint',
     ],
     'double': [
