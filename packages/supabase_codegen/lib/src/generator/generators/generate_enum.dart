@@ -72,9 +72,8 @@ Future<void> generateEnums(Directory enumsDir) async {
   }
 }
 
-/// Process the enums populating the [formattedEnums] and returning the
-/// all enums as a map of the enum name to the list of values
-Future<Map<String, List<String>>> processEnums() async {
+/// Retrieve the enums from the database schema
+Future<Map<String, List<String>>> fetchEnums() async {
   // Fetch enum types from database
   logger.info('[GenerateTypes] Fetching enum types from database...');
   try {
@@ -113,6 +112,21 @@ Future<Map<String, List<String>>> processEnums() async {
       }
       enums[enumName]!.add(enumValue);
     }
+    return enums;
+  } on Exception catch (e) {
+    logger.error('[GenerateTypes] Error retrieving enums: $e');
+    rethrow;
+  }
+}
+
+/// Process the enums populating the [formattedEnums] and returning the
+/// all enums as a map of the enum name to the list of values
+Future<Map<String, List<String>>> processEnums([
+  Map<String, List<String>>? enums,
+]) async {
+  try {
+    /// Get the enums from the database if not set
+    enums ??= await fetchEnums();
 
     // Generate each enum
     logger.debug('[GenerateTypes] Generating enum definitions:');
@@ -127,6 +141,7 @@ Future<Map<String, List<String>>> processEnums() async {
       logger.debug('  Processing: $enumName -> $formattedEnumName');
       formattedEnums[enumName] = formattedEnumName;
     });
+    logger.debug('[GenerateTypes] Formatted enums: $formattedEnums');
     return enums;
   } catch (e, stackTrace) {
     logger.error(
