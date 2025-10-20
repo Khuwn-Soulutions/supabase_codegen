@@ -18,7 +18,7 @@ Future<void> generateSchemaInfo() async {
     await createDirectories();
 
     // Generate schema files
-    await generateSchemaFiles(tables);
+    await generateSchemaFiles();
 
     // Generate database files
     await generateDatabaseFiles(tables);
