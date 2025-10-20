@@ -38,7 +38,6 @@ Future<void> generateSchemaTables() async {
 }
 
 /// Get the schema tables
-@visibleForTesting
 Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   // Get table information from Supabase
   logger.info('[GenerateTypes] Fetching schema info...');
@@ -181,7 +180,6 @@ Future<void> generateTables(
 // coverage:ignore-end
 
 /// Create a map of the field name to data for that field
-@visibleForTesting
 Map<String, ColumnData> createFieldNameTypeMap(
   List<Map<String, dynamic>> columns, {
   TableOverrides? tableOverrides,
