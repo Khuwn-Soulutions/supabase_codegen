@@ -29,21 +29,7 @@ bool forFlutterUsage = false;
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
 
-/// Column data type
-typedef ColumnData = ({
-  String dartType,
-  bool isNullable,
-  bool hasDefault,
-  dynamic defaultValue,
-  String columnName,
-  bool isArray,
-  bool isEnum,
-});
-
-/// Field name type map
-typedef FieldNameTypeMap = Map<String, ColumnData>;
-
-/// Supabase code gnerator utils class
+/// Supabase code generator utils class
 // coverage:ignore-start
 @visibleForTesting
 class SupabaseCodeGeneratorUtils {
