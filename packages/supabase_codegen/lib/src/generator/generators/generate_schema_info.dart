@@ -146,7 +146,7 @@ Future<void> generateTableBarrelFile(
   final dbBuffer = StringBuffer();
   writeHeader(dbBuffer);
   dbBuffer
-    ..writeln("export 'enums/$enumsFileName.dart';")
+    ..writeln("export 'enums/$enumBarrelFileName.dart';")
     ..writeln("export 'tables/$tableBarrelFileName';");
   writeFooter(dbBuffer);
 

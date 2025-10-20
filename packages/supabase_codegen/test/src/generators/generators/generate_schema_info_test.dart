@@ -306,7 +306,7 @@ void main() {
       final enumsDir = Directory('${testRootDir.path}/enums')
         ..createSync(recursive: true);
 
-      File('${enumsDir.path}/$enumsFileName.dart')
+      File('${enumsDir.path}/$enumBarrelFileName.dart')
         ..createSync()
         ..writeAsStringSync('// Dummy enums file');
 
@@ -317,7 +317,7 @@ void main() {
       final databaseFileContent = databaseFile.readAsStringSync();
       expect(
         databaseFileContent,
-        contains("export 'enums/$enumsFileName.dart';"),
+        contains("export 'enums/$enumBarrelFileName.dart';"),
       );
       expect(
         databaseFileContent,

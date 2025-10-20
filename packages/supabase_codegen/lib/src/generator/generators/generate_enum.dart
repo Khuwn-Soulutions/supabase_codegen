@@ -6,7 +6,7 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Generate enums
 Future<void> generateEnums(Directory enumsDir) async {
-  final enumFile = File('${enumsDir.path}/$enumsFileName.dart');
+  final enumBarrelFile = File('${enumsDir.path}/$enumBarrelFileName.dart');
   // Add header comment and imports
   final buffer = StringBuffer();
 
@@ -60,7 +60,7 @@ Future<void> generateEnums(Directory enumsDir) async {
     writeFooter(buffer);
 
     /// Write file to disk only if the content has changed ignoring date
-    writeFileIfChangedIgnoringDate(enumFile, buffer);
+    writeFileIfChangedIgnoringDate(enumBarrelFile, buffer);
     logger.info('[GenerateTypes] Generated enums file successfully');
   } catch (e, stackTrace) {
     logger.error(
