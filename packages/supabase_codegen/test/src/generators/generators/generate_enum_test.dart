@@ -44,7 +44,7 @@ void main() {
       );
       await generateEnums(testEnumsDir);
 
-      final enumFile = File('${testEnumsDir.path}/$enumsFileName.dart');
+      final enumFile = File('${testEnumsDir.path}/$enumBarrelFileName.dart');
       expect(enumFile.existsSync(), isTrue);
       return enumFile.readAsStringSync();
     }

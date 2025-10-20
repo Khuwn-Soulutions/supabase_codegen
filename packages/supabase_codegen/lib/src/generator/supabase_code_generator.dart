@@ -15,7 +15,7 @@ late String root;
 String tag = '';
 
 /// Enums file name
-const enumsFileName = '_enums';
+const enumBarrelFileName = '_enums';
 
 /// Map of enum type to formatted name
 final formattedEnums = <String, String>{};
