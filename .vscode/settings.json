@@ -2,5 +2,10 @@
   "flutterTools.displayGetxContextMenu": false,
   "flutterTools.displayMobxContextMenu": false,
   "flutterTools.displayRiverpodContextMenu": false,
-  "flutterTools.displayModularContextMenu": false
+  "flutterTools.displayModularContextMenu": false,
+  "conventionalCommits.scopes": [
+    "supabase_codegen",
+    "supabase_codegen_flutter",
+    "supabase_codegen_serverpod"
+  ]
 }
