@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
+import 'package:pluralize/pluralize.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// Supabase code generator serverpod utils class
@@ -132,7 +133,7 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
   void generateModel(String tableName, FieldNameTypeMap fieldNameTypeMap) {
     logger.info('Generating model for $tableName');
     final buffer = StringBuffer();
-    final className = tableName.toPascalCase();
+    final className = Pluralize().singular(tableName.toPascalCase());
     writeSpyHeader(buffer);
     buffer
       ..writeln('class: $className')

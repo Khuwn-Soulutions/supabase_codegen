@@ -46,6 +46,15 @@ void main() {
         'udt_name': 'uuid',
       },
     ],
+    'recipes': [
+      {
+        'column_name': 'id',
+        'data_type': 'String',
+        'is_nullable': 'NO',
+        'column_default': 'gen_random_uuid()',
+        'udt_name': 'uuid',
+      },
+    ],
   };
 
   const enums = {
@@ -118,6 +127,42 @@ void main() {
     });
 
     group('generateTableFiles', () {
+      test(
+        'creates file with classname singular version of table name',
+        () async {
+          final tables = {
+            'students': [
+              {
+                'column_name': 'id',
+                'data_type': 'integer',
+                'is_nullable': 'NO',
+                'column_default': "nextval('students_id_seq'::regclass)",
+                'udt_name': 'int4',
+              },
+              {
+                'column_name': 'name',
+                'data_type': 'text',
+                'is_nullable': 'YES',
+                'column_default': null,
+                'udt_name': 'text',
+              },
+            ],
+          };
+          await codeGenerator.generateTableFiles(tables);
+
+          final tableFile = File(
+            path.join(
+              tablesDir.path,
+              'students.${SupabaseCodeGenServerpodUtils.fileType}',
+            ),
+          );
+          expect(tableFile.existsSync(), isTrue);
+
+          final content = await tableFile.readAsString();
+          expect(content, contains('class: Student'));
+          expect(content, contains('table: students'));
+        },
+      );
       test('creates correct files and content from provided map', () async {
         final tables = {
           'my_table': [
@@ -139,7 +184,12 @@ void main() {
         };
         await codeGenerator.generateTableFiles(tables);
 
-        final tableFile = File(path.join(tablesDir.path, 'my_table.spy'));
+        final tableFile = File(
+          path.join(
+            tablesDir.path,
+            'my_table.${SupabaseCodeGenServerpodUtils.fileType}',
+          ),
+        );
         expect(tableFile.existsSync(), isTrue);
 
         final content = await tableFile.readAsString();
@@ -208,6 +258,17 @@ void main() {
         final anotherTableContent = await anotherTableFile.readAsString();
         expect(anotherTableContent, contains('class: AnotherTable'));
         expect(anotherTableContent, contains('  id: String?'));
+
+        final recipesFile = File(
+          path.join(
+            tablesDir.path,
+            'recipes.${SupabaseCodeGenServerpodUtils.fileType}',
+          ),
+        );
+        expect(recipesFile.existsSync(), isTrue);
+        final recipesContent = await recipesFile.readAsString();
+        expect(recipesContent, contains('class: Recipe'));
+        expect(recipesContent, contains('  id: String?'));
       });
     });
   });
