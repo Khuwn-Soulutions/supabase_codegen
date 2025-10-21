@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:example_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
 /// This is the endpoint that will be used to generate a recipe using the
@@ -8,7 +9,7 @@ import 'package:serverpod/serverpod.dart';
 /// generateRecipe method.
 class RecipeEndpoint extends Endpoint {
   /// Pass in a string containing the ingredients and get a recipe back.
-  Future<String> generateRecipe(Session session, String ingredients) async {
+  Future<Recipe> generateRecipe(Session session, String ingredients) async {
     // Serverpod automatically loads your passwords.yaml file and makes the passwords available
     // in the session.passwords map.
     final geminiApiKey = session.passwords['gemini'];
@@ -35,6 +36,26 @@ class RecipeEndpoint extends Endpoint {
       throw Exception('No response from Gemini API');
     }
 
-    return responseText;
+    final recipe = Recipe(
+      author: 'Gemini',
+      text: responseText,
+      date: DateTime.now(),
+      ingredients: ingredients,
+    );
+
+    // Save the recipe to the database, the returned recipe has the id set
+    final recipeWithId = await Recipe.db.insertRow(session, recipe);
+
+    return recipeWithId;
+  }
+
+  /// This method returns all the generated Recipe from the database.
+  Future<List<Recipe>> getRecipes(Session session) async {
+    // Get all the Recipe from the database, sorted by date.
+    return Recipe.db.find(
+      session,
+      orderBy: (t) => t.date,
+      orderDescending: true,
+    );
   }
 }
