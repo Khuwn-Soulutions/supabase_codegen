@@ -107,9 +107,12 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
     logger.info('Generating schema...');
 
     // coverage:ignore-start
-    final tables = (schemaTables ?? await getSchemaTables())
-      /// Remove all serverpod tables
-      ..removeWhere((key, value) => key.startsWith('serverpod_'));
+    final tables =
+        Map<String, List<Map<String, dynamic>>>.from(
+            schemaTables ?? await getSchemaTables(),
+          )
+          /// Remove all serverpod tables
+          ..removeWhere((key, value) => key.startsWith('serverpod_'));
 
     // coverage:ignore-end
     logger.debug('Got tables: $tables');
