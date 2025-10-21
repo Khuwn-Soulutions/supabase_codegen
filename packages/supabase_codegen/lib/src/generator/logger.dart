@@ -14,3 +14,6 @@ final Talker testLogger = Talker(
     ),
   ),
 );
+
+/// Create verbose logger
+void createVerboseLogger() => logger = testLogger;
