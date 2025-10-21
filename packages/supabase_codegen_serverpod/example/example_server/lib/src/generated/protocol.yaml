@@ -1,2 +1,4 @@
+recipe:
+  - generateRecipe:
 greeting:
   - hello:

@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   serverpod: 2.9.1
+  google_generative_ai: ^0.4.7
 
 dev_dependencies:
   lints: '>=3.0.0 <7.0.0'

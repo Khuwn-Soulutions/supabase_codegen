@@ -14,6 +14,25 @@ import 'dart:async' as _i2;
 import 'package:example_client/src/protocol/greeting.dart' as _i3;
 import 'protocol.dart' as _i4;
 
+/// This is the endpoint that will be used to generate a recipe using the
+/// Google Gemini API. It extends the Endpoint class and implements the
+/// generateRecipe method.
+/// {@category Endpoint}
+class EndpointRecipe extends _i1.EndpointRef {
+  EndpointRecipe(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'recipe';
+
+  /// Pass in a string containing the ingredients and get a recipe back.
+  _i2.Future<String> generateRecipe(String ingredients) =>
+      caller.callServerEndpoint<String>(
+        'recipe',
+        'generateRecipe',
+        {'ingredients': ingredients},
+      );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -58,13 +77,19 @@ class Client extends _i1.ServerpodClientShared {
           disconnectStreamsOnLostInternetConnection:
               disconnectStreamsOnLostInternetConnection,
         ) {
+    recipe = EndpointRecipe(this);
     greeting = EndpointGreeting(this);
   }
+
+  late final EndpointRecipe recipe;
 
   late final EndpointGreeting greeting;
 
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'greeting': greeting};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'recipe': recipe,
+        'greeting': greeting,
+      };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};
