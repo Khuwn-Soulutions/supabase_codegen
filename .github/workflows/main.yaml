@@ -37,7 +37,7 @@ jobs:
       working_directory: packages/supabase_codegen_flutter
 
   build_codegen_serverpod:
-    uses: ./.github/workflows/supabase_codegen.yaml
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       min_coverage: 85
       working_directory: packages/supabase_codegen_serverpod
