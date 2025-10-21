@@ -24,22 +24,6 @@ Future<void> generateTableFile({
   final file = File('${directory.path}/${tableName.toLowerCase()}.dart');
   final buffer = StringBuffer();
 
-  // Convert the map to a list of entries sorted with the required items first
-  final entries = fieldNameTypeMap.entries.toList()
-    ..sort((a, b) {
-      final aIsRequired = !a.value.isNullable && !a.value.hasDefault;
-      final bIsRequired = !b.value.isNullable && !b.value.hasDefault;
-
-      if (aIsRequired == bIsRequired) {
-        // Keep original order if both are required or both are optional
-        return 0;
-      } else if (aIsRequired) {
-        return -1; // Place required items first
-      } else {
-        return 1; // Place optional items after required items
-      }
-    });
-
   /// Write imports
   writeImports(buffer);
 
@@ -54,7 +38,7 @@ Future<void> generateTableFile({
 
   /// Generate Row class
   writeRowClass(
-    entries: entries,
+    entries: fieldNameTypeMap.sortedEntries,
     buffer: buffer,
     className: className,
     classDesc: classDesc,

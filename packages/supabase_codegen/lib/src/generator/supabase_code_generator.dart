@@ -15,7 +15,7 @@ late String root;
 String tag = '';
 
 /// Enums file name
-const enumsFileName = '_enums';
+const enumBarrelFileName = '_enums';
 
 /// Map of enum type to formatted name
 final formattedEnums = <String, String>{};
@@ -26,26 +26,17 @@ bool skipFooterWrite = false;
 /// Are the types being generated for Flutter usage
 bool forFlutterUsage = false;
 
+/// Package code is being generated from
+String defaultPackageName = 'supabase_codegen';
+
+/// Package code is being generated from
+String packageName = defaultPackageName;
+
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
 
-/// Column data type
-typedef ColumnData = ({
-  String dartType,
-  bool isNullable,
-  bool hasDefault,
-  dynamic defaultValue,
-  String columnName,
-  bool isArray,
-  bool isEnum,
-});
-
-/// Field name type map
-typedef FieldNameTypeMap = Map<String, ColumnData>;
-
-/// Supabase code gnerator utils class
+/// Supabase code generator utils class
 // coverage:ignore-start
-@visibleForTesting
 class SupabaseCodeGeneratorUtils {
   /// Constructor
   const SupabaseCodeGeneratorUtils();

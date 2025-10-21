@@ -12,7 +12,7 @@ class MockGeneratorUtils extends Mock implements SupabaseCodeGeneratorUtils {}
 void main() {
   late SupabaseCodeGenerator generator;
   logger = testLogger;
-  group('generateSupabaseTypes', () {
+  group('SupabaseCodeGenerator', () {
     generator = const SupabaseCodeGenerator();
     test('it throws an error when env file not found', () {
       expect(

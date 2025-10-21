@@ -5,11 +5,10 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 // coverage:ignore-file
 
 /// Generate schema files
-Future<void> generateSchemaFiles(
-  Map<String, List<Map<String, dynamic>>> tables,
-) async {
-  final enumsDir = Directory('$root/enums');
-  await enumsDir.create(recursive: true);
+Future<void> generateSchemaFiles([
+  Directory? enumsDir,
+]) async {
+  enumsDir ??= enumsDirectory;
 
   // Generate enums file
   await generateEnums(enumsDir);
