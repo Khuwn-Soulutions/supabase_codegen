@@ -11,8 +11,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:example_client/src/protocol/greeting.dart' as _i3;
-import 'protocol.dart' as _i4;
+import 'package:example_client/src/protocol/tables/recipes.dart' as _i3;
+import 'package:example_client/src/protocol/greeting.dart' as _i4;
+import 'protocol.dart' as _i5;
 
 /// This is the endpoint that will be used to generate a recipe using the
 /// Google Gemini API. It extends the Endpoint class and implements the
@@ -25,11 +26,19 @@ class EndpointRecipe extends _i1.EndpointRef {
   String get name => 'recipe';
 
   /// Pass in a string containing the ingredients and get a recipe back.
-  _i2.Future<String> generateRecipe(String ingredients) =>
-      caller.callServerEndpoint<String>(
+  _i2.Future<_i3.Recipe> generateRecipe(String ingredients) =>
+      caller.callServerEndpoint<_i3.Recipe>(
         'recipe',
         'generateRecipe',
         {'ingredients': ingredients},
+      );
+
+  /// This method returns all the generated Recipe from the database.
+  _i2.Future<List<_i3.Recipe>> getRecipes() =>
+      caller.callServerEndpoint<List<_i3.Recipe>>(
+        'recipe',
+        'getRecipes',
+        {},
       );
 }
 
@@ -43,8 +52,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i3.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i3.Greeting>(
+  _i2.Future<_i4.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i4.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -67,7 +76,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i4.Protocol(),
+          _i5.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
