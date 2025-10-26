@@ -1,0 +1,1 @@
+ALTER TABLE public.recipes RENAME COLUMN date TO created_at;
