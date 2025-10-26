@@ -54,6 +54,13 @@ void main() {
         'column_default': 'gen_random_uuid()',
         'udt_name': 'uuid',
       },
+      {
+        'column_name': 'created_at',
+        'data_type': 'timestamptz',
+        'is_nullable': 'NO',
+        'column_default': null,
+        'udt_name': 'timestamp with time zone',
+      },
     ],
   };
 
@@ -199,6 +206,33 @@ void main() {
         expect(content, contains('  id: int?'));
         expect(content, contains('  name: String?'));
       });
+
+      test('specifies the column name if originally in snake_case', () async {
+        const tableName = 'recipes';
+        final tables = {
+          tableName: [
+            {
+              'column_name': 'created_at',
+              'data_type': 'timestamptz',
+              'is_nullable': 'NO',
+              'column_default': null,
+              'udt_name': 'timestamp with time zone',
+            },
+          ],
+        };
+        await codeGenerator.generateTableFiles(tables);
+
+        final tableFile = File(
+          path.join(
+            tablesDir.path,
+            '$tableName.${SupabaseCodeGenServerpodUtils.fileType}',
+          ),
+        );
+        expect(tableFile.existsSync(), isTrue);
+
+        final content = await tableFile.readAsString();
+        expect(content, contains('createdAt: DateTime, column=created_at'));
+      });
     });
 
     group('generateSchema', () {
@@ -269,6 +303,10 @@ void main() {
         final recipesContent = await recipesFile.readAsString();
         expect(recipesContent, contains('class: Recipe'));
         expect(recipesContent, contains('  id: String?'));
+        expect(
+          recipesContent,
+          contains('  createdAt: DateTime, column=created_at'),
+        );
       });
     });
   });
