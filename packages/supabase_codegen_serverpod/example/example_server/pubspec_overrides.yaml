@@ -1,28 +1,15 @@
-name: example_server
-description: Starting point for a Serverpod server.
-# version: 1.0.0
-# homepage: https://www.example.com
-
-environment:
-  sdk: ">=3.5.0 <4.0.0"
-
-dependencies:
-  serverpod: 3.0.0-alpha.1
-  google_generative_ai: ^0.4.7
-
-dev_dependencies:
-  lints: ">=3.0.0 <7.0.0"
-  test: ^1.25.5
-  serverpod_test: 3.0.0-alpha.1
-  supabase_codegen_serverpod:
-    path: ../../
-
+# melos_managed_dependency_overrides: serverpod,serverpod_lints,serverpod_serialization,serverpod_shared,serverpod_test
 dependency_overrides:
   serverpod:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
       path: packages/serverpod_clientpackages/serverpod
+  serverpod_lints:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_clientpackages/serverpod_lints
   serverpod_serialization:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
@@ -38,8 +25,3 @@ dependency_overrides:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
       path: packages/serverpod_clientpackages/serverpod_test
-  serverpod_lints:
-    git:
-      url: https://github.com/Khuwn-Soulutions/serverpod.git
-      ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_lints

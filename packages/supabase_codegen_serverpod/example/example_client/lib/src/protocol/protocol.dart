@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -53,11 +54,11 @@ class Protocol extends _i1.SerializationManager {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i2.Greeting) {
-      return 'Greeting';
-    }
-    if (data is _i3.Recipe) {
-      return 'Recipe';
+    switch (data) {
+      case _i2.Greeting():
+        return 'Greeting';
+      case _i3.Recipe():
+        return 'Recipe';
     }
     return null;
   }
