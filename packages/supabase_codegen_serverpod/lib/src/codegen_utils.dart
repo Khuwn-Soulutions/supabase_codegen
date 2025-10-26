@@ -157,8 +157,9 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
       final isOptional = isNullable || hasDefault;
       final question = isOptional ? '?' : '';
       final type = dartType.isDynamic ? 'Object' : dartType;
+      final columnAlias = fieldName == columnName ? '' : ', column=$columnName';
 
-      buffer.writeln('  $fieldName: $type$question');
+      buffer.writeln('  $fieldName: $type$question$columnAlias');
     }
 
     // Write the footer
