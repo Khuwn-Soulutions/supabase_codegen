@@ -120,7 +120,7 @@ class MyHomePageState extends State<MyHomePage> {
                   return ListTile(
                     title: Text(
                         recipe.text.substring(0, recipe.text.indexOf('\n'))),
-                    subtitle: Text('${recipe.author} - ${recipe.date}'),
+                    subtitle: Text('${recipe.author} - ${recipe.createdAt}'),
                     onTap: () {
                       // Show the recipe in the text field
                       _textEditingController.text = recipe.ingredients;
@@ -163,7 +163,8 @@ class MyHomePageState extends State<MyHomePage> {
                           // Change the ResultDisplay to use the Recipe object
                           ResultDisplay(
                         resultMessage: _recipe != null
-                            ? '${_recipe?.author} on ${_recipe?.date}:\n${_recipe?.text}'
+                            ? '${_recipe?.author} on ${_recipe?.createdAt}:'
+                                '\n${_recipe?.text}'
                             : null,
                         errorMessage: _errorMessage,
                       ),

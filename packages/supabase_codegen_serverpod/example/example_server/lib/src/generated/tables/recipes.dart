@@ -17,7 +17,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     this.id,
     required this.author,
     required this.text,
-    required this.date,
+    required this.createdAt,
     required this.ingredients,
   });
 
@@ -25,7 +25,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     int? id,
     required String author,
     required String text,
-    required DateTime date,
+    required DateTime createdAt,
     required String ingredients,
   }) = _RecipeImpl;
 
@@ -34,7 +34,8 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       id: jsonSerialization['id'] as int?,
       author: jsonSerialization['author'] as String,
       text: jsonSerialization['text'] as String,
-      date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
       ingredients: jsonSerialization['ingredients'] as String,
     );
   }
@@ -50,7 +51,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   String text;
 
-  DateTime date;
+  DateTime createdAt;
 
   String ingredients;
 
@@ -64,7 +65,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     int? id,
     String? author,
     String? text,
-    DateTime? date,
+    DateTime? createdAt,
     String? ingredients,
   });
   @override
@@ -73,7 +74,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'author': author,
       'text': text,
-      'date': date.toJson(),
+      'created_at': createdAt.toJson(),
       'ingredients': ingredients,
     };
   }
@@ -84,7 +85,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'author': author,
       'text': text,
-      'date': date.toJson(),
+      'created_at': createdAt.toJson(),
       'ingredients': ingredients,
     };
   }
@@ -126,13 +127,13 @@ class _RecipeImpl extends Recipe {
     int? id,
     required String author,
     required String text,
-    required DateTime date,
+    required DateTime createdAt,
     required String ingredients,
   }) : super._(
           id: id,
           author: author,
           text: text,
-          date: date,
+          createdAt: createdAt,
           ingredients: ingredients,
         );
 
@@ -144,21 +145,47 @@ class _RecipeImpl extends Recipe {
     Object? id = _Undefined,
     String? author,
     String? text,
-    DateTime? date,
+    DateTime? createdAt,
     String? ingredients,
   }) {
     return Recipe(
       id: id is int? ? id : this.id,
       author: author ?? this.author,
       text: text ?? this.text,
-      date: date ?? this.date,
+      createdAt: createdAt ?? this.createdAt,
       ingredients: ingredients ?? this.ingredients,
     );
   }
 }
 
+class RecipeUpdateTable extends _i1.UpdateTable<RecipeTable> {
+  RecipeUpdateTable(super.table);
+
+  _i1.ColumnValue<String, String> author(String value) => _i1.ColumnValue(
+        table.author,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> text(String value) => _i1.ColumnValue(
+        table.text,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> ingredients(String value) => _i1.ColumnValue(
+        table.ingredients,
+        value,
+      );
+}
+
 class RecipeTable extends _i1.Table<int?> {
   RecipeTable({super.tableRelation}) : super(tableName: 'recipes') {
+    updateTable = RecipeUpdateTable(this);
     author = _i1.ColumnString(
       'author',
       this,
@@ -167,8 +194,8 @@ class RecipeTable extends _i1.Table<int?> {
       'text',
       this,
     );
-    date = _i1.ColumnDateTime(
-      'date',
+    createdAt = _i1.ColumnDateTime(
+      'created_at',
       this,
     );
     ingredients = _i1.ColumnString(
@@ -177,11 +204,13 @@ class RecipeTable extends _i1.Table<int?> {
     );
   }
 
+  late final RecipeUpdateTable updateTable;
+
   late final _i1.ColumnString author;
 
   late final _i1.ColumnString text;
 
-  late final _i1.ColumnDateTime date;
+  late final _i1.ColumnDateTime createdAt;
 
   late final _i1.ColumnString ingredients;
 
@@ -190,7 +219,7 @@ class RecipeTable extends _i1.Table<int?> {
         id,
         author,
         text,
-        date,
+        createdAt,
         ingredients,
       ];
 }
@@ -380,6 +409,46 @@ class RecipeRepository {
     return session.db.updateRow<Recipe>(
       row,
       columns: columns?.call(Recipe.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Recipe] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Recipe?> updateById(
+    _i1.Session session,
+    int id, {
+    required _i1.ColumnValueListBuilder<RecipeUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Recipe>(
+      id,
+      columnValues: columnValues(Recipe.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Recipe]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Recipe>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<RecipeUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<RecipeTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<RecipeTable>? orderBy,
+    _i1.OrderByListBuilder<RecipeTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Recipe>(
+      columnValues: columnValues(Recipe.t.updateTable),
+      where: where(Recipe.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Recipe.t),
+      orderByList: orderByList?.call(Recipe.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }
