@@ -58,7 +58,7 @@ jobs:
         env:
           PROJECT_NAME: example
           AWS_NAME: example
-          DEPLOYMENT_BUCKET: example-deployment-8414733
+          DEPLOYMENT_BUCKET: example-deployment-31828
           TARGET: ${{ github.event.inputs.target }}
         run: |
           # Deploy server to AWS

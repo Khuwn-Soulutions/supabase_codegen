@@ -7,7 +7,7 @@ services:
   #   environment:
   #     POSTGRES_USER: postgres
   #     POSTGRES_DB: example
-  #     POSTGRES_PASSWORD: "_UlY67IeipSqKlPg4Qw-M7PDEpTNro2M"
+  #     POSTGRES_PASSWORD: "SUehulGCCPkz4lpQ9Rb1WyJKNnCNAoeD"
   #   volumes:
   #     - example_data:/var/lib/postgresql/data
 
@@ -15,7 +15,7 @@ services:
     image: redis:6.2.6
     ports:
       - "8091:6379"
-    command: redis-server --requirepass "Q4AFmJwuLqvw3VJ6OaklKrl0sJwd4snW"
+    command: redis-server --requirepass "GK1Bv-65FSB_K6zCqQA1bU7808xDpqU6"
     environment:
       - REDIS_REPLICATION_MODE=master
 
@@ -27,7 +27,7 @@ services:
   #   environment:
   #     POSTGRES_USER: postgres
   #     POSTGRES_DB: example_test
-  #     POSTGRES_PASSWORD: "7a2U1N0bv1WhOpHVVbOMINryVR1car-g"
+  #     POSTGRES_PASSWORD: "dJyLZYhOpFsoARxUsyVcTah8CulMvlqL"
   #   volumes:
   #     - example_test_data:/var/lib/postgresql/data
 
@@ -35,7 +35,7 @@ services:
     image: redis:6.2.6
     ports:
       - "9091:6379"
-    command: redis-server --requirepass "5B0soLr-h406UtS6zTRrQtGkPceVg86g"
+    command: redis-server --requirepass "SxB5ujYb4AXUYX0UNZTkvFgqp7eZZACt"
     environment:
       - REDIS_REPLICATION_MODE=master
 # volumes:

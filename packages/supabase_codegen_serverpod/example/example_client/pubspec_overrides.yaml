@@ -1,18 +1,10 @@
-name: example_client
-description: Starting point for a Serverpod client.
-
-environment:
-  sdk: ">=3.5.0 <4.0.0"
-
-dependencies:
-  serverpod_client: 3.0.0-alpha.1
-
+# melos_managed_dependency_overrides: serverpod_client,serverpod_serialization
 dependency_overrides:
   serverpod_client:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_client
+      path: packages/serverpod_clientpackages/serverpod_client
   serverpod_serialization:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
