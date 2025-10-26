@@ -17,7 +17,7 @@ abstract class Recipe implements _i1.SerializableModel {
     this.id,
     required this.author,
     required this.text,
-    required this.date,
+    required this.createdAt,
     required this.ingredients,
   });
 
@@ -25,7 +25,7 @@ abstract class Recipe implements _i1.SerializableModel {
     int? id,
     required String author,
     required String text,
-    required DateTime date,
+    required DateTime createdAt,
     required String ingredients,
   }) = _RecipeImpl;
 
@@ -34,7 +34,8 @@ abstract class Recipe implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       author: jsonSerialization['author'] as String,
       text: jsonSerialization['text'] as String,
-      date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
       ingredients: jsonSerialization['ingredients'] as String,
     );
   }
@@ -48,7 +49,7 @@ abstract class Recipe implements _i1.SerializableModel {
 
   String text;
 
-  DateTime date;
+  DateTime createdAt;
 
   String ingredients;
 
@@ -59,7 +60,7 @@ abstract class Recipe implements _i1.SerializableModel {
     int? id,
     String? author,
     String? text,
-    DateTime? date,
+    DateTime? createdAt,
     String? ingredients,
   });
   @override
@@ -68,7 +69,7 @@ abstract class Recipe implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'author': author,
       'text': text,
-      'date': date.toJson(),
+      'created_at': createdAt.toJson(),
       'ingredients': ingredients,
     };
   }
@@ -86,13 +87,13 @@ class _RecipeImpl extends Recipe {
     int? id,
     required String author,
     required String text,
-    required DateTime date,
+    required DateTime createdAt,
     required String ingredients,
   }) : super._(
           id: id,
           author: author,
           text: text,
-          date: date,
+          createdAt: createdAt,
           ingredients: ingredients,
         );
 
@@ -104,14 +105,14 @@ class _RecipeImpl extends Recipe {
     Object? id = _Undefined,
     String? author,
     String? text,
-    DateTime? date,
+    DateTime? createdAt,
     String? ingredients,
   }) {
     return Recipe(
       id: id is int? ? id : this.id,
       author: author ?? this.author,
       text: text ?? this.text,
-      date: date ?? this.date,
+      createdAt: createdAt ?? this.createdAt,
       ingredients: ingredients ?? this.ingredients,
     );
   }

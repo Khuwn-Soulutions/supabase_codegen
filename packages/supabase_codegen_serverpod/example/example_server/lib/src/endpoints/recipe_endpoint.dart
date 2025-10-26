@@ -39,7 +39,7 @@ class RecipeEndpoint extends Endpoint {
     final recipe = Recipe(
       author: 'Gemini',
       text: responseText,
-      date: DateTime.now(),
+      createdAt: DateTime.now(),
       ingredients: ingredients,
     );
 
@@ -54,7 +54,7 @@ class RecipeEndpoint extends Endpoint {
     // Get all the Recipe from the database, sorted by date.
     return Recipe.db.find(
       session,
-      orderBy: (t) => t.date,
+      orderBy: (t) => t.createdAt,
       orderDescending: true,
     );
   }
