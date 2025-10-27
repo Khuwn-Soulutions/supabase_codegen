@@ -8,13 +8,21 @@ void main() {
 
   group('getDefaultValue should return correct default values', () {
     test('when no default value is provided', () {
-      expect(getDefaultValue('int'), '0');
-      expect(getDefaultValue('double'), '0.0');
-      expect(getDefaultValue('bool'), 'false');
-      expect(getDefaultValue('String'), "''");
-      expect(getDefaultValue('DateTime'), 'DateTime.now()');
-      expect(getDefaultValue('List<String>'), 'const <String>[]');
-      expect(getDefaultValue('UserStatus'), 'null');
+      final expected = {
+        'int': '0',
+        'double': '0.0',
+        'bool': 'false',
+        'String': "''",
+        'DateTime': 'DateTime.now()',
+        'List<String>': 'const <String>[]',
+        'UserStatus': 'null',
+        'UuidValue': 'Uuid().v4obj()',
+        'Map<String, dynamic>': '{}',
+      };
+      for (final type in expected.keys) {
+        final value = expected[type]!;
+        expect(getDefaultValue(type), value);
+      }
     });
 
     test('when default value is provided', () {
@@ -25,7 +33,9 @@ void main() {
         'String': [
           (defaultValue: "'N/A'::text", value: "'N/A'"),
           (defaultValue: "''::text", value: "''"),
-          (defaultValue: 'gen_random_uuid()', value: "''"),
+        ],
+        'UuidValue': [
+          (defaultValue: 'gen_random_uuid()', value: 'Uuid().v4obj()'),
         ],
         'DateTime': [
           (
