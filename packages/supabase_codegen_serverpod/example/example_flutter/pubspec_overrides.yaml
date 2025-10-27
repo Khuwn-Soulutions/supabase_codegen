@@ -6,14 +6,14 @@ dependency_overrides:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_client
+      path: packages/serverpod_client
   serverpod_flutter:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_flutter
+      path: packages/serverpod_flutter
   serverpod_serialization:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_serialization
+      path: packages/serverpod_serialization

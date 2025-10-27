@@ -4,24 +4,24 @@ dependency_overrides:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod
+      path: packages/serverpod
   serverpod_lints:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_lints
+      path: packages/serverpod_lints
   serverpod_serialization:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_serialization
+      path: packages/serverpod_serialization
   serverpod_shared:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_shared
+      path: packages/serverpod_shared
   serverpod_test:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_test
+      path: packages/serverpod_test
