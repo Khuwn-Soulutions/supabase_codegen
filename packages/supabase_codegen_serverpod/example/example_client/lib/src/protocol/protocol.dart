@@ -12,9 +12,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'greeting.dart' as _i2;
-import 'tables/recipes.dart' as _i3;
-import 'package:example_client/src/protocol/tables/recipes.dart' as _i4;
+import 'tables/default_values.dart' as _i3;
+import 'tables/recipes.dart' as _i4;
+import 'package:example_client/src/protocol/tables/recipes.dart' as _i5;
 export 'greeting.dart';
+export 'tables/default_values.dart';
 export 'tables/recipes.dart';
 export 'client.dart';
 
@@ -34,17 +36,23 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i2.Greeting) {
       return _i2.Greeting.fromJson(data) as T;
     }
-    if (t == _i3.Recipe) {
-      return _i3.Recipe.fromJson(data) as T;
+    if (t == _i3.DefaultValue) {
+      return _i3.DefaultValue.fromJson(data) as T;
+    }
+    if (t == _i4.Recipe) {
+      return _i4.Recipe.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Greeting?>()) {
       return (data != null ? _i2.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i3.Recipe?>()) {
-      return (data != null ? _i3.Recipe.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i3.DefaultValue?>()) {
+      return (data != null ? _i3.DefaultValue.fromJson(data) : null) as T;
     }
-    if (t == List<_i4.Recipe>) {
-      return (data as List).map((e) => deserialize<_i4.Recipe>(e)).toList()
+    if (t == _i1.getType<_i4.Recipe?>()) {
+      return (data != null ? _i4.Recipe.fromJson(data) : null) as T;
+    }
+    if (t == List<_i5.Recipe>) {
+      return (data as List).map((e) => deserialize<_i5.Recipe>(e)).toList()
           as T;
     }
     return super.deserialize<T>(data, t);
@@ -57,7 +65,9 @@ class Protocol extends _i1.SerializationManager {
     switch (data) {
       case _i2.Greeting():
         return 'Greeting';
-      case _i3.Recipe():
+      case _i3.DefaultValue():
+        return 'DefaultValue';
+      case _i4.Recipe():
         return 'Recipe';
     }
     return null;
@@ -72,8 +82,11 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Greeting') {
       return deserialize<_i2.Greeting>(data['data']);
     }
+    if (dataClassName == 'DefaultValue') {
+      return deserialize<_i3.DefaultValue>(data['data']);
+    }
     if (dataClassName == 'Recipe') {
-      return deserialize<_i3.Recipe>(data['data']);
+      return deserialize<_i4.Recipe>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

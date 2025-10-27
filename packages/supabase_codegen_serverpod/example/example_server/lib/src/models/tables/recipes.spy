@@ -7,7 +7,7 @@ table: recipes
 fields:
   author: String
   text: String
-  createdAt: DateTime, column=created_at
   ingredients: String
   id: int?
-## Date: 2025-10-26 16:07:41.148090
+  createdAt: DateTime?, column=created_at, default=now
+## Date: 2025-10-27 18:10:38.551264
