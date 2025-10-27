@@ -362,6 +362,12 @@ String getDefaultValue(
       return DateTime.tryParse(fallbackValue ?? '') != null
           ? "DateTime.parse('$fallbackValue')"
           : 'DateTime.now()';
+    case 'UuidValue':
+      return switch (defaultValue) {
+        'gen_random_uuid()' => 'Uuid().v4obj()',
+        'gen_random_uuid_v7()' => 'Uuid().v7obj()',
+        _ => 'Uuid().v4obj()',
+      };
     default:
       // Enum
       if (isEnum) {
