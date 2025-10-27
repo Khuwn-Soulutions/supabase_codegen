@@ -23,6 +23,15 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
   /// Generated file type
   static const String fileType = 'spy';
 
+  /// Column identifier
+  static const String columnIdentifier = 'column';
+
+  /// Default identifier
+  static const String defaultIdentifier = 'default';
+
+  /// Default persist identifier
+  static const String defaultPersistIdentifier = 'defaultPersist';
+
   /// Generate schema info
   @override
   @visibleForTesting
@@ -157,9 +166,18 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
       final isOptional = isNullable || hasDefault;
       final question = isOptional ? '?' : '';
       final type = dartType.isDynamic ? 'Object' : dartType;
-      final columnAlias = fieldName == columnName ? '' : ', column=$columnName';
+      final columnAlias = fieldName == columnName
+          ? ''
+          : ', $columnIdentifier=$columnName';
+      final defaultModifier = defaultModifierFor(
+        defaultValue,
+        isId: fieldName == 'id',
+        dartType: dartType,
+      );
 
-      buffer.writeln('  $fieldName: $type$question$columnAlias');
+      buffer.writeln(
+        '  $fieldName: $type$question$columnAlias$defaultModifier',
+      );
     }
 
     // Write the footer
@@ -168,5 +186,44 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
     final filename = tableName.toSnakeCase();
     final file = File('${tablesDirectory.path}/$filename.$fileType');
     writeFileIfChangedIgnoringDate(file, buffer);
+  }
+
+  /// Get the default to use for column
+  String defaultModifierFor(
+    dynamic defaultValue, {
+    required String dartType,
+    required bool isId,
+  }) {
+    if (defaultValue == null) return '';
+
+    logger.debug('Default value: $defaultValue');
+    final value = defaultValue.toString();
+    final serverpodDefault = switch (value) {
+      'now()' => 'now',
+      'gen_random_uuid()' => 'random',
+      'gen_random_uuid_v7()' => 'random_v7',
+      _ => extractDefaultValue(value, dartType),
+    };
+    final defaultKey = isId ? defaultPersistIdentifier : defaultIdentifier;
+    return serverpodDefault.isNotEmpty ? ', $defaultKey=$serverpodDefault' : '';
+  }
+
+  /// Extract the default value from the default value from the database
+  String extractDefaultValue(String defaultValue, String dartType) {
+    if (defaultValue.isEmpty) return '';
+
+    // Serial values
+    if (defaultValue.startsWith('nextval')) {
+      return 'serial';
+    }
+
+    // Other types
+    const separator = '::';
+    if (!defaultValue.contains(separator)) {
+      return defaultValue;
+    }
+
+    final [value, type] = defaultValue.split(separator);
+    return dartType == 'String' ? value : value.replaceAll("'", '');
   }
 }
