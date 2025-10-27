@@ -84,4 +84,11 @@ const expectedRowFields = '''
   dynamic get isDynamic => getField<dynamic>(isDynamicField);
   set isDynamic(dynamic value) => setField<dynamic>(isDynamicField, value);
 
+  /// Is Uuid field name
+  static const String isUuidField = 'is_uuid';
+
+  /// Is Uuid
+  UuidValue get isUuid => getField<UuidValue>(isUuidField, defaultValue: Uuid().v4obj())!;
+  set isUuid(UuidValue value) => setField<UuidValue>(isUuidField, value);
+
 ''';
