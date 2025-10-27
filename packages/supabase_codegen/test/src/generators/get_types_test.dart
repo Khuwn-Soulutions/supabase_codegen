@@ -7,11 +7,13 @@ void main() {
       'text',
       'varchar',
       'char',
-      'uuid',
       'character varying',
       'name',
       'bytea',
       'user-defined',
+    ],
+    'UuidValue': [
+      'uuid',
     ],
     'int': [
       'int2',
