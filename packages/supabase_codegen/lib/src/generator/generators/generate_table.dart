@@ -396,9 +396,19 @@ String getDefaultValue(
       }
       // Map
       if (dartType == 'Map<String, dynamic>') {
-        return jsonDecode(fallbackValue ?? '') != null
-            ? fallbackValue!.replaceAll('"', "'")
-            : '{}';
+        const emptyMap = '{}';
+        if (fallbackValue == null) return emptyMap;
+
+        try {
+          // Check if the fallbackValue is valid json
+          jsonDecode(fallbackValue);
+          return fallbackValue.replaceAll('"', "'");
+        }
+        // Catch the error so we can return an empty map
+        // ignore: avoid_catching_errors
+        on Error catch (_) {
+          return emptyMap;
+        }
       }
 
       return 'null';
