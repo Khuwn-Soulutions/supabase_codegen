@@ -291,7 +291,10 @@ void main() {
         expect(anotherTableFile.existsSync(), isTrue);
         final anotherTableContent = await anotherTableFile.readAsString();
         expect(anotherTableContent, contains('class: AnotherTable'));
-        expect(anotherTableContent, contains('  id: String?'));
+        expect(
+          anotherTableContent,
+          contains('  id: UuidValue?, defaultPersist=random'),
+        );
 
         final recipesFile = File(
           path.join(
@@ -302,10 +305,84 @@ void main() {
         expect(recipesFile.existsSync(), isTrue);
         final recipesContent = await recipesFile.readAsString();
         expect(recipesContent, contains('class: Recipe'));
-        expect(recipesContent, contains('  id: String?'));
+        expect(
+          recipesContent,
+          contains('  id: UuidValue?, defaultPersist=random'),
+        );
         expect(
           recipesContent,
           contains('  createdAt: DateTime, column=created_at'),
+        );
+      });
+    });
+
+    group('defaultModifierFor', () {
+      final defaultValues = {
+        'now()': (
+          dartType: 'DateTime',
+          expected: 'now',
+        ),
+        'gen_random_uuid()': (
+          dartType: 'UuidValue',
+          expected: 'random',
+        ),
+        'gen_random_uuid_v7()': (
+          dartType: 'UuidValue',
+          expected: 'random_v7',
+        ),
+        "nextval('table_id_seq'::regclass)": (
+          dartType: 'int',
+          expected: 'serial',
+        ),
+        "'10.5'::double precision": (
+          dartType: 'double',
+          expected: '10.5',
+        ),
+        "'10'::bigint": (
+          dartType: 'int',
+          expected: '10',
+        ),
+        "'This is a string'::text": (
+          dartType: 'String',
+          expected: "'This is a string'",
+        ),
+        'true': (dartType: 'bool', expected: 'true'),
+        'false': (dartType: 'bool', expected: 'false'),
+        null: (dartType: 'String', expected: ''),
+      };
+
+      for (final entry in defaultValues.entries) {
+        final defaultValue = entry.key;
+        final (:dartType, :expected) = entry.value;
+        test('returns the correct default modifier for $defaultValue', () {
+          final modifier = codeGenerator.defaultModifierFor(
+            defaultValue,
+            dartType: dartType,
+            isId: false,
+          );
+          const defaultIdentifier =
+              SupabaseCodeGenServerpodUtils.defaultIdentifier;
+          expect(
+            modifier,
+            expected.isEmpty ? '' : ', $defaultIdentifier=$expected',
+          );
+        });
+      }
+
+      test('returns the correct default modifier for id', () {
+        const defaultValue = "nextval('some_id_seq'::regclass)";
+        const dartType = 'int';
+        const expected = 'serial';
+        final modifier = codeGenerator.defaultModifierFor(
+          defaultValue,
+          dartType: dartType,
+          isId: true,
+        );
+        const defaultIdentifier =
+            SupabaseCodeGenServerpodUtils.defaultPersistIdentifier;
+        expect(
+          modifier,
+          ', $defaultIdentifier=$expected',
         );
       });
     });
