@@ -17,16 +17,16 @@ abstract class Recipe implements _i1.SerializableModel {
     this.id,
     required this.author,
     required this.text,
-    required this.createdAt,
     required this.ingredients,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   factory Recipe({
     int? id,
     required String author,
     required String text,
-    required DateTime createdAt,
     required String ingredients,
+    DateTime? createdAt,
   }) = _RecipeImpl;
 
   factory Recipe.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -34,9 +34,10 @@ abstract class Recipe implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       author: jsonSerialization['author'] as String,
       text: jsonSerialization['text'] as String,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
       ingredients: jsonSerialization['ingredients'] as String,
+      createdAt: jsonSerialization['created_at'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
     );
   }
 
@@ -49,9 +50,9 @@ abstract class Recipe implements _i1.SerializableModel {
 
   String text;
 
-  DateTime createdAt;
-
   String ingredients;
+
+  DateTime? createdAt;
 
   /// Returns a shallow copy of this [Recipe]
   /// with some or all fields replaced by the given arguments.
@@ -60,8 +61,8 @@ abstract class Recipe implements _i1.SerializableModel {
     int? id,
     String? author,
     String? text,
-    DateTime? createdAt,
     String? ingredients,
+    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -69,8 +70,8 @@ abstract class Recipe implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'author': author,
       'text': text,
-      'created_at': createdAt.toJson(),
       'ingredients': ingredients,
+      if (createdAt != null) 'created_at': createdAt?.toJson(),
     };
   }
 
@@ -87,14 +88,14 @@ class _RecipeImpl extends Recipe {
     int? id,
     required String author,
     required String text,
-    required DateTime createdAt,
     required String ingredients,
+    DateTime? createdAt,
   }) : super._(
           id: id,
           author: author,
           text: text,
-          createdAt: createdAt,
           ingredients: ingredients,
+          createdAt: createdAt,
         );
 
   /// Returns a shallow copy of this [Recipe]
@@ -105,15 +106,15 @@ class _RecipeImpl extends Recipe {
     Object? id = _Undefined,
     String? author,
     String? text,
-    DateTime? createdAt,
     String? ingredients,
+    Object? createdAt = _Undefined,
   }) {
     return Recipe(
       id: id is int? ? id : this.id,
       author: author ?? this.author,
       text: text ?? this.text,
-      createdAt: createdAt ?? this.createdAt,
       ingredients: ingredients ?? this.ingredients,
+      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
     );
   }
 }

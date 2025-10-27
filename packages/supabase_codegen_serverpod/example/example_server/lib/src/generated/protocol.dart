@@ -13,9 +13,11 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
 import 'greeting.dart' as _i3;
-import 'tables/recipes.dart' as _i4;
-import 'package:example_server/src/generated/tables/recipes.dart' as _i5;
+import 'tables/default_values.dart' as _i4;
+import 'tables/recipes.dart' as _i5;
+import 'package:example_server/src/generated/tables/recipes.dart' as _i6;
 export 'greeting.dart';
+export 'tables/default_values.dart';
 export 'tables/recipes.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
@@ -26,6 +28,73 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'default_values',
+      dartName: 'DefaultValue',
+      schema: 'public',
+      module: 'example',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'default_date_time',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'default_bool',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: true,
+          dartType: 'bool?',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'default_double',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+          columnDefault: '10.5',
+        ),
+        _i2.ColumnDefinition(
+          name: 'default_int',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+          columnDefault: '10',
+        ),
+        _i2.ColumnDefinition(
+          name: 'default_string',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+          columnDefault: '\'This is a string\'::text',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'default_values_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        )
+      ],
+      managed: true,
+    ),
     _i2.TableDefinition(
       name: 'recipes',
       dartName: 'Recipe',
@@ -52,16 +121,17 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String',
         ),
         _i2.ColumnDefinition(
-          name: 'created_at',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: false,
-          dartType: 'DateTime',
-        ),
-        _i2.ColumnDefinition(
           name: 'ingredients',
           columnType: _i2.ColumnType.text,
           isNullable: false,
           dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'created_at',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+          columnDefault: 'CURRENT_TIMESTAMP',
         ),
       ],
       foreignKeys: [],
@@ -94,17 +164,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i3.Greeting) {
       return _i3.Greeting.fromJson(data) as T;
     }
-    if (t == _i4.Recipe) {
-      return _i4.Recipe.fromJson(data) as T;
+    if (t == _i4.DefaultValue) {
+      return _i4.DefaultValue.fromJson(data) as T;
+    }
+    if (t == _i5.Recipe) {
+      return _i5.Recipe.fromJson(data) as T;
     }
     if (t == _i1.getType<_i3.Greeting?>()) {
       return (data != null ? _i3.Greeting.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i4.Recipe?>()) {
-      return (data != null ? _i4.Recipe.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i4.DefaultValue?>()) {
+      return (data != null ? _i4.DefaultValue.fromJson(data) : null) as T;
     }
-    if (t == List<_i5.Recipe>) {
-      return (data as List).map((e) => deserialize<_i5.Recipe>(e)).toList()
+    if (t == _i1.getType<_i5.Recipe?>()) {
+      return (data != null ? _i5.Recipe.fromJson(data) : null) as T;
+    }
+    if (t == List<_i6.Recipe>) {
+      return (data as List).map((e) => deserialize<_i6.Recipe>(e)).toList()
           as T;
     }
     try {
@@ -120,7 +196,9 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (data) {
       case _i3.Greeting():
         return 'Greeting';
-      case _i4.Recipe():
+      case _i4.DefaultValue():
+        return 'DefaultValue';
+      case _i5.Recipe():
         return 'Recipe';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -139,8 +217,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Greeting') {
       return deserialize<_i3.Greeting>(data['data']);
     }
+    if (dataClassName == 'DefaultValue') {
+      return deserialize<_i4.DefaultValue>(data['data']);
+    }
     if (dataClassName == 'Recipe') {
-      return deserialize<_i4.Recipe>(data['data']);
+      return deserialize<_i5.Recipe>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -158,8 +239,10 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i4.Recipe:
-        return _i4.Recipe.t;
+      case _i4.DefaultValue:
+        return _i4.DefaultValue.t;
+      case _i5.Recipe:
+        return _i5.Recipe.t;
     }
     return null;
   }

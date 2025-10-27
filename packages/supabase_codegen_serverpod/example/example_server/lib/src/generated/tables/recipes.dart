@@ -17,16 +17,16 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     this.id,
     required this.author,
     required this.text,
-    required this.createdAt,
     required this.ingredients,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   factory Recipe({
     int? id,
     required String author,
     required String text,
-    required DateTime createdAt,
     required String ingredients,
+    DateTime? createdAt,
   }) = _RecipeImpl;
 
   factory Recipe.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -34,9 +34,10 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       id: jsonSerialization['id'] as int?,
       author: jsonSerialization['author'] as String,
       text: jsonSerialization['text'] as String,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
       ingredients: jsonSerialization['ingredients'] as String,
+      createdAt: jsonSerialization['created_at'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
     );
   }
 
@@ -51,9 +52,9 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   String text;
 
-  DateTime createdAt;
-
   String ingredients;
+
+  DateTime? createdAt;
 
   @override
   _i1.Table<int?> get table => t;
@@ -65,8 +66,8 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     int? id,
     String? author,
     String? text,
-    DateTime? createdAt,
     String? ingredients,
+    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -74,8 +75,8 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'author': author,
       'text': text,
-      'created_at': createdAt.toJson(),
       'ingredients': ingredients,
+      if (createdAt != null) 'created_at': createdAt?.toJson(),
     };
   }
 
@@ -85,8 +86,8 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'author': author,
       'text': text,
-      'created_at': createdAt.toJson(),
       'ingredients': ingredients,
+      if (createdAt != null) 'created_at': createdAt?.toJson(),
     };
   }
 
@@ -127,14 +128,14 @@ class _RecipeImpl extends Recipe {
     int? id,
     required String author,
     required String text,
-    required DateTime createdAt,
     required String ingredients,
+    DateTime? createdAt,
   }) : super._(
           id: id,
           author: author,
           text: text,
-          createdAt: createdAt,
           ingredients: ingredients,
+          createdAt: createdAt,
         );
 
   /// Returns a shallow copy of this [Recipe]
@@ -145,15 +146,15 @@ class _RecipeImpl extends Recipe {
     Object? id = _Undefined,
     String? author,
     String? text,
-    DateTime? createdAt,
     String? ingredients,
+    Object? createdAt = _Undefined,
   }) {
     return Recipe(
       id: id is int? ? id : this.id,
       author: author ?? this.author,
       text: text ?? this.text,
-      createdAt: createdAt ?? this.createdAt,
       ingredients: ingredients ?? this.ingredients,
+      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
     );
   }
 }
@@ -171,14 +172,14 @@ class RecipeUpdateTable extends _i1.UpdateTable<RecipeTable> {
         value,
       );
 
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.createdAt,
+  _i1.ColumnValue<String, String> ingredients(String value) => _i1.ColumnValue(
+        table.ingredients,
         value,
       );
 
-  _i1.ColumnValue<String, String> ingredients(String value) => _i1.ColumnValue(
-        table.ingredients,
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.createdAt,
         value,
       );
 }
@@ -194,13 +195,14 @@ class RecipeTable extends _i1.Table<int?> {
       'text',
       this,
     );
-    createdAt = _i1.ColumnDateTime(
-      'created_at',
-      this,
-    );
     ingredients = _i1.ColumnString(
       'ingredients',
       this,
+    );
+    createdAt = _i1.ColumnDateTime(
+      'created_at',
+      this,
+      hasDefault: true,
     );
   }
 
@@ -210,17 +212,17 @@ class RecipeTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString text;
 
-  late final _i1.ColumnDateTime createdAt;
-
   late final _i1.ColumnString ingredients;
+
+  late final _i1.ColumnDateTime createdAt;
 
   @override
   List<_i1.Column> get columns => [
         id,
         author,
         text,
-        createdAt,
         ingredients,
+        createdAt,
       ];
 }
 
