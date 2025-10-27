@@ -11,24 +11,8 @@ String getDartType(Map<String, dynamic> column) {
       postgresType.toUpperCase() == 'ARRAY' ||
       column['is_array'] == true;
 
-  // Get base type for arrays
-  String baseType;
-  if (isArray) {
-    if (udtName.startsWith('_')) {
-      baseType = getBaseDartType(udtName.substring(1), column: column);
-    } else if (column['element_type'] != null) {
-      baseType = getBaseDartType(
-        column['element_type'] as String,
-        column: column,
-      );
-    } else {
-      baseType = getBaseDartType(
-        postgresType.replaceAll('[]', ''),
-        column: column,
-      );
-    }
-    return 'List<$baseType>';
-  }
+  // Get array type
+  if (isArray) return _getArrayType(udtName, column, postgresType);
 
   // Non-array types
   return getBaseDartType(
@@ -37,19 +21,45 @@ String getDartType(Map<String, dynamic> column) {
   );
 }
 
+/// Get the array type
+String _getArrayType(
+  String udtName,
+  Map<String, dynamic> column,
+  String postgresType,
+) {
+  String baseType;
+  if (udtName.startsWith('_')) {
+    baseType = getBaseDartType(udtName.substring(1), column: column);
+  } else if (column['element_type'] != null) {
+    baseType = getBaseDartType(
+      column['element_type'] as String,
+      column: column,
+    );
+  } else {
+    baseType = getBaseDartType(
+      postgresType.replaceAll('[]', ''),
+      column: column,
+    );
+  }
+  return 'List<$baseType>';
+}
+
 /// Get the base dart type for the [postgresType]
 /// considering the provided [column] data
+// TODO(jwelmac): create constants for the types returned
 String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
   switch (postgresType) {
     /// String
     case 'text':
     case 'varchar':
     case 'char':
-    case 'uuid':
     case 'character varying':
     case 'name':
     case 'bytea':
       return 'String';
+
+    case 'uuid':
+      return 'UuidValue';
 
     /// Integer
     case 'int2':
