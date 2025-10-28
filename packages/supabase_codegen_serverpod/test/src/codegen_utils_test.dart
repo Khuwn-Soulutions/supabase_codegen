@@ -349,6 +349,27 @@ void main() {
         'true': (dartType: 'bool', expected: 'true'),
         'false': (dartType: 'bool', expected: 'false'),
         null: (dartType: 'String', expected: ''),
+        "(now() AT TIME ZONE 'utc'::text)": (
+          dartType: 'DateTime',
+          expected: 'now',
+        ),
+        "'2001-01-01'::date": (
+          dartType: 'DateTime',
+          expected: '2001-01-01T00:00:00.000',
+        ),
+        "'2001-01-02 00:00:00+00'::timestamp with time zone": (
+          dartType: 'DateTime',
+          expected: '2001-01-02T00:00:00.000Z',
+        ),
+        // Ignored
+        "'{a,b}'::text[]": (
+          dartType: 'List<String>',
+          expected: '',
+        ),
+        "'{\"test\": 1}'::jsonb": (
+          dartType: 'Object',
+          expected: '',
+        ),
       };
 
       for (final entry in defaultValues.entries) {
