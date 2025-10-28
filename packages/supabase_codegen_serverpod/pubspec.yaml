@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   change_case: ^2.2.0
-  meta: ^1.17.0
   path: ^1.9.1
   pluralize: ^0.0.8
   supabase: ^2.10.0
