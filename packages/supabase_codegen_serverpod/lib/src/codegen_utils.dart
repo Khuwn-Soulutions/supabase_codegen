@@ -163,7 +163,8 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
         :isEnum,
       ) = entry.value;
       final fieldName = entry.key;
-      final isOptional = isNullable || hasDefault;
+      final isId = fieldName == 'id';
+      final isOptional = isNullable || hasDefault || isId;
       final question = isOptional ? '?' : '';
       // Add the lines below to `config/generator.yaml`
       // extraClasses:
@@ -174,7 +175,7 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
           : ', $columnIdentifier=$columnName';
       final defaultModifier = defaultModifierFor(
         defaultValue,
-        isId: fieldName == 'id',
+        isId: isId,
         dartType: dartType,
       );
 
@@ -201,12 +202,7 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
 
     logger.debug('Default value: $defaultValue');
     final value = defaultValue.toString();
-    final serverpodDefault = switch (value) {
-      'now()' => 'now',
-      'gen_random_uuid()' => 'random',
-      'gen_random_uuid_v7()' => 'random_v7',
-      _ => extractDefaultValue(value, dartType),
-    };
+    final serverpodDefault = extractDefaultValue(value, dartType);
     final defaultKey = isId ? defaultPersistIdentifier : defaultIdentifier;
     return serverpodDefault.isNotEmpty ? ', $defaultKey=$serverpodDefault' : '';
   }
@@ -220,6 +216,18 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
       return 'serial';
     }
 
+    // Now
+    if (defaultValue.contains('now') || defaultValue == 'CURRENT_TIMESTAMP') {
+      return 'now';
+    }
+
+    // Uuid
+    if (defaultValue.contains('gen_random_uuid')) {
+      return defaultValue
+          .replaceAll('gen_random_uuid', 'random')
+          .replaceAll('()', '');
+    }
+
     // Other types
     const separator = '::';
     if (!defaultValue.contains(separator)) {
@@ -227,6 +235,19 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
     }
 
     final [value, type] = defaultValue.split(separator);
-    return dartType == DartType.string ? value : value.replaceAll("'", '');
+    final unquotedValue = value.replaceAll("'", '');
+
+    // List/Json (ignore defaults)
+    if (dartType.contains(DartType.list) || type.contains('json')) {
+      return '';
+    }
+
+    if (dartType == DartType.dateTime) {
+      final dt = DateTime.tryParse(unquotedValue);
+      return dt == null ? '' : dt.toIso8601String();
+    }
+
+    // Default
+    return dartType == DartType.string ? value : unquotedValue;
   }
 }
