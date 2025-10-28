@@ -350,19 +350,19 @@ String getDefaultValue(
   );
 
   switch (dartType) {
-    case 'int':
+    case DartType.int:
       return fallbackValue ?? '0';
-    case 'double':
+    case DartType.double:
       return fallbackValue ?? '0.0';
-    case 'bool':
+    case DartType.bool:
       return fallbackValue ?? 'false';
-    case 'String':
+    case DartType.string:
       return "'${fallbackValue ?? ""}'";
-    case 'DateTime':
+    case DartType.dateTime:
       return DateTime.tryParse(fallbackValue ?? '') != null
           ? "DateTime.parse('$fallbackValue')"
           : 'DateTime.now()';
-    case 'UuidValue':
+    case DartType.uuidValue:
       return switch (defaultValue) {
         'gen_random_uuid()' => 'Uuid().v4obj()',
         'gen_random_uuid_v7()' => 'Uuid().v7obj()',
@@ -374,7 +374,7 @@ String getDefaultValue(
         return fallbackValue != null ? '$dartType.$fallbackValue' : 'null';
       }
       // List
-      if (dartType.startsWith('List<')) {
+      if (dartType.startsWith('${DartType.list}<')) {
         final genericType = getGenericType(dartType);
         // Replace the enclosing {} of sql list to get comma separated list
         final fallbackList =
@@ -385,7 +385,7 @@ String getDefaultValue(
                 .split(',')
                 .map(
                   (item) => switch (genericType) {
-                    'String' => "'$item'",
+                    DartType.string => "'$item'",
                     _ => item,
                   },
                 )
@@ -411,6 +411,6 @@ String getDefaultValue(
         }
       }
 
-      return 'null';
+      return DartType.nullString;
   }
 }

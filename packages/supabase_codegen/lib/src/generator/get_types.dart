@@ -46,7 +46,6 @@ String _getArrayType(
 
 /// Get the base dart type for the [postgresType]
 /// considering the provided [column] data
-// TODO(jwelmac): create constants for the types returned
 String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
   switch (postgresType) {
     /// String
@@ -56,21 +55,21 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
     case 'character varying':
     case 'name':
     case 'bytea':
-      return 'String';
+      return DartType.string;
 
     case 'uuid':
-      return 'UuidValue';
+      return DartType.uuidValue;
 
     /// Integer
     case 'int2':
     case 'int4':
     case 'int8':
     case 'integer':
-      return 'int';
+      return DartType.int;
 
     /// Big integer
     case 'bigint':
-      return 'BigInt';
+      return DartType.bigInt;
 
     /// Double
     case 'float4':
@@ -78,33 +77,33 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
     case 'decimal':
     case 'numeric':
     case 'double precision':
-      return 'double';
+      return DartType.double;
 
     /// Bool
     case 'bool':
     case 'boolean':
-      return 'bool';
+      return DartType.bool;
 
     /// DateTime
     case 'timestamp':
     case 'timestamptz':
     case 'timestamp with time zone':
     case 'timestamp without time zone':
-      return 'DateTime';
+      return DartType.dateTime;
 
     /// Map
     case 'json':
     case 'jsonb':
-      return 'dynamic';
+      return DartType.dynamic;
 
     /// Enum
     case 'user-defined':
       return (column != null ? formattedEnums[column['udt_name']] : null) ??
-          'String'; // For enums
+          DartType.string; // For enums
 
     /// Default
     default:
-      return 'String';
+      return DartType.string;
   }
 }
 

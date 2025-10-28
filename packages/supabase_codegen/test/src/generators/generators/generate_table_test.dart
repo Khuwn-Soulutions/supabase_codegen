@@ -9,15 +9,15 @@ void main() {
   group('getDefaultValue should return correct default values', () {
     test('when no default value is provided', () {
       final expected = {
-        'int': '0',
-        'double': '0.0',
-        'bool': 'false',
-        'String': "''",
-        'DateTime': 'DateTime.now()',
+        DartType.int: '0',
+        DartType.double: '0.0',
+        DartType.bool: 'false',
+        DartType.string: "''",
+        DartType.dateTime: 'DateTime.now()',
+        DartType.uuidValue: 'Uuid().v4obj()',
+        DartType.dynamic: DartType.nullString,
         'List<String>': 'const <String>[]',
         'UserStatus': 'null',
-        'UuidValue': 'Uuid().v4obj()',
-        'Map<String, dynamic>': '{}',
       };
       for (final type in expected.keys) {
         final value = expected[type]!;
