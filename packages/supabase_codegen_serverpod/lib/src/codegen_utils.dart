@@ -165,7 +165,10 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
       final fieldName = entry.key;
       final isOptional = isNullable || hasDefault;
       final question = isOptional ? '?' : '';
-      final type = dartType.isDynamic ? 'Object' : dartType;
+      // Add the lines below to `config/generator.yaml`
+      // extraClasses:
+      // - package:supabase_codegen_serverpod/json_class.dart:JsonClass
+      final type = dartType.isDynamic ? 'JsonClass' : dartType;
       final columnAlias = fieldName == columnName
           ? ''
           : ', $columnIdentifier=$columnName';
