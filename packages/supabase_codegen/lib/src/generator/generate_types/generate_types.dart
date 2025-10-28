@@ -1,5 +1,5 @@
 export 'cmd_option.dart';
-export 'dart_type.dart';
+export 'dart_types.dart';
 export 'default_values.dart';
 export 'field_name_type_map.dart';
 export 'get_config.dart';
