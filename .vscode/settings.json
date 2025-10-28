@@ -4,8 +4,9 @@
   "flutterTools.displayRiverpodContextMenu": false,
   "flutterTools.displayModularContextMenu": false,
   "conventionalCommits.scopes": [
-    "supabase_codegen",
-    "supabase_codegen_flutter",
-    "supabase_codegen_serverpod"
+    "core",
+    "flutter",
+    "serverpod",
+    "github"
   ]
 }
