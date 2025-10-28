@@ -2,3 +2,6 @@ type: server
 
 client_package_path: ../example_client
 server_test_tools_path: test/integration/test_tools
+
+extraClasses:
+  - package:supabase_codegen_serverpod/json_class.dart:JsonClass
