@@ -394,20 +394,18 @@ String getDefaultValue(
 
         return 'const <$genericType>[${values.join(', ')}]';
       }
-      // Map
-      if (dartType == 'Map<String, dynamic>') {
-        const emptyMap = '{}';
-        if (fallbackValue == null) return emptyMap;
 
+      // Default (e.g. dynamic)
+      if (fallbackValue != null) {
         try {
           // Check if the fallbackValue is valid json
           jsonDecode(fallbackValue);
           return fallbackValue.replaceAll('"', "'");
         }
-        // Catch the error so we can return an empty map
+        // Catch the error so we can return null
         // ignore: avoid_catching_errors
         on Error catch (_) {
-          return emptyMap;
+          return DartType.nullString;
         }
       }
 
