@@ -49,9 +49,13 @@ void main() {
           (defaultValue: "(now()'::text)", value: 'DateTime.now()'),
           (defaultValue: 'CURRENT_TIMESTAMP', value: 'DateTime.now()'),
         ],
-        'Map<String, dynamic>': [
+        'dynamic': [
           (defaultValue: "'{}'::jsonb", value: '{}'),
           (defaultValue: "'{\"test\": 1}'::jsonb", value: "{'test': 1}"),
+          (
+            defaultValue: "[{\"test\": 1}, {\"test\": 2}]'::jsonb",
+            value: "[{'test': 1}, {'test': 2}]"
+          ),
         ],
         'List<String>': [
           (defaultValue: "'{}'::text[]", value: 'const <String>[]'),
