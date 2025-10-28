@@ -224,6 +224,6 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
     }
 
     final [value, type] = defaultValue.split(separator);
-    return dartType == 'String' ? value : value.replaceAll("'", '');
+    return dartType == DartType.string ? value : value.replaceAll("'", '');
   }
 }
