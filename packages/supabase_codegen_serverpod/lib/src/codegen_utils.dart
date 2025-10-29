@@ -57,8 +57,10 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
   }
 
   /// Write the spy yaml file header
-  void writeSpyHeader(StringBuffer buffer) =>
-      writeHeader(buffer, skipIgnore: true, commentPrefix: commentPrefix);
+  void writeSpyHeader(StringBuffer buffer) {
+    buffer.writeln(commentPrefix);
+    writeHeader(buffer, skipIgnore: true, commentPrefix: commentPrefix);
+  }
 
   /// Write the spy yaml file footer
   void writeSpyFooter(StringBuffer buffer) =>
