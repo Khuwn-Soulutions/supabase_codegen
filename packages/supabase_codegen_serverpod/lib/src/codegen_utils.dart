@@ -152,6 +152,7 @@ class SupabaseCodeGenServerpodUtils extends SupabaseCodeGeneratorUtils {
     buffer
       ..writeln('class: $className')
       ..writeln('table: $tableName')
+      ..writeln('managedMigration: false')
       ..writeln('fields:');
 
     for (final entry in fieldNameTypeMap.sortedEntries) {
