@@ -8,13 +8,21 @@ void main() {
 
   group('getDefaultValue should return correct default values', () {
     test('when no default value is provided', () {
-      expect(getDefaultValue('int'), '0');
-      expect(getDefaultValue('double'), '0.0');
-      expect(getDefaultValue('bool'), 'false');
-      expect(getDefaultValue('String'), "''");
-      expect(getDefaultValue('DateTime'), 'DateTime.now()');
-      expect(getDefaultValue('List<String>'), 'const <String>[]');
-      expect(getDefaultValue('UserStatus'), 'null');
+      final expected = {
+        DartType.int: '0',
+        DartType.double: '0.0',
+        DartType.bool: 'false',
+        DartType.string: "''",
+        DartType.dateTime: 'DateTime.now()',
+        DartType.uuidValue: 'Uuid().v4obj()',
+        DartType.dynamic: DartType.nullString,
+        'List<String>': 'const <String>[]',
+        'UserStatus': 'null',
+      };
+      for (final type in expected.keys) {
+        final value = expected[type]!;
+        expect(getDefaultValue(type), value);
+      }
     });
 
     test('when default value is provided', () {
@@ -25,7 +33,9 @@ void main() {
         'String': [
           (defaultValue: "'N/A'::text", value: "'N/A'"),
           (defaultValue: "''::text", value: "''"),
-          (defaultValue: 'gen_random_uuid()', value: "''"),
+        ],
+        'UuidValue': [
+          (defaultValue: 'gen_random_uuid()', value: 'Uuid().v4obj()'),
         ],
         'DateTime': [
           (
@@ -39,9 +49,13 @@ void main() {
           (defaultValue: "(now()'::text)", value: 'DateTime.now()'),
           (defaultValue: 'CURRENT_TIMESTAMP', value: 'DateTime.now()'),
         ],
-        'Map<String, dynamic>': [
+        'dynamic': [
           (defaultValue: "'{}'::jsonb", value: '{}'),
           (defaultValue: "'{\"test\": 1}'::jsonb", value: "{'test': 1}"),
+          (
+            defaultValue: "[{\"test\": 1}, {\"test\": 2}]'::jsonb",
+            value: "[{'test': 1}, {'test': 2}]"
+          ),
         ],
         'List<String>': [
           (defaultValue: "'{}'::text[]", value: 'const <String>[]'),

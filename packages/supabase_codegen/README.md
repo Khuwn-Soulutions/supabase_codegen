@@ -164,7 +164,8 @@ The generator maps common PostgreSQL types to Dart types by default. You can ove
 
 | PostgreSQL type(s) | Dart type |
 | --- | --- |
-| text, varchar, char, uuid, character varying, name, bytea | String |
+| text, varchar, char, character varying, name, bytea | String |
+| uuid | UuidValue |
 | int2, int4, int8, integer, bigint | int |
 | float4, float8, decimal, numeric, double precision | double |
 | bool, boolean | bool |
@@ -291,21 +292,21 @@ class UsersRow extends SupabaseDataRow {
   /// Users Row
   UsersRow({
     required String email,
-    required UserRole role,
-    String? id,
+    UuidValue? id,
     String? accName,
     String? phoneNumber,
     List<String>? contacts,
+    UserRole? role,
     DateTime? createdAt,
   }) : super({
-          'email': supaSerialize(email),
-          'role': supaSerialize(role),
-          if (id != null) 'id': supaSerialize(id),
-          if (accName != null) 'acc_name': supaSerialize(accName),
-          if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
-          if (contacts != null) 'contacts': supaSerialize(contacts),
-          if (createdAt != null) 'created_at': supaSerialize(createdAt),
-        });
+         'email': supaSerialize(email),
+         if (id != null) 'id': supaSerialize(id),
+         if (accName != null) 'acc_name': supaSerialize(accName),
+         if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
+         if (contacts != null) 'contacts': supaSerialize(contacts),
+         if (role != null) 'role': supaSerialize(role),
+         if (createdAt != null) 'created_at': supaSerialize(createdAt),
+       });
 
   /// Users Row
   const UsersRow._(super.data);
@@ -325,8 +326,9 @@ class UsersRow extends SupabaseDataRow {
   static const String idField = 'id';
 
   /// Id
-  String get id => getField<String>(idField, defaultValue: '')!;
-  set id(String value) => setField<String>(idField, value);
+  UuidValue get id =>
+      getField<UuidValue>(idField, defaultValue: Uuid().v4obj())!;
+  set id(UuidValue value) => setField<UuidValue>(idField, value);
 
   /// Email field name
   static const String emailField = 'email';
@@ -381,22 +383,21 @@ class UsersRow extends SupabaseDataRow {
   /// overriding the provided fields
   UsersRow copyWith({
     String? email,
-    UserRole? role,
-    String? id,
+    UuidValue? id,
     String? accName,
     String? phoneNumber,
     List<String>? contacts,
+    UserRole? role,
     DateTime? createdAt,
-  }) =>
-      UsersRow.fromJson({
-        'email': email ?? data['email'],
-        'role': role?.name ?? data['role'],
-        'id': id ?? data['id'],
-        'acc_name': accName ?? data['acc_name'],
-        'phone_number': phoneNumber ?? data['phone_number'],
-        'contacts': contacts ?? data['contacts'],
-        'created_at': createdAt ?? data['created_at'],
-      });
+  }) => UsersRow.fromJson({
+    'email': supaSerialize(email) ?? data['email'],
+    'id': supaSerialize(id) ?? data['id'],
+    'acc_name': supaSerialize(accName) ?? data['acc_name'],
+    'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
+    'contacts': supaSerialize(contacts) ?? data['contacts'],
+    'role': supaSerialize(role) ?? data['role'],
+    'created_at': supaSerialize(createdAt) ?? data['created_at'],
+  });
 }
 
 ```

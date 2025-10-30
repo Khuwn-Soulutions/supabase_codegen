@@ -1,5 +1,5 @@
-/// Dart type extension
-extension DartTypeExtension on String {
+/// Extension to determine if
+extension IsDynamicExtension on String {
   /// Is this a dynamic type
   bool get isDynamic => this == 'dynamic';
 

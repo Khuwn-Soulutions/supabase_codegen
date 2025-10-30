@@ -10,6 +10,7 @@ Future<String?> runGenerateTypes(
   List<String> args, {
   SupabaseCodeGenerator generator = const SupabaseCodeGenerator(),
   File? pubspecFile,
+  String? package,
   bool forFlutter = false,
 }) async {
   /// Are we running in test mode
@@ -125,6 +126,11 @@ Future<String?> runGenerateTypes(
     // Extract overrides from config
     final schemaOverrides = extractSchemaOverrides(codegenConfig);
     logger.debug('Schema Overrides: $schemaOverrides');
+
+    /// Set the package name from which generation is occuring
+    if (package != null) {
+      packageName = package;
+    }
 
     /// Generate the types using the command line options
     await generator.generateSupabaseTypes(

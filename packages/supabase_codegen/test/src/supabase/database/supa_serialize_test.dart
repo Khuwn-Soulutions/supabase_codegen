@@ -1,6 +1,7 @@
 import 'package:latlng/latlng.dart';
 import 'package:supabase_codegen/src/supabase/database/supa_serialize.dart';
 import 'package:test/test.dart';
+import 'package:uuid/uuid.dart';
 
 enum TestEnum {
   value1,
@@ -30,6 +31,11 @@ void main() {
 
     test('serializes Enums to their name', () {
       expect(supaSerialize<TestEnum>(TestEnum.value1), 'value1');
+    });
+
+    test('serializes UuidValues to string representation', () {
+      final uuidValue = const Uuid().v4obj();
+      expect(supaSerialize<UuidValue>(uuidValue), uuidValue.uuid);
     });
 
     test('serializes other types as-is', () {
@@ -130,6 +136,11 @@ void main() {
       expect(supaDeserialize<LatLng>({'lat': 48.8584}), isNull);
       expect(supaDeserialize<LatLng>({'lng': 2.2945}), isNull);
       expect(supaDeserialize<LatLng>(<dynamic, dynamic>{}), isNull);
+    });
+
+    test('deserializes UuidValue', () {
+      final uuid = const Uuid().v4obj().uuid;
+      expect(supaDeserialize<UuidValue>(uuid), UuidValue.withValidation(uuid));
     });
 
     test('deserializes String', () {

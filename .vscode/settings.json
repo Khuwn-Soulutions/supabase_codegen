@@ -2,5 +2,12 @@
   "flutterTools.displayGetxContextMenu": false,
   "flutterTools.displayMobxContextMenu": false,
   "flutterTools.displayRiverpodContextMenu": false,
-  "flutterTools.displayModularContextMenu": false
+  "flutterTools.displayModularContextMenu": false,
+  "conventionalCommits.scopes": [
+    "core",
+    "flutter",
+    "serverpod",
+    "github",
+    "serverpod_example"
+  ]
 }

@@ -96,7 +96,7 @@ class _UsersDetailScreenState extends State<UsersDetailScreen> {
                           /// Delete user
                           await _usersTable.delete(
                             matchingRows:
-                                (q) => q.eq(UsersRow.idField, _user.id),
+                                (q) => q.eq(UsersRow.idField, _user.id.uuid),
                           );
 
                           if (context.mounted) {
@@ -119,7 +119,7 @@ class _UsersDetailScreenState extends State<UsersDetailScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            _buildDetailRow('ID', _user.id),
+            _buildDetailRow('ID', _user.id.uuid),
             _buildDetailRow('Email', _user.email),
             _buildDetailRow('Account Name', _user.accName),
             _buildDetailRow('Phone Number', _user.phoneNumber),

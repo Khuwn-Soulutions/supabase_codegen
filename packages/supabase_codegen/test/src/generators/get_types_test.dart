@@ -3,41 +3,43 @@ import 'package:test/test.dart';
 
 void main() {
   final typeToPostgresTypes = {
-    'String': [
+    DartType.string: [
       'text',
       'varchar',
       'char',
-      'uuid',
       'character varying',
       'name',
       'bytea',
       'user-defined',
     ],
-    'int': [
+    DartType.uuidValue: [
+      'uuid',
+    ],
+    DartType.int: [
       'int2',
       'int4',
       'int8',
-      'integer',
       'bigint',
+      'integer',
     ],
-    'double': [
+    DartType.double: [
       'float4',
       'float8',
       'numeric',
       'decimal',
       'double precision',
     ],
-    'bool': [
+    DartType.bool: [
       'bool',
       'boolean',
     ],
-    'DateTime': [
+    DartType.dateTime: [
       'timestamp',
       'timestamptz',
       'timestamp with time zone',
       'timestamp without time zone',
     ],
-    'dynamic': [
+    DartType.dynamic: [
       'json',
       'jsonb',
     ],
@@ -93,14 +95,14 @@ void main() {
       );
     });
 
-    test('returns String for unknown types', () {
+    test('returns ${DartType.string} for unknown types', () {
       expect(
         getDartType({'data_type': 'unknown_type'}),
-        equals('String'),
+        equals(DartType.string),
       );
       expect(
         getDartType({'data_type': 'unknown_array', 'udt_name': '_unknown'}),
-        equals('List<String>'),
+        equals('List<${DartType.string}>'),
       );
     });
 
@@ -123,8 +125,8 @@ void main() {
       }
     });
 
-    test('returns String for unknown types', () {
-      expect(getBaseDartType('unknown_type'), equals('String'));
+    test('returns ${DartType.string} for unknown types', () {
+      expect(getBaseDartType('unknown_type'), equals(DartType.string));
     });
 
     test('returns correct enum name when udt_name is in formattedEnums', () {

@@ -101,6 +101,15 @@ const FieldNameTypeMap testFieldNameTypeMap = {
     isArray: false,
     isEnum: false,
   ),
+  'isUuid': (
+    dartType: 'UuidValue',
+    isNullable: true,
+    hasDefault: true,
+    defaultValue: 'gen_random_uuid()',
+    columnName: 'is_uuid',
+    isArray: false,
+    isEnum: false,
+  ),
 };
 
 /// Test [FieldNameTypeMap] entries

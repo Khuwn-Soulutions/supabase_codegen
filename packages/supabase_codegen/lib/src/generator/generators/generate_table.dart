@@ -24,22 +24,6 @@ Future<void> generateTableFile({
   final file = File('${directory.path}/${tableName.toLowerCase()}.dart');
   final buffer = StringBuffer();
 
-  // Convert the map to a list of entries sorted with the required items first
-  final entries = fieldNameTypeMap.entries.toList()
-    ..sort((a, b) {
-      final aIsRequired = !a.value.isNullable && !a.value.hasDefault;
-      final bIsRequired = !b.value.isNullable && !b.value.hasDefault;
-
-      if (aIsRequired == bIsRequired) {
-        // Keep original order if both are required or both are optional
-        return 0;
-      } else if (aIsRequired) {
-        return -1; // Place required items first
-      } else {
-        return 1; // Place optional items after required items
-      }
-    });
-
   /// Write imports
   writeImports(buffer);
 
@@ -54,7 +38,7 @@ Future<void> generateTableFile({
 
   /// Generate Row class
   writeRowClass(
-    entries: entries,
+    entries: fieldNameTypeMap.sortedEntries,
     buffer: buffer,
     className: className,
     classDesc: classDesc,
@@ -366,25 +350,31 @@ String getDefaultValue(
   );
 
   switch (dartType) {
-    case 'int':
+    case DartType.int:
       return fallbackValue ?? '0';
-    case 'double':
+    case DartType.double:
       return fallbackValue ?? '0.0';
-    case 'bool':
+    case DartType.bool:
       return fallbackValue ?? 'false';
-    case 'String':
+    case DartType.string:
       return "'${fallbackValue ?? ""}'";
-    case 'DateTime':
+    case DartType.dateTime:
       return DateTime.tryParse(fallbackValue ?? '') != null
           ? "DateTime.parse('$fallbackValue')"
           : 'DateTime.now()';
+    case DartType.uuidValue:
+      return switch (defaultValue) {
+        'gen_random_uuid()' => 'Uuid().v4obj()',
+        'gen_random_uuid_v7()' => 'Uuid().v7obj()',
+        _ => 'Uuid().v4obj()',
+      };
     default:
       // Enum
       if (isEnum) {
         return fallbackValue != null ? '$dartType.$fallbackValue' : 'null';
       }
       // List
-      if (dartType.startsWith('List<')) {
+      if (dartType.startsWith('${DartType.list}<')) {
         final genericType = getGenericType(dartType);
         // Replace the enclosing {} of sql list to get comma separated list
         final fallbackList =
@@ -395,7 +385,7 @@ String getDefaultValue(
                 .split(',')
                 .map(
                   (item) => switch (genericType) {
-                    'String' => "'$item'",
+                    DartType.string => "'$item'",
                     _ => item,
                   },
                 )
@@ -404,13 +394,21 @@ String getDefaultValue(
 
         return 'const <$genericType>[${values.join(', ')}]';
       }
-      // Map
-      if (dartType == 'Map<String, dynamic>') {
-        return jsonDecode(fallbackValue ?? '') != null
-            ? fallbackValue!.replaceAll('"', "'")
-            : '{}';
+
+      // Default (e.g. dynamic)
+      if (fallbackValue != null) {
+        try {
+          // Check if the fallbackValue is valid json
+          jsonDecode(fallbackValue);
+          return fallbackValue.replaceAll('"', "'");
+        }
+        // Catch the error so we can return null
+        // ignore: avoid_catching_errors
+        on Error catch (_) {
+          return DartType.nullString;
+        }
       }
 
-      return 'null';
+      return DartType.nullString;
   }
 }

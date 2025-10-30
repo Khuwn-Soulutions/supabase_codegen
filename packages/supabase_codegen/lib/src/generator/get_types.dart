@@ -11,30 +11,37 @@ String getDartType(Map<String, dynamic> column) {
       postgresType.toUpperCase() == 'ARRAY' ||
       column['is_array'] == true;
 
-  // Get base type for arrays
-  String baseType;
-  if (isArray) {
-    if (udtName.startsWith('_')) {
-      baseType = getBaseDartType(udtName.substring(1), column: column);
-    } else if (column['element_type'] != null) {
-      baseType = getBaseDartType(
-        column['element_type'] as String,
-        column: column,
-      );
-    } else {
-      baseType = getBaseDartType(
-        postgresType.replaceAll('[]', ''),
-        column: column,
-      );
-    }
-    return 'List<$baseType>';
-  }
+  // Get array type
+  if (isArray) return _getArrayType(udtName, column, postgresType);
 
   // Non-array types
   return getBaseDartType(
     postgresType == 'user-defined' ? postgresType : udtName,
     column: column,
   );
+}
+
+/// Get the array type
+String _getArrayType(
+  String udtName,
+  Map<String, dynamic> column,
+  String postgresType,
+) {
+  String baseType;
+  if (udtName.startsWith('_')) {
+    baseType = getBaseDartType(udtName.substring(1), column: column);
+  } else if (column['element_type'] != null) {
+    baseType = getBaseDartType(
+      column['element_type'] as String,
+      column: column,
+    );
+  } else {
+    baseType = getBaseDartType(
+      postgresType.replaceAll('[]', ''),
+      column: column,
+    );
+  }
+  return 'List<$baseType>';
 }
 
 /// Get the base dart type for the [postgresType]
@@ -45,19 +52,21 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
     case 'text':
     case 'varchar':
     case 'char':
-    case 'uuid':
     case 'character varying':
     case 'name':
     case 'bytea':
-      return 'String';
+      return DartType.string;
+
+    case 'uuid':
+      return DartType.uuidValue;
 
     /// Integer
     case 'int2':
     case 'int4':
     case 'int8':
-    case 'integer':
     case 'bigint':
-      return 'int';
+    case 'integer':
+      return DartType.int;
 
     /// Double
     case 'float4':
@@ -65,33 +74,33 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
     case 'decimal':
     case 'numeric':
     case 'double precision':
-      return 'double';
+      return DartType.double;
 
     /// Bool
     case 'bool':
     case 'boolean':
-      return 'bool';
+      return DartType.bool;
 
     /// DateTime
     case 'timestamp':
     case 'timestamptz':
     case 'timestamp with time zone':
     case 'timestamp without time zone':
-      return 'DateTime';
+      return DartType.dateTime;
 
     /// Map
     case 'json':
     case 'jsonb':
-      return 'dynamic';
+      return DartType.dynamic;
 
     /// Enum
     case 'user-defined':
       return (column != null ? formattedEnums[column['udt_name']] : null) ??
-          'String'; // For enums
+          DartType.string; // For enums
 
     /// Default
     default:
-      return 'String';
+      return DartType.string;
   }
 }
 
