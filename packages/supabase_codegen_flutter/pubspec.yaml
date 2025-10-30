@@ -28,6 +28,8 @@ dev_dependencies:
 dependency_overrides:
   # Flutter test requires 1.16.0
   meta: ^1.16.0
+  # override the test version in core package to ensure flutter test compatibility
+  test: ^1.25.15
 
 executables:
   generate_types:
