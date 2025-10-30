@@ -64,12 +64,9 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
     case 'int2':
     case 'int4':
     case 'int8':
+    case 'bigint':
     case 'integer':
       return DartType.int;
-
-    /// Big integer
-    case 'bigint':
-      return DartType.bigInt;
 
     /// Double
     case 'float4':

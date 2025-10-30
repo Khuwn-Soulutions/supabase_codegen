@@ -9,9 +9,6 @@ class DartType {
   /// Integer
   static const int = 'int';
 
-  /// Big integer
-  static const bigInt = 'BigInt';
-
   /// Double
   static const double = 'double';
 

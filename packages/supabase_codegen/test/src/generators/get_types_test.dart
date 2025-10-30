@@ -19,10 +19,8 @@ void main() {
       'int2',
       'int4',
       'int8',
-      'integer',
-    ],
-    DartType.bigInt: [
       'bigint',
+      'integer',
     ],
     DartType.double: [
       'float4',
