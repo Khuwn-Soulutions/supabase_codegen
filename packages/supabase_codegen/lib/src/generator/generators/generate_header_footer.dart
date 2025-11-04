@@ -38,7 +38,10 @@ void writeHeader(
       ..writeln(commentPrefix)
       ..writeln(
           '$_ignoreCommentPrefix ignore_for_file: require_trailing_commas, '
-          'constant_identifier_names');
+          'constant_identifier_names')
+      ..writeln(
+        '$_ignoreCommentPrefix ignore_for_file: dangling_library_doc_comments',
+      );
   }
   buffer.writeln(commentPrefix);
 }
