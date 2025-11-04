@@ -5,6 +5,9 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 /// Dart comment prefix
 const String _dartCommentPrefix = '///';
 
+/// Dart analysis ignore comment prefix
+const String _ignoreCommentPrefix = '//';
+
 /// Comment prefix
 String _commentPrefix = _dartCommentPrefix;
 
@@ -33,7 +36,8 @@ void writeHeader(
   if (!skipIgnore && commentPrefix == _dartCommentPrefix) {
     buffer
       ..writeln(commentPrefix)
-      ..writeln('$commentPrefix ignore_for_file: require_trailing_commas, '
+      ..writeln(
+          '$_ignoreCommentPrefix ignore_for_file: require_trailing_commas, '
           'constant_identifier_names');
   }
   buffer.writeln(commentPrefix);
