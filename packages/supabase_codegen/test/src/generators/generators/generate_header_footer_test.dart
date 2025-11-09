@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:mocktail/mocktail.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
+
+class MockFile extends Mock implements File {}
 
 void main() {
   setUp(() {
@@ -64,55 +67,127 @@ void main() {
       });
     });
 
-    group('writeFileIfChangedIgnoringDate', () {
-      /// Setup the file and buffer for testing
-      (File, StringBuffer) setupFileAndBuffer() {
-        final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final file = File('test_output_$timestamp.dart');
-        final buffer = StringBuffer();
-        writeHeader(buffer);
-        writeFooter(buffer);
-        return (file, buffer);
-      }
-
-      test('writes new file if it does not exist', () {
-        final (file, buffer) = setupFileAndBuffer();
-        writeFileIfChangedIgnoringDate(file, buffer);
-        expect(file.existsSync(), isTrue);
-        final content = file.readAsStringSync();
-        expect(content, contains('Generated file. Do not edit.'));
-        file.deleteSync();
+    group('removeFileFormatting', () {
+      const line = 'Hello';
+      test('removes all spaces', () {
+        const withSpaces = '  $line';
+        expect(removeFileFormatting(withSpaces), equals(line));
       });
 
-      test('does not rewrite file if content is the same ignoring date', () {
-        final (file, buffer) = setupFileAndBuffer();
-        writeFileIfChangedIgnoringDate(file, buffer);
-        final initialContent = stripDateLine(file.readAsStringSync());
+      test('removes all tabs', () {
+        const withTabs = '\t$line';
+        expect(removeFileFormatting(withTabs), equals(line));
+      });
 
-        final buffer2 = StringBuffer();
-        writeHeader(buffer2);
-        writeFooter(buffer2);
-        writeFileIfChangedIgnoringDate(file, buffer2);
-        final secondContent = stripDateLine(file.readAsStringSync());
+      test('removes all newlines', () {
+        const withNewlines = '''
+$line
+''';
+        expect(removeFileFormatting(withNewlines), equals(line));
+      });
+    });
 
-        expect(initialContent, equals(secondContent));
-        file.deleteSync();
+    group('writeFileIfChangedIgnoringDate', () {
+      /// Load the buffer
+      void loadBuffer(StringBuffer buffer) {
+        writeHeader(buffer);
+        writeFooter(buffer);
+      }
+
+      var mockFile = MockFile();
+      var buffer = StringBuffer();
+      var content = '';
+
+      setUp(() {
+        mockFile = MockFile();
+        buffer = StringBuffer();
+        loadBuffer(buffer);
+
+        when(() => mockFile.existsSync()).thenAnswer((_) => content.isNotEmpty);
+        when(() => mockFile.writeAsStringSync(any())).thenAnswer(
+          (invocation) {
+            expect(invocation.positionalArguments, isNotEmpty);
+            content = invocation.positionalArguments[0] as String;
+          },
+        );
+        when(() => mockFile.readAsStringSync()).thenAnswer((_) => content);
+      });
+
+      tearDown(() {
+        buffer.clear();
+        mockFile.deleteSync();
+        content = '';
+      });
+
+      void verifyFileExistenceChecked({required int times}) =>
+          verify(() => mockFile.existsSync()).called(times);
+
+      void verifyFileContentsRead({required int times}) =>
+          verify(() => mockFile.readAsStringSync()).called(times);
+
+      void verifyFileContentsNotRead() =>
+          verifyNever(() => mockFile.readAsStringSync());
+
+      void verifyFileWritten({required int times}) =>
+          verify(() => mockFile.writeAsStringSync(any())).called(times);
+
+      test('writes new file if it does not exist', () {
+        writeFileIfChangedIgnoringDate(mockFile, buffer);
+        // Existence checked but contents never read
+        verifyFileExistenceChecked(times: 1);
+        verifyFileContentsNotRead();
+        // File written
+        verifyFileWritten(times: 1);
+      });
+
+      group(
+          'when the content is the same ignoring date, '
+          'then the file is not updated', () {
+        // Rewrite the buffer and verify no updates
+        void rewriteBufferAndVerifyNoUpdates() {
+          // Create a new buffer and attempt write
+          final buffer2 = StringBuffer();
+          loadBuffer(buffer2);
+          writeFileIfChangedIgnoringDate(mockFile, buffer2);
+
+          // Existence checked, file read but not written
+          verifyFileExistenceChecked(times: 2);
+          verifyFileContentsRead(times: 1);
+          verifyFileWritten(times: 1);
+        }
+
+        test('with original formatting', () {
+          // Write the file initially
+          writeFileIfChangedIgnoringDate(mockFile, buffer);
+
+          rewriteBufferAndVerifyNoUpdates();
+        });
+
+        test('with updated formatting between files', () {
+          writeFileIfChangedIgnoringDate(mockFile, buffer);
+
+          // Update the formatting of the current content
+          content = content.replaceAll('///', '  ///');
+
+          rewriteBufferAndVerifyNoUpdates();
+        });
       });
 
       test('rewrites file if content differs ignoring date', () {
-        final (file, buffer1) = setupFileAndBuffer();
-        writeFileIfChangedIgnoringDate(file, buffer1);
-        final initialContent = stripDateLine(file.readAsStringSync());
+        writeFileIfChangedIgnoringDate(mockFile, buffer);
 
+        // Create new content
         final buffer2 = StringBuffer();
         writeHeader(buffer2);
         buffer2.writeln('// Additional line to change content');
         writeFooter(buffer2);
-        writeFileIfChangedIgnoringDate(file, buffer2);
-        final secondContent = stripDateLine(file.readAsStringSync());
 
-        expect(initialContent, isNot(equals(secondContent)));
-        file.deleteSync();
+        // Write the new content
+        writeFileIfChangedIgnoringDate(mockFile, buffer2);
+
+        verifyFileExistenceChecked(times: 2);
+        verifyFileContentsRead(times: 1);
+        verifyFileWritten(times: 2);
       });
     });
   });
