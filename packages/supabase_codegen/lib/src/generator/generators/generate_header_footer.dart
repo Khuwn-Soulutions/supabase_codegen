@@ -73,7 +73,7 @@ String stripDateLine(String content) {
 /// Remove all file formatting
 @visibleForTesting
 String removeFileFormatting(String content) {
-  return content.replaceAll(RegExp(r'[\n\s\t]'), '');
+  return content.replaceAll(RegExp(r'[\n\s\t,]'), '');
 }
 
 /// Strip generated content of the date line and all formatting
