@@ -85,6 +85,11 @@ $line
 ''';
         expect(removeFileFormatting(withNewlines), equals(line));
       });
+
+      test('removes all commas', () {
+        const withComma = '$line,';
+        expect(removeFileFormatting(withComma), equals(line));
+      });
     });
 
     group('writeFileIfChangedIgnoringDate', () {
