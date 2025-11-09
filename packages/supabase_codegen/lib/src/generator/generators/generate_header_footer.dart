@@ -70,15 +70,27 @@ String stripDateLine(String content) {
   return content.replaceAll(_dateRegex, '');
 }
 
+/// Remove all file formatting
+@visibleForTesting
+String removeFileFormatting(String content) {
+  return content.replaceAll(RegExp(r'[\n\s\t,]'), '');
+}
+
+/// Strip generated content of the date line and all formatting
+@visibleForTesting
+String stripGeneratedContent(String content) {
+  return removeFileFormatting(stripDateLine(content));
+}
+
 /// Write the file if the content has changed,
 /// ignoring the date line
 void writeFileIfChangedIgnoringDate(File file, StringBuffer buffer) {
   final newContent = buffer.toString();
-  final newContentStripped = stripDateLine(newContent);
+  final newContentStripped = stripGeneratedContent(newContent);
 
   if (file.existsSync()) {
     final existingContent = file.readAsStringSync();
-    final existingContentStripped = stripDateLine(existingContent);
+    final existingContentStripped = stripGeneratedContent(existingContent);
 
     if (newContentStripped != existingContentStripped) {
       file.writeAsStringSync(newContent);
