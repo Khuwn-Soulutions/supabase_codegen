@@ -1,0 +1,10 @@
+{{> header }}
+{{> ignore }}
+
+/// {{enums.formattedEnumName.titleCase()}} Enum
+enum {{enums.formattedEnumName}} {
+  {{#enums.values}}/// {{.}}
+  {{.}},{{/enums.values}}
+}
+
+{{> footer }}
