@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:change_case/change_case.dart';
@@ -75,7 +76,6 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   }
 
   // Debug response data
-  logger.debug('Table Count: ${schemaData.length}');
   if (schemaData.isNotEmpty) {
     logger
       ..debug('First column sample:')
@@ -96,10 +96,14 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   }
 
   // After fetching schema info
-  logger.debug('\n[GenerateTypes] Available tables:');
+  logger
+    ..debug('Table Count: ${tables.keys.length}')
+    ..debug('\n[GenerateTypes] Available tables:');
   for (final tableName in tables.keys) {
     logger.debug('  - $tableName');
   }
+
+  logger.debug('Table Map: $tables');
 
   return tables;
 }
@@ -175,6 +179,7 @@ Future<void> generateTables(
   Directory? directory,
 ]) async {
   final tablesDir = directory ?? tablesDirectory;
+  final tableList = <Map<String, dynamic>>[];
   for (final tableName in tables.keys) {
     final columns = tables[tableName]!;
     final tableOverrides = schemaOverrides[tableName];
@@ -184,6 +189,67 @@ Future<void> generateTables(
       columns,
       tableOverrides: tableOverrides,
     );
+    logger
+      ..debug('Table Name: $tableName')
+      ..debug('Field Name Type Map: $fieldNameTypeMap');
+
+    final columnMaps = <Map<String, dynamic>>[];
+    for (final entry in fieldNameTypeMap.sortedEntries) {
+      final (
+        :dartType,
+        :isNullable,
+        :hasDefault,
+        :defaultValue,
+        :columnName,
+        :isArray,
+        :isEnum
+      ) = entry.value;
+      final fieldName = entry.key;
+
+      /// Constructor
+      final isOptional = dartType.isDynamic || isNullable || hasDefault;
+      final constructor = {
+        'isOptional': isOptional,
+        'qualifier': isOptional ? '' : 'required ',
+        'question': isOptional && dartType.isNotDynamic ? '?' : '',
+      };
+
+      // Field
+      final isOptionalField =
+          dartType.isNotDynamic && isNullable && !hasDefault;
+      final field = {
+        'defaultValue': hasDefault
+            ? getDefaultValue(
+                dartType,
+                defaultValue: defaultValue,
+                isEnum: isEnum,
+              )
+            : '',
+        'genericType': isArray ? getGenericType(dartType) : '',
+        'isOptional': isOptionalField,
+        'question': isOptionalField ? '?' : '',
+        'bang': dartType.isDynamic || isOptionalField ? '' : '!',
+      };
+
+      columnMaps.add({
+        'dartType': dartType,
+        'isNullable': isNullable,
+        'hasDefault': hasDefault,
+        'defaultValue': defaultValue,
+        'columnName': columnName,
+        'isArray': isArray,
+        'isEnum': isEnum,
+        'fieldName': fieldName,
+        'constructor': constructor,
+        'field': field,
+      });
+    }
+    logger.debug('Column Maps: ${jsonEncode(columnMaps)}');
+
+    tableList.add({
+      'name': tableName,
+      'columns': columnMaps,
+    });
 
     await generateTableFile(
       tableName: tableName,
@@ -192,6 +258,7 @@ Future<void> generateTables(
       fieldNameTypeMap: fieldNameTypeMap,
     );
   }
+  logger.debug('Table List: ${jsonEncode(tableList)}');
 }
 // coverage:ignore-end
 
