@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:change_case/change_case.dart';
@@ -18,11 +19,17 @@ Future<void> generateEnums(Directory enumsDir) async {
 
     // Generate each enum
     logger.debug('[GenerateTypes] Generating enum definitions:');
+    final enumList = <Map<String, dynamic>>[];
     enums.forEach((enumName, values) async {
       final formattedEnumName = formattedEnums[enumName]!;
       final enumBuffer = StringBuffer();
       final fileName = formattedEnumName.toSnakeCase();
       final enumFile = File('${enumsDir.path}/$fileName.dart');
+      enumList.add({
+        'enumName': enumName,
+        'formattedEnumName': formattedEnumName,
+        'values': values,
+      });
 
       /// Add header comment and imports
       writeHeader(enumBuffer);
@@ -55,6 +62,9 @@ Future<void> generateEnums(Directory enumsDir) async {
       /// Write the filename to the main buffer file
       buffer.writeln("export '$fileName.dart';");
     });
+    logger.debug(
+      '[GenerateTypes] Enum List: ${jsonEncode(enumList)}',
+    );
 
     /// Write footer
     writeFooter(buffer);
