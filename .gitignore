@@ -8,6 +8,7 @@ pubspec.lock
 
 # Other folders
 .idea
+.mason
 
 # Environment files
 .env*
