@@ -1,0 +1,50 @@
+{{> header}}
+import 'package:{{package}}/{{package}}.dart';
+
+/// {{tables.name.titleCase()}} Table
+class {{tables.name.pascalCase()}}Table extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}Table<{{tables.name.pascalCase()}}Row> {
+  /// Table Name
+  @override
+  String get tableName => '{{tables.name}}';
+
+  /// Create a [{{tables.name.pascalCase()}}Row] from the [data] provided
+  @override
+  {{tables.name.pascalCase()}}Row createRow(Map<String, dynamic> data) =>
+      {{tables.name.pascalCase()}}Row.fromJson(data);
+}
+
+
+/// {{tables.name.titleCase()}} constructor
+class {{tables.name.pascalCase()}}Row extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}DataRow {
+  /// {{tables.name.titleCase()}} Row
+  {{tables.name.pascalCase()}}Row({
+    {{#tables.columns}}{{constructor.qualifier}}{{{dartType}}}{{constructor.question}} {{fieldName}},
+    {{/tables.columns}}
+  }) : super({
+    {{#tables.columns}}{{#constructor.isOptional}}if ({{fieldName}} != null){{/constructor.isOptional}} '{{columnName}}': supaSerialize({{fieldName}}),
+    {{/tables.columns}}
+  });
+
+
+  /// {{tables.name.titleCase()}} default constructor
+  const {{tables.name.pascalCase()}}Row._(super.data);
+
+  /// Create $classDesc Row from a [data] map
+  factory {{tables.name.pascalCase()}}Row.fromJson(Map<String, dynamic> data) =>
+      {{tables.name.pascalCase()}}Row._(data.cleaned);
+
+  /// Get the Json representation of the {{tables.name.titleCase()}} row
+  Map<String, dynamic> toJson() => data;
+
+  /// Get the [SupabaseTable] for this row
+  @override
+  SupabaseTable get table => {{tables.name.pascalCase()}}Table();
+  {{#tables.columns}}
+  /// {{fieldName.titleCase()}} field name
+  static const String {{fieldName}}Field = '{{columnName}}';
+
+  {{> table.row.field.array }}{{> table.row.field.single}}
+  {{/tables.columns}}
+}
+
+{{> footer }}

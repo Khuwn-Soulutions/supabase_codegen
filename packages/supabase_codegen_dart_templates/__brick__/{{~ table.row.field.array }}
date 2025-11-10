@@ -1,0 +1,5 @@
+{{#isArray}}
+  /// {{fieldName.titleCase()}}
+  {{{dartType}}} get {{fieldName}} => getListField<{{{field.genericType}}}>({{fieldName}}Field{{#hasDefault}}, defaultValue: {{{field.defaultValue}}}{{/hasDefault}});
+  set {{fieldName}}({{{dartType}}}? value) => setListField<{{{field.genericType}}}>({{fieldName}}Field, value);
+{{/isArray}}
