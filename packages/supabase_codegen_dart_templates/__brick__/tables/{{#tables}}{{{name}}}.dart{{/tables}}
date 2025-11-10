@@ -25,7 +25,7 @@ class {{tables.name.pascalCase()}}Row extends Supabase{{#forFlutter}}Flutter{{/f
     {{#tables.columns}}{{constructor.qualifier}}{{{dartType}}}{{constructor.question}} {{parameterName}},
     {{/tables.columns}}
   }) : super({
-    {{#tables.columns}}{{#constructor.isOptional}}if ({{parameterName}} != null){{/constructor.isOptional}} '{{columnName}}': supaSerialize({{parameterName}}),
+    {{#tables.columns}}{{#constructor.isOptional}}if ({{parameterName}} != null){{/constructor.isOptional}} {{field.name}}: supaSerialize({{parameterName}}),
     {{/tables.columns}}
   });
 
