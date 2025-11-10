@@ -1,0 +1,7 @@
+{
+  "bricks": {
+    "supabase_codegen_dart_templates": {
+      "path": "packages/supabase_codegen_dart_templates"
+    }
+  }
+}
