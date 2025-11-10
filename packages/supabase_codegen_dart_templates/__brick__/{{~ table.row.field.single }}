@@ -1,7 +1,7 @@
 {{^isArray}}
-  /// {{fieldName.titleCase()}}
-  {{{dartType}}}{{field.question}} get {{fieldName}} => getField<{{{dartType}}}>(
-    {{fieldName}}Field{{#isEnum}}, enumValues: {{{dartType}}}.values{{/isEnum}}{{#hasDefault}}, defaultValue: {{{field.defaultValue}}}{{/hasDefault}}
+  /// {{parameterName.titleCase()}}
+  {{{dartType}}}{{field.question}} get {{parameterName}} => getField<{{{dartType}}}>(
+    {{field.name}}{{#isEnum}}, enumValues: {{{dartType}}}.values{{/isEnum}}{{#hasDefault}}, defaultValue: {{{field.defaultValue}}}{{/hasDefault}}
   ){{field.bang}};
-  set {{fieldName}}({{{dartType}}}{{field.question}} value) => setField<{{{dartType}}}>({{fieldName}}Field, value);
+  set {{parameterName}}({{{dartType}}}{{field.question}} value) => setField<{{{dartType}}}>({{field.name}}, value);
 {{/isArray}}

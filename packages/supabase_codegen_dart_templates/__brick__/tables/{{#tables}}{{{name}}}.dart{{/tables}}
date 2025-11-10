@@ -22,10 +22,10 @@ class {{tables.name.pascalCase()}}Table extends Supabase{{#forFlutter}}Flutter{{
 class {{tables.name.pascalCase()}}Row extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}DataRow {
   /// {{tables.name.titleCase()}} Row
   {{tables.name.pascalCase()}}Row({
-    {{#tables.columns}}{{constructor.qualifier}}{{{dartType}}}{{constructor.question}} {{fieldName}},
+    {{#tables.columns}}{{constructor.qualifier}}{{{dartType}}}{{constructor.question}} {{parameterName}},
     {{/tables.columns}}
   }) : super({
-    {{#tables.columns}}{{#constructor.isOptional}}if ({{fieldName}} != null){{/constructor.isOptional}} '{{columnName}}': supaSerialize({{fieldName}}),
+    {{#tables.columns}}{{#constructor.isOptional}}if ({{parameterName}} != null){{/constructor.isOptional}} '{{columnName}}': supaSerialize({{parameterName}}),
     {{/tables.columns}}
   });
 
@@ -44,8 +44,8 @@ class {{tables.name.pascalCase()}}Row extends Supabase{{#forFlutter}}Flutter{{/f
   @override
   SupabaseTable get table => {{tables.name.pascalCase()}}Table();
   {{#tables.columns}}
-  /// {{fieldName.titleCase()}} field name
-  static const String {{fieldName}}Field = '{{columnName}}';
+  /// {{parameterName.titleCase()}} column name ({{columnName}})
+  static const String {{field.name}} = '{{columnName}}';
 
   {{> table.row.field.array }}{{> table.row.field.single}}
   {{/tables.columns}}

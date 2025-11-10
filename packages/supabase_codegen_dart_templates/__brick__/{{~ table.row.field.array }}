@@ -1,5 +1,5 @@
 {{#isArray}}
-  /// {{fieldName.titleCase()}}
-  {{{dartType}}} get {{fieldName}} => getListField<{{{field.genericType}}}>({{fieldName}}Field{{#hasDefault}}, defaultValue: {{{field.defaultValue}}}{{/hasDefault}});
-  set {{fieldName}}({{{dartType}}}? value) => setListField<{{{field.genericType}}}>({{fieldName}}Field, value);
+  /// {{parameterName.titleCase()}}
+  {{{dartType}}} get {{parameterName}} => getListField<{{{field.genericType}}}>({{field.name}}{{#hasDefault}}, defaultValue: {{{field.defaultValue}}}{{/hasDefault}});
+  set {{parameterName}}({{{dartType}}}? value) => setListField<{{{field.genericType}}}>({{field.name}}, value);
 {{/isArray}}
