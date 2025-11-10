@@ -218,6 +218,7 @@ Future<void> generateTables(
       final isOptionalField =
           dartType.isNotDynamic && isNullable && !hasDefault;
       final field = {
+        'name': '${fieldName}Field',
         'defaultValue': hasDefault
             ? getDefaultValue(
                 dartType,
@@ -226,7 +227,6 @@ Future<void> generateTables(
               )
             : '',
         'genericType': isArray ? getGenericType(dartType) : '',
-        'isOptional': isOptionalField,
         'question': isOptionalField ? '?' : '',
         'bang': dartType.isDynamic || isOptionalField ? '' : '!',
       };
@@ -239,7 +239,7 @@ Future<void> generateTables(
         'columnName': columnName,
         'isArray': isArray,
         'isEnum': isEnum,
-        'fieldName': fieldName,
+        'parameterName': fieldName,
         'constructor': constructor,
         'field': field,
       });
