@@ -327,7 +327,6 @@ void writeCopyWith({
 }
 
 /// Helper to get the default value for a given Dart type.
-@visibleForTesting
 String getDefaultValue(
   String dartType, {
   dynamic defaultValue,
@@ -364,8 +363,8 @@ String getDefaultValue(
           : 'DateTime.now()';
     case DartType.uuidValue:
       return switch (defaultValue) {
-        'gen_random_uuid()' => 'Uuid().v4obj()',
-        'gen_random_uuid_v7()' => 'Uuid().v7obj()',
+        'gen_random_uuid()' => 'const Uuid().v4obj()',
+        'gen_random_uuid_v7()' => 'const Uuid().v7obj()',
         _ => 'Uuid().v4obj()',
       };
     default:
