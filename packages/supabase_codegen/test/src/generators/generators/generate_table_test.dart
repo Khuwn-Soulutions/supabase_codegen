@@ -14,7 +14,7 @@ void main() {
         DartType.bool: 'false',
         DartType.string: "''",
         DartType.dateTime: 'DateTime.now()',
-        DartType.uuidValue: 'Uuid().v4obj()',
+        DartType.uuidValue: 'const Uuid().v4obj()',
         DartType.dynamic: DartType.nullString,
         'List<String>': 'const <String>[]',
         'UserStatus': 'null',
@@ -35,7 +35,7 @@ void main() {
           (defaultValue: "''::text", value: "''"),
         ],
         'UuidValue': [
-          (defaultValue: 'gen_random_uuid()', value: 'Uuid().v4obj()'),
+          (defaultValue: 'gen_random_uuid()', value: 'const Uuid().v4obj()'),
         ],
         'DateTime': [
           (
