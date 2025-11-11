@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dotenv/dotenv.dart';
+import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
-
-import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
+import 'package:supabase_codegen/supabase_codegen_generator.dart' hide logger;
 
 /// Supabase client instance to generate types.
 late SupabaseClient client;
@@ -27,7 +30,7 @@ bool skipFooterWrite = false;
 bool forFlutterUsage = false;
 
 /// Package code is being generated from
-String defaultPackageName = 'supabase_codegen';
+const defaultPackageName = 'supabase_codegen';
 
 /// Package code is being generated from
 String packageName = defaultPackageName;
@@ -35,19 +38,108 @@ String packageName = defaultPackageName;
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
 
+/// Mason logger
+final _logger = Logger();
+
 /// Supabase code generator utils class
 // coverage:ignore-start
 class SupabaseCodeGeneratorUtils {
   /// Constructor
   const SupabaseCodeGeneratorUtils();
 
+  /// Supabase client instance.
+  static late SupabaseClient client;
+
+  /// Config
+  static GeneratorConfig config = GeneratorConfig.empty();
+
   /// Generate schema info
   @visibleForTesting
-  Future<void> generateSchema() => generateSchemaInfo();
+  Future<void> generateSchema([
+    GeneratorConfig? genConfig,
+    String? outputFolder,
+  ]) async {
+    config = genConfig ?? GeneratorConfig.empty();
+    _logger.info('Generating with config: ${jsonEncode(config.toJson())}');
+
+    // Generate tables and enums
+    final progress = _logger.progress('Generating Tables and Enums...');
+    final outputDir = Directory(outputFolder ?? root);
+    await generateTablesAndEnums(outputDir, config);
+
+    // Generate barrel files
+    progress.update('Generating barrel files');
+    await generateBarrelFiles(outputDir, config);
+
+    progress.complete('Types generated successfully');
+
+    // Run post generation clean up process
+    await _cleanup();
+  }
+
+  /// Generate tables and enums into the [outputDir] with the provided [config]
+  Future<void> generateTablesAndEnums(
+    Directory outputDir,
+    GeneratorConfig config,
+  ) =>
+      _generateBundle(
+        outputDir: outputDir,
+        config: config,
+        bundle: tablesAndEnumsBundle,
+      );
+
+  /// Generate barrel files into the [outputDir] with the provided [config]
+  Future<void> generateBarrelFiles(
+    Directory outputDir,
+    GeneratorConfig config,
+  ) =>
+      _generateBundle(
+        outputDir: outputDir,
+        config: config,
+        bundle: barrelFilesBundle,
+      );
+
+  /// Generate the [bundle] into the [outputDir] with the provided [config]
+  Future<void> _generateBundle({
+    required Directory outputDir,
+    required GeneratorConfig config,
+    required MasonBundle bundle,
+  }) async {
+    final generator = await MasonGenerator.fromBundle(bundle);
+    final target = DirectoryGeneratorTarget(outputDir);
+    await generator.generate(target, vars: config.toJson());
+  }
+
+  /// Run post generation clean up process
+  Future<void> _cleanup() async {
+    final cleanupProgess = _logger.progress('Renaming files');
+
+    /// List the files in the current directory
+    final files = Directory.current.listSync(recursive: true);
+    for (final file in files) {
+      if (file is File) {
+        // rename file by removing the .mustache at the end of the file
+        final newPath = file.path.replaceAll('.mustache', '');
+
+        // rename the file
+        file.renameSync(newPath);
+      }
+    }
+
+    // Run dart format
+    cleanupProgess.update('Running dart format');
+    Process.runSync('dart', ['format', '.']);
+
+    // Run dart fix
+    cleanupProgess.update('Running dart fix');
+    Process.runSync('dart', ['fix', '.', '--apply']);
+    cleanupProgess.complete('Cleanup complete');
+  }
 
   /// Create the supabase client
-  SupabaseClient createClient(String supabaseUrl, String supabaseKey) =>
-      SupabaseClient(supabaseUrl, supabaseKey);
+  SupabaseClient createClient(String supabaseUrl, String supabaseKey) {
+    return client = SupabaseClient(supabaseUrl, supabaseKey);
+  }
 }
 // coverage:ignore-end
 
@@ -67,6 +159,9 @@ class SupabaseCodeGenerator {
     required String envFilePath,
     required String outputFolder,
 
+    /// Package name
+    String package = defaultPackageName,
+
     /// Tags to add to file footer
     String fileTag = '',
 
@@ -79,6 +174,9 @@ class SupabaseCodeGenerator {
     /// Overrides for table and column configurations
     SchemaOverrides overrides = const {},
   }) async {
+    /// Initialize the supabase client
+    initSupabaseClient(envFilePath);
+
     /// Set tag
     tag = fileTag;
 
@@ -94,6 +192,26 @@ class SupabaseCodeGenerator {
     /// Set overrides
     schemaOverrides = overrides;
 
+    /// Get the enum config
+    final enums = await generateEnumConfigs();
+
+    /// Get the table config
+    final tables = await generateTableConfigs(overrides);
+
+    final config = GeneratorConfig(
+      package: package,
+      version: version,
+      forFlutter: forFlutter,
+      tag: tag,
+      tables: tables,
+      enums: enums,
+    );
+
+    await utils.generateSchema(config);
+  }
+
+  /// Initialize the supabase client
+  void initSupabaseClient(String envFilePath) {
     /// Load env keys
     final dotenv = DotEnv()..load([envFilePath]);
     final hasUrl = dotenv.isEveryDefined([supabaseEnvKeys.url]);
@@ -113,10 +231,8 @@ class SupabaseCodeGenerator {
 
     // Get the config from env
     final supabaseUrl = dotenv[supabaseEnvKeys.url]!;
-    logger.info('[GenerateTypes] Starting type generation');
+    _logger.info('[GenerateTypes] Starting type generation');
 
     client = utils.createClient(supabaseUrl, supabaseKey);
-
-    await utils.generateSchema();
   }
 }

@@ -134,6 +134,7 @@ Future<String?> runGenerateTypes(
 
     /// Generate the types using the command line options
     await generator.generateSupabaseTypes(
+      package: packageName,
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       fileTag: tag,
