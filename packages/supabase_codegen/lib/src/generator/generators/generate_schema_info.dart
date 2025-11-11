@@ -94,7 +94,7 @@ Future<void> generateSchemaTables() async {
 Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   // Get table information from Supabase
   logger.info('[GenerateTypes] Fetching schema info...');
-  final response = await client.rpc<dynamic>('get_schema_info');
+  final response = await client.rpc<List<dynamic>>('get_schema_info');
 
   // Debug raw response
   logger
@@ -102,20 +102,14 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
     ..debug('Response type: ${response.runtimeType}');
 
   // Modified to handle direct List response
-  final schemaData = List<Map<String, dynamic>>.from(
-    response is List
-        ? response
-        // Get data from the response if not a List
-        // ignore: avoid_dynamic_calls
-        : response['data'] as List<dynamic>,
-  );
+  final schemaData = List<Map<String, dynamic>>.from(response);
 
   if (schemaData.isEmpty) {
     throw Exception('Failed to fetch schema info: Empty response');
   }
 
   // Debug response data
-  if (schemaData.isNotEmpty) {
+  else {
     logger
       ..debug('First column sample:')
       ..debug(schemaData.first);
