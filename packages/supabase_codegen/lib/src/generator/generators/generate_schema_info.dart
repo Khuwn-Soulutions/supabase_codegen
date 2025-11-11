@@ -11,86 +11,39 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 Future<List<TableConfig>> generateTableConfigs(
   Map<String, Map<String, ColumnOverride>> overrides,
 ) async {
-  final tables = await getSchemaTables();
-  final tableList = <TableConfig>[];
-  // Generate each table
-  for (final entry in tables.entries) {
+  final schemaTables = await getSchemaTables();
+  final tableConfigs = <TableConfig>[];
+
+  // Generate each table config
+  for (final entry in schemaTables.entries) {
     final tableName = entry.key;
-    final columns = entry.value;
+    final columnSchema = entry.value;
     final tableOverrides = overrides[tableName];
 
     // Generate a map of the field name to data for that field
     final fieldNameTypeMap = createFieldNameTypeMap(
-      columns,
+      columnSchema,
       tableOverrides: tableOverrides,
     );
     logger
       ..debug('Table Name: $tableName')
       ..debug('Field Name Type Map: $fieldNameTypeMap');
 
-    final columnConfigs = <ColumnConfig>[];
-    for (final entry in fieldNameTypeMap.sortedEntries) {
-      final (
-        :dartType,
-        :isNullable,
-        :hasDefault,
-        :defaultValue,
-        :columnName,
-        :isArray,
-        :isEnum
-      ) = entry.value;
-      final fieldName = entry.key;
-
-      /// Constructor
-      final isOptional = dartType.isDynamic || isNullable || hasDefault;
-      final constructor = ColumnConstructorConfig(
-        isOptional: isOptional,
-        qualifier: isOptional ? '' : 'required ',
-        question: isOptional && dartType.isNotDynamic ? '?' : '',
-      );
-
-      // Field
-      final isOptionalField =
-          dartType.isNotDynamic && isNullable && !hasDefault;
-      final field = ColumnFieldConfig(
-        name: '${fieldName}Field',
-        defaultValue: hasDefault
-            ? getDefaultValue(
-                dartType,
-                defaultValue: defaultValue,
-                isEnum: isEnum,
-              )
-            : '',
-        genericType: isArray ? getGenericType(dartType) : '',
-        question: isOptionalField ? '?' : '',
-        bang: dartType.isDynamic || isOptionalField ? '' : '!',
-      );
-
-      columnConfigs.add(
-        ColumnConfig(
-          dartType: dartType,
-          isNullable: isNullable,
-          hasDefault: hasDefault,
-          defaultValue: defaultValue,
-          columnName: columnName,
-          isArray: isArray,
-          isEnum: isEnum,
-          parameterName: fieldName,
-          constructor: constructor,
-          field: field,
-        ),
-      );
-    }
-
-    tableList.add(
-      TableConfig(
-        name: tableName,
-        columns: columnConfigs,
-      ),
+    final tableConfig = TableConfig(
+      name: tableName,
+      columns: fieldNameTypeMap.sortedEntries
+          .map(
+            (entry) => ColumnConfig.fromColumnData(
+              fieldName: entry.key,
+              columnData: entry.value,
+            ),
+          )
+          .toList(),
     );
+    tableConfigs.add(tableConfig);
   }
-  logger.debug('Table List compiled');
-  return tableList;
+  logger.debug('Table Config Created');
+  return tableConfigs;
 }
 
 /// Table barrel file name
