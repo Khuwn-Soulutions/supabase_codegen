@@ -8,8 +8,6 @@ void run(HookContext context) {
   final hasTag = (context.vars['tag']?.toString() ?? '').isNotEmpty;
   context.vars['hasTag'] = hasTag;
 
-  // Set tables to null if
-
   // Log and set date
   context.logger.info('Setting date to $date');
   context.vars['date'] = date;

@@ -1,7 +1,10 @@
 {
   "bricks": {
-    "supabase_codegen_dart_templates": {
-      "path": "packages/supabase_codegen_dart_templates"
+    "tables_and_enums": {
+      "path": "packages/supabase_codegen_templates/tables_and_enums"
+    },
+    "barrel_files": {
+      "path": "packages/supabase_codegen_templates/barrel_files"
     }
   }
 }
