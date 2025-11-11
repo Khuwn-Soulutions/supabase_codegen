@@ -1,5 +1,4 @@
-import 'package:supabase_codegen/src/generator/generator_config/tables_config/column_constructor_config.dart';
-import 'package:supabase_codegen/src/generator/generator_config/tables_config/column_field_config.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template column_config}
 /// The configuration for a column in the generated table row class.
@@ -47,6 +46,58 @@ class ColumnConfig {
         map['constructor'] as Map<String, dynamic>,
       ),
       field: ColumnFieldConfig.fromJson(map['field'] as Map<String, dynamic>),
+    );
+  }
+
+  /// Create a [ColumnConfig] from the [fieldName] and [ColumnData]
+  factory ColumnConfig.fromColumnData({
+    required String fieldName,
+    required ColumnData columnData,
+  }) {
+    final (
+      :dartType,
+      :isNullable,
+      :hasDefault,
+      :defaultValue,
+      :columnName,
+      :isArray,
+      :isEnum
+    ) = columnData;
+
+    /// Constructor
+    final isOptional = dartType.isDynamic || isNullable || hasDefault;
+    final constructor = ColumnConstructorConfig(
+      isOptional: isOptional,
+      qualifier: isOptional ? '' : 'required ',
+      question: isOptional && dartType.isNotDynamic ? '?' : '',
+    );
+
+    // Field
+    final isOptionalField = dartType.isNotDynamic && isNullable && !hasDefault;
+    final field = ColumnFieldConfig(
+      name: '${fieldName}Field',
+      defaultValue: hasDefault
+          ? getDefaultValue(
+              dartType,
+              defaultValue: defaultValue,
+              isEnum: isEnum,
+            )
+          : '',
+      genericType: isArray ? getGenericType(dartType) : '',
+      question: isOptionalField ? '?' : '',
+      bang: dartType.isDynamic || isOptionalField ? '' : '!',
+    );
+    return ColumnConfig(
+      dartType: dartType,
+      isNullable: isNullable,
+      hasDefault: hasDefault,
+      defaultValue: defaultValue,
+      columnName: columnName,
+      isArray: isArray,
+      isEnum: isEnum,
+      parameterName: fieldName,
+      constructor: constructor,
+      field: field,
     );
   }
 
