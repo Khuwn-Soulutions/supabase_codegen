@@ -1,9 +1,8 @@
 {{> header}}
-{{> ignore}}
 import 'package:{{package}}/{{package}}.dart';
-// Import enums if needed
-// ignore: unused_import, always_use_package_imports
-import '../database.dart';
+{{#tables.hasDatabaseImport}}// Import enums
+// ignore: always_use_package_imports
+import '../database.dart';{{/tables.hasDatabaseImport}}
 
 /// {{tables.displayName}} Table
 class {{tables.tableClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}Table<{{tables.rowClass}}> {
