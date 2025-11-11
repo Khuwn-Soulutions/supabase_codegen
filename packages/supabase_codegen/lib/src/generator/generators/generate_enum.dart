@@ -3,7 +3,22 @@ import 'dart:io';
 
 import 'package:change_case/change_case.dart';
 
-import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
+
+/// Generate enums list
+Future<List<EnumConfig>> generateEnumConfigs() async {
+  final enums = await processEnums();
+  return enums.entries.map((entry) {
+    final enumName = entry.key;
+    final values = entry.value;
+    final formattedEnumName = formattedEnums[enumName]!;
+    return EnumConfig(
+      enumName: enumName,
+      formattedEnumName: formattedEnumName,
+      values: values,
+    );
+  }).toList();
+}
 
 /// Generate enums
 Future<void> generateEnums(Directory enumsDir) async {
@@ -89,18 +104,9 @@ Future<Map<String, List<String>>> fetchEnums() async {
   try {
     // Query to get all enum types and their values
     logger.debug('[GenerateTypes] Executing RPC call to get_enum_types...');
-    final response = await client.rpc<dynamic>('get_enum_types');
+    final response = await client.rpc<List<dynamic>>('get_enum_types');
 
-    // Modified to handle direct List response
-    // ignore: avoid_dynamic_calls
-    final enumData = List<Map<String, dynamic>>.from(
-      response is List
-          ? response
-          :
-          // Get data from the response if not a List
-          // ignore: avoid_dynamic_calls
-          response['data'] as List,
-    );
+    final enumData = List<Map<String, dynamic>>.from(response);
 
     logger
       ..debug('[GenerateTypes] Raw enum response data:')
