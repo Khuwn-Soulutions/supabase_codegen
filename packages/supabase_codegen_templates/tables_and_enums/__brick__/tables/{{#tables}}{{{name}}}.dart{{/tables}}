@@ -53,12 +53,12 @@ class {{tables.rowClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}D
   /// Make a copy of the current [{{tables.rowClass}}]
   /// overriding the provided fields
   {{tables.rowClass}} copyWith({
-    {{#tables.columns}}{{dartType}}? {{parameterName}},
+    {{#tables.columns}}{{{dartType}}}? {{parameterName}},
     {{/tables.columns}}
   }) => {{tables.rowClass}}.fromJson({
     {{#tables.columns}}'{{columnName}}': supaSerialize({{parameterName}}) ?? data['{{columnName}}'],
     {{/tables.columns}}
-  })
+  });
 }
 
 {{> footer }}
