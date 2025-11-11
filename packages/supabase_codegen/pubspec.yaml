@@ -16,6 +16,7 @@ dependencies:
   dotenv: ^4.2.0
   http: ^1.5.0
   latlng: ^2.0.7
+  mason: ^0.1.1
   # Ensure compatibility with flutter_test
   meta: ^1.16.0
   mock_supabase_http_client: ^0.0.3+2
