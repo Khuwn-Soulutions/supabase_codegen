@@ -1,3 +1,4 @@
+import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
 
 /// {@template enum_config}
@@ -42,12 +43,16 @@ class EnumConfig {
   /// The list of values for the enum.
   final List<String> values;
 
+  /// Does any of the values use ALL_CAPS_WITH_UNDERSCORES
+  bool get hasConstantIdentifier => values.any((value) => value.isUpperCase());
+
   /// Converts the [EnumConfig] to a JSON object.
   Map<String, dynamic> toJson() {
     return {
       'enumName': enumName,
       'formattedEnumName': formattedEnumName,
       'values': values,
+      'hasConstantIdentifier': hasConstantIdentifier,
     };
   }
 
