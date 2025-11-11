@@ -1,5 +1,5 @@
 {{> header }}
-{{> ignore }}
+{{#enums.hasConstantIdentifier}}// ignore_for_file: constant_identifier_names{{/enums.hasConstantIdentifier}}
 
 /// {{enums.formattedEnumName.titleCase()}} Enum
 enum {{enums.formattedEnumName}} {
