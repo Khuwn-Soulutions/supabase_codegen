@@ -41,6 +41,7 @@ class GeneratorConfig {
 
   /// Create json representation of [GeneratorConfig]
   Map<String, dynamic> toJson() => {
+        'date': DateTime.now().toString(),
         'package': package,
         'version': version,
         'forFlutter': forFlutter,
