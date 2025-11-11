@@ -55,7 +55,7 @@ class {{tables.rowClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}D
     {{#tables.columns}}{{{dartType}}}? {{parameterName}},
     {{/tables.columns}}
   }) => {{tables.rowClass}}.fromJson({
-    {{#tables.columns}}'{{columnName}}': supaSerialize({{parameterName}}) ?? data['{{columnName}}'],
+    {{#tables.columns}}{{field.name}}: supaSerialize({{parameterName}}) ?? data[{{field.name}}],
     {{/tables.columns}}
   });
 }
