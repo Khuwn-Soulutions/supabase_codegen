@@ -146,9 +146,6 @@ Future<String?> runGenerateTypes(
     // coverage:ignore-start
     if (isRunningInTest) return null;
 
-    /// Format generated files
-    await Process.run('dart', ['format', outputFolder]);
-
     exit(0);
     // coverage:ignore-end
   } on Exception catch (e) {
