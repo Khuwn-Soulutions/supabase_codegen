@@ -1,3 +1,4 @@
+import 'package:change_case/change_case.dart';
 import 'package:supabase_codegen/src/generator/generator_config/tables_config/column_config.dart';
 
 /// {@template table_config}
@@ -28,6 +29,21 @@ class TableConfig {
     );
   }
 
+  /// Display name to use for the class
+  String get displayName => name.toTitleCase();
+
+  /// Class name
+  String get className => name.toPascalCase();
+
+  /// Row class name
+  String get rowClass => '${className}Row';
+
+  /// Table class name
+  String get tableClass => '${className}Table';
+
+  /// Has database import
+  bool get hasDatabaseImport => columns.any((column) => column.isEnum);
+
   /// The name of the table.
   final String name;
 
@@ -50,6 +66,11 @@ class TableConfig {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'name': name,
+      'displayName': displayName,
+      'className': className,
+      'rowClass': rowClass,
+      'tableClass': tableClass,
+      'hasDatabaseImport': hasDatabaseImport,
       'columns': columns.map((x) => x.toJson()).toList(),
     };
   }
