@@ -66,8 +66,10 @@ class SupabaseCodeGeneratorUtils {
     await generateTablesAndEnums(outputDir, config);
 
     // Generate barrel files
-    progress.update('Generating barrel files');
-    await generateBarrelFiles(outputDir, config);
+    if (config.barrelFiles) {
+      progress.update('Generating barrel files');
+      await generateBarrelFiles(outputDir, config);
+    }
 
     progress.complete('Types generated successfully');
 
@@ -154,6 +156,9 @@ class SupabaseCodeGenerator {
     required String envFilePath,
     required String outputFolder,
 
+    /// Should barrel files be generated
+    bool barrelFiles = true,
+
     /// Package name
     String package = defaultPackageName,
 
@@ -200,6 +205,7 @@ class SupabaseCodeGenerator {
         version: version,
         forFlutter: forFlutter,
         tag: tag,
+        barrelFiles: barrelFiles,
         tables: tables,
         enums: enums,
       );
