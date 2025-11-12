@@ -8,6 +8,7 @@ class GeneratorConfig {
     required this.version,
     required this.forFlutter,
     required this.tag,
+    required this.barrelFiles,
     this.tables = const [],
     this.enums = const [],
   });
@@ -18,6 +19,7 @@ class GeneratorConfig {
         version: '',
         forFlutter: false,
         tag: '',
+        barrelFiles: true,
       );
 
   /// Create [GeneratorConfig] from [json]
@@ -27,6 +29,7 @@ class GeneratorConfig {
         version: json['version'] as String,
         forFlutter: json['forFlutter'] as bool,
         tag: json['tag'] as String,
+        barrelFiles: json['barrelFiles'] as bool,
         tables: (json['tables'] as List<dynamic>)
             .map<TableConfig>(
               (table) => TableConfig.fromJson(table as Map<String, dynamic>),
@@ -46,6 +49,7 @@ class GeneratorConfig {
         'version': version,
         'forFlutter': forFlutter,
         'tag': tag,
+        'barrelFiles': barrelFiles,
         'hasTag': tag.isNotEmpty,
         'tables': tables.map((table) => table.toJson()).toList(),
         'enums': enums.map((config) => config.toJson()).toList(),
@@ -59,6 +63,9 @@ class GeneratorConfig {
 
   /// Are the files being generated for use in Flutter?
   final bool forFlutter;
+
+  /// Should barrel files be generated
+  final bool barrelFiles;
 
   /// Tag
   final String tag;
