@@ -110,8 +110,6 @@ class SupabaseCodeGeneratorUtils {
 
   /// Run post generation clean up process
   Future<void> _cleanup(Directory outputDir) async {
-    final cleanupProgess = logger.progress('Renaming files');
-
     /// List the files in the current directory
     final files = outputDir.listSync(recursive: true);
     for (final file in files) {
@@ -125,7 +123,7 @@ class SupabaseCodeGeneratorUtils {
     }
 
     // Run dart format
-    cleanupProgess.update('Running dart format');
+    logger.detail('Running dart format');
     Process.runSync('dart', ['format', outputDir.path]);
   }
 
