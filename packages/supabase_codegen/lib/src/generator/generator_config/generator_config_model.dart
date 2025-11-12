@@ -46,6 +46,7 @@ class GeneratorConfig {
         'version': version,
         'forFlutter': forFlutter,
         'tag': tag,
+        'hasTag': tag.isNotEmpty,
         'tables': tables.map((table) => table.toJson()).toList(),
         'enums': enums.map((config) => config.toJson()).toList(),
       };
