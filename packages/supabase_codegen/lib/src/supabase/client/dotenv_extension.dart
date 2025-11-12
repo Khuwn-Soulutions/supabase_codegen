@@ -43,7 +43,7 @@ extension DotenvExtension on DotEnv {
     if (!hasUrl) {
       log('Unable to find env: ${File.fromUri(Uri.file(envPath)).path}');
       throw Exception(
-        '[GenerateTypes] Missing ${supabaseEnvKeys.url} in $envPath file. ',
+        'Missing ${supabaseEnvKeys.url} in $envPath file. ',
       );
     }
 
@@ -53,7 +53,7 @@ extension DotenvExtension on DotEnv {
     );
     if (supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} '
+        'Ensure that either ${supabaseEnvKeys.anonKey} '
         'or ${supabaseEnvKeys.anonKey} is set to ensure access to the database',
       );
     }

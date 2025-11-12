@@ -1,19 +1,12 @@
+import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
-import 'package:talker/talker.dart';
 
 /// A simple logger that uses the talker package.
-late Talker logger;
+late Logger logger;
 
 /// Test logger instance
 @visibleForTesting
-final Talker testLogger = Talker(
-  logger: TalkerLogger(
-    formatter: const ColoredLoggerFormatter(),
-    settings: TalkerLoggerSettings(
-      lineSymbol: '',
-    ),
-  ),
-);
+final Logger testLogger = Logger(level: Level.verbose);
 
 /// Create verbose logger
 void createVerboseLogger() => logger = testLogger;

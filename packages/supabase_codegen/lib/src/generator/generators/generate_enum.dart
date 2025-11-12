@@ -33,7 +33,7 @@ Future<void> generateEnums(Directory enumsDir) async {
     final enums = await processEnums();
 
     // Generate each enum
-    logger.debug('[GenerateTypes] Generating enum definitions:');
+    logger.detail('Generating enum definitions:');
     final enumList = <Map<String, dynamic>>[];
     enums.forEach((enumName, values) async {
       final formattedEnumName = formattedEnums[enumName]!;
@@ -72,13 +72,13 @@ Future<void> generateEnums(Directory enumsDir) async {
       /// Write file to disk only if the content has changed ignoring date
       writeFileIfChangedIgnoringDate(enumFile, enumBuffer);
 
-      logger.info('[GenerateTypes] Generated enum file: $fileName');
+      logger.info('Generated enum file: $fileName');
 
       /// Write the filename to the main buffer file
       buffer.writeln("export '$fileName.dart';");
     });
-    logger.debug(
-      '[GenerateTypes] Enum List: ${jsonEncode(enumList)}',
+    logger.detail(
+      'Enum List: ${jsonEncode(enumList)}',
     );
 
     /// Write footer
@@ -86,13 +86,9 @@ Future<void> generateEnums(Directory enumsDir) async {
 
     /// Write file to disk only if the content has changed ignoring date
     writeFileIfChangedIgnoringDate(enumBarrelFile, buffer);
-    logger.info('[GenerateTypes] Generated enums file successfully');
-  } catch (e, stackTrace) {
-    logger.error(
-      '[GenerateTypes] Error generating enums: $e',
-      e,
-      stackTrace,
-    );
+    logger.info('Generated enums file successfully');
+  } catch (e) {
+    logger.err('Error generating enums: $e');
     rethrow;
   }
 }
@@ -100,37 +96,41 @@ Future<void> generateEnums(Directory enumsDir) async {
 /// Retrieve the enums from the database schema
 Future<Map<String, List<String>>> fetchEnums() async {
   // Fetch enum types from database
-  logger.info('[GenerateTypes] Fetching enum types from database...');
+  final progress = logger.progress(
+    'Fetching enum types from database...',
+  );
   try {
     // Query to get all enum types and their values
-    logger.debug('[GenerateTypes] Executing RPC call to get_enum_types...');
+    logger.detail('Executing RPC call to get_enum_types...');
     final response = await client.rpc<List<dynamic>>('get_enum_types');
 
     final enumData = List<Map<String, dynamic>>.from(response);
 
     logger
-      ..debug('[GenerateTypes] Raw enum response data:')
-      ..debug(enumData);
+      ..detail('Raw enum response data:')
+      ..detail(enumData.toString());
 
     final enums = <String, List<String>>{};
 
     // Process the response data
-    logger.debug('[GenerateTypes] Processing enum types:');
+    logger.detail('Processing enum types:');
     for (final row in enumData) {
       final enumName = row['enum_name'] as String;
       final enumValue = (row['enum_value'] as String).replaceAll('/', '_');
 
-      logger.debug('  Found enum: $enumName with value: $enumValue');
+      logger.detail('  Found enum: $enumName with value: $enumValue');
 
       if (!enums.containsKey(enumName)) {
         enums[enumName] = [];
-        logger.debug('  Created new enum list for: $enumName');
+        logger.detail('  Created new enum list for: $enumName');
       }
       enums[enumName]!.add(enumValue);
     }
+    progress.complete('Database enums fetched');
     return enums;
   } on Exception catch (e) {
-    logger.error('[GenerateTypes] Error retrieving enums: $e');
+    progress.fail('Failed to fetch enums from database');
+    logger.err('Error retrieving enums: $e');
     rethrow;
   }
 }
@@ -145,7 +145,7 @@ Future<Map<String, List<String>>> processEnums([
     enums ??= await fetchEnums();
 
     // Generate each enum
-    logger.debug('[GenerateTypes] Generating enum definitions:');
+    logger.detail('Generating enum definitions:');
     enums.forEach((enumName, values) async {
       // Format enum name to PascalCase and remove Enum suffix
       final formattedEnumName = enumName
@@ -154,17 +154,13 @@ Future<Map<String, List<String>>> processEnums([
           .join()
           .replaceAll(RegExp(r'Enum$'), '');
 
-      logger.debug('  Processing: $enumName -> $formattedEnumName');
+      logger.detail('  Processing: $enumName -> $formattedEnumName');
       formattedEnums[enumName] = formattedEnumName;
     });
-    logger.debug('[GenerateTypes] Formatted enums: $formattedEnums');
+    logger.detail('Formatted enums: $formattedEnums');
     return enums;
-  } catch (e, stackTrace) {
-    logger.error(
-      '[GenerateTypes] Error while processing enums: $e',
-      e,
-      stackTrace,
-    );
+  } catch (e) {
+    logger.err('Error while processing enums: $e');
     rethrow;
   }
 }

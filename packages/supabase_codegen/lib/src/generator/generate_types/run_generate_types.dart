@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:change_case/change_case.dart';
+import 'package:mason_logger/mason_logger.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
-import 'package:talker/talker.dart';
 
 /// Generate the supabase types using the [args] provided
 Future<String?> runGenerateTypes(
@@ -112,20 +112,12 @@ Future<String?> runGenerateTypes(
     final skipFooter = flagValueFor(CmdOption.skipFooter);
 
     /// Set the log level if debug is true
-    final level = debug ? LogLevel.verbose : LogLevel.info;
-    logger = Talker(
-      logger: TalkerLogger(
-        formatter: const ColoredLoggerFormatter(),
-        settings: TalkerLoggerSettings(
-          level: level,
-          lineSymbol: '',
-        ),
-      ),
-    );
+    final level = debug ? Level.verbose : Level.info;
+    logger = Logger(level: level);
 
     // Extract overrides from config
     final schemaOverrides = extractSchemaOverrides(codegenConfig);
-    logger.debug('Schema Overrides: $schemaOverrides');
+    logger.detail('Schema Overrides: $schemaOverrides');
 
     /// Set the package name from which generation is occuring
     if (package != null) {

@@ -99,7 +99,7 @@ void main() {
               (e) => e.toString(),
               'message',
               contains(
-                '[GenerateTypes] Ensure that either '
+                'Ensure that either '
                 '${supabaseEnvKeys.anonKey} or ${supabaseEnvKeys.anonKey} is '
                 'set to ensure access to the database',
               ),

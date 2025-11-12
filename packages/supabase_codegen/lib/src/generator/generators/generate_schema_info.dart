@@ -26,8 +26,8 @@ Future<List<TableConfig>> generateTableConfigs(
       tableOverrides: tableOverrides,
     );
     logger
-      ..debug('Table Name: $tableName')
-      ..debug('Field Name Type Map: $fieldNameTypeMap');
+      ..detail('Table Name: $tableName')
+      ..detail('Field Name Type Map: $fieldNameTypeMap');
 
     final tableConfig = TableConfig(
       name: tableName,
@@ -42,7 +42,7 @@ Future<List<TableConfig>> generateTableConfigs(
     );
     tableConfigs.add(tableConfig);
   }
-  logger.debug('Table Config Created');
+  logger.detail('Table Config Created');
   return tableConfigs;
 }
 
@@ -73,9 +73,9 @@ Future<void> generateSchemaInfo() async {
 
     await generateSchemaTables();
 
-    logger.info('[GenerateTypes] Successfully generated types');
+    logger.info('Successfully generated types');
   } catch (e) {
-    logger.debug('[GenerateTypes] Error generating types: $e');
+    logger.detail('Error generating types: $e');
     rethrow;
   } finally {
     await client.dispose();
@@ -93,26 +93,19 @@ Future<void> generateSchemaTables() async {
 /// Get the schema tables
 Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
   // Get table information from Supabase
-  logger.info('[GenerateTypes] Fetching schema info...');
+  final progress = logger.progress('Fetching tables from database...');
   final response = await client.rpc<List<dynamic>>('get_schema_info');
 
   // Debug raw response
-  logger
-    ..debug('[GenerateTypes] Raw Schema Response: $response')
-    ..debug('Response type: ${response.runtimeType}');
+  logger.detail('Response type: ${response.runtimeType}');
 
   // Modified to handle direct List response
   final schemaData = List<Map<String, dynamic>>.from(response);
 
   if (schemaData.isEmpty) {
-    throw Exception('Failed to fetch schema info: Empty response');
-  }
-
-  // Debug response data
-  else {
-    logger
-      ..debug('First column sample:')
-      ..debug(schemaData.first);
+    const message = 'Failed to fetch schema tables: Empty response';
+    progress.fail(message);
+    throw Exception(message);
   }
 
   // Group columns by table
@@ -130,14 +123,15 @@ Future<Map<String, List<Map<String, dynamic>>>> getSchemaTables() async {
 
   // After fetching schema info
   logger
-    ..debug('Table Count: ${tables.keys.length}')
-    ..debug('\n[GenerateTypes] Available tables:');
+    ..detail('Table Count: ${tables.keys.length}')
+    ..detail('\nAvailable tables:');
   for (final tableName in tables.keys) {
-    logger.debug('  - $tableName');
+    logger.detail('  - $tableName');
   }
 
-  logger.debug('Table Map: $tables');
+  logger.detail('Table Map: $tables');
 
+  progress.complete('Database tables fetched');
   return tables;
 }
 
@@ -163,7 +157,7 @@ Future<void> generateDatabaseFiles(
 ) async {
   logger
     ..info('[GenerateDatabaseFiles] Generating database files...')
-    ..debug('Writing files to $root');
+    ..detail('Writing files to $root');
 
   // Generate individual table files
   await generateTables(tables);
@@ -223,8 +217,8 @@ Future<void> generateTables(
       tableOverrides: tableOverrides,
     );
     logger
-      ..debug('Table Name: $tableName')
-      ..debug('Field Name Type Map: $fieldNameTypeMap');
+      ..detail('Table Name: $tableName')
+      ..detail('Field Name Type Map: $fieldNameTypeMap');
 
     final columnMaps = <Map<String, dynamic>>[];
     for (final entry in fieldNameTypeMap.sortedEntries) {
@@ -277,7 +271,7 @@ Future<void> generateTables(
         'field': field,
       });
     }
-    logger.debug('Column Maps: ${jsonEncode(columnMaps)}');
+    logger.detail('Column Maps: ${jsonEncode(columnMaps)}');
 
     tableList.add({
       'name': tableName,
@@ -291,7 +285,7 @@ Future<void> generateTables(
       fieldNameTypeMap: fieldNameTypeMap,
     );
   }
-  logger.debug('Table List: ${jsonEncode(tableList)}');
+  logger.detail('Table List: ${jsonEncode(tableList)}');
 }
 // coverage:ignore-end
 
@@ -327,8 +321,8 @@ Map<String, ColumnData> createFieldNameTypeMap(
     fieldNameTypeMap[fieldName] = columnData;
 
     logger
-      ..debug('[GenerateTableFile] Processing column: $columnName')
-      ..debug('  Column data: $columnData');
+      ..detail('[GenerateTableFile] Processing column: $columnName')
+      ..detail('  Column data: $columnData');
   }
   return fieldNameTypeMap;
 }
