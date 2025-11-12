@@ -72,7 +72,7 @@ class SupabaseCodeGeneratorUtils {
     progress.complete('Types generated successfully');
 
     // Run post generation clean up process
-    await _cleanup();
+    await _cleanup(outputDir);
   }
 
   /// Generate tables and enums into the [outputDir] with the provided [config]
@@ -109,11 +109,11 @@ class SupabaseCodeGeneratorUtils {
   }
 
   /// Run post generation clean up process
-  Future<void> _cleanup() async {
-    final cleanupProgess = _logger.progress('Renaming files');
+  Future<void> _cleanup(Directory outputDir) async {
+    final cleanupProgess = logger.progress('Renaming files');
 
     /// List the files in the current directory
-    final files = Directory.current.listSync(recursive: true);
+    final files = outputDir.listSync(recursive: true);
     for (final file in files) {
       if (file is File) {
         // rename file by removing the .mustache at the end of the file
@@ -126,12 +126,7 @@ class SupabaseCodeGeneratorUtils {
 
     // Run dart format
     cleanupProgess.update('Running dart format');
-    Process.runSync('dart', ['format', '.']);
-
-    // Run dart fix
-    cleanupProgess.update('Running dart fix');
-    Process.runSync('dart', ['fix', '.', '--apply']);
-    cleanupProgess.complete('Cleanup complete');
+    Process.runSync('dart', ['format', outputDir.path]);
   }
 
   /// Create the supabase client
