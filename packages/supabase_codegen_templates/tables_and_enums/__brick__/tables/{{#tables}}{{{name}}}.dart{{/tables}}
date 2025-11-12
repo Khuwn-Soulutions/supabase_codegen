@@ -24,7 +24,8 @@ class {{tables.rowClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}D
     {{#tables.columns}}{{constructor.qualifier}}{{{dartType}}}{{constructor.question}} {{parameterName}},
     {{/tables.columns}}
   }) : super({
-    {{#tables.columns}}{{#constructor.isOptional}}if ({{parameterName}} != null){{/constructor.isOptional}} {{field.name}}: supaSerialize({{parameterName}}),
+    {{#tables.columns}}{{#constructor.isOptional}}if ({{parameterName}} != null){{/constructor.isOptional}} 
+        {{field.name}}: supaSerialize({{parameterName}}),
     {{/tables.columns}}
   });
 
@@ -46,7 +47,12 @@ class {{tables.rowClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}D
   /// {{parameterName.titleCase()}} column name ({{columnName}})
   static const String {{field.name}} = '{{columnName}}';
 
-  {{> table.row.field.array }}{{> table.row.field.single}}
+  {{! Array fields}}
+  {{> table.row.field.array }}
+
+  {{! Single fields}}
+  {{> table.row.field.single}}
+
   {{/tables.columns}}
 
   /// Make a copy of the current [{{tables.rowClass}}]
