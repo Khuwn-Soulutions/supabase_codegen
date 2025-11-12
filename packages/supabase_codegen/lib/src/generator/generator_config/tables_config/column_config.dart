@@ -163,6 +163,7 @@ class ColumnConfig {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'dartType': dartType,
+      'isDynamic': dartType.isDynamic,
       'isNullable': isNullable,
       'hasDefault': hasDefault,
       'defaultValue': defaultValue,
