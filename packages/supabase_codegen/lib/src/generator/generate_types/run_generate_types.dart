@@ -64,6 +64,14 @@ Future<String?> runGenerateTypes(
         abbr: CmdOption.debug[0],
         help: 'Enable debug logging',
       )
+      // Barrel files
+      ..addFlag(
+        CmdOption.barrelFiles,
+        defaultsTo: defaultValues[CmdOption.barrelFiles] as bool,
+        abbr: CmdOption.barrelFiles[0],
+        help: 'Use barrel files for exports. '
+            '(default: ${defaultValues[CmdOption.barrelFiles]})',
+      )
       // Skip footer
       ..addFlag(
         CmdOption.skipFooter,
@@ -110,6 +118,7 @@ Future<String?> runGenerateTypes(
     final tag = optionValueFor(CmdOption.tag);
     final debug = flagValueFor(CmdOption.debug);
     final skipFooter = flagValueFor(CmdOption.skipFooter);
+    final barrelFiles = flagValueFor(CmdOption.barrelFiles);
 
     /// Set the log level if debug is true
     final level = debug ? Level.verbose : Level.info;
@@ -130,6 +139,7 @@ Future<String?> runGenerateTypes(
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       fileTag: tag,
+      barrelFiles: barrelFiles,
       skipFooter: skipFooter,
       forFlutter: forFlutter,
       overrides: schemaOverrides,

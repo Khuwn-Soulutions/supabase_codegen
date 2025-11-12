@@ -6,4 +6,5 @@ const defaultValues = <String, dynamic>{
   CmdOption.output: 'supabase/types',
   CmdOption.tag: '',
   CmdOption.configYaml: '.supabase_codegen.yaml',
+  CmdOption.barrelFiles: true,
 };

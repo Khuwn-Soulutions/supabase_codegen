@@ -20,4 +20,7 @@ sealed class CmdOption {
 
   /// configYaml option
   static const configYaml = 'config-yaml';
+
+  /// barrel files option
+  static const barrelFiles = 'barrel-files';
 }
