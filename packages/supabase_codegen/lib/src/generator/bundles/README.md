@@ -17,7 +17,7 @@ dart pub global activate mason_cli
 ```
 1. Generate brick bundles from project root.
 ```sh
-for brick in {tables_and_enums,barrel_files}; do mason bundle "packages/supabase_codegen_templates/$brick" -o packages/supabase_codegen/lib/src/generator/bundles -t dart; done
+dart run scripts/bundle_bricks.dart
 ```
 
 ## Usage
