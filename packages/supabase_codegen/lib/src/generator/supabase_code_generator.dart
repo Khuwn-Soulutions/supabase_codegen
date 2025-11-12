@@ -6,7 +6,7 @@ import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
-import 'package:supabase_codegen/supabase_codegen_generator.dart' hide logger;
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// Supabase client instance to generate types.
 late SupabaseClient client;
@@ -38,9 +38,6 @@ String packageName = defaultPackageName;
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
 
-/// Mason logger
-final _logger = Logger();
-
 /// Supabase code generator utils class
 // coverage:ignore-start
 class SupabaseCodeGeneratorUtils {
@@ -60,10 +57,10 @@ class SupabaseCodeGeneratorUtils {
     String? outputFolder,
   ]) async {
     config = genConfig ?? GeneratorConfig.empty();
-    _logger.info('Generating with config: ${jsonEncode(config.toJson())}');
+    logger.detail('Generating with config: ${jsonEncode(config.toJson())}');
 
     // Generate tables and enums
-    final progress = _logger.progress('Generating Tables and Enums...');
+    final progress = logger.progress('Generating Tables and Enums...');
     final outputDir = Directory(outputFolder ?? root);
     await generateTablesAndEnums(outputDir, config);
 
@@ -217,22 +214,20 @@ class SupabaseCodeGenerator {
     final hasUrl = dotenv.isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
       throw Exception(
-        '[GenerateTypes] Missing ${supabaseEnvKeys.url} in $envFilePath file. ',
+        'Missing ${supabaseEnvKeys.url} in $envFilePath file. ',
       );
     }
 
     final supabaseKey = dotenv[supabaseEnvKeys.key];
     if (supabaseKey == null || supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] ${supabaseEnvKeys.key} is required to access the '
+        '${supabaseEnvKeys.key} is required to access the '
         'database schema.',
       );
     }
 
     // Get the config from env
     final supabaseUrl = dotenv[supabaseEnvKeys.url]!;
-    _logger.info('[GenerateTypes] Starting type generation');
-
     client = utils.createClient(supabaseUrl, supabaseKey);
   }
 }
