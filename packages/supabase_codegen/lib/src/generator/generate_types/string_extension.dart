@@ -7,4 +7,10 @@ extension GeneratorStringExtensions on String {
 
   /// Is this not a dynamic type
   bool get isNotDynamic => !isDynamic;
+
+  /// Is this a standard [DartType]
+  bool get isStandardType => DartType.values.contains(this);
+
+  /// Is this not a standard [DartType]
+  bool get isNotStandardType => !isStandardType;
 }

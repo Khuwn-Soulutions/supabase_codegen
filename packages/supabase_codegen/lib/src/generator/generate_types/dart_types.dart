@@ -26,4 +26,17 @@ class DartType {
 
   /// Null
   static const nullString = 'null';
+
+  /// All values
+  static const values = [
+    string,
+    uuidValue,
+    int,
+    double,
+    bool,
+    dateTime,
+    dynamic,
+    list,
+    nullString,
+  ];
 }
