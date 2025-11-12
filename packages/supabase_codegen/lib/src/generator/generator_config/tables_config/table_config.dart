@@ -30,7 +30,7 @@ class TableConfig {
   }
 
   /// Display name to use for the class
-  String get displayName => name.toTitleCase();
+  String get displayName => name.toSentenceCase().toTitleCase();
 
   /// Class name
   String get className => name.toPascalCase();
