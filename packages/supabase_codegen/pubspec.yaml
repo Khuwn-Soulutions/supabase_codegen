@@ -24,7 +24,6 @@ dependencies:
   path: ^1.9.1
   quiver: ^3.2.2
   supabase: ^2.10.0
-  talker: ^5.0.2
   uuid: ^4.5.1
   yaml: ^3.1.3
 
