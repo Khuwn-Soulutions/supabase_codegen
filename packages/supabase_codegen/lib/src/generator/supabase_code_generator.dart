@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dotenv/dotenv.dart';
 import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
@@ -171,40 +172,56 @@ class SupabaseCodeGenerator {
     /// Overrides for table and column configurations
     SchemaOverrides overrides = const {},
   }) async {
-    /// Initialize the supabase client
-    initSupabaseClient(envFilePath);
+    final progress = logger.progress('Generating Supabase types...');
+    try {
+      /// Initialize the supabase client
+      initSupabaseClient(envFilePath);
 
-    /// Set tag
-    tag = fileTag;
+      /// Set tag
+      tag = fileTag;
 
-    /// Set root folder
-    root = outputFolder;
+      /// Set root folder
+      root = outputFolder;
 
-    /// Set skip footer
-    skipFooterWrite = skipFooter;
+      /// Set skip footer
+      skipFooterWrite = skipFooter;
 
-    /// Set flutter usage
-    forFlutterUsage = forFlutter;
+      /// Set flutter usage
+      forFlutterUsage = forFlutter;
 
-    /// Set overrides
-    schemaOverrides = overrides;
+      /// Set overrides
+      schemaOverrides = overrides;
 
-    /// Get the enum config
-    final enums = await generateEnumConfigs();
+      /// Get the enum config
+      final enums = await generateEnumConfigs();
 
-    /// Get the table config
-    final tables = await generateTableConfigs(overrides);
+      /// Get the table config
+      final tables = await generateTableConfigs(overrides);
 
-    final config = GeneratorConfig(
-      package: package,
-      version: version,
-      forFlutter: forFlutter,
-      tag: tag,
-      tables: tables,
-      enums: enums,
-    );
+      final config = GeneratorConfig(
+        package: package,
+        version: version,
+        forFlutter: forFlutter,
+        tag: tag,
+        tables: tables,
+        enums: enums,
+      );
 
-    await utils.generateSchema(config);
+      await utils.generateSchema(config);
+      final outputFolderLink = link(
+        message: outputFolder,
+        uri: Uri.directory(path.join(Directory.current.path, outputFolder)),
+      );
+
+      progress.complete(
+        'Supabase types generated successfully to $outputFolderLink',
+      );
+    } on Exception catch (error) {
+      progress.fail('Error while generating types: $error');
+      rethrow;
+    } finally {
+      await client.dispose();
+    }
   }
 
   /// Initialize the supabase client
