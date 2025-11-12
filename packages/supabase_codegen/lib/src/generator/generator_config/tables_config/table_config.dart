@@ -1,5 +1,5 @@
 import 'package:change_case/change_case.dart';
-import 'package:supabase_codegen/src/generator/generator_config/tables_config/column_config.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template table_config}
 /// The configuration for a table in the generated table row class.
@@ -41,8 +41,11 @@ class TableConfig {
   /// Table class name
   String get tableClass => '${className}Table';
 
-  /// Has database import
-  bool get hasDatabaseImport => columns.any((column) => column.isEnum);
+  /// Imported files
+  List<String> get importedFiles => columns
+      .where((column) => column.dartType.isNotStandardType && column.isEnum)
+      .map((column) => '../enums/${column.dartType.toSnakeCase()}.dart')
+      .toList();
 
   /// The name of the table.
   final String name;
@@ -70,7 +73,8 @@ class TableConfig {
       'className': className,
       'rowClass': rowClass,
       'tableClass': tableClass,
-      'hasDatabaseImport': hasDatabaseImport,
+      'hasImports': importedFiles.isNotEmpty,
+      'importedFiles': importedFiles,
       'columns': columns.map((x) => x.toJson()).toList(),
     };
   }
