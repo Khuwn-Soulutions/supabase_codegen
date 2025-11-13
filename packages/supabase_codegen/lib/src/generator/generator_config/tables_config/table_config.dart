@@ -9,16 +9,10 @@ import 'package:supabase_codegen/supabase_codegen_generator.dart';
 @immutable
 class TableConfig {
   /// {@macro table_config}
-  const TableConfig({
-    required this.name,
-    required this.columns,
-  });
+  const TableConfig({required this.name, required this.columns});
 
   /// Creates an empty [TableConfig].
-  factory TableConfig.empty() => const TableConfig(
-        name: '',
-        columns: [],
-      );
+  factory TableConfig.empty() => const TableConfig(name: '', columns: []);
 
   /// Creates a [TableConfig] from a json map.
   factory TableConfig.fromJson(Map<String, dynamic> map) {
@@ -58,10 +52,7 @@ class TableConfig {
 
   /// Creates a copy of this [TableConfig] but with the given fields
   /// replaced with the new values.
-  TableConfig copyWith({
-    String? name,
-    List<ColumnConfig>? columns,
-  }) {
+  TableConfig copyWith({String? name, List<ColumnConfig>? columns}) {
     return TableConfig(
       name: name ?? this.name,
       columns: columns ?? this.columns,
