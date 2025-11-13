@@ -44,33 +44,27 @@ class GeneratorLockfile {
         forFlutter: config.forFlutter,
         tag: config.tag,
         barrelFiles: config.barrelFiles,
-        tables: config.tables.fold(
-          <String, int>{},
-          (tables, table) {
-            tables[table.name] = table.hashCode;
-            return tables;
-          },
-        ),
-        enums: config.enums.fold(
-          <String, int>{},
-          (enums, enumConfig) {
-            enums[enumConfig.formattedEnumName] = enumConfig.hashCode;
-            return enums;
-          },
-        ),
+        tables: config.tables.fold(<String, int>{}, (tables, table) {
+          tables[table.name] = table.hashCode;
+          return tables;
+        }),
+        enums: config.enums.fold(<String, int>{}, (enums, enumConfig) {
+          enums[enumConfig.fileName] = enumConfig.hashCode;
+          return enums;
+        }),
       );
 
   /// Create json representation of [GeneratorLockfile]
   Map<String, dynamic> toJson() => {
-        'date': date.toString(),
-        'package': package,
-        'version': version,
-        'forFlutter': forFlutter,
-        'tag': tag,
-        'barrelFiles': barrelFiles,
-        'tables': tables,
-        'enums': enums,
-      };
+    'date': date.toString(),
+    'package': package,
+    'version': version,
+    'forFlutter': forFlutter,
+    'tag': tag,
+    'barrelFiles': barrelFiles,
+    'tables': tables,
+    'enums': enums,
+  };
 
   /// Create yaml representation of the [GeneratorLockfile]
   String toYaml() => Yaml.encode(toJson());
@@ -93,9 +87,9 @@ class GeneratorLockfile {
   /// Tag
   final String tag;
 
-  /// Tables
+  /// Tables (Map of table name to [TableConfig] hashCode)
   final Map<String, int> tables;
 
-  /// Enums
+  /// Enums (Map of filename to [EnumConfig] hashCode)
   final Map<String, int> enums;
 }
