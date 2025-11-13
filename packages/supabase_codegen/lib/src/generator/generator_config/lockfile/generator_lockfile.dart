@@ -1,11 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:mason/mason.dart';
+import 'package:meta/meta.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:yaml/yaml.dart';
 
 /// Class representation of the lock file for a previous file generation process
+@immutable
 class GeneratorLockfile {
   /// Constructor
-  GeneratorLockfile({
+  const GeneratorLockfile({
     required this.date,
     required this.package,
     required this.version,
@@ -92,4 +95,30 @@ class GeneratorLockfile {
 
   /// Enums (Map of filename to [EnumConfig] hashCode)
   final Map<String, int> enums;
+
+  /// HAsh and equality  @override
+  @override
+  int get hashCode =>
+      date.hashCode ^
+      package.hashCode ^
+      version.hashCode ^
+      forFlutter.hashCode ^
+      barrelFiles.hashCode ^
+      tag.hashCode ^
+      const DeepCollectionEquality().hash(tables) ^
+      const DeepCollectionEquality().hash(enums);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GeneratorLockfile &&
+          runtimeType == other.runtimeType &&
+          date == other.date &&
+          package == other.package &&
+          version == other.version &&
+          forFlutter == other.forFlutter &&
+          barrelFiles == other.barrelFiles &&
+          tag == other.tag &&
+          const DeepCollectionEquality().equals(tables, other.tables) &&
+          const DeepCollectionEquality().equals(enums, other.enums);
 }
