@@ -13,8 +13,10 @@ class GeneratorLockfileManager {
 
   /// Get the lock file from the provided [directory]
   File _getLockFile([Directory? directory]) {
-    final filePath =
-        path.join(directory?.path ?? Directory.current.path, lockFileName);
+    final filePath = path.join(
+      directory?.path ?? Directory.current.path,
+      lockFileName,
+    );
     return File(filePath);
   }
 

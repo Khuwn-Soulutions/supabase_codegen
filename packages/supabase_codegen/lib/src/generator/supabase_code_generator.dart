@@ -73,6 +73,9 @@ class SupabaseCodeGeneratorUtils {
 
     progress.complete('Types generated successfully');
 
+    // Write the lockfile
+    _writeLockFile();
+
     // Run post generation clean up process
     await _cleanup(outputDir);
   }
@@ -108,6 +111,17 @@ class SupabaseCodeGeneratorUtils {
     final generator = await MasonGenerator.fromBundle(bundle);
     final target = DirectoryGeneratorTarget(outputDir);
     await generator.generate(target, vars: config.toJson());
+  }
+
+  /// Write the generator lockfile (to the project root)
+  void _writeLockFile() {
+    final lockFileProgress = logger.progress('Cleaning up generated files');
+
+    const lockfileManager = GeneratorLockfileManager();
+    final lockfile = GeneratorLockfile.fromConfig(config);
+    lockfileManager.writeLockfile(lockfile: lockfile);
+
+    lockFileProgress.complete('Lockfile created');
   }
 
   /// Run post generation clean up process
