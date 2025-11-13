@@ -44,4 +44,65 @@ class GeneratorLockfileManager {
     }
     file.writeAsStringSync(lockfile.toYaml());
   }
+
+  /// Process lockfile
+  Future<
+    ({
+      GeneratorConfig? upserts,
+      ({List<String> tables, List<String> enums})? deletes,
+      GeneratorLockfile lockfile,
+    })
+  >
+  processLockFile(GeneratorConfig config, {Directory? directory}) async {
+    final previousLockFile = await getLockfile(directory);
+    final currentLockFile = GeneratorLockfile.fromConfig(config);
+
+    // First-time generation — send full config
+    if (previousLockFile == null) {
+      return (upserts: config, deletes: null, lockfile: currentLockFile);
+    }
+
+    // Nothing changed
+    if (previousLockFile == currentLockFile) {
+      return (upserts: null, deletes: null, lockfile: currentLockFile);
+    }
+
+    // --- Lockfile changed ---
+
+    // Identify deleted tables/enums
+    final deletedTables = previousLockFile.tables.keys
+        .where((t) => !currentLockFile.tables.containsKey(t))
+        .toList();
+
+    final deletedEnums = previousLockFile.enums.keys
+        .where((e) => !currentLockFile.enums.containsKey(e))
+        .toList();
+
+    // Identify upserted (added or changed) tables/enums
+    final upsertTableNames = currentLockFile.tables.keys
+        .where((t) => previousLockFile.tables[t] != currentLockFile.tables[t])
+        .toList();
+
+    final upsertEnumNames = currentLockFile.enums.keys
+        .where((e) => previousLockFile.enums[e] != currentLockFile.enums[e])
+        .toList();
+
+    // Build filtered GeneratorConfigs
+    final upserts = (upsertTableNames.isEmpty && upsertEnumNames.isEmpty)
+        ? null
+        : config.copyWith(
+            tables: config.tables
+                .where((t) => upsertTableNames.contains(t.name))
+                .toList(),
+            enums: config.enums
+                .where((e) => upsertEnumNames.contains(e.formattedEnumName))
+                .toList(),
+          );
+
+    final deletes = (deletedTables.isEmpty && deletedEnums.isEmpty)
+        ? null
+        : (tables: deletedTables, enums: deletedEnums);
+
+    return (upserts: upserts, deletes: deletes, lockfile: currentLockFile);
+  }
 }
