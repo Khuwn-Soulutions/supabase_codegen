@@ -16,12 +16,12 @@ class GeneratorConfig {
 
   /// Create empty [GeneratorConfig]
   factory GeneratorConfig.empty() => GeneratorConfig(
-        package: '',
-        version: '',
-        forFlutter: false,
-        tag: '',
-        barrelFiles: true,
-      );
+    package: '',
+    version: '',
+    forFlutter: false,
+    tag: '',
+    barrelFiles: true,
+  );
 
   /// Create [GeneratorConfig] from [json]
   factory GeneratorConfig.fromJson(Map<String, dynamic> json) =>
@@ -46,19 +46,6 @@ class GeneratorConfig {
             : DateTime.parse(json['date'] as String),
       );
 
-  /// Create json representation of [GeneratorConfig]
-  Map<String, dynamic> toJson() => {
-        'date': date.toString(),
-        'package': package,
-        'version': version,
-        'forFlutter': forFlutter,
-        'tag': tag,
-        'barrelFiles': barrelFiles,
-        'hasTag': tag.isNotEmpty,
-        'tables': tables.map((table) => table.toJson()).toList(),
-        'enums': enums.map((config) => config.toJson()).toList(),
-      };
-
   /// Date created
   final DateTime date;
 
@@ -82,4 +69,38 @@ class GeneratorConfig {
 
   /// Enums
   final List<EnumConfig> enums;
+
+  /// Create json representation of [GeneratorConfig]
+  Map<String, dynamic> toJson() => {
+    'date': date.toString(),
+    'package': package,
+    'version': version,
+    'forFlutter': forFlutter,
+    'tag': tag,
+    'barrelFiles': barrelFiles,
+    'hasTag': tag.isNotEmpty,
+    'tables': tables.map((table) => table.toJson()).toList(),
+    'enums': enums.map((config) => config.toJson()).toList(),
+  };
+
+  /// Create a copy of [GeneratorConfig] with the provided properties overridden
+  GeneratorConfig copyWith({
+    DateTime? date,
+    String? package,
+    String? version,
+    bool? forFlutter,
+    bool? barrelFiles,
+    String? tag,
+    List<TableConfig>? tables,
+    List<EnumConfig>? enums,
+  }) => GeneratorConfig(
+    date: date ?? this.date,
+    package: package ?? this.package,
+    version: version ?? this.version,
+    forFlutter: forFlutter ?? this.forFlutter,
+    tag: tag ?? this.tag,
+    barrelFiles: barrelFiles ?? this.barrelFiles,
+    tables: tables ?? this.tables,
+    enums: enums ?? this.enums,
+  );
 }
