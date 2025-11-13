@@ -11,7 +11,8 @@ class GeneratorConfig {
     required this.barrelFiles,
     this.tables = const [],
     this.enums = const [],
-  });
+    DateTime? date,
+  }) : date = date ?? DateTime.now();
 
   /// Create empty [GeneratorConfig]
   factory GeneratorConfig.empty() => GeneratorConfig(
@@ -40,11 +41,14 @@ class GeneratorConfig {
               (config) => EnumConfig.fromJson(config as Map<String, dynamic>),
             )
             .toList(),
+        date: json['date'] == null
+            ? null
+            : DateTime.parse(json['date'] as String),
       );
 
   /// Create json representation of [GeneratorConfig]
   Map<String, dynamic> toJson() => {
-        'date': DateTime.now().toString(),
+        'date': date.toString(),
         'package': package,
         'version': version,
         'forFlutter': forFlutter,
@@ -54,6 +58,9 @@ class GeneratorConfig {
         'tables': tables.map((table) => table.toJson()).toList(),
         'enums': enums.map((config) => config.toJson()).toList(),
       };
+
+  /// Date created
+  final DateTime date;
 
   /// Package name
   final String package;
