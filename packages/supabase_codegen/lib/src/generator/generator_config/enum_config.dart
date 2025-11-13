@@ -18,11 +18,8 @@ class EnumConfig {
   });
 
   /// An empty factory for [EnumConfig].
-  factory EnumConfig.empty() => const EnumConfig(
-        enumName: '',
-        formattedEnumName: '',
-        values: [],
-      );
+  factory EnumConfig.empty() =>
+      const EnumConfig(enumName: '', formattedEnumName: '', values: []);
 
   /// Creates an [EnumConfig] from a JSON object.
   ///
@@ -47,6 +44,9 @@ class EnumConfig {
   /// Does any of the values use ALL_CAPS_WITH_UNDERSCORES
   bool get hasConstantIdentifier => values.any((value) => value.isUpperCase());
 
+  /// File name
+  String get fileName => formattedEnumName.toSnakeCase();
+
   /// Converts the [EnumConfig] to a JSON object.
   Map<String, dynamic> toJson() {
     return {
@@ -54,6 +54,7 @@ class EnumConfig {
       'formattedEnumName': formattedEnumName,
       'values': values,
       'hasConstantIdentifier': hasConstantIdentifier,
+      'fileName': fileName,
     };
   }
 
