@@ -1,0 +1,14 @@
+date: "2025-11-13 01:12:55.798921"
+package: supabase_codegen_flutter
+version: 3.0.1
+forFlutter: true
+tag: 
+barrelFiles: true
+tables:
+  messages: 2100678305
+  test_generate: 513098288
+  test_table: 960837097
+  users: 55946520
+enums:
+  MessageTypes: 2057528469
+  UserRole: 2034031078
