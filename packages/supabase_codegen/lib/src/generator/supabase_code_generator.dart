@@ -84,23 +84,21 @@ class SupabaseCodeGeneratorUtils {
   Future<void> generateTablesAndEnums(
     Directory outputDir,
     GeneratorConfig config,
-  ) =>
-      _generateBundle(
-        outputDir: outputDir,
-        config: config,
-        bundle: tablesAndEnumsBundle,
-      );
+  ) => _generateBundle(
+    outputDir: outputDir,
+    config: config,
+    bundle: tablesAndEnumsBundle,
+  );
 
   /// Generate barrel files into the [outputDir] with the provided [config]
   Future<void> generateBarrelFiles(
     Directory outputDir,
     GeneratorConfig config,
-  ) =>
-      _generateBundle(
-        outputDir: outputDir,
-        config: config,
-        bundle: barrelFilesBundle,
-      );
+  ) => _generateBundle(
+    outputDir: outputDir,
+    config: config,
+    bundle: barrelFilesBundle,
+  );
 
   /// Generate the [bundle] into the [outputDir] with the provided [config]
   Future<void> _generateBundle({
@@ -128,7 +126,14 @@ class SupabaseCodeGeneratorUtils {
   Future<void> _cleanup(Directory outputDir) async {
     final cleanup = logger.progress('Cleaning up generated files');
 
-    /// List the files in the current directory
+    _ensureFileExtension(outputDir);
+    _formatFiles(outputDir);
+
+    cleanup.complete('Generated files cleaned up successfully');
+  }
+
+  /// Ensure all files in the output directory end in the proper extension
+  void _ensureFileExtension(Directory outputDir) {
     final files = outputDir.listSync(recursive: true);
     for (final file in files) {
       if (file is File) {
@@ -139,12 +144,12 @@ class SupabaseCodeGeneratorUtils {
         file.renameSync(newPath);
       }
     }
+  }
 
-    // Run dart format
+  /// Format files
+  void _formatFiles(Directory outputDir) {
     logger.detail('Running dart format');
     Process.runSync('dart', ['format', outputDir.path]);
-
-    cleanup.complete('Generated files cleaned up successfully');
   }
 
   /// Create the supabase client
@@ -247,9 +252,7 @@ class SupabaseCodeGenerator {
     final dotenv = DotEnv()..load([envFilePath]);
     final hasUrl = dotenv.isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
-      throw Exception(
-        'Missing ${supabaseEnvKeys.url} in $envFilePath file. ',
-      );
+      throw Exception('Missing ${supabaseEnvKeys.url} in $envFilePath file. ');
     }
 
     final supabaseKey = dotenv[supabaseEnvKeys.key];
