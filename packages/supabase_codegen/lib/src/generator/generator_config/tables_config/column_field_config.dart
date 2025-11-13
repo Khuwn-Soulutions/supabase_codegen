@@ -1,6 +1,9 @@
+import 'package:meta/meta.dart';
+
 /// {@template column_field_config}
 /// The configuration for a column's field in the generated table row class.
 /// {@endtemplate}
+@immutable
 class ColumnFieldConfig {
   /// {@macro column_field_config}
   const ColumnFieldConfig({
@@ -83,5 +86,26 @@ class ColumnFieldConfig {
       'question': question,
       'bang': bang,
     };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ColumnFieldConfig &&
+        other.name == name &&
+        other.defaultValue == defaultValue &&
+        other.genericType == genericType &&
+        other.question == question &&
+        other.bang == bang;
+  }
+
+  @override
+  int get hashCode {
+    return name.hashCode ^
+        defaultValue.hashCode ^
+        genericType.hashCode ^
+        question.hashCode ^
+        bang.hashCode;
   }
 }

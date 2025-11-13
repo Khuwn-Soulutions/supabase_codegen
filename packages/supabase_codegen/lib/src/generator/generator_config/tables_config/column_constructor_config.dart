@@ -1,7 +1,10 @@
+import 'package:meta/meta.dart';
+
 /// {@template column_constructor_config}
 /// The configuration for a column's constructor parameter in the generated
 /// table row class.
 /// {@endtemplate}
+@immutable
 class ColumnConstructorConfig {
   /// {@macro column_constructor_config}
   const ColumnConstructorConfig({
@@ -57,4 +60,17 @@ class ColumnConstructorConfig {
       'question': question,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ColumnConstructorConfig &&
+        other.isOptional == isOptional &&
+        other.qualifier == qualifier &&
+        other.question == question;
+  }
+
+  @override
+  int get hashCode => isOptional.hashCode ^ qualifier.hashCode ^ question.hashCode;
 }

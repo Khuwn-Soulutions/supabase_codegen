@@ -1,8 +1,10 @@
+import 'package:meta/meta.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template column_config}
 /// The configuration for a column in the generated table row class.
 /// {@endtemplate}
+@immutable
 class ColumnConfig {
   /// {@macro column_config}
   const ColumnConfig({
@@ -174,5 +176,36 @@ class ColumnConfig {
       'constructor': constructor.toJson(),
       'field': field.toJson(),
     };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ColumnConfig &&
+        other.dartType == dartType &&
+        other.isNullable == isNullable &&
+        other.hasDefault == hasDefault &&
+        other.defaultValue == defaultValue &&
+        other.columnName == columnName &&
+        other.isArray == isArray &&
+        other.isEnum == isEnum &&
+        other.parameterName == parameterName &&
+        other.constructor == constructor &&
+        other.field == field;
+  }
+
+  @override
+  int get hashCode {
+    return dartType.hashCode ^
+        isNullable.hashCode ^
+        hasDefault.hashCode ^
+        defaultValue.hashCode ^
+        columnName.hashCode ^
+        isArray.hashCode ^
+        isEnum.hashCode ^
+        parameterName.hashCode ^
+        constructor.hashCode ^
+        field.hashCode;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:change_case/change_case.dart';
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 /// {@template enum_config}
@@ -69,4 +70,19 @@ class EnumConfig {
       values: values ?? this.values,
     );
   }
+
+  @override
+  int get hashCode =>
+      enumName.hashCode ^
+      formattedEnumName.hashCode ^
+      const DeepCollectionEquality().hash(values);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EnumConfig &&
+          runtimeType == other.runtimeType &&
+          enumName == other.enumName &&
+          formattedEnumName == other.formattedEnumName &&
+          values == other.values;
 }

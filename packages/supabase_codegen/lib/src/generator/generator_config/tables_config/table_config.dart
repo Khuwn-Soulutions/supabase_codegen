@@ -1,9 +1,12 @@
 import 'package:change_case/change_case.dart';
+import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template table_config}
 /// The configuration for a table in the generated table row class.
 /// {@endtemplate}
+@immutable
 class TableConfig {
   /// {@macro table_config}
   const TableConfig({
@@ -78,4 +81,18 @@ class TableConfig {
       'columns': columns.map((x) => x.toJson()).toList(),
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    const deepCollectionEquality = DeepCollectionEquality();
+
+    return other is TableConfig &&
+        other.name == name &&
+        deepCollectionEquality.equals(other.columns, columns);
+  }
+
+  @override
+  int get hashCode =>
+      name.hashCode ^ const DeepCollectionEquality().hash(columns);
 }
