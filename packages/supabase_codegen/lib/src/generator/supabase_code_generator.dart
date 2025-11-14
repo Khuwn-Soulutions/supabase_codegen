@@ -45,6 +45,7 @@ class SupabaseCodeGeneratorUtils {
   /// Constructor
   const SupabaseCodeGeneratorUtils({
     this.bundleGenerator = const BundleGenerator(),
+    this.lockfileManager = const GeneratorLockfileManager(),
   });
 
   /// Bundle generator
@@ -57,8 +58,7 @@ class SupabaseCodeGeneratorUtils {
   static GeneratorConfig config = GeneratorConfig.empty();
 
   /// Lockfile manager
-  static const GeneratorLockfileManager lockfileManager =
-      GeneratorLockfileManager();
+  final GeneratorLockfileManager lockfileManager;
 
   /// Generated files
   static List<GeneratedFile> generatedFiles = [];
