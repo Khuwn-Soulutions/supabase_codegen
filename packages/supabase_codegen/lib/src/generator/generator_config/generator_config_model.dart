@@ -46,6 +46,21 @@ class GeneratorConfig extends GeneratorConfigBase {
             : DateTime.parse(json['date'] as String),
       );
 
+  /// Create [GeneratorConfig] from [params] with the [tables] and [enums]
+  factory GeneratorConfig.fromParams({
+    required GeneratorConfigParams params,
+    List<TableConfig> tables = const [],
+    List<EnumConfig> enums = const [],
+  }) => GeneratorConfig(
+    package: params.package,
+    version: params.version,
+    forFlutter: params.forFlutter,
+    tag: params.tag,
+    barrelFiles: params.barrelFiles,
+    tables: tables,
+    enums: enums,
+  );
+
   /// Date created
   final DateTime date;
 
