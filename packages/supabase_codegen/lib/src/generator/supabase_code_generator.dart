@@ -60,9 +60,6 @@ class SupabaseCodeGeneratorUtils {
   /// Lockfile manager
   final GeneratorLockfileManager lockfileManager;
 
-  /// Generated files
-  static List<GeneratedFile> generatedFiles = [];
-
   /// Generate schema info
   @visibleForTesting
   Future<bool> generateSchema([
