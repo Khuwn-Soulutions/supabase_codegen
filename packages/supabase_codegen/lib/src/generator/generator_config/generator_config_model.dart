@@ -31,12 +31,12 @@ class GeneratorConfig {
         forFlutter: json['forFlutter'] as bool,
         tag: json['tag'] as String,
         barrelFiles: json['barrelFiles'] as bool,
-        tables: (json['tables'] as List<dynamic>)
+        tables: (json['tables'] as List<dynamic>? ?? [])
             .map<TableConfig>(
               (table) => TableConfig.fromJson(table as Map<String, dynamic>),
             )
             .toList(),
-        enums: (json['enums'] as List<dynamic>)
+        enums: (json['enums'] as List<dynamic>? ?? [])
             .map<EnumConfig>(
               (config) => EnumConfig.fromJson(config as Map<String, dynamic>),
             )
@@ -79,8 +79,14 @@ class GeneratorConfig {
     'tag': tag,
     'barrelFiles': barrelFiles,
     'hasTag': tag.isNotEmpty,
-    'tables': tables.map((table) => table.toJson()).toList(),
-    'enums': enums.map((config) => config.toJson()).toList(),
+    // Important!!
+    // Set arrays used to generate files to null if no items to generate
+    'tables': tables.isEmpty
+        ? null
+        : tables.map((table) => table.toJson()).toList(),
+    'enums': enums.isEmpty
+        ? null
+        : enums.map((config) => config.toJson()).toList(),
   };
 
   /// Create a copy of [GeneratorConfig] with the provided properties overridden
