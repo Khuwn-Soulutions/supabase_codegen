@@ -18,21 +18,36 @@ class SupabaseSchemaGenerator {
   /// Bundle generator
   final BundleGenerator bundleGenerator;
 
-  /// Supabase client instance.
-  static late SupabaseClient client;
-
   /// Config
   static GeneratorConfig config = GeneratorConfig.empty();
 
   /// Lockfile manager
   final GeneratorLockfileManager lockfileManager;
 
+  /// Generate the schema files
+  Future<bool> generate(GeneratorConfigParams params) async {
+    config = await generateConfig(params);
+    return generateSchema(params.outputFolder);
+  }
+
+  /// Generate configuration for file generation
+  Future<GeneratorConfig> generateConfig(GeneratorConfigParams params) async {
+    /// Get the enum config
+    final enums = await generateEnumConfigs();
+
+    /// Get the table config
+    final tables = await generateTableConfigs(params.overrides);
+
+    final config = GeneratorConfig.fromParams(
+      params: params,
+      tables: tables,
+      enums: enums,
+    );
+    return config;
+  }
+
   /// Generate schema info
-  Future<bool> generateSchema([
-    GeneratorConfig? genConfig,
-    String? outputFolder,
-  ]) async {
-    config = genConfig ?? GeneratorConfig.empty();
+  Future<bool> generateSchema(String outputFolder) async {
     logger.detail('Generating with config: ${jsonEncode(config.toJson())}');
 
     final (:deletes, :lockfile, :upserts) = await lockfileManager
@@ -49,7 +64,7 @@ class SupabaseSchemaGenerator {
     }
 
     // Output Directory
-    final outputDir = Directory(outputFolder ?? root);
+    final outputDir = Directory(outputFolder);
 
     // Handle upserts
     if (upserts != null) {
@@ -84,6 +99,6 @@ class SupabaseSchemaGenerator {
 
   /// Create the supabase client
   SupabaseClient createClient(String supabaseUrl, String supabaseKey) {
-    return client = SupabaseClient(supabaseUrl, supabaseKey);
+    return SupabaseClient(supabaseUrl, supabaseKey);
   }
 }

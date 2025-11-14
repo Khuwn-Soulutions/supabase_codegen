@@ -11,94 +11,28 @@ import 'package:supabase_codegen/supabase_codegen_generator.dart';
 /// Supabase client instance to generate types.
 late SupabaseClient client;
 
-/// Root directory path for generating files
-late String root;
-
-/// Tag
-String tag = '';
-
-/// Enums file name
-const enumBarrelFileName = '_enums';
-
 /// Map of enum type to formatted name
 final formattedEnums = <String, String>{};
-
-/// Should the footer generation be skipped
-bool skipFooterWrite = false;
-
-/// Are the types being generated for Flutter usage
-bool forFlutterUsage = false;
-
-/// Package code is being generated from
-const defaultPackageName = 'supabase_codegen';
-
-/// Package code is being generated from
-String packageName = defaultPackageName;
-
-/// Overrides for table and column configurations
-SchemaOverrides schemaOverrides = {};
 
 /// Supabase code generator
 class SupabaseCodeGenerator {
   /// Constructor
-  const SupabaseCodeGenerator({this.utils = const SupabaseSchemaGenerator()});
+  const SupabaseCodeGenerator({
+    this.schemaGenerator = const SupabaseSchemaGenerator(),
+  });
 
   /// Utility class
   @visibleForTesting
-  final SupabaseSchemaGenerator utils;
+  final SupabaseSchemaGenerator schemaGenerator;
 
   /// Generate Supabase types
-  Future<void> generateSupabaseTypes({
-    required String envFilePath,
-    required String outputFolder,
-
-    /// Should barrel files be generated
-    bool barrelFiles = true,
-
-    /// Package name
-    String package = defaultPackageName,
-
-    /// Tags to add to file footer
-    String fileTag = '',
-
-    /// Should the footer be skipped
-    bool skipFooter = false,
-
-    /// Is this for Flutter usage
-    bool forFlutter = false,
-
-    /// Overrides for table and column configurations
-    SchemaOverrides overrides = const {},
-  }) async {
+  Future<void> generateSupabaseTypes(GeneratorConfigParams params) async {
     final progress = logger.progress('Generating Supabase types...');
     try {
       /// Initialize the supabase client
-      initSupabaseClient(envFilePath);
+      initSupabaseClient(params.envFilePath);
 
-      /// Set tag
-      tag = fileTag;
-
-      /// Set root folder
-      root = outputFolder;
-
-      /// Set skip footer
-      skipFooterWrite = skipFooter;
-
-      /// Set flutter usage
-      forFlutterUsage = forFlutter;
-
-      /// Set overrides
-      schemaOverrides = overrides;
-
-      /// Get the enum config
-      final config = await generateConfig(
-        overrides,
-        package,
-        forFlutter: forFlutter,
-        barrelFiles: barrelFiles,
-      );
-
-      final generated = await utils.generateSchema(config);
+      final generated = await schemaGenerator.generate(params);
 
       /// Handle failed generation
       if (!generated) {
@@ -109,8 +43,10 @@ class SupabaseCodeGenerator {
 
       /// Display success
       final outputFolderLink = link(
-        message: outputFolder,
-        uri: Uri.directory(path.join(Directory.current.path, outputFolder)),
+        message: params.outputFolder,
+        uri: Uri.directory(
+          path.join(Directory.current.path, params.outputFolder),
+        ),
       );
 
       progress.complete(
@@ -120,34 +56,6 @@ class SupabaseCodeGenerator {
       progress.fail('Error while generating types: $error');
       rethrow;
     }
-    // finally {
-    //   await client.dispose();
-    // }
-  }
-
-  /// Generate configuration for file generation
-  Future<GeneratorConfig> generateConfig(
-    SchemaOverrides overrides,
-    String package, {
-    bool forFlutter = false,
-    bool barrelFiles = true,
-  }) async {
-    /// Get the enum config
-    final enums = await generateEnumConfigs();
-
-    /// Get the table config
-    final tables = await generateTableConfigs(overrides);
-
-    final config = GeneratorConfig(
-      package: package,
-      version: version,
-      forFlutter: forFlutter,
-      tag: tag,
-      barrelFiles: barrelFiles,
-      tables: tables,
-      enums: enums,
-    );
-    return config;
   }
 
   /// Initialize the supabase client
@@ -169,6 +77,6 @@ class SupabaseCodeGenerator {
 
     // Get the config from env
     final supabaseUrl = dotenv[supabaseEnvKeys.url]!;
-    client = utils.createClient(supabaseUrl, supabaseKey);
+    client = schemaGenerator.createClient(supabaseUrl, supabaseKey);
   }
 }

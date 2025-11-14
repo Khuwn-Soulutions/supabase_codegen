@@ -5,6 +5,9 @@ import 'package:change_case/change_case.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
 
+/// Package code is being generated from
+const defaultPackageName = 'supabase_codegen';
+
 /// Generate the supabase types using the [args] provided
 Future<String?> runGenerateTypes(
   List<String> args, {
@@ -14,7 +17,8 @@ Future<String?> runGenerateTypes(
   bool forFlutter = false,
 }) async {
   /// Are we running in test mode
-  final isRunningInTest = Platform.script.path.contains('test.dart') ||
+  final isRunningInTest =
+      Platform.script.path.contains('test.dart') ||
       Platform.environment['FLUTTER_TEST'] == 'true';
 
   try {
@@ -23,11 +27,7 @@ Future<String?> runGenerateTypes(
     /// the pubspec file with a predefined fallback if not set in pubspec
     final parser = ArgParser()
       // Help
-      ..addFlag(
-        CmdOption.help,
-        abbr: CmdOption.help[0],
-        help: 'Show help',
-      )
+      ..addFlag(CmdOption.help, abbr: CmdOption.help[0], help: 'Show help')
       // Env
       ..addOption(
         CmdOption.env,
@@ -54,7 +54,8 @@ Future<String?> runGenerateTypes(
         CmdOption.configYaml,
         defaultsTo: defaultValues[CmdOption.configYaml] as String,
         abbr: CmdOption.configYaml[0],
-        help: 'Path to config yaml file. \n'
+        help:
+            'Path to config yaml file. \n'
             'If not specified, reads from .supabase_codegen.yaml or keys under '
             'supabase_codegen in pubspec.yaml',
       )
@@ -69,7 +70,8 @@ Future<String?> runGenerateTypes(
         CmdOption.barrelFiles,
         defaultsTo: defaultValues[CmdOption.barrelFiles] as bool,
         abbr: CmdOption.barrelFiles[0],
-        help: 'Use barrel files for exports. '
+        help:
+            'Use barrel files for exports. '
             '(default: ${defaultValues[CmdOption.barrelFiles]})',
       )
       // Skip footer
@@ -104,13 +106,13 @@ Future<String?> runGenerateTypes(
     String optionValueFor(String option) => results.wasParsed(option)
         ? results.option(option)!
         : (codegenConfig[option.toCamelCase()] as String?) ??
-            parser.defaultFor(option)! as String;
+              parser.defaultFor(option)! as String;
 
     /// Helper function to get flag value
     bool flagValueFor(String option) => results.wasParsed(option)
         ? results.flag(option)
         : (codegenConfig[option.toCamelCase()] as bool?) ??
-            parser.defaultFor(option)! as bool;
+              parser.defaultFor(option)! as bool;
 
     // Pull out options
     final envFilePath = optionValueFor(CmdOption.env);
@@ -128,22 +130,18 @@ Future<String?> runGenerateTypes(
     final schemaOverrides = extractSchemaOverrides(codegenConfig);
     logger.detail('Schema Overrides: $schemaOverrides');
 
-    /// Set the package name from which generation is occuring
-    if (package != null) {
-      packageName = package;
-    }
-
     /// Generate the types using the command line options
-    await generator.generateSupabaseTypes(
-      package: packageName,
+    final params = GeneratorConfigParams(
+      package: package ?? defaultPackageName,
       envFilePath: envFilePath,
       outputFolder: outputFolder,
-      fileTag: tag,
+      tag: tag,
       barrelFiles: barrelFiles,
-      skipFooter: skipFooter,
       forFlutter: forFlutter,
       overrides: schemaOverrides,
+      version: version,
     );
+    await generator.generateSupabaseTypes(params);
 
     // coverage:ignore-start
     if (isRunningInTest) return null;
