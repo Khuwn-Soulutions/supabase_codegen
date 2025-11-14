@@ -15,10 +15,10 @@ class ColumnConstructorConfig {
 
   /// Creates an empty [ColumnConstructorConfig].
   factory ColumnConstructorConfig.empty() => const ColumnConstructorConfig(
-        isOptional: false,
-        qualifier: '',
-        question: '',
-      );
+    isOptional: false,
+    qualifier: '',
+    question: '',
+  );
 
   /// Creates a [ColumnConstructorConfig] from a json map.
   factory ColumnConstructorConfig.fromJson(Map<String, dynamic> map) {
@@ -72,5 +72,6 @@ class ColumnConstructorConfig {
   }
 
   @override
-  int get hashCode => isOptional.hashCode ^ qualifier.hashCode ^ question.hashCode;
+  int get hashCode =>
+      isOptional.hashCode ^ qualifier.hashCode ^ question.hashCode;
 }
