@@ -49,8 +49,9 @@ class SupabaseCodegenFlutterClient implements SupabaseCodegenClientBase {
   /// Load the supabase client using environment variables
   @override
   Future<SupabaseClient> loadClientFromEnv([String? envPath]) async {
-    final (:supabaseUrl, :supabaseKey, :env) =
-        await DotEnv().extractKeys(envPath ?? defaultEnvPath);
+    final (:supabaseUrl, :supabaseKey, :env) = await DotEnv().extractKeys(
+      envPath ?? defaultEnvPath,
+    );
     this.env = env;
     return createClient(supabaseUrl, supabaseKey);
   }

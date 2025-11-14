@@ -38,20 +38,20 @@ class TestGenerateRow extends SupabaseDataRow {
     DateTime? timestamp,
     List<int>? numArray,
   }) : super({
-          'is_not_nullable': supaSerialize(isNotNullable),
-          if (id != null) 'id': supaSerialize(id),
-          if (createdAt != null) 'created_at': supaSerialize(createdAt),
-          if (isNullable != null) 'is_nullable': supaSerialize(isNullable),
-          if (isArray != null) 'is_array': supaSerialize(isArray),
-          if (isInt != null) 'is_int': supaSerialize(isInt),
-          if (isDouble != null) 'is_double': supaSerialize(isDouble),
-          if (isBool != null) 'is_bool': supaSerialize(isBool),
-          if (isJson != null) 'is_json': supaSerialize(isJson),
-          if (isString != null) 'is_string': supaSerialize(isString),
-          if (dateCol != null) 'date_col': supaSerialize(dateCol),
-          if (timestamp != null) 'timestamp': supaSerialize(timestamp),
-          if (numArray != null) 'num_array': supaSerialize(numArray),
-        });
+         'is_not_nullable': supaSerialize(isNotNullable),
+         if (id != null) 'id': supaSerialize(id),
+         if (createdAt != null) 'created_at': supaSerialize(createdAt),
+         if (isNullable != null) 'is_nullable': supaSerialize(isNullable),
+         if (isArray != null) 'is_array': supaSerialize(isArray),
+         if (isInt != null) 'is_int': supaSerialize(isInt),
+         if (isDouble != null) 'is_double': supaSerialize(isDouble),
+         if (isBool != null) 'is_bool': supaSerialize(isBool),
+         if (isJson != null) 'is_json': supaSerialize(isJson),
+         if (isString != null) 'is_string': supaSerialize(isString),
+         if (dateCol != null) 'date_col': supaSerialize(dateCol),
+         if (timestamp != null) 'timestamp': supaSerialize(timestamp),
+         if (numArray != null) 'num_array': supaSerialize(numArray),
+       });
 
   /// Test Generate Row
   const TestGenerateRow._(super.data);
@@ -94,9 +94,9 @@ class TestGenerateRow extends SupabaseDataRow {
 
   /// Is Array
   List<String> get isArray => getListField<String>(
-        isArrayField,
-        defaultValue: const <String>['a', 'b'],
-      );
+    isArrayField,
+    defaultValue: const <String>['a', 'b'],
+  );
   set isArray(List<String>? value) => setListField<String>(isArrayField, value);
 
   /// Is Not Nullable field name
@@ -157,9 +157,9 @@ class TestGenerateRow extends SupabaseDataRow {
 
   /// Timestamp
   DateTime get timestamp => getField<DateTime>(
-        timestampField,
-        defaultValue: DateTime.parse('2001-01-01 00:00:00+00'),
-      )!;
+    timestampField,
+    defaultValue: DateTime.parse('2001-01-01 00:00:00+00'),
+  )!;
   set timestamp(DateTime value) => setField<DateTime>(timestampField, value);
 
   /// Num Array field name
@@ -186,23 +186,21 @@ class TestGenerateRow extends SupabaseDataRow {
     String? dateCol,
     DateTime? timestamp,
     List<int>? numArray,
-  }) =>
-      TestGenerateRow.fromJson({
-        'is_not_nullable':
-            supaSerialize(isNotNullable) ?? data['is_not_nullable'],
-        'id': supaSerialize(id) ?? data['id'],
-        'created_at': supaSerialize(createdAt) ?? data['created_at'],
-        'is_nullable': supaSerialize(isNullable) ?? data['is_nullable'],
-        'is_array': supaSerialize(isArray) ?? data['is_array'],
-        'is_int': supaSerialize(isInt) ?? data['is_int'],
-        'is_double': supaSerialize(isDouble) ?? data['is_double'],
-        'is_bool': supaSerialize(isBool) ?? data['is_bool'],
-        'is_json': supaSerialize(isJson) ?? data['is_json'],
-        'is_string': supaSerialize(isString) ?? data['is_string'],
-        'date_col': supaSerialize(dateCol) ?? data['date_col'],
-        'timestamp': supaSerialize(timestamp) ?? data['timestamp'],
-        'num_array': supaSerialize(numArray) ?? data['num_array'],
-      });
+  }) => TestGenerateRow.fromJson({
+    'is_not_nullable': supaSerialize(isNotNullable) ?? data['is_not_nullable'],
+    'id': supaSerialize(id) ?? data['id'],
+    'created_at': supaSerialize(createdAt) ?? data['created_at'],
+    'is_nullable': supaSerialize(isNullable) ?? data['is_nullable'],
+    'is_array': supaSerialize(isArray) ?? data['is_array'],
+    'is_int': supaSerialize(isInt) ?? data['is_int'],
+    'is_double': supaSerialize(isDouble) ?? data['is_double'],
+    'is_bool': supaSerialize(isBool) ?? data['is_bool'],
+    'is_json': supaSerialize(isJson) ?? data['is_json'],
+    'is_string': supaSerialize(isString) ?? data['is_string'],
+    'date_col': supaSerialize(dateCol) ?? data['date_col'],
+    'timestamp': supaSerialize(timestamp) ?? data['timestamp'],
+    'num_array': supaSerialize(numArray) ?? data['num_array'],
+  });
 }
 
 /// Date: 2025-04-13 19:48:58.871272

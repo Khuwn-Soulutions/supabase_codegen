@@ -6,7 +6,8 @@ String getDartType(Map<String, dynamic> column) {
   final udtName = column['udt_name'] as String? ?? '';
 
   // Improved array detection
-  final isArray = udtName.startsWith('_') ||
+  final isArray =
+      udtName.startsWith('_') ||
       postgresType.endsWith('[]') ||
       postgresType.toUpperCase() == 'ARRAY' ||
       column['is_array'] == true;

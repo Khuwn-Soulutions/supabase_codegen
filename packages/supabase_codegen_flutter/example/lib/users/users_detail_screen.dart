@@ -95,8 +95,8 @@ class _UsersDetailScreenState extends State<UsersDetailScreen> {
                         onPressed: () async {
                           /// Delete user
                           await _usersTable.delete(
-                            matchingRows:
-                                (q) => q.eq(UsersRow.idField, _user.id.uuid),
+                            matchingRows: (q) =>
+                                q.eq(UsersRow.idField, _user.id.uuid),
                           );
 
                           if (context.mounted) {
@@ -139,13 +139,12 @@ class _UsersDetailScreenState extends State<UsersDetailScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Column(
-                  children:
-                      _user.contacts.map((contact) {
-                        return ListTile(
-                          leading: const Icon(Icons.person),
-                          title: Text(contact),
-                        );
-                      }).toList(),
+                  children: _user.contacts.map((contact) {
+                    return ListTile(
+                      leading: const Icon(Icons.person),
+                      title: Text(contact),
+                    );
+                  }).toList(),
                 ),
               ),
           ],

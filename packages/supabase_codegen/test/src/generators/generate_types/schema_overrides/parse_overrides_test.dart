@@ -6,10 +6,7 @@ void main() {
     final codegenConfig = <String, dynamic>{
       'override': {
         'users': {
-          'id': {
-            'data_type': 'String',
-            'is_nullable': false,
-          },
+          'id': {'data_type': 'String', 'is_nullable': false},
           'email': {
             'data_type': 'String',
             'is_nullable': true,
@@ -17,9 +14,7 @@ void main() {
           },
         },
         'posts': {
-          'title': {
-            'data_type': 'String',
-          },
+          'title': {'data_type': 'String'},
         },
       },
     };

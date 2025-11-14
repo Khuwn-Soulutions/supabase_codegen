@@ -16,12 +16,12 @@ class ColumnFieldConfig {
 
   /// Creates an empty [ColumnFieldConfig].
   factory ColumnFieldConfig.empty() => const ColumnFieldConfig(
-        name: '',
-        defaultValue: '',
-        genericType: '',
-        question: '',
-        bang: '',
-      );
+    name: '',
+    defaultValue: '',
+    genericType: '',
+    question: '',
+    bang: '',
+  );
 
   /// Creates a [ColumnFieldConfig] from a json map.
   factory ColumnFieldConfig.fromJson(Map<String, dynamic> map) {

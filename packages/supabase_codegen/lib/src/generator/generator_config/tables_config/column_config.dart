@@ -22,16 +22,16 @@ class ColumnConfig {
 
   /// Creates an empty [ColumnConfig].
   factory ColumnConfig.empty() => ColumnConfig(
-        dartType: '',
-        isNullable: false,
-        hasDefault: false,
-        columnName: '',
-        isArray: false,
-        isEnum: false,
-        parameterName: '',
-        constructor: ColumnConstructorConfig.empty(),
-        field: ColumnFieldConfig.empty(),
-      );
+    dartType: '',
+    isNullable: false,
+    hasDefault: false,
+    columnName: '',
+    isArray: false,
+    isEnum: false,
+    parameterName: '',
+    constructor: ColumnConstructorConfig.empty(),
+    field: ColumnFieldConfig.empty(),
+  );
 
   /// Creates a [ColumnConfig] from a json map.
   factory ColumnConfig.fromJson(Map<String, dynamic> map) {
@@ -63,7 +63,7 @@ class ColumnConfig {
       :defaultValue,
       :columnName,
       :isArray,
-      :isEnum
+      :isEnum,
     ) = columnData;
 
     /// Constructor

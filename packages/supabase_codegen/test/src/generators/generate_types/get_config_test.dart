@@ -104,8 +104,9 @@ void main() {
       ''';
 
         // Mock File.readAsStringSync
-        when(() => mockPubspecFile.readAsStringSync())
-            .thenReturn(pubspecContent);
+        when(
+          () => mockPubspecFile.readAsStringSync(),
+        ).thenReturn(pubspecContent);
         when(() => mockPubspecFile.existsSync()).thenReturn(true);
 
         // Act
@@ -125,8 +126,9 @@ void main() {
         name: test_package
       ''';
         // Mock File.readAsStringSync
-        when(() => mockPubspecFile.readAsStringSync())
-            .thenReturn(pubspecContent);
+        when(
+          () => mockPubspecFile.readAsStringSync(),
+        ).thenReturn(pubspecContent);
         when(() => mockPubspecFile.existsSync()).thenReturn(true);
 
         // Act
@@ -198,8 +200,9 @@ void main() {
           skipFooter: true
         ''';
         when(() => mockConfigFile.existsSync()).thenReturn(false);
-        when(() => mockPubspecFile.readAsStringSync())
-            .thenReturn(pubspecContent);
+        when(
+          () => mockPubspecFile.readAsStringSync(),
+        ).thenReturn(pubspecContent);
         when(() => mockPubspecFile.existsSync()).thenReturn(true);
 
         // Act

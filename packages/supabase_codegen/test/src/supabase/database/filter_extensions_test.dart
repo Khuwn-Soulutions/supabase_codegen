@@ -20,8 +20,9 @@ void main() {
     });
 
     test('eqOrNull applies eq filter when value is not null', () {
-      when(() => mockBuilder.eq('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.eq('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.eqOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.eq('column', 'value')).called(1);
@@ -34,8 +35,9 @@ void main() {
     });
 
     test('neqOrNull applies neq filter when value is not null', () {
-      when(() => mockBuilder.neq('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.neq('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.neqOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.neq('column', 'value')).called(1);
@@ -48,8 +50,9 @@ void main() {
     });
 
     test('ltOrNull applies lt filter when value is not null', () {
-      when(() => mockBuilder.lt('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.lt('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.ltOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.lt('column', 'value')).called(1);
@@ -62,8 +65,9 @@ void main() {
     });
 
     test('lteOrNull applies lte filter when value is not null', () {
-      when(() => mockBuilder.lte('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.lte('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.lteOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.lte('column', 'value')).called(1);
@@ -76,8 +80,9 @@ void main() {
     });
 
     test('gtOrNull applies gt filter when value is not null', () {
-      when(() => mockBuilder.gt('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.gt('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.gtOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.gt('column', 'value')).called(1);
@@ -90,8 +95,9 @@ void main() {
     });
 
     test('gteOrNull applies gte filter when value is not null', () {
-      when(() => mockBuilder.gte('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.gte('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.gteOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.gte('column', 'value')).called(1);
@@ -104,8 +110,9 @@ void main() {
     });
 
     test('containsOrNull applies contains filter when value is not null', () {
-      when(() => mockBuilder.contains('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.contains('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.containsOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.contains('column', 'value')).called(1);
@@ -118,8 +125,9 @@ void main() {
     });
 
     test('overlapsOrNull applies overlaps filter when value is not null', () {
-      when(() => mockBuilder.overlaps('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.overlaps('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.overlapsOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.overlaps('column', 'value')).called(1);
@@ -133,8 +141,9 @@ void main() {
 
     test('inFilterOrNull applies inFilter when values is not null', () {
       final values = ['value1', 'value2'];
-      when(() => mockBuilder.inFilter('column', values))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.inFilter('column', values),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.inFilterOrNull('column', values);
       expect(result, mockBuilder);
       verify(() => mockBuilder.inFilter('column', values)).called(1);
@@ -156,8 +165,9 @@ void main() {
     });
 
     test('eqOrNull applies eq filter when value is not null', () {
-      when(() => mockBuilder.eq('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.eq('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.eqOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.eq('column', 'value')).called(1);
@@ -170,8 +180,9 @@ void main() {
     });
 
     test('neqOrNull applies neq filter when value is not null', () {
-      when(() => mockBuilder.neq('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.neq('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.neqOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.neq('column', 'value')).called(1);
@@ -184,8 +195,9 @@ void main() {
     });
 
     test('ltOrNull applies lt filter when value is not null', () {
-      when(() => mockBuilder.lt('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.lt('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.ltOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.lt('column', 'value')).called(1);
@@ -198,8 +210,9 @@ void main() {
     });
 
     test('lteOrNull applies lte filter when value is not null', () {
-      when(() => mockBuilder.lte('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.lte('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.lteOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.lte('column', 'value')).called(1);
@@ -212,8 +225,9 @@ void main() {
     });
 
     test('gtOrNull applies gt filter when value is not null', () {
-      when(() => mockBuilder.gt('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.gt('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.gtOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.gt('column', 'value')).called(1);
@@ -226,8 +240,9 @@ void main() {
     });
 
     test('gteOrNull applies gte filter when value is not null', () {
-      when(() => mockBuilder.gte('column', 'value'))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.gte('column', 'value'),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.gteOrNull('column', 'value');
       expect(result, mockBuilder);
       verify(() => mockBuilder.gte('column', 'value')).called(1);
@@ -241,8 +256,9 @@ void main() {
 
     test('inFilterOrNull applies inFilter when values is not null', () {
       final values = ['value1', 'value2'];
-      when(() => mockBuilder.inFilter('column', values))
-          .thenAnswer((_) => mockBuilder);
+      when(
+        () => mockBuilder.inFilter('column', values),
+      ).thenAnswer((_) => mockBuilder);
       final result = mockBuilder.inFilterOrNull('column', values);
       expect(result, mockBuilder);
       verify(() => mockBuilder.inFilter('column', values)).called(1);

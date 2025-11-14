@@ -3,10 +3,7 @@ import 'package:supabase_codegen/src/supabase/database/supa_serialize.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
-enum TestEnum {
-  value1,
-  value2;
-}
+enum TestEnum { value1, value2 }
 
 void main() {
   group('supaSerialize', () {
@@ -23,10 +20,7 @@ void main() {
       const lat = 48.8584;
       const lng = 2.2945;
       final latLng = LatLng.degree(lat, lng);
-      expect(supaSerialize<LatLng>(latLng), {
-        'lat': lat,
-        'lng': lng,
-      });
+      expect(supaSerialize<LatLng>(latLng), {'lat': lat, 'lng': lng});
     });
 
     test('serializes Enums to their name', () {
@@ -119,8 +113,10 @@ void main() {
     });
 
     test('deserializes LatLng from map with latitude and longitude', () {
-      final result =
-          supaDeserialize<LatLng>({'latitude': 48.8584, 'longitude': 2.2945});
+      final result = supaDeserialize<LatLng>({
+        'latitude': 48.8584,
+        'longitude': 2.2945,
+      });
       expect(result?.latitude.degrees, 48.8584);
       expect(result?.longitude.degrees, 2.2945);
     });

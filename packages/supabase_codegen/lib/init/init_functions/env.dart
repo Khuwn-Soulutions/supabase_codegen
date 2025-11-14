@@ -51,8 +51,10 @@ Future<String> configureEnv({
   if (loadClientWithEnv) {
     final added = await addEnvFileToAssets(envPath);
     print(
-      green('${added ? 'Env file added to' : 'Env file present in'} '
-          'flutter assets ✅'),
+      green(
+        '${added ? 'Env file added to' : 'Env file present in'} '
+        'flutter assets ✅',
+      ),
     );
   }
 
@@ -92,8 +94,10 @@ bool createEnvFile(
         ..append('SUPABASE_ANON_KEY=$key');
 
       print(
-        green('\nSupabase credentials written to '
-            'the environment file created at $envPath\n'),
+        green(
+          '\nSupabase credentials written to '
+          'the environment file created at $envPath\n',
+        ),
       );
     });
   }
@@ -119,7 +123,8 @@ Future<bool> addEnvFileToAssets(
   final pubspec = loadYaml(pubSpecContents) as YamlMap;
   final pubSpecFile = File(pubspecPath);
 
-  final assetsEntry = '''
+  final assetsEntry =
+      '''
   assets:
     - $envPath
 ''';
@@ -127,14 +132,12 @@ Future<bool> addEnvFileToAssets(
   /// Write full flutter entry if no flutter
   final flutter = pubspec['flutter'] as YamlMap?;
   if (!pubspec.containsKey('flutter')) {
-    pubSpecFile.writeAsStringSync(
-      '''
+    pubSpecFile.writeAsStringSync('''
 $pubSpecContents
 
 flutter:
 $assetsEntry
-''',
-    );
+''');
     return true;
   }
 

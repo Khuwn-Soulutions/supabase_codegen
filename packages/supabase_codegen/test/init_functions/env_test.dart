@@ -119,29 +119,36 @@ INVALID_KEY=abc123
 
       test('adds env file to pubspec.yaml with no flutter section', () async {
         File(pubspecPath).writeAsStringSync('name: test');
-        final result =
-            await addEnvFileToAssets(testEnv, pubspecPath: pubspecPath);
+        final result = await addEnvFileToAssets(
+          testEnv,
+          pubspecPath: pubspecPath,
+        );
         expect(result, isTrue);
         checkPubSpecContents();
       });
 
-      test('adds env file to pubspec.yaml with flutter but no assets',
-          () async {
-        File(pubspecPath).writeAsStringSync('''
+      test(
+        'adds env file to pubspec.yaml with flutter but no assets',
+        () async {
+          File(pubspecPath).writeAsStringSync('''
 name: test
 
 # Flutter section
 flutter:
 ''');
-        final result =
-            await addEnvFileToAssets(testEnv, pubspecPath: pubspecPath);
-        expect(result, isTrue);
-        checkPubSpecContents();
-      });
+          final result = await addEnvFileToAssets(
+            testEnv,
+            pubspecPath: pubspecPath,
+          );
+          expect(result, isTrue);
+          checkPubSpecContents();
+        },
+      );
 
-      test('adds env file to pubspec.yaml with flutter in dependencies',
-          () async {
-        File(pubspecPath).writeAsStringSync('''
+      test(
+        'adds env file to pubspec.yaml with flutter in dependencies',
+        () async {
+          File(pubspecPath).writeAsStringSync('''
 name: test
 
 dependencies:
@@ -151,11 +158,14 @@ dependencies:
 # Flutter section
 flutter:
 ''');
-        final result =
-            await addEnvFileToAssets(testEnv, pubspecPath: pubspecPath);
-        expect(result, isTrue);
-        checkPubSpecContents();
-      });
+          final result = await addEnvFileToAssets(
+            testEnv,
+            pubspecPath: pubspecPath,
+          );
+          expect(result, isTrue);
+          checkPubSpecContents();
+        },
+      );
 
       test('does not add if env file already present in assets', () async {
         File(pubspecPath).writeAsStringSync('''
@@ -165,8 +175,10 @@ flutter:
   assets:
     - $testEnv
 ''');
-        final result =
-            await addEnvFileToAssets(testEnv, pubspecPath: pubspecPath);
+        final result = await addEnvFileToAssets(
+          testEnv,
+          pubspecPath: pubspecPath,
+        );
         expect(result, isFalse);
         checkPubSpecContents();
       });
@@ -179,8 +191,10 @@ flutter:
   assets:
     - $somethingElse
 ''');
-        final result =
-            await addEnvFileToAssets(testEnv, pubspecPath: pubspecPath);
+        final result = await addEnvFileToAssets(
+          testEnv,
+          pubspecPath: pubspecPath,
+        );
         expect(result, isTrue);
         checkPubSpecContents();
         expect(pubspecFile.readAsStringSync(), contains(somethingElse));

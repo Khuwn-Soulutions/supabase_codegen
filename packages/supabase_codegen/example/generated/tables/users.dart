@@ -31,14 +31,14 @@ class UsersRow extends SupabaseDataRow {
     UserRole? role,
     DateTime? createdAt,
   }) : super({
-          'email': supaSerialize(email),
-          if (id != null) 'id': supaSerialize(id),
-          if (accName != null) 'acc_name': supaSerialize(accName),
-          if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
-          if (contacts != null) 'contacts': supaSerialize(contacts),
-          if (role != null) 'role': supaSerialize(role),
-          if (createdAt != null) 'created_at': supaSerialize(createdAt),
-        });
+         'email': supaSerialize(email),
+         if (id != null) 'id': supaSerialize(id),
+         if (accName != null) 'acc_name': supaSerialize(accName),
+         if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
+         if (contacts != null) 'contacts': supaSerialize(contacts),
+         if (role != null) 'role': supaSerialize(role),
+         if (createdAt != null) 'created_at': supaSerialize(createdAt),
+       });
 
   /// Users Row
   const UsersRow._(super.data);
@@ -95,10 +95,10 @@ class UsersRow extends SupabaseDataRow {
 
   /// Role
   UserRole get role => getField<UserRole>(
-        roleField,
-        enumValues: UserRole.values,
-        defaultValue: UserRole.user,
-      )!;
+    roleField,
+    enumValues: UserRole.values,
+    defaultValue: UserRole.user,
+  )!;
   set role(UserRole value) => setField<UserRole>(roleField, value);
 
   /// Created At field name
@@ -119,16 +119,15 @@ class UsersRow extends SupabaseDataRow {
     List<String>? contacts,
     UserRole? role,
     DateTime? createdAt,
-  }) =>
-      UsersRow.fromJson({
-        'email': supaSerialize(email) ?? data['email'],
-        'id': supaSerialize(id) ?? data['id'],
-        'acc_name': supaSerialize(accName) ?? data['acc_name'],
-        'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
-        'contacts': supaSerialize(contacts) ?? data['contacts'],
-        'role': supaSerialize(role) ?? data['role'],
-        'created_at': supaSerialize(createdAt) ?? data['created_at'],
-      });
+  }) => UsersRow.fromJson({
+    'email': supaSerialize(email) ?? data['email'],
+    'id': supaSerialize(id) ?? data['id'],
+    'acc_name': supaSerialize(accName) ?? data['acc_name'],
+    'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
+    'contacts': supaSerialize(contacts) ?? data['contacts'],
+    'role': supaSerialize(role) ?? data['role'],
+    'created_at': supaSerialize(createdAt) ?? data['created_at'],
+  });
 }
 
 /// Date: 2025-04-13 19:48:58.873571

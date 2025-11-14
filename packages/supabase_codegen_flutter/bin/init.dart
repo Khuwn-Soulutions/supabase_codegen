@@ -6,7 +6,7 @@ const defaultOutputPath = 'lib/types';
 
 /// Call the supabase_codegen init with relevant environment
 void main() => init(
-      forFlutter: true,
-      defaultEnvPath: defaultEnvFile,
-      defaultOutputPath: defaultOutputPath,
-    );
+  forFlutter: true,
+  defaultEnvPath: defaultEnvFile,
+  defaultOutputPath: defaultOutputPath,
+);

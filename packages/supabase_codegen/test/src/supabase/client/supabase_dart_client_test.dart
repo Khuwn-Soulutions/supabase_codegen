@@ -7,8 +7,11 @@ import 'package:test/test.dart';
 
 void main() {
   group('Supabase (Dart) Client', () {
-    final envPath =
-        path.join(Directory.current.path, 'test', 'dart_client.env');
+    final envPath = path.join(
+      Directory.current.path,
+      'test',
+      'dart_client.env',
+    );
     late SupabaseCodegenClient codegenClient;
 
     setUp(() {
@@ -27,7 +30,8 @@ void main() {
       String url = 'https://example.com',
       String key = '1234567',
     }) {
-      final contents = '''
+      final contents =
+          '''
 ${url.isEmpty ? '' : 'SUPABASE_URL=$url'}
 ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
 ''';

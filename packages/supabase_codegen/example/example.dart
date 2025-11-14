@@ -35,9 +35,7 @@ Future<void> main() async {
     email: 'user@example.com',
     role: UserRole.user,
     accName: 'Regular User',
-    contacts: [
-      adminUser.email,
-    ],
+    contacts: [adminUser.email],
   );
 
   await usersTable.insertRow(user);

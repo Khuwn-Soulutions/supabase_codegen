@@ -1,7 +1,8 @@
 import 'expected.dart';
 
 /// Expected Row class
-const expectedRowClass = '''
+const expectedRowClass =
+    '''
 /// Test Generate Row
 class TestGenerateRow extends SupabaseDataRow {
   /// Test Generate Row
@@ -42,5 +43,7 @@ $expectedRowFields$expectedCopyWith}
 
 ''';
 
-final expectedFlutterRowClass =
-    expectedRowClass.replaceAll('SupabaseDataRow', 'SupabaseFlutterDataRow');
+final expectedFlutterRowClass = expectedRowClass.replaceAll(
+  'SupabaseDataRow',
+  'SupabaseFlutterDataRow',
+);

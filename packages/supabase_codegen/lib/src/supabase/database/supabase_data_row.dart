@@ -40,21 +40,20 @@ abstract class SupabaseDataRow {
       data[fieldName] = supaSerializeList(value);
 
   @override
-  String toString() => '''
+  String toString() =>
+      '''
 Table: $tableName
 Row Data: {
-${data.entries.map(
-            (e) => '  (${e.value.runtimeType}) "${e.key}": ${e.value},\n',
-          ).join()}}
+${data.entries.map((e) => '  (${e.value.runtimeType}) "${e.key}": ${e.value},\n').join()}}
 ''';
 
   @override
   int get hashCode => Object.hash(
-        tableName,
-        Object.hashAllUnordered(
-          data.entries.map((e) => Object.hash(e.key, e.value)),
-        ),
-      );
+    tableName,
+    Object.hashAllUnordered(
+      data.entries.map((e) => Object.hash(e.key, e.value)),
+    ),
+  );
 
   @override
   bool operator ==(Object other) =>

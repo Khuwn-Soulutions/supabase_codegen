@@ -12,16 +12,8 @@ void main() {
       'bytea',
       'user-defined',
     ],
-    DartType.uuidValue: [
-      'uuid',
-    ],
-    DartType.int: [
-      'int2',
-      'int4',
-      'int8',
-      'bigint',
-      'integer',
-    ],
+    DartType.uuidValue: ['uuid'],
+    DartType.int: ['int2', 'int4', 'int8', 'bigint', 'integer'],
     DartType.double: [
       'float4',
       'float8',
@@ -29,34 +21,33 @@ void main() {
       'decimal',
       'double precision',
     ],
-    DartType.bool: [
-      'bool',
-      'boolean',
-    ],
+    DartType.bool: ['bool', 'boolean'],
     DartType.dateTime: [
       'timestamp',
       'timestamptz',
       'timestamp with time zone',
       'timestamp without time zone',
     ],
-    DartType.dynamic: [
-      'json',
-      'jsonb',
-    ],
+    DartType.dynamic: ['json', 'jsonb'],
   };
   group('getDartType', () {
-    test('returns correct Dart type for various Postgres types (non-array)',
-        () {
-      for (final entry in typeToPostgresTypes.entries) {
-        final dartType = entry.key;
-        for (final postgresType in entry.value) {
-          expect(
-            getDartType({'data_type': postgresType, 'udt_name': postgresType}),
-            equals(dartType),
-          );
+    test(
+      'returns correct Dart type for various Postgres types (non-array)',
+      () {
+        for (final entry in typeToPostgresTypes.entries) {
+          final dartType = entry.key;
+          for (final postgresType in entry.value) {
+            expect(
+              getDartType({
+                'data_type': postgresType,
+                'udt_name': postgresType,
+              }),
+              equals(dartType),
+            );
+          }
         }
-      }
-    });
+      },
+    );
 
     test('returns correct Dart type for array types', () {
       expect(
@@ -79,12 +70,7 @@ void main() {
         }),
         equals('List<String>'),
       );
-      expect(
-        getDartType({
-          'data_type': 'integer[]',
-        }),
-        equals('List<int>'),
-      );
+      expect(getDartType({'data_type': 'integer[]'}), equals('List<int>'));
       expect(
         getDartType({'data_type': 'ARRAY', 'element_type': 'text'}),
         equals('List<String>'),
