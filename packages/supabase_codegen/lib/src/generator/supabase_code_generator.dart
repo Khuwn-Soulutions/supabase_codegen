@@ -43,7 +43,12 @@ SchemaOverrides schemaOverrides = {};
 // coverage:ignore-start
 class SupabaseCodeGeneratorUtils {
   /// Constructor
-  const SupabaseCodeGeneratorUtils();
+  const SupabaseCodeGeneratorUtils({
+    this.bundleGenerator = const BundleGenerator(),
+  });
+
+  /// Bundle generator
+  final BundleGenerator bundleGenerator;
 
   /// Supabase client instance.
   static late SupabaseClient client;
@@ -86,7 +91,7 @@ class SupabaseCodeGeneratorUtils {
     // Handle upserts
     if (upserts != null) {
       // Generate tables and enums
-      await generateFiles(outputDir, upserts);
+      await bundleGenerator.generateFiles(outputDir, upserts, config);
     }
 
     // Handle deletes
@@ -106,56 +111,6 @@ class SupabaseCodeGeneratorUtils {
     return true;
   }
 
-  /// Generate files to the [outputDir]
-  Future<void> generateFiles(
-    Directory outputDir,
-    GeneratorConfig upserts,
-  ) async {
-    final progress = logger.progress('Generating Tables and Enums...');
-    await generateTablesAndEnums(outputDir, upserts);
-    // Generate barrel files
-    if (config.barrelFiles) {
-      progress.update('Generating barrel files');
-      await generateBarrelFiles(outputDir, config);
-    }
-    progress.complete('Types generated successfully');
-
-    // Run post generation clean up process
-    await _cleanup(outputDir);
-  }
-
-  /// Generate tables and enums into the [outputDir] with the provided [config]
-  Future<void> generateTablesAndEnums(
-    Directory outputDir,
-    GeneratorConfig config,
-  ) => _generateBundle(
-    outputDir: outputDir,
-    config: config,
-    bundle: tablesAndEnumsBundle,
-  );
-
-  /// Generate barrel files into the [outputDir] with the provided [config]
-  Future<void> generateBarrelFiles(
-    Directory outputDir,
-    GeneratorConfig config,
-  ) => _generateBundle(
-    outputDir: outputDir,
-    config: config,
-    bundle: barrelFilesBundle,
-  );
-
-  /// Generate the [bundle] into the [outputDir] with the provided [config]
-  Future<void> _generateBundle({
-    required Directory outputDir,
-    required GeneratorConfig config,
-    required MasonBundle bundle,
-  }) async {
-    final generator = await MasonGenerator.fromBundle(bundle);
-    final target = DirectoryGeneratorTarget(outputDir);
-    final files = await generator.generate(target, vars: config.toJson());
-    generatedFiles.addAll(files);
-  }
-
   /// Write the generator lockfile (to the project root)
   void _writeLockFile(GeneratorLockfile lockfile) {
     final lockFileProgress = logger.progress('Cleaning up generated files');
@@ -163,45 +118,6 @@ class SupabaseCodeGeneratorUtils {
     lockfileManager.writeLockfile(lockfile: lockfile);
 
     lockFileProgress.complete('Lockfile created');
-  }
-
-  /// Run post generation clean up process
-  Future<void> _cleanup(Directory outputDir) async {
-    final cleanup = logger.progress('Cleaning up generated files');
-
-    _ensureFileExtension(outputDir);
-    _formatFiles(outputDir);
-
-    cleanup.complete('Generated files cleaned up successfully');
-
-    for (final file in generatedFiles) {
-      final filePath = _replaceMustache(file.path);
-      logger.success('$filePath ${file.status.name}');
-    }
-  }
-
-  /// Replace the mustache extension
-  String _replaceMustache(String filePath) =>
-      filePath.replaceAll('.mustache', '');
-
-  /// Ensure all files in the output directory end in the proper extension
-  void _ensureFileExtension(Directory outputDir) {
-    final files = outputDir.listSync(recursive: true);
-    for (final file in files) {
-      if (file is File) {
-        // rename file by removing the .mustache at the end of the file
-        final newPath = _replaceMustache(file.path);
-
-        // rename the file
-        file.renameSync(newPath);
-      }
-    }
-  }
-
-  /// Format files
-  void _formatFiles(Directory outputDir) {
-    logger.detail('Running dart format');
-    Process.runSync('dart', ['format', outputDir.path]);
   }
 
   /// Create the supabase client
