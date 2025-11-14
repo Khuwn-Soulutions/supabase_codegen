@@ -88,7 +88,6 @@ void main() {
             '--tag',
             testTag,
             '--debug',
-            '--skip-footer',
           ];
 
           // Act
@@ -126,13 +125,11 @@ void main() {
           const envFilePath = '.env';
           const outputFolder = '.dart_tool/types';
           const fileTag = 'v1.0.1';
-          const skipFooter = true;
 
           configFile.writeAsStringSync('''
             env: $envFilePath
             output: $outputFolder
             tag: $fileTag
-            skipFooter: $skipFooter
           ''');
 
           // Act
@@ -182,13 +179,11 @@ void main() {
           const envFilePath = '.env';
           const outputFolder = '.dart_tool/types';
           const fileTag = 'v1.0.1';
-          const skipFooter = true;
 
           customConfigFile.writeAsStringSync('''
             env: $envFilePath
             output: $outputFolder
             tag: $fileTag
-            skipFooter: $skipFooter
           ''');
 
           // Act
@@ -234,7 +229,6 @@ void main() {
         output: pubspec/output
         tag: pubspectag
         debug: true
-        skipFooter: true
       ''');
           when(() => mockPubspecFile.existsSync()).thenReturn(true);
 

@@ -30,7 +30,6 @@ void main() {
           output: config/output
           tag: configtag
           debug: false
-          skipFooter: false
         ''';
         when(() => mockConfigFile.readAsStringSync()).thenReturn(configContent);
         when(() => mockConfigFile.existsSync()).thenReturn(true);
@@ -43,7 +42,6 @@ void main() {
         expect(result['output'], 'config/output');
         expect(result['tag'], 'configtag');
         expect(result['debug'], false);
-        expect(result['skipFooter'], false);
       });
 
       test('returns empty config if key is not found', () {
@@ -53,7 +51,6 @@ void main() {
           output: config/output
           tag: configtag
           debug: false
-          skipFooter: false
         ''';
         when(() => mockConfigFile.readAsStringSync()).thenReturn(configContent);
         when(() => mockConfigFile.existsSync()).thenReturn(true);
@@ -73,7 +70,6 @@ void main() {
             output: config/output
             tag: configtag
             debug: false
-            skipFooter: false
         ''';
         when(() => mockConfigFile.readAsStringSync()).thenReturn(configContent);
         when(() => mockConfigFile.existsSync()).thenReturn(true);
@@ -86,7 +82,6 @@ void main() {
         expect(result['output'], 'config/output');
         expect(result['tag'], 'configtag');
         expect(result['debug'], false);
-        expect(result['skipFooter'], false);
       });
     });
 
@@ -100,7 +95,6 @@ void main() {
           output: test/output
           tag: testtag
           debug: true
-          skipFooter: true
       ''';
 
         // Mock File.readAsStringSync
@@ -117,7 +111,6 @@ void main() {
         expect(result['output'], 'test/output');
         expect(result['tag'], 'testtag');
         expect(result['debug'], true);
-        expect(result['skipFooter'], true);
       });
 
       test('returns empty config if no supabase_codegen key', () {
@@ -167,7 +160,6 @@ void main() {
           output: config/output
           tag: configtag
           debug: false
-          skipFooter: false
         ''';
         when(() => mockConfigFile.readAsStringSync()).thenReturn(configContent);
         when(() => mockConfigFile.existsSync()).thenReturn(true);
@@ -184,7 +176,6 @@ void main() {
         expect(result['output'], 'config/output');
         expect(result['tag'], 'configtag');
         expect(result['debug'], false);
-        expect(result['skipFooter'], false);
         verifyNever(() => mockPubspecFile.existsSync());
       });
 
@@ -197,7 +188,6 @@ void main() {
           output: pubspec/output
           tag: pubspectag
           debug: true
-          skipFooter: true
         ''';
         when(() => mockConfigFile.existsSync()).thenReturn(false);
         when(
@@ -216,7 +206,6 @@ void main() {
         expect(result['output'], 'pubspec/output');
         expect(result['tag'], 'pubspectag');
         expect(result['debug'], true);
-        expect(result['skipFooter'], true);
       });
     });
   });

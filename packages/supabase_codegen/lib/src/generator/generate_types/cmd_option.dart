@@ -12,9 +12,6 @@ sealed class CmdOption {
   /// debug option
   static const debug = 'debug';
 
-  /// skipFooter option
-  static const skipFooter = 'skip-footer';
-
   /// help option
   static const help = 'help';
 

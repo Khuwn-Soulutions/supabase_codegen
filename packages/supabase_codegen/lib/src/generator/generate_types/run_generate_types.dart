@@ -73,12 +73,6 @@ Future<String?> runGenerateTypes(
         help:
             'Use barrel files for exports. '
             '(default: ${defaultValues[CmdOption.barrelFiles]})',
-      )
-      // Skip footer
-      ..addFlag(
-        CmdOption.skipFooter,
-        abbr: CmdOption.skipFooter[0],
-        help: 'Skip footer generation',
       );
     final results = parser.parse(args);
 
@@ -119,7 +113,6 @@ Future<String?> runGenerateTypes(
     final outputFolder = optionValueFor(CmdOption.output);
     final tag = optionValueFor(CmdOption.tag);
     final debug = flagValueFor(CmdOption.debug);
-    final skipFooter = flagValueFor(CmdOption.skipFooter);
     final barrelFiles = flagValueFor(CmdOption.barrelFiles);
 
     /// Set the log level if debug is true
