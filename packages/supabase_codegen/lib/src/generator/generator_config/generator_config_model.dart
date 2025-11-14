@@ -1,14 +1,14 @@
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// Generator configuration model
-class GeneratorConfig {
+class GeneratorConfig extends GeneratorConfigBase {
   /// Constructor
   GeneratorConfig({
-    required this.package,
-    required this.version,
-    required this.forFlutter,
-    required this.tag,
-    required this.barrelFiles,
+    required super.package,
+    required super.version,
+    required super.forFlutter,
+    required super.tag,
+    required super.barrelFiles,
     this.tables = const [],
     this.enums = const [],
     DateTime? date,
@@ -48,21 +48,6 @@ class GeneratorConfig {
 
   /// Date created
   final DateTime date;
-
-  /// Package name
-  final String package;
-
-  /// Package version
-  final String version;
-
-  /// Are the files being generated for use in Flutter?
-  final bool forFlutter;
-
-  /// Should barrel files be generated
-  final bool barrelFiles;
-
-  /// Tag
-  final String tag;
 
   /// Tables
   final List<TableConfig> tables;
