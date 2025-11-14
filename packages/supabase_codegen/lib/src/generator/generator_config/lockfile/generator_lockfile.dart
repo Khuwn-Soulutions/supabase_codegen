@@ -26,7 +26,7 @@ class GeneratorLockfile {
         package: json['package'] as String,
         version: json['version'] as String,
         forFlutter: json['forFlutter'] as bool,
-        tag: json['tag'] as String,
+        tag: json['tag'] == null ? '' : json['tag'] as String,
         barrelFiles: json['barrelFiles'] as bool,
         tables: Map<String, int>.from(json['tables'] as Map),
         enums: Map<String, int>.from(json['enums'] as Map),
