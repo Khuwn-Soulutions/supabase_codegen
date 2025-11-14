@@ -7,18 +7,23 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
 import 'package:test/test.dart';
 
-class MockGeneratorUtils extends Mock implements SupabaseSchemaGenerator {}
+class MockSchemaGenerator extends Mock implements SupabaseSchemaGenerator {}
 
 void main() {
   late SupabaseCodeGenerator generator;
   logger = testLogger;
+  late GeneratorConfigParams params;
+
+  setUp(() {
+    params = GeneratorConfigParams.empty();
+  });
+
   group('SupabaseCodeGenerator', () {
     generator = const SupabaseCodeGenerator();
     test('it throws an error when env file not found', () {
       expect(
         generator.generateSupabaseTypes(
-          envFilePath: '.no-env',
-          outputFolder: '',
+          params.copyWith(envFilePath: '.no-env'),
         ),
         throwsException,
       );
@@ -32,7 +37,10 @@ void main() {
       );
       late File envFile;
 
-      setUp(() => envFile = File(envPath));
+      setUp(() {
+        envFile = File(envPath);
+        params = params.copyWith(envFilePath: envFile.path);
+      });
 
       tearDown(() {
         if (envFile.existsSync()) {
@@ -42,10 +50,7 @@ void main() {
 
       test('throws an error if it does not contain ${supabaseEnvKeys.url}', () {
         expect(
-          generator.generateSupabaseTypes(
-            envFilePath: envFile.path,
-            outputFolder: '',
-          ),
+          generator.generateSupabaseTypes(params),
           throwsA(
             isA<Exception>().having(
               (e) => e.toString(),
@@ -60,10 +65,7 @@ void main() {
           '${supabaseEnvKeys.key} not set', () async {
         envFile.writeAsStringSync('${supabaseEnvKeys.url}=http://db.com');
         expect(
-          generator.generateSupabaseTypes(
-            envFilePath: envFile.path,
-            outputFolder: '',
-          ),
+          generator.generateSupabaseTypes(params),
           throwsA(
             isA<Exception>().having(
               (e) => e.toString(),
@@ -81,14 +83,22 @@ void main() {
         const url = 'http://db.com';
         const anonKey = 'ANON_KEY';
         const key = 'KEY';
-        late MockGeneratorUtils mockUtils;
+        late MockSchemaGenerator mockSchemaGenerator;
 
         setUp(() {
-          mockUtils = MockGeneratorUtils();
-          generator = SupabaseCodeGenerator(utils: mockUtils);
-          when(mockUtils.generateSchema).thenAnswer((_) async => true);
+          mockSchemaGenerator = MockSchemaGenerator();
+          generator = SupabaseCodeGenerator(
+            schemaGenerator: mockSchemaGenerator,
+          );
           when(
-            () => mockUtils.createClient(any<String>(), any<String>()),
+            () => mockSchemaGenerator.generateSchema(any()),
+          ).thenAnswer((_) async => true);
+          when(
+            () => mockSchemaGenerator.generate(params),
+          ).thenAnswer((_) async => true);
+          when(
+            () =>
+                mockSchemaGenerator.createClient(any<String>(), any<String>()),
           ).thenAnswer(
             (inv) => SupabaseClient(
               inv.positionalArguments[0] as String,
@@ -106,11 +116,8 @@ void main() {
             ${supabaseEnvKeys.anonKey}=$anonKey
             ${supabaseEnvKeys.key}=$key
           ''');
-            await generator.generateSupabaseTypes(
-              envFilePath: envFile.path,
-              outputFolder: '',
-            );
-            verify(() => mockUtils.createClient(url, key)).called(1);
+            await generator.generateSupabaseTypes(params);
+            verify(() => mockSchemaGenerator.createClient(url, key)).called(1);
           },
         );
 
@@ -120,11 +127,8 @@ void main() {
             ${supabaseEnvKeys.url}=$url
             ${supabaseEnvKeys.key}=$key
           ''');
-          await generator.generateSupabaseTypes(
-            envFilePath: envFile.path,
-            outputFolder: '',
-          );
-          verify(() => mockUtils.createClient(url, key)).called(1);
+          await generator.generateSupabaseTypes(params);
+          verify(() => mockSchemaGenerator.createClient(url, key)).called(1);
         });
       });
     });
