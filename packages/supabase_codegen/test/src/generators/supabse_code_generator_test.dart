@@ -25,8 +25,11 @@ void main() {
     });
 
     group('with env file', () {
-      final envPath =
-          path.join(Directory.current.path, 'test', '.env-gen-test');
+      final envPath = path.join(
+        Directory.current.path,
+        'test',
+        '.env-gen-test',
+      );
       late File envFile;
 
       setUp(() => envFile = File(envPath));
@@ -53,8 +56,7 @@ void main() {
         );
       });
 
-      test(
-          'throws an error when ${supabaseEnvKeys.anonKey} or '
+      test('throws an error when ${supabaseEnvKeys.anonKey} or '
           '${supabaseEnvKeys.key} not set', () async {
         envFile.writeAsStringSync('${supabaseEnvKeys.url}=http://db.com');
         expect(
@@ -66,38 +68,39 @@ void main() {
             isA<Exception>().having(
               (e) => e.toString(),
               'message',
-              contains('${supabaseEnvKeys.key} is required to access the '
-                  'database schema.'),
+              contains(
+                '${supabaseEnvKeys.key} is required to access the '
+                'database schema.',
+              ),
             ),
           ),
         );
       });
 
-      group(
-        'sets client',
-        () {
-          const url = 'http://db.com';
-          const anonKey = 'ANON_KEY';
-          const key = 'KEY';
-          late MockGeneratorUtils mockUtils;
+      group('sets client', () {
+        const url = 'http://db.com';
+        const anonKey = 'ANON_KEY';
+        const key = 'KEY';
+        late MockGeneratorUtils mockUtils;
 
-          setUp(() {
-            mockUtils = MockGeneratorUtils();
-            generator = SupabaseCodeGenerator(utils: mockUtils);
-            when(mockUtils.generateSchema).thenAnswer((_) async {});
-            when(() => mockUtils.createClient(any<String>(), any<String>()))
-                .thenAnswer(
-              (inv) => SupabaseClient(
-                inv.positionalArguments[0] as String,
-                inv.positionalArguments[1] as String,
-              ),
-            );
-          });
+        setUp(() {
+          mockUtils = MockGeneratorUtils();
+          generator = SupabaseCodeGenerator(utils: mockUtils);
+          when(mockUtils.generateSchema).thenAnswer((_) async => true);
+          when(
+            () => mockUtils.createClient(any<String>(), any<String>()),
+          ).thenAnswer(
+            (inv) => SupabaseClient(
+              inv.positionalArguments[0] as String,
+              inv.positionalArguments[1] as String,
+            ),
+          );
+        });
 
-          test(
-              'with provided ${supabaseEnvKeys.key} if both '
-              '${supabaseEnvKeys.anonKey} and ${supabaseEnvKeys.key} provided',
-              () async {
+        test(
+          'with provided ${supabaseEnvKeys.key} if both '
+          '${supabaseEnvKeys.anonKey} and ${supabaseEnvKeys.key} provided',
+          () async {
             envFile.writeAsStringSync('''
             ${supabaseEnvKeys.url}=$url
             ${supabaseEnvKeys.anonKey}=$anonKey
@@ -108,23 +111,22 @@ void main() {
               outputFolder: '',
             );
             verify(() => mockUtils.createClient(url, key)).called(1);
-          });
+          },
+        );
 
-          test(
-              'with provided ${supabaseEnvKeys.key} if '
-              '${supabaseEnvKeys.anonKey} not provided', () async {
-            envFile.writeAsStringSync('''
+        test('with provided ${supabaseEnvKeys.key} if '
+            '${supabaseEnvKeys.anonKey} not provided', () async {
+          envFile.writeAsStringSync('''
             ${supabaseEnvKeys.url}=$url
             ${supabaseEnvKeys.key}=$key
           ''');
-            await generator.generateSupabaseTypes(
-              envFilePath: envFile.path,
-              outputFolder: '',
-            );
-            verify(() => mockUtils.createClient(url, key)).called(1);
-          });
-        },
-      );
+          await generator.generateSupabaseTypes(
+            envFilePath: envFile.path,
+            outputFolder: '',
+          );
+          verify(() => mockUtils.createClient(url, key)).called(1);
+        });
+      });
     });
   });
 }
