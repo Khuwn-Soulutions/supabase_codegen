@@ -51,30 +51,74 @@ class SupabaseCodeGeneratorUtils {
   /// Config
   static GeneratorConfig config = GeneratorConfig.empty();
 
+  /// Lockfile manager
+  static const GeneratorLockfileManager lockfileManager =
+      GeneratorLockfileManager();
+
+  /// Generated files
+  static List<GeneratedFile> generatedFiles = [];
+
   /// Generate schema info
   @visibleForTesting
-  Future<void> generateSchema([
+  Future<bool> generateSchema([
     GeneratorConfig? genConfig,
     String? outputFolder,
   ]) async {
     config = genConfig ?? GeneratorConfig.empty();
     logger.detail('Generating with config: ${jsonEncode(config.toJson())}');
 
-    // Generate tables and enums
-    final progress = logger.progress('Generating Tables and Enums...');
-    final outputDir = Directory(outputFolder ?? root);
-    await generateTablesAndEnums(outputDir, config);
+    final (:deletes, :lockfile, :upserts) = await lockfileManager
+        .processLockFile(config);
 
+    logger.detail(
+      'Lockfile: ${jsonEncode(lockfile.toJson())}, '
+      'upserts: $upserts, deletes: $deletes',
+    );
+
+    // Stop if no changes
+    if (upserts == null && deletes == null) {
+      return false;
+    }
+
+    // Output Directory
+    final outputDir = Directory(outputFolder ?? root);
+
+    // Handle upserts
+    if (upserts != null) {
+      // Generate tables and enums
+      await generateFiles(outputDir, upserts);
+    }
+
+    // Handle deletes
+    if (deletes != null) {
+      for (final enumFileName in deletes.enums) {
+        final enumPath = path.join(outputDir.path, enumFileName);
+        final file = File(enumPath);
+        if (file.existsSync()) {
+          file.deleteSync();
+        }
+      }
+    }
+
+    // Write the lockfile
+    _writeLockFile(lockfile);
+
+    return true;
+  }
+
+  /// Generate files to the [outputDir]
+  Future<void> generateFiles(
+    Directory outputDir,
+    GeneratorConfig upserts,
+  ) async {
+    final progress = logger.progress('Generating Tables and Enums...');
+    await generateTablesAndEnums(outputDir, upserts);
     // Generate barrel files
     if (config.barrelFiles) {
       progress.update('Generating barrel files');
       await generateBarrelFiles(outputDir, config);
     }
-
     progress.complete('Types generated successfully');
-
-    // Write the lockfile
-    _writeLockFile();
 
     // Run post generation clean up process
     await _cleanup(outputDir);
@@ -108,15 +152,14 @@ class SupabaseCodeGeneratorUtils {
   }) async {
     final generator = await MasonGenerator.fromBundle(bundle);
     final target = DirectoryGeneratorTarget(outputDir);
-    await generator.generate(target, vars: config.toJson());
+    final files = await generator.generate(target, vars: config.toJson());
+    generatedFiles.addAll(files);
   }
 
   /// Write the generator lockfile (to the project root)
-  void _writeLockFile() {
+  void _writeLockFile(GeneratorLockfile lockfile) {
     final lockFileProgress = logger.progress('Cleaning up generated files');
 
-    const lockfileManager = GeneratorLockfileManager();
-    final lockfile = GeneratorLockfile.fromConfig(config);
     lockfileManager.writeLockfile(lockfile: lockfile);
 
     lockFileProgress.complete('Lockfile created');
@@ -130,7 +173,16 @@ class SupabaseCodeGeneratorUtils {
     _formatFiles(outputDir);
 
     cleanup.complete('Generated files cleaned up successfully');
+
+    for (final file in generatedFiles) {
+      final filePath = _replaceMustache(file.path);
+      logger.success('$filePath ${file.status.name}');
+    }
   }
+
+  /// Replace the mustache extension
+  String _replaceMustache(String filePath) =>
+      filePath.replaceAll('.mustache', '');
 
   /// Ensure all files in the output directory end in the proper extension
   void _ensureFileExtension(Directory outputDir) {
@@ -138,7 +190,7 @@ class SupabaseCodeGeneratorUtils {
     for (final file in files) {
       if (file is File) {
         // rename file by removing the .mustache at the end of the file
-        final newPath = file.path.replaceAll('.mustache', '');
+        final newPath = _replaceMustache(file.path);
 
         // rename the file
         file.renameSync(newPath);
@@ -229,7 +281,16 @@ class SupabaseCodeGenerator {
         enums: enums,
       );
 
-      await utils.generateSchema(config);
+      final generated = await utils.generateSchema(config);
+
+      /// Handle failed generation
+      if (!generated) {
+        progress.cancel();
+        logger.alert('No changes detected. Skipping file generation');
+        return;
+      }
+
+      /// Display success
       final outputFolderLink = link(
         message: outputFolder,
         uri: Uri.directory(path.join(Directory.current.path, outputFolder)),
