@@ -7,7 +7,7 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
 import 'package:test/test.dart';
 
-class MockGeneratorUtils extends Mock implements SupabaseCodeGeneratorUtils {}
+class MockGeneratorUtils extends Mock implements SupabaseSchemaGenerator {}
 
 void main() {
   late SupabaseCodeGenerator generator;

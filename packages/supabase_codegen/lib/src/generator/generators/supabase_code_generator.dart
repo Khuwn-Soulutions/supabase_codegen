@@ -41,13 +41,11 @@ SchemaOverrides schemaOverrides = {};
 /// Supabase code generator
 class SupabaseCodeGenerator {
   /// Constructor
-  const SupabaseCodeGenerator({
-    this.utils = const SupabaseCodeGeneratorUtils(),
-  });
+  const SupabaseCodeGenerator({this.utils = const SupabaseSchemaGenerator()});
 
   /// Utility class
   @visibleForTesting
-  final SupabaseCodeGeneratorUtils utils;
+  final SupabaseSchemaGenerator utils;
 
   /// Generate Supabase types
   Future<void> generateSupabaseTypes({
@@ -93,19 +91,11 @@ class SupabaseCodeGenerator {
       schemaOverrides = overrides;
 
       /// Get the enum config
-      final enums = await generateEnumConfigs();
-
-      /// Get the table config
-      final tables = await generateTableConfigs(overrides);
-
-      final config = GeneratorConfig(
-        package: package,
-        version: version,
+      final config = await generateConfig(
+        overrides,
+        package,
         forFlutter: forFlutter,
-        tag: tag,
         barrelFiles: barrelFiles,
-        tables: tables,
-        enums: enums,
       );
 
       final generated = await utils.generateSchema(config);
@@ -129,9 +119,35 @@ class SupabaseCodeGenerator {
     } on Exception catch (error) {
       progress.fail('Error while generating types: $error');
       rethrow;
-    } finally {
-      await client.dispose();
     }
+    // finally {
+    //   await client.dispose();
+    // }
+  }
+
+  /// Generate configuration for file generation
+  Future<GeneratorConfig> generateConfig(
+    SchemaOverrides overrides,
+    String package, {
+    bool forFlutter = false,
+    bool barrelFiles = true,
+  }) async {
+    /// Get the enum config
+    final enums = await generateEnumConfigs();
+
+    /// Get the table config
+    final tables = await generateTableConfigs(overrides);
+
+    final config = GeneratorConfig(
+      package: package,
+      version: version,
+      forFlutter: forFlutter,
+      tag: tag,
+      barrelFiles: barrelFiles,
+      tables: tables,
+      enums: enums,
+    );
+    return config;
   }
 
   /// Initialize the supabase client

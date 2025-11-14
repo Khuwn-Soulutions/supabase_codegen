@@ -264,7 +264,7 @@ void main() {
       expect(usage, isNotNull);
       for (final entry in defaultValues.entries) {
         expect(usage, contains(entry.key));
-        expect(usage, contains(entry.value));
+        expect(usage, contains(entry.value.toString()));
       }
 
       // Assert
@@ -279,26 +279,28 @@ void main() {
       );
     });
 
-    test('it catches error if generateSupabaseTypes throws an exception',
-        () async {
-      // Arrange
-      final args = <String>[];
-      final exception = Exception('Test exception');
+    test(
+      'it catches error if generateSupabaseTypes throws an exception',
+      () async {
+        // Arrange
+        final args = <String>[];
+        final exception = Exception('Test exception');
 
-      when(
-        () => mockGenerator.generateSupabaseTypes(
-          envFilePath: any(named: 'envFilePath'),
-          outputFolder: any(named: 'outputFolder'),
-          fileTag: any(named: 'fileTag'),
-          skipFooter: any(named: 'skipFooter'),
-        ),
-      ).thenThrow(exception);
+        when(
+          () => mockGenerator.generateSupabaseTypes(
+            envFilePath: any(named: 'envFilePath'),
+            outputFolder: any(named: 'outputFolder'),
+            fileTag: any(named: 'fileTag'),
+            skipFooter: any(named: 'skipFooter'),
+          ),
+        ).thenThrow(exception);
 
-      // Act and Assert
-      expect(
-        runGenerateTypes(args, generator: mockGenerator),
-        throwsA(isA<Exception>()),
-      );
-    });
+        // Act and Assert
+        expect(
+          runGenerateTypes(args, generator: mockGenerator),
+          throwsA(isA<Exception>()),
+        );
+      },
+    );
   });
 }
