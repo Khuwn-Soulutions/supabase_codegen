@@ -16,6 +16,10 @@ void main() {
     late MockFile mockPubspecFile;
     final configFile = File(defaultValues['config-yaml']! as String);
 
+    setUpAll(() {
+      registerFallbackValue(GeneratorConfigParams.empty());
+    });
+
     setUp(() {
       mockGenerator = MockSupabaseCodeGenerator();
       mockPubspecFile = MockFile();
@@ -27,12 +31,7 @@ void main() {
 
       when(
         () => mockGenerator.generateSupabaseTypes(
-          envFilePath: any(named: 'envFilePath'),
-          outputFolder: any(named: 'outputFolder'),
-          fileTag: any(named: 'fileTag'),
-          skipFooter: any(named: 'skipFooter'),
-          forFlutter: any(named: 'forFlutter'),
-          overrides: any(named: 'overrides'),
+          any(that: isA<GeneratorConfigParams>()),
         ),
       ).thenAnswer((_) async => {});
     });
@@ -58,8 +57,19 @@ void main() {
         // Assert
         verify(
           () => mockGenerator.generateSupabaseTypes(
-            envFilePath: defaultValues[CmdOption.env] as String,
-            outputFolder: defaultValues[CmdOption.output] as String,
+            any(
+              that: isA<GeneratorConfigParams>()
+                  .having(
+                    (param) => param.envFilePath,
+                    'envFilePath',
+                    defaultValues[CmdOption.env],
+                  )
+                  .having(
+                    (param) => param.outputFolder,
+                    'outputFolder',
+                    defaultValues[CmdOption.output],
+                  ),
+            ),
           ),
         ).called(1);
       });
@@ -87,10 +97,20 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: envFilePath,
-              outputFolder: output,
-              fileTag: testTag,
-              skipFooter: true,
+              any(
+                that: isA<GeneratorConfigParams>()
+                    .having(
+                      (param) => param.envFilePath,
+                      'envFilePath',
+                      envFilePath,
+                    )
+                    .having(
+                      (param) => param.outputFolder,
+                      'outputFolder',
+                      output,
+                    )
+                    .having((param) => param.tag, 'tag', testTag),
+              ),
             ),
           ).called(1);
         });
@@ -125,10 +145,20 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: envFilePath,
-              outputFolder: outputFolder,
-              fileTag: fileTag,
-              skipFooter: skipFooter,
+              any(
+                that: isA<GeneratorConfigParams>()
+                    .having(
+                      (param) => param.envFilePath,
+                      'envFilePath',
+                      envFilePath,
+                    )
+                    .having(
+                      (param) => param.outputFolder,
+                      'outputFolder',
+                      outputFolder,
+                    )
+                    .having((param) => param.tag, 'tag', fileTag),
+              ),
             ),
           ).called(1);
           verifyNever(() => mockPubspecFile.readAsStringSync());
@@ -173,10 +203,20 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: envFilePath,
-              outputFolder: outputFolder,
-              fileTag: fileTag,
-              skipFooter: skipFooter,
+              any(
+                that: isA<GeneratorConfigParams>()
+                    .having(
+                      (param) => param.envFilePath,
+                      'envFilePath',
+                      envFilePath,
+                    )
+                    .having(
+                      (param) => param.outputFolder,
+                      'outputFolder',
+                      outputFolder,
+                    )
+                    .having((param) => param.tag, 'tag', fileTag),
+              ),
             ),
           ).called(1);
           verifyNever(() => mockPubspecFile.readAsStringSync());
@@ -208,10 +248,20 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: '.pubspecenv',
-              outputFolder: 'pubspec/output',
-              fileTag: 'pubspectag',
-              skipFooter: true,
+              any(
+                that: isA<GeneratorConfigParams>()
+                    .having(
+                      (param) => param.envFilePath,
+                      'envFilePath',
+                      '.pubspecenv',
+                    )
+                    .having(
+                      (param) => param.outputFolder,
+                      'outputFolder',
+                      'pubspec/output',
+                    )
+                    .having((param) => param.tag, 'tag', 'pubspectag'),
+              ),
             ),
           ).called(1);
         });
@@ -225,11 +275,20 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: defaultValues[CmdOption.env] as String,
-              outputFolder: defaultValues[CmdOption.output] as String,
-              // Explicit check
-              // ignore: avoid_redundant_argument_values
-              forFlutter: false,
+              any(
+                that: isA<GeneratorConfigParams>()
+                    .having(
+                      (param) => param.envFilePath,
+                      'envFilePath',
+                      defaultValues[CmdOption.env] as String,
+                    )
+                    .having(
+                      (param) => param.outputFolder,
+                      'outputFolder',
+                      defaultValues[CmdOption.output] as String,
+                    )
+                    .having((param) => param.forFlutter, 'forFlutter', false),
+              ),
             ),
           ).called(1);
         });
@@ -245,9 +304,20 @@ void main() {
           // Assert
           verify(
             () => mockGenerator.generateSupabaseTypes(
-              envFilePath: defaultValues[CmdOption.env] as String,
-              outputFolder: defaultValues[CmdOption.output] as String,
-              forFlutter: true,
+              any(
+                that: isA<GeneratorConfigParams>()
+                    .having(
+                      (param) => param.envFilePath,
+                      'envFilePath',
+                      defaultValues[CmdOption.env] as String,
+                    )
+                    .having(
+                      (param) => param.outputFolder,
+                      'outputFolder',
+                      defaultValues[CmdOption.output] as String,
+                    )
+                    .having((param) => param.forFlutter, 'forFlutter', true),
+              ),
             ),
           ).called(1);
         });
@@ -271,10 +341,7 @@ void main() {
       // Verify that no other code was executed.
       verifyNever(
         () => mockGenerator.generateSupabaseTypes(
-          envFilePath: any(named: 'envFilePath'),
-          outputFolder: any(named: 'outputFolder'),
-          fileTag: any(named: 'fileTag'),
-          skipFooter: any(named: 'skipFooter'),
+          any(that: isA<GeneratorConfigParams>()),
         ),
       );
     });
@@ -288,10 +355,7 @@ void main() {
 
         when(
           () => mockGenerator.generateSupabaseTypes(
-            envFilePath: any(named: 'envFilePath'),
-            outputFolder: any(named: 'outputFolder'),
-            fileTag: any(named: 'fileTag'),
-            skipFooter: any(named: 'skipFooter'),
+            any(that: isA<GeneratorConfigParams>()),
           ),
         ).thenThrow(exception);
 
