@@ -95,7 +95,7 @@ class GeneratorLockfileManager {
                 .where((t) => upsertTableNames.contains(t.name))
                 .toList(),
             enums: config.enums
-                .where((e) => upsertEnumNames.contains(e.formattedEnumName))
+                .where((e) => upsertEnumNames.contains(e.fileName))
                 .toList(),
           );
 
