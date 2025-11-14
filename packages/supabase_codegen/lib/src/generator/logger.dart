@@ -1,7 +1,7 @@
 import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
 
-/// A simple logger that uses the talker package.
+/// A simple logger using mason_logger package.
 late Logger logger;
 
 /// Test logger instance
