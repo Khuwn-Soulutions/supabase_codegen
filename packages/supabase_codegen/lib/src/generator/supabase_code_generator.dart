@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dotenv/dotenv.dart';
@@ -38,91 +37,6 @@ String packageName = defaultPackageName;
 
 /// Overrides for table and column configurations
 SchemaOverrides schemaOverrides = {};
-
-/// Supabase code generator utils class
-// coverage:ignore-start
-class SupabaseCodeGeneratorUtils {
-  /// Constructor
-  const SupabaseCodeGeneratorUtils({
-    this.bundleGenerator = const BundleGenerator(),
-    this.lockfileManager = const GeneratorLockfileManager(),
-  });
-
-  /// Bundle generator
-  final BundleGenerator bundleGenerator;
-
-  /// Supabase client instance.
-  static late SupabaseClient client;
-
-  /// Config
-  static GeneratorConfig config = GeneratorConfig.empty();
-
-  /// Lockfile manager
-  final GeneratorLockfileManager lockfileManager;
-
-  /// Generate schema info
-  @visibleForTesting
-  Future<bool> generateSchema([
-    GeneratorConfig? genConfig,
-    String? outputFolder,
-  ]) async {
-    config = genConfig ?? GeneratorConfig.empty();
-    logger.detail('Generating with config: ${jsonEncode(config.toJson())}');
-
-    final (:deletes, :lockfile, :upserts) = await lockfileManager
-        .processLockFile(config);
-
-    logger.detail(
-      'Lockfile: ${jsonEncode(lockfile.toJson())}, '
-      'upserts: $upserts, deletes: $deletes',
-    );
-
-    // Stop if no changes
-    if (upserts == null && deletes == null) {
-      return false;
-    }
-
-    // Output Directory
-    final outputDir = Directory(outputFolder ?? root);
-
-    // Handle upserts
-    if (upserts != null) {
-      // Generate tables and enums
-      await bundleGenerator.generateFiles(outputDir, upserts, config);
-    }
-
-    // Handle deletes
-    if (deletes != null) {
-      for (final enumFileName in deletes.enums) {
-        final enumPath = path.join(outputDir.path, enumFileName);
-        final file = File(enumPath);
-        if (file.existsSync()) {
-          file.deleteSync();
-        }
-      }
-    }
-
-    // Write the lockfile
-    _writeLockFile(lockfile);
-
-    return true;
-  }
-
-  /// Write the generator lockfile (to the project root)
-  void _writeLockFile(GeneratorLockfile lockfile) {
-    final lockFileProgress = logger.progress('Cleaning up generated files');
-
-    lockfileManager.writeLockfile(lockfile: lockfile);
-
-    lockFileProgress.complete('Lockfile created');
-  }
-
-  /// Create the supabase client
-  SupabaseClient createClient(String supabaseUrl, String supabaseKey) {
-    return client = SupabaseClient(supabaseUrl, supabaseKey);
-  }
-}
-// coverage:ignore-end
 
 /// Supabase code generator
 class SupabaseCodeGenerator {
