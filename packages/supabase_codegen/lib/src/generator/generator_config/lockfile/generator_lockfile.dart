@@ -96,7 +96,6 @@ class GeneratorLockfile {
   /// Enums (Map of filename to [EnumConfig] hashCode)
   final Map<String, int> enums;
 
-  /// HAsh and equality  @override
   @override
   int get hashCode =>
       date.hashCode ^
