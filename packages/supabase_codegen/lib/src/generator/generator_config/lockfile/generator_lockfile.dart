@@ -19,6 +19,16 @@ class GeneratorLockfile {
     this.enums = const {},
   });
 
+  /// Create an empty [GeneratorLockfile]
+  factory GeneratorLockfile.empty() => GeneratorLockfile(
+    date: DateTime.now(),
+    package: '',
+    version: '',
+    forFlutter: false,
+    tag: '',
+    barrelFiles: false,
+  );
+
   /// Create [GeneratorLockfile] from [json]
   factory GeneratorLockfile.fromJson(Map<String, dynamic> json) =>
       GeneratorLockfile(
