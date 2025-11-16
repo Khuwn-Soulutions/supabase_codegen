@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
@@ -83,22 +84,28 @@ class SupabaseSchemaGenerator {
     }
 
     // Write the lockfile
-    _writeLockFile(lockfile);
+    writeLockFile(lockfile);
 
     return true;
   }
 
   /// Write the generator lockfile (to the project root)
-  void _writeLockFile(GeneratorLockfile lockfile) {
+  @visibleForTesting
+  void writeLockFile(GeneratorLockfile lockfile) {
     final lockFileProgress = logger.progress('Cleaning up generated files');
 
-    lockfileManager.writeLockfile(lockfile: lockfile);
+    try {
+      lockfileManager.writeLockfile(lockfile: lockfile);
 
-    lockFileProgress.complete('Lockfile created');
+      lockFileProgress.complete('Lockfile created');
+    } on Exception catch (e) {
+      lockFileProgress.fail(e.toString());
+    }
   }
 
   /// Create the supabase client
-  SupabaseClient createClient(String supabaseUrl, String supabaseKey) {
-    return SupabaseClient(supabaseUrl, supabaseKey);
-  }
+  // coverage:ignore-start
+  SupabaseClient createClient(String supabaseUrl, String supabaseKey) =>
+      SupabaseClient(supabaseUrl, supabaseKey);
+  // coverage:ignore-end
 }
