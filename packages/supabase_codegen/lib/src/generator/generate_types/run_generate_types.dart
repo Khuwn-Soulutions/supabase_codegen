@@ -16,11 +16,6 @@ Future<String?> runGenerateTypes(
   String? package,
   bool forFlutter = false,
 }) async {
-  /// Are we running in test mode
-  final isRunningInTest =
-      Platform.script.path.contains('test.dart') ||
-      Platform.environment['FLUTTER_TEST'] == 'true';
-
   try {
     /// Get the parser for the argument.
     /// If an option is not set the default value will be extracted from
