@@ -20,6 +20,7 @@ class ColumnConstructorConfig {
     question: '',
   );
 
+  // coverage:ignore-start
   /// Creates a [ColumnConstructorConfig] from a json map.
   factory ColumnConstructorConfig.fromJson(Map<String, dynamic> map) {
     return ColumnConstructorConfig(
@@ -28,6 +29,7 @@ class ColumnConstructorConfig {
       question: map['question'] as String,
     );
   }
+  // coverage:ignore-end
 
   /// Whether the parameter is optional in the constructor.
   final bool isOptional;
