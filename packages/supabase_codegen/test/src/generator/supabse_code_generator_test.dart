@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
@@ -8,6 +9,8 @@ import 'package:supabase_codegen/supabase_codegen.dart' show supabaseEnvKeys;
 import 'package:test/test.dart';
 
 class MockSchemaGenerator extends Mock implements SupabaseSchemaGenerator {}
+
+class MockLogger extends Mock implements Logger {}
 
 void main() {
   late SupabaseCodeGenerator generator;
@@ -129,6 +132,23 @@ void main() {
           ''');
           await generator.generateSupabaseTypes(params);
           verify(() => mockSchemaGenerator.createClient(url, key)).called(1);
+        });
+
+        test('and handles failed generation', () async {
+          envFile.writeAsStringSync('''
+            ${supabaseEnvKeys.url}=$url
+            ${supabaseEnvKeys.anonKey}=$anonKey
+            ${supabaseEnvKeys.key}=$key
+          ''');
+          logger = MockLogger();
+          when(
+            () => logger.progress(any()),
+          ).thenAnswer((_) => Logger().progress('message'));
+          when(
+            () => mockSchemaGenerator.generate(params),
+          ).thenAnswer((_) async => false);
+          await generator.generateSupabaseTypes(params);
+          verify(() => logger.alert(any())).called(1);
         });
       });
     });
