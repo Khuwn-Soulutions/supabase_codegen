@@ -36,7 +36,7 @@ class SupabaseSchemaGenerator {
     final enums = await generateEnumConfigs();
 
     /// Get the table config
-    final tables = await generateTableConfigs(params.overrides);
+    final tables = await generateTableConfigs(overrides: params.overrides);
 
     final config = GeneratorConfig.fromParams(
       params: params,
