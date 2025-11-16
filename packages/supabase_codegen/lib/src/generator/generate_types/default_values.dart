@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// Default option values
-const defaultValues = <String, dynamic>{
+final defaultValues = <String, dynamic>{
   CmdOption.env: '.env',
   CmdOption.output: 'supabase/types',
   CmdOption.tag: '',
