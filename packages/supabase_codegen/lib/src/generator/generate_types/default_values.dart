@@ -51,7 +51,7 @@ String getDefaultValue(
       return switch (defaultValue) {
         'gen_random_uuid()' => 'const Uuid().v4obj()',
         'gen_random_uuid_v7()' => 'const Uuid().v7obj()',
-        _ => 'Uuid().v4obj()',
+        _ => 'const Uuid().v4obj()',
       };
     default:
       // Enum
@@ -87,9 +87,8 @@ String getDefaultValue(
           jsonDecode(fallbackValue);
           return fallbackValue.replaceAll('"', "'");
         }
-        // Catch the error so we can return null
-        // ignore: avoid_catching_errors
-        on Error catch (_) {
+        // Catch the FormatException with invalid json so we can return null
+        on Exception catch (_) {
           return DartType.nullString;
         }
       }
