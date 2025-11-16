@@ -2,23 +2,20 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 
+import '../test_helpers/test_helpers.dart';
+
 void main() {
   /// Get schema tables
   group('getSchemaTables', () {
-    const schemaRpc = 'get_schema_info';
-
     setUp(() {
       client = mockSupabase;
     });
 
     /// Get the schema tables for the given [schemaData]
     Future<Map<String, List<Map<String, dynamic>>>> getSchemaTablesFor(
-      dynamic schemaData,
+      List<Map<String, String>> schemaData,
     ) async {
-      mockSupabaseHttpClient.registerRpcFunction(
-        schemaRpc,
-        (params, tables) => schemaData,
-      );
+      mockSchemaRpc(schemaData);
       return getSchemaTables();
     }
 
@@ -36,7 +33,7 @@ void main() {
     });
 
     test('should throw an exception when response is empty', () async {
-      expect(getSchemaTablesFor(<dynamic>[]), throwsException);
+      expect(getSchemaTablesFor([]), throwsException);
     });
 
     test('should filter out tables starting with an underscore', () async {

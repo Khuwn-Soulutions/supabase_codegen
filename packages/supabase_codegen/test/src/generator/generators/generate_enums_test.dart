@@ -2,9 +2,10 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:test/test.dart';
 
+import '../test_helpers/test_helpers.dart';
+
 void main() {
   group('generateEnumsFile', () {
-    const enumRpc = 'get_enum_types';
     const testEnumName = 'enum_test';
     const formattedTestEnumName = 'EnumTest';
 
@@ -16,11 +17,10 @@ void main() {
     });
 
     /// Generate the enums for the provided [enumData]
-    Future<List<EnumConfig>> generateEnumWithData(dynamic enumData) async {
-      mockSupabaseHttpClient.registerRpcFunction(
-        enumRpc,
-        (params, tables) => enumData,
-      );
+    Future<List<EnumConfig>> generateEnumWithData(
+      List<Map<String, String>> enumData,
+    ) async {
+      mockEnumRpc(enumData);
       return generateEnumConfigs();
     }
 
@@ -49,17 +49,9 @@ void main() {
     });
 
     test('given multiple enums generates multiple enum configs', () async {
-      const enumOneName = 'enum_one';
-      const enumOneValues = ['value1', 'value2'];
-      const enumTwoName = 'enum_two';
-      const enumTwoValues = ['valueA', 'valueB'];
       final enums = await generateEnumWithData([
-        ...enumOneValues.map(
-          (value) => {'enum_name': enumOneName, 'enum_value': value},
-        ),
-        ...enumTwoValues.map(
-          (value) => {'enum_name': enumTwoName, 'enum_value': value},
-        ),
+        ...testEnumOne,
+        ...testEnumTwo,
       ]);
 
       expect(enums.length, 2, reason: 'Expected 2 enums');
@@ -105,7 +97,7 @@ void main() {
     });
 
     test('handles empty enum response', () async {
-      final enumContent = await generateEnumWithData(<dynamic>[]);
+      final enumContent = await generateEnumWithData([]);
 
       expect(enumContent, isEmpty);
     });
