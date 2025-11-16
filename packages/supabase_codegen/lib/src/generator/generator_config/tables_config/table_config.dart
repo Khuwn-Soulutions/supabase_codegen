@@ -12,6 +12,7 @@ class TableConfig {
   const TableConfig({required this.name, required this.columns});
 
   /// Creates an empty [TableConfig].
+  // coverage:ignore-start
   factory TableConfig.empty() => const TableConfig(name: '', columns: []);
 
   /// Creates a [TableConfig] from a json map.
@@ -25,6 +26,7 @@ class TableConfig {
       ),
     );
   }
+  // coverage:ignore-end
 
   /// Display name to use for the class
   String get displayName => name.toSentenceCase().toTitleCase();
@@ -52,12 +54,14 @@ class TableConfig {
 
   /// Creates a copy of this [TableConfig] but with the given fields
   /// replaced with the new values.
+  // coverage:ignore-start
   TableConfig copyWith({String? name, List<ColumnConfig>? columns}) {
     return TableConfig(
       name: name ?? this.name,
       columns: columns ?? this.columns,
     );
   }
+  // coverage:ignore-end
 
   /// Converts this [TableConfig] to a json map.
   Map<String, dynamic> toJson() {

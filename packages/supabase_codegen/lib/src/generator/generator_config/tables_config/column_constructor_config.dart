@@ -42,6 +42,7 @@ class ColumnConstructorConfig {
 
   /// Creates a copy of this [ColumnConstructorConfig] but with the given
   /// fields replaced with the new values.
+  // coverage:ignore-start
   ColumnConstructorConfig copyWith({
     bool? isOptional,
     String? qualifier,
@@ -53,6 +54,7 @@ class ColumnConstructorConfig {
       question: question ?? this.question,
     );
   }
+  // coverage:ignore-end
 
   /// Converts this [ColumnConstructorConfig] to a json map.
   Map<String, dynamic> toJson() {

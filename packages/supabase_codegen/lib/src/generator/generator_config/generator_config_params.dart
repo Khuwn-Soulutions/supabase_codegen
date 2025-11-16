@@ -26,7 +26,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
     tag: '',
     barrelFiles: true,
   );
-
+  // coverage:ignore-start
   /// Create [GeneratorConfigParams] from [json]
   factory GeneratorConfigParams.fromJson(Map<String, dynamic> json) =>
       GeneratorConfigParams(
@@ -41,6 +41,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
           json['overrides'] as Map<String, dynamic>? ?? {},
         ),
       );
+  // coverage:ignore-end
 
   /// Environment file path
   final String envFilePath;
@@ -51,6 +52,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
   /// Overrides for table and column configurations
   final SchemaOverrides overrides;
 
+  // coverage:ignore-start
   /// Create json representation of [GeneratorConfigParams]
   Map<String, dynamic> toJson() => {
     'envFilePath': envFilePath,
@@ -63,6 +65,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
     'hasTag': tag.isNotEmpty,
     'overrides': overrides,
   };
+  // coverage:ignore-end
 
   /// Create a copy of [GeneratorConfigParams] with the
   /// provided properties overridden

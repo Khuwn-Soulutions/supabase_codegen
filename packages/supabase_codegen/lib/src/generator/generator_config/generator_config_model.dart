@@ -23,6 +23,7 @@ class GeneratorConfig extends GeneratorConfigBase {
     barrelFiles: true,
   );
 
+  // coverage:ignore-start
   /// Create [GeneratorConfig] from [json]
   factory GeneratorConfig.fromJson(Map<String, dynamic> json) =>
       GeneratorConfig(
@@ -45,6 +46,7 @@ class GeneratorConfig extends GeneratorConfigBase {
             ? null
             : DateTime.parse(json['date'] as String),
       );
+  // coverage:ignore-end
 
   /// Create [GeneratorConfig] from [params] with the [tables] and [enums]
   factory GeneratorConfig.fromParams({

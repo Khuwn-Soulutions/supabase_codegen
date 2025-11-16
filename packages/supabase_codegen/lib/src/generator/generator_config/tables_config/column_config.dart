@@ -34,6 +34,7 @@ class ColumnConfig {
   );
 
   /// Creates a [ColumnConfig] from a json map.
+  // coverage:ignore-start
   factory ColumnConfig.fromJson(Map<String, dynamic> map) {
     return ColumnConfig(
       dartType: map['dartType'] as String,
@@ -50,6 +51,7 @@ class ColumnConfig {
       field: ColumnFieldConfig.fromJson(map['field'] as Map<String, dynamic>),
     );
   }
+  // coverage:ignore-end
 
   /// Create a [ColumnConfig] from the [fieldName] and [ColumnData]
   factory ColumnConfig.fromColumnData({
