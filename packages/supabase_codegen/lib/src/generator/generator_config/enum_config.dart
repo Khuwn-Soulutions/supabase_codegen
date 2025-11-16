@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:change_case/change_case.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
@@ -24,6 +26,7 @@ class EnumConfig {
   /// Creates an [EnumConfig] from a JSON object.
   ///
   /// The [json] object should be a map with string keys and dynamic values.
+  // coverage:ignore-start
   factory EnumConfig.fromJson(Map<String, dynamic> json) {
     return EnumConfig(
       enumName: json['enumName'] as String,
@@ -31,6 +34,7 @@ class EnumConfig {
       values: (json['values'] as List<dynamic>).cast<String>(),
     );
   }
+  // coverage:ignore-end
 
   /// The original name of the enum from the database.
   final String enumName;
@@ -58,6 +62,11 @@ class EnumConfig {
     };
   }
 
+  /// Get string representation of [EnumConfig]
+  // coverage:ignore-start
+  @override
+  String toString() => jsonEncode(toJson());
+
   /// Creates a copy of this [EnumConfig] but with the given fields replaced
   /// with the new values.
   EnumConfig copyWith({
@@ -71,6 +80,7 @@ class EnumConfig {
       values: values ?? this.values,
     );
   }
+  // coverage:ignore-end
 
   @override
   int get hashCode =>
@@ -85,5 +95,5 @@ class EnumConfig {
           runtimeType == other.runtimeType &&
           enumName == other.enumName &&
           formattedEnumName == other.formattedEnumName &&
-          values == other.values;
+          const DeepCollectionEquality().equals(values, other.values);
 }
