@@ -13,4 +13,7 @@ extension GeneratorStringExtensions on String {
 
   /// Is this not a standard [DartType]
   bool get isNotStandardType => !isStandardType;
+
+  /// Is this value a YES
+  bool get isYes => this == 'YES';
 }
