@@ -28,7 +28,7 @@ melos:
     test:coverage:
       run: |
         melos exec -c 4 --fail-fast -- \
-          "very_good test --coverage && remove_from_coverage -f ./coverage/lcov.info -r '\.g\.dart$'"
+          "very_good test --coverage --exclude-coverage '.g.dart$'"
       description: Run `very_good test` with coverage for a specific package.
       packageFilters:
         dirExists:
