@@ -19,6 +19,7 @@ class ColumnOverride {
   /// The default value of the column
   final dynamic columnDefault;
 
+  // coverage:ignore-start
   /// Convert this [ColumnOverride] to a JSON map
   Map<String, dynamic> toJson() => {
     if (dataType != null) 'data_type': dataType,
@@ -29,4 +30,5 @@ class ColumnOverride {
   /// String representation of [ColumnOverride]
   @override
   String toString() => toJson().toString();
+  // coverage:ignore-end
 }

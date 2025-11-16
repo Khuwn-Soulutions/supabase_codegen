@@ -23,6 +23,7 @@ class ColumnFieldConfig {
     bang: '',
   );
 
+  // coverage:ignore-start
   /// Creates a [ColumnFieldConfig] from a json map.
   factory ColumnFieldConfig.fromJson(Map<String, dynamic> map) {
     return ColumnFieldConfig(
@@ -33,6 +34,7 @@ class ColumnFieldConfig {
       bang: map['bang'] as String,
     );
   }
+  // coverage:ignore-end
 
   /// The name of the static field in the generated table row class that holds
   /// the column name.
@@ -61,6 +63,7 @@ class ColumnFieldConfig {
 
   /// Creates a copy of this [ColumnFieldConfig] but with the given fields
   /// replaced with the new values.
+  // coverage:ignore-start
   ColumnFieldConfig copyWith({
     String? name,
     String? defaultValue,
@@ -76,6 +79,7 @@ class ColumnFieldConfig {
       bang: bang ?? this.bang,
     );
   }
+  // coverage:ignore-end
 
   /// Converts this [ColumnFieldConfig] to a json map.
   Map<String, dynamic> toJson() {

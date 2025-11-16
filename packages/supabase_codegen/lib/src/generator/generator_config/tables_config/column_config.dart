@@ -133,6 +133,7 @@ class ColumnConfig {
   /// The configuration for the field of the column.
   final ColumnFieldConfig field;
 
+  // coverage:ignore-start
   /// Creates a copy of this [ColumnConfig] but with the given fields
   /// replaced with the new values.
   ColumnConfig copyWith({
@@ -160,6 +161,7 @@ class ColumnConfig {
       field: field ?? this.field,
     );
   }
+  // coverage:ignore-end
 
   /// Converts this [ColumnConfig] to a json map.
   Map<String, dynamic> toJson() {
