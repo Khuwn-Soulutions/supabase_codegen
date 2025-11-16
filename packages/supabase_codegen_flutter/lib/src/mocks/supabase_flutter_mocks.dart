@@ -17,17 +17,16 @@ import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
       accessTokenExpireDateTime.millisecondsSinceEpoch ~/ 1000;
   final accessTokenMid = base64.encode(
     utf8.encode(
-      json.encode(
-        {
-          'exp': accessTokenExpiresAt,
-          'sub': '1234567890',
-          'role': 'authenticated',
-        },
-      ),
+      json.encode({
+        'exp': accessTokenExpiresAt,
+        'sub': '1234567890',
+        'role': 'authenticated',
+      }),
     ),
   );
   final accessToken = 'any.$accessTokenMid.any';
-  final sessionString = '''
+  final sessionString =
+      '''
   {
     "access_token":"$accessToken",
     "expires_in": ${accessTokenExpireDateTime.difference(DateTime.now()).inSeconds},
@@ -67,8 +66,9 @@ class MockLocalStorage extends LocalStorage {
   Future<void> initialize() async {}
   @override
   Future<String?> accessToken() async {
-    return getSessionData(DateTime.now().add(const Duration(hours: 1)))
-        .sessionString;
+    return getSessionData(
+      DateTime.now().add(const Duration(hours: 1)),
+    ).sessionString;
   }
 
   @override
@@ -76,10 +76,10 @@ class MockLocalStorage extends LocalStorage {
   @override
   Future<void> persistSession(String persistSessionString) async {}
 
-// coverage:ignore-start
+  // coverage:ignore-start
   @override
   Future<void> removePersistedSession() async {}
-// coverage:ignore-end
+  // coverage:ignore-end
 }
 
 /// Copied from package:supabase_flutter/test/widget_test_stubs.dart

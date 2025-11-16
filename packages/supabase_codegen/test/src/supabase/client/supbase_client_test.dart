@@ -21,7 +21,8 @@ void main() {
       String url = 'https://example.com',
       String key = '1234567',
     }) {
-      final contents = '''
+      final contents =
+          '''
 ${url.isEmpty ? '' : 'SUPABASE_URL=$url'}
 ${key.isEmpty ? '' : 'SUPABASE_KEY=$key'}
 ''';

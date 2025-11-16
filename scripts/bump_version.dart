@@ -35,8 +35,9 @@ const supabaseCodegenFlutterPath = 'packages/supabase_codegen_flutter';
 
 /// Overwrite version file
 void updateVersionFile(String version) {
-  final versionFile =
-      File('$supabaseCodegenPath/lib/src/generator/version.dart');
+  final versionFile = File(
+    '$supabaseCodegenPath/lib/src/generator/version.dart',
+  );
   final versionContents = versionFile.readAsStringSync();
   versionFile.writeAsStringSync(
     versionContents.replaceAll(
@@ -53,10 +54,7 @@ void updatePubspecVersion(String version) {
     final pubspecFile = File('$path/pubspec.yaml');
     final pubspecContents = pubspecFile.readAsStringSync();
     pubspecFile.writeAsStringSync(
-      pubspecContents.replaceAll(
-        RegExp('version: (.+)'),
-        'version: $version',
-      ),
+      pubspecContents.replaceAll(RegExp('version: (.+)'), 'version: $version'),
     );
     talker.info('pubspec.yaml at $path updated');
   }

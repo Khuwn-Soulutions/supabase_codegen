@@ -35,7 +35,8 @@ void main() {
       String url = 'https://example.com',
       String key = '1234567',
     }) {
-      final contents = '''
+      final contents =
+          '''
 SUPABASE_URL=$url
 SUPABASE_KEY=$key
 ''';
@@ -43,32 +44,26 @@ SUPABASE_KEY=$key
     }
 
     group('loadSupabaseClient ', () {
-      test(
-        'throws an error if client not previously loaded',
-        () async {
-          expect(mockClient.supabaseClient, isNull);
-          expect(
-            mockClient.loadSupabaseClient,
-            throwsA(
-              isA<AssertionError>().having(
-                (e) => e.toString(),
-                'message',
-                contains('You must call'),
-              ),
+      test('throws an error if client not previously loaded', () async {
+        expect(mockClient.supabaseClient, isNull);
+        expect(
+          mockClient.loadSupabaseClient,
+          throwsA(
+            isA<AssertionError>().having(
+              (e) => e.toString(),
+              'message',
+              contains('You must call'),
             ),
-          );
-        },
-      );
+          ),
+        );
+      });
 
-      test(
-        'returns a SupabaseClient after client loaded',
-        () async {
-          writeEnvFile();
-          await mockClient.loadClientFromEnv(envPath);
-          final client = mockClient.loadSupabaseClient();
-          expect(client, isA<SupabaseClient>());
-        },
-      );
+      test('returns a SupabaseClient after client loaded', () async {
+        writeEnvFile();
+        await mockClient.loadClientFromEnv(envPath);
+        final client = mockClient.loadSupabaseClient();
+        expect(client, isA<SupabaseClient>());
+      });
 
       test('caches the client', () async {
         writeEnvFile();
@@ -93,10 +88,7 @@ SUPABASE_KEY=$key
 
         // Expect a valid client
         expect(client, isA<SupabaseClient>());
-        expect(
-          Supabase.instance.client,
-          equals(mockClient.supabaseClient),
-        );
+        expect(Supabase.instance.client, equals(mockClient.supabaseClient));
       });
 
       test('throws an Error when file is empty', () {
@@ -146,10 +138,7 @@ SUPABASE_KEY=$key
         mockClient.supabaseClient!.auth.headers['Authorization'],
         contains(key),
       );
-      expect(
-        mockClient.supabaseClient!.realtime.endPoint,
-        contains(url.host),
-      );
+      expect(mockClient.supabaseClient!.realtime.endPoint, contains(url.host));
     });
   });
 }

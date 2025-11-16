@@ -1,0 +1,7 @@
+{{^isArray}}
+  /// {{parameterName.titleCase()}}
+  {{{dartType}}}{{field.question}} get {{parameterName}} => getField<{{{dartType}}}>(
+    {{field.name}}{{#isEnum}}, enumValues: {{{dartType}}}.values{{/isEnum}}{{#hasDefault}}, defaultValue: {{{field.defaultValue}}}{{/hasDefault}}
+  ){{field.bang}};
+  set {{parameterName}}({{{dartType}}}{{field.question}} value) => setField<{{{dartType}}}>({{field.name}}, value);
+{{/isArray}}

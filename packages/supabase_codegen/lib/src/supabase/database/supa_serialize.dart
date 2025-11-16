@@ -45,8 +45,10 @@ T? supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
 
   /// Handle enum deserialization
   if (enumValues.isNotEmpty) {
-    return (enumValues as List<Enum>)
-        .firstWhereOrNull((val) => val.name == value) as T?;
+    return (enumValues as List<Enum>).firstWhereOrNull(
+          (val) => val.name == value,
+        )
+        as T?;
   }
 
   /// Handle other types
@@ -76,11 +78,10 @@ T? supaDeserialize<T>(dynamic value, {List<T> enumValues = const []}) {
 List<T>? supaDeserializeList<T>(
   dynamic value, {
   List<T> enumValues = const [],
-}) =>
-    value is List
-        ? value
-            .map((v) => supaDeserialize<T>(v, enumValues: enumValues))
-            .where((v) => v != null)
-            .map((v) => v as T)
-            .toList()
-        : null;
+}) => value is List
+    ? value
+          .map((v) => supaDeserialize<T>(v, enumValues: enumValues))
+          .where((v) => v != null)
+          .map((v) => v as T)
+          .toList()
+    : null;

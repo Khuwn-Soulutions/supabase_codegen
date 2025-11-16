@@ -3,7 +3,7 @@ import 'package:supabase_codegen/src/generator/generate_types/generate_types.dar
 
 /// Choose the output folder
 String chooseOutputFolder([String? defaultOutputFolder]) => ask(
-      green('Choose the output folder:'),
-      defaultValue:
-          defaultOutputFolder ?? defaultValues[CmdOption.output] as String,
-    );
+  green('Choose the output folder:'),
+  defaultValue:
+      defaultOutputFolder ?? defaultValues[CmdOption.output] as String,
+);

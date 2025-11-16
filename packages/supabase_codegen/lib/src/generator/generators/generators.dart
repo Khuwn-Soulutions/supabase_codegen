@@ -1,5 +1,4 @@
-export 'generate_enum.dart';
-export 'generate_header_footer.dart';
-export 'generate_schema.dart';
-export 'generate_schema_info.dart';
-export 'generate_table.dart';
+export 'generate_enums.dart';
+export 'generate_tables.dart';
+export 'schema_generator.dart';
+export 'supabase_code_generator.dart';

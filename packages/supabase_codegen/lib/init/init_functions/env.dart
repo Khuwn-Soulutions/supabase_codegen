@@ -8,10 +8,17 @@ import 'package:supabase_codegen/src/generator/generator.dart';
 
 import 'package:yaml/yaml.dart';
 
+/// Create env file defaults
+typedef CreateEnvDefaults = ({bool? create, String? url, String? key});
+
 /// Configure env file
 Future<String> configureEnv({
   bool forFlutter = false,
   String? defaultEnvPath,
+  bool loadFlutterClient = true,
+  // Used for testing
+  CreateEnvDefaults? createDefaults,
+  String pubspecPath = 'pubspec.yaml',
 }) async {
   // Get the value by prompt
   final envPath = ask(
@@ -23,14 +30,19 @@ Future<String> configureEnv({
   if (!exists(envPath)) {
     printerr(red('File does not exist: $envPath\n'));
 
-    final created = createEnvFile(envPath);
-    if (!created) exit(1);
+    final created = createEnvFile(envPath, defaults: createDefaults);
+    if (!created) {
+      const message = 'Env file not created';
+      printerr(red('$message ❌'));
+      isRunningInTest ? throw Exception(message) : exit(1);
+    }
   }
   // confirm that the file matches the expected format
   final validated = validateEnvFile(envPath);
   if (!validated) {
-    printerr(red('Env file not validated ❌'));
-    exit(1);
+    const message = 'Env file not valid';
+    printerr(red('$message ❌'));
+    isRunningInTest ? throw Exception(message) : exit(1);
   }
 
   print(green('Env file validated ✅'));
@@ -44,15 +56,17 @@ Future<String> configureEnv({
       'Would you like to use the env file to load '
       'the Supabase client in your application?',
     ),
-    defaultValue: true,
+    defaultValue: loadFlutterClient,
   );
 
   // Write the location of the env file to the assets in pubspec
   if (loadClientWithEnv) {
-    final added = await addEnvFileToAssets(envPath);
+    final added = await addEnvFileToAssets(envPath, pubspecPath: pubspecPath);
     print(
-      green('${added ? 'Env file added to' : 'Env file present in'} '
-          'flutter assets ✅'),
+      green(
+        '${added ? 'Env file added to' : 'Env file present in'} '
+        'flutter assets ✅',
+      ),
     );
   }
 
@@ -63,7 +77,7 @@ Future<String> configureEnv({
 bool createEnvFile(
   String envPath, {
   // Used for testing
-  ({bool? create, String? url, String? key})? defaults,
+  CreateEnvDefaults? defaults,
 }) {
   final created = confirm(
     blue('Would you like to create the env file? ($envPath)'),
@@ -92,8 +106,10 @@ bool createEnvFile(
         ..append('SUPABASE_ANON_KEY=$key');
 
       print(
-        green('\nSupabase credentials written to '
-            'the environment file created at $envPath\n'),
+        green(
+          '\nSupabase credentials written to '
+          'the environment file created at $envPath\n',
+        ),
       );
     });
   }
@@ -119,7 +135,8 @@ Future<bool> addEnvFileToAssets(
   final pubspec = loadYaml(pubSpecContents) as YamlMap;
   final pubSpecFile = File(pubspecPath);
 
-  final assetsEntry = '''
+  final assetsEntry =
+      '''
   assets:
     - $envPath
 ''';
@@ -127,14 +144,12 @@ Future<bool> addEnvFileToAssets(
   /// Write full flutter entry if no flutter
   final flutter = pubspec['flutter'] as YamlMap?;
   if (!pubspec.containsKey('flutter')) {
-    pubSpecFile.writeAsStringSync(
-      '''
+    pubSpecFile.writeAsStringSync('''
 $pubSpecContents
 
 flutter:
 $assetsEntry
-''',
-    );
+''');
     return true;
   }
 

@@ -6,7 +6,7 @@ repository: https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packa
 resolution: workspace
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.8.0
 
 dependencies:
   args: ^2.7.0
@@ -16,13 +16,14 @@ dependencies:
   dotenv: ^4.2.0
   http: ^1.5.0
   latlng: ^2.0.7
+  mason: ^0.1.1
+  mason_logger: ^0.3.3
   # Ensure compatibility with flutter_test
   meta: ^1.16.0
   mock_supabase_http_client: ^0.0.3+2
   path: ^1.9.1
   quiver: ^3.2.2
   supabase: ^2.10.0
-  talker: ^5.0.2
   uuid: ^4.5.1
   yaml: ^3.1.3
 

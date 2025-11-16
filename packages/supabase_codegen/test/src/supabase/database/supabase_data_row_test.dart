@@ -25,10 +25,7 @@ void main() {
     group('created with fields', () {
       late UsersRow row;
       setUp(() {
-        row = UsersRow(
-          role: user.role,
-          email: user.email,
-        );
+        row = UsersRow(role: user.role, email: user.email);
       });
       test('has fields set to input', () {
         expect(row, isNotNull);
@@ -93,14 +90,11 @@ void main() {
         expect(value, isNull);
       });
 
-      test(
-        'returns empty list if field not found',
-        () {
-          final value = user.getListField<String>('list-not-found');
-          expect(value, isNotNull);
-          expect(value, isEmpty);
-        },
-      );
+      test('returns empty list if field not found', () {
+        final value = user.getListField<String>('list-not-found');
+        expect(value, isNotNull);
+        expect(value, isEmpty);
+      });
 
       test('returns default value if field not found', () {
         final value = user.getListField<String>(
@@ -193,9 +187,7 @@ void main() {
         expect(original.data.containsKey('id'), false);
 
         const newEmail = 'newEmail';
-        final copy = original.copyWith(
-          email: newEmail,
-        );
+        final copy = original.copyWith(email: newEmail);
         expect(copy.email, newEmail);
         expect(original.data.keys, copy.data.keys);
         expect(copy.data.containsKey('id'), false);

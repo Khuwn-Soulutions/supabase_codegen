@@ -6,7 +6,7 @@ repository: https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packa
 resolution: workspace
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.8.0
   flutter: ">=3.24.0"
 
 dependencies:

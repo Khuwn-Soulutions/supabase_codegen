@@ -40,8 +40,9 @@ Future<void> init({
     file
       ..write('# Supabase codegen config.')
       ..append(
-          '# See https://pub.dev/packages/supabase_codegen#yaml-configuration '
-          'for more info')
+        '# See https://pub.dev/packages/supabase_codegen#yaml-configuration '
+        'for more info',
+      )
       ..append('${CmdOption.env}: $env')
       ..append('${CmdOption.output}: $output');
 

@@ -1,6 +1,6 @@
+import 'package:mason_logger/mason_logger.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
-import 'package:talker/talker.dart';
 
 /// A list of dictionaries (`Map<String, dynamic>`)
 typedef DictionaryList = List<Map<String, dynamic>>;
@@ -9,7 +9,7 @@ typedef DictionaryList = List<Map<String, dynamic>>;
 abstract class SupabaseTable<T extends SupabaseDataRow> {
   /// Supabase Table
   SupabaseTable({SupabaseClient? client})
-      : _client = client ?? loadSupabaseClient();
+    : _client = client ?? loadSupabaseClient();
 
   /// Supabase Client
   final SupabaseClient _client;
@@ -34,7 +34,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   Future<List<T>> queryRows({
     PostgrestTransformBuilder<DictionaryList> Function(
       PostgrestFilterBuilder<DictionaryList>,
-    )? queryFn,
+    )?
+    queryFn,
     int? limit,
   }) {
     final select = _select();
@@ -47,16 +48,17 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   Future<T?> querySingleRow({
     required PostgrestTransformBuilder<DictionaryList> Function(
       PostgrestFilterBuilder<DictionaryList>,
-    ) queryFn,
-  }) =>
-      queryFn(_select())
-          .limit(1)
-          .select()
-          .maybeSingle()
-          .catchError((dynamic e) {
-        Talker().error('Error querying row: $e'); // coverage:ignore-line
+    )
+    queryFn,
+  }) => queryFn(_select())
+      .limit(1)
+      .select()
+      .maybeSingle()
+      .catchError((dynamic e) {
+        Logger().err('Error querying row: $e'); // coverage:ignore-line
         return null;
-      }).then((r) => r != null ? createRow(r) : null);
+      })
+      .then((r) => r != null ? createRow(r) : null);
 
   /// Insert a row into the table
   Future<T> insertRow(T row) => insert(row.data);
@@ -74,13 +76,12 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
     String? onConflict,
     bool ignoreDuplicates = false,
     bool defaultToNull = true,
-  }) =>
-      upsert(
-        row.data,
-        onConflict: onConflict,
-        ignoreDuplicates: ignoreDuplicates,
-        defaultToNull: defaultToNull,
-      );
+  }) => upsert(
+    row.data,
+    onConflict: onConflict,
+    ignoreDuplicates: ignoreDuplicates,
+    defaultToNull: defaultToNull,
+  );
 
   /// Upsert the [data] in the table and return
   /// the [SupabaseDataRow] representation of that row.
@@ -125,7 +126,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   Future<List<T>> update({
     required PostgrestTransformBuilder<dynamic> Function(
       PostgrestFilterBuilder<dynamic>,
-    ) matchingRows,
+    )
+    matchingRows,
     Map<String, dynamic>? data,
     T? row,
     bool returnRows = false,
@@ -153,7 +155,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   Future<List<T>> delete({
     required PostgrestTransformBuilder<dynamic> Function(
       PostgrestFilterBuilder<dynamic>,
-    ) matchingRows,
+    )
+    matchingRows,
     bool returnRows = false,
   }) async {
     final delete = matchingRows(dbTable.delete());

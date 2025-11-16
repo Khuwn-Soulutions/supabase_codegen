@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:change_case/change_case.dart';
+import 'package:mason_logger/mason_logger.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
-import 'package:talker/talker.dart';
+
+/// Package code is being generated from
+const defaultPackageName = 'supabase_codegen';
 
 /// Generate the supabase types using the [args] provided
 Future<String?> runGenerateTypes(
@@ -13,21 +16,13 @@ Future<String?> runGenerateTypes(
   String? package,
   bool forFlutter = false,
 }) async {
-  /// Are we running in test mode
-  final isRunningInTest = Platform.script.path.contains('test.dart') ||
-      Platform.environment['FLUTTER_TEST'] == 'true';
-
   try {
     /// Get the parser for the argument.
     /// If an option is not set the default value will be extracted from
     /// the pubspec file with a predefined fallback if not set in pubspec
     final parser = ArgParser()
       // Help
-      ..addFlag(
-        CmdOption.help,
-        abbr: CmdOption.help[0],
-        help: 'Show help',
-      )
+      ..addFlag(CmdOption.help, abbr: CmdOption.help[0], help: 'Show help')
       // Env
       ..addOption(
         CmdOption.env,
@@ -54,7 +49,8 @@ Future<String?> runGenerateTypes(
         CmdOption.configYaml,
         defaultsTo: defaultValues[CmdOption.configYaml] as String,
         abbr: CmdOption.configYaml[0],
-        help: 'Path to config yaml file. \n'
+        help:
+            'Path to config yaml file. \n'
             'If not specified, reads from .supabase_codegen.yaml or keys under '
             'supabase_codegen in pubspec.yaml',
       )
@@ -64,11 +60,14 @@ Future<String?> runGenerateTypes(
         abbr: CmdOption.debug[0],
         help: 'Enable debug logging',
       )
-      // Skip footer
+      // Barrel files
       ..addFlag(
-        CmdOption.skipFooter,
-        abbr: CmdOption.skipFooter[0],
-        help: 'Skip footer generation',
+        CmdOption.barrelFiles,
+        defaultsTo: defaultValues[CmdOption.barrelFiles] as bool,
+        abbr: CmdOption.barrelFiles[0],
+        help:
+            'Use barrel files for exports. '
+            '(default: ${defaultValues[CmdOption.barrelFiles]})',
       );
     final results = parser.parse(args);
 
@@ -96,57 +95,44 @@ Future<String?> runGenerateTypes(
     String optionValueFor(String option) => results.wasParsed(option)
         ? results.option(option)!
         : (codegenConfig[option.toCamelCase()] as String?) ??
-            parser.defaultFor(option)! as String;
+              parser.defaultFor(option)! as String;
 
     /// Helper function to get flag value
     bool flagValueFor(String option) => results.wasParsed(option)
         ? results.flag(option)
         : (codegenConfig[option.toCamelCase()] as bool?) ??
-            parser.defaultFor(option)! as bool;
+              parser.defaultFor(option)! as bool;
 
     // Pull out options
     final envFilePath = optionValueFor(CmdOption.env);
     final outputFolder = optionValueFor(CmdOption.output);
     final tag = optionValueFor(CmdOption.tag);
     final debug = flagValueFor(CmdOption.debug);
-    final skipFooter = flagValueFor(CmdOption.skipFooter);
+    final barrelFiles = flagValueFor(CmdOption.barrelFiles);
 
     /// Set the log level if debug is true
-    final level = debug ? LogLevel.verbose : LogLevel.info;
-    logger = Talker(
-      logger: TalkerLogger(
-        formatter: const ColoredLoggerFormatter(),
-        settings: TalkerLoggerSettings(
-          level: level,
-          lineSymbol: '',
-        ),
-      ),
-    );
+    final level = debug ? Level.verbose : Level.info;
+    logger = Logger(level: level);
 
     // Extract overrides from config
     final schemaOverrides = extractSchemaOverrides(codegenConfig);
-    logger.debug('Schema Overrides: $schemaOverrides');
-
-    /// Set the package name from which generation is occuring
-    if (package != null) {
-      packageName = package;
-    }
+    logger.detail('Schema Overrides: $schemaOverrides');
 
     /// Generate the types using the command line options
-    await generator.generateSupabaseTypes(
+    final params = GeneratorConfigParams(
+      package: package ?? defaultPackageName,
       envFilePath: envFilePath,
       outputFolder: outputFolder,
-      fileTag: tag,
-      skipFooter: skipFooter,
+      tag: tag,
+      barrelFiles: barrelFiles,
       forFlutter: forFlutter,
       overrides: schemaOverrides,
+      version: version,
     );
+    await generator.generateSupabaseTypes(params);
 
     // coverage:ignore-start
     if (isRunningInTest) return null;
-
-    /// Format generated files
-    await Process.run('dart', ['format', outputFolder]);
 
     exit(0);
     // coverage:ignore-end
