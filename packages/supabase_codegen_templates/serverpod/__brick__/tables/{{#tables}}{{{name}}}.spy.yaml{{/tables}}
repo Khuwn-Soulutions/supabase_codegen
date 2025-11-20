@@ -1,0 +1,7 @@
+{{> spy.header}}
+class: {{tables.tableClass}}
+table: {{tables.name}}
+managedMigration: false
+fields:{{#tables.columns}}
+  {{parameterName}}: {{{type}}}{{question}}{{#hasColumnAlias}}, column={{columnName}}{{/hasColumnAlias}}{{#hasDefault}}, {{defaultKey}}={{{defaultValue}}}{{/hasDefault}}{{/tables.columns}}
+{{> spy.footer}}

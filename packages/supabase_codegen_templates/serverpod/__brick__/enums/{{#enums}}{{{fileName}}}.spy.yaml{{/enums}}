@@ -1,0 +1,6 @@
+{{> spy.header}}
+enum: {{enums.formattedEnumName}}
+serialized: byName
+values:{{#enums.values}}
+  - {{.}}{{/enums.values}}
+{{> spy.footer}}

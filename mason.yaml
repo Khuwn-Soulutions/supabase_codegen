@@ -3,3 +3,5 @@ bricks:
     path: packages/supabase_codegen_templates/tables_and_enums
   barrel_files:
     path: packages/supabase_codegen_templates/barrel_files
+  serverpod:
+    path: packages/supabase_codegen_templates/serverpod
