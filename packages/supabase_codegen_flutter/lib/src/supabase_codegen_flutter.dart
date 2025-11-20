@@ -1,5 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// coverage:ignore-file
+
 /// Supabase instance
 Supabase get supabase => Supabase.instance;
 
