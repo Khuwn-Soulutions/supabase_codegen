@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   change_case: ^2.2.0
+  mason: ^0.1.1
   # Version to match flutter_test requirements
   meta: ^1.16.0
   path: ^1.9.1
