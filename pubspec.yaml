@@ -10,7 +10,7 @@ workspace:
 
 dev_dependencies:
   melos: ^7.1.1
-  talker: ^4.3.0
+  talker: ^5.1.0
   very_good_analysis: ^10.0.0
 
 # Melos configuration
