@@ -1,5 +1,6 @@
 import 'package:example_client/example_client.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
 /// Sets up a global client object that can be used to talk to the server from
@@ -121,7 +122,10 @@ class MyHomePageState extends State<MyHomePage> {
                   final recipe = _recipeHistory[index];
                   return ListTile(
                     title: Text(
-                      recipe.text.substring(0, recipe.text.indexOf('\n')),
+                      recipe.text
+                          .substring(0, recipe.text.indexOf('\n'))
+                          .replaceAll('#', '')
+                          .trim(),
                     ),
                     subtitle: Text('${recipe.author} - ${recipe.createdAt}'),
                     onTap: () {
@@ -165,10 +169,7 @@ class MyHomePageState extends State<MyHomePage> {
                       child:
                           // Change the ResultDisplay to use the Recipe object
                           ResultDisplay(
-                            resultMessage: _recipe != null
-                                ? '${_recipe?.author} on ${_recipe?.createdAt}:'
-                                      '\n${_recipe?.text}'
-                                : null,
+                            resultMessage: _recipe?.text,
                             errorMessage: _errorMessage,
                           ),
                     ),
@@ -215,7 +216,10 @@ class ResultDisplay extends StatelessWidget {
       child: Container(
         color: backgroundColor,
         child: Center(
-          child: Text(text),
+          child: Padding(
+            padding: const .all(8.0),
+            child: GptMarkdown(text),
+          ),
         ),
       ),
     );
