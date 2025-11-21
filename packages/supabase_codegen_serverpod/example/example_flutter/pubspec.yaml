@@ -29,6 +29,7 @@ dependencies:
     sdk: flutter
   example_client:
     path: ../example_client
+  gpt_markdown: ^1.1.4
   serverpod_flutter: 3.0.0-rc.1
   supabase_codegen_serverpod:
     path: ../../ 
