@@ -4,7 +4,7 @@ description: Starting point for a Serverpod server.
 # homepage: https://www.example.com
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
   serverpod: 3.0.0-alpha.1
@@ -13,11 +13,13 @@ dependencies:
 dev_dependencies:
   lints: ">=3.0.0 <7.0.0"
   test: ^1.25.5
-  serverpod_test: 3.0.0-alpha.1
+  serverpod_test: 3.0.0-rc.1
   supabase_codegen_serverpod:
     path: ../../
 
 dependency_overrides:
+  supabase_codegen:
+    path: ../../../supabase_codegen
   serverpod:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git

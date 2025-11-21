@@ -1,5 +1,7 @@
-# melos_managed_dependency_overrides: serverpod,serverpod_lints,serverpod_serialization,serverpod_shared,serverpod_test
+# melos_managed_dependency_overrides: supabase_codegen,serverpod,serverpod_lints,serverpod_serialization,serverpod_shared,serverpod_test
 dependency_overrides:
+  supabase_codegen:
+    path: ../../../supabase_codegen
   serverpod:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
