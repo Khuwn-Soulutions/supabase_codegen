@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
+import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:yaml/yaml.dart';
 
@@ -38,8 +39,12 @@ class GeneratorLockfile {
         forFlutter: json['forFlutter'] as bool,
         tag: json['tag'] == null ? '' : json['tag'] as String,
         barrelFiles: json['barrelFiles'] as bool,
-        tables: Map<String, int>.from(json['tables'] as Map),
-        enums: Map<String, int>.from(json['enums'] as Map),
+        tables: json['tables'] != null
+            ? Map<String, int>.from(json['tables'] as Map)
+            : {},
+        enums: json['enums'] != null
+            ? Map<String, int>.from(json['enums'] as Map)
+            : {},
       );
 
   /// Create a [GeneratorLockfile] from [yamlContent]
@@ -73,11 +78,11 @@ class GeneratorLockfile {
     'package': package,
     'version': version,
     'forFlutter': forFlutter,
-    'tag': tag,
     'barrelFiles': barrelFiles,
-    'tables': tables,
-    'enums': enums,
-  };
+    'tag': tag.isEmpty ? null : tag,
+    'tables': tables.isEmpty ? null : tables,
+    'enums': enums.isEmpty ? null : enums,
+  }.cleaned;
 
   /// Create yaml representation of the [GeneratorLockfile]
   String toYaml() => Yaml.encode(toJson());
