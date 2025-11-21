@@ -1,8 +1,8 @@
-date: "2025-11-20 17:28:52.312807"
+date: "2025-11-21 01:34:58.190615"
 package: supabase_codegen_serverpod
-version: 3.0.1
+version: "4.0.0-alpha.1"
 forFlutter: false
 barrelFiles: false
 tables:
   default_values: 1452540937
-  recipes: 430237957
+  recipes: 1355849187
