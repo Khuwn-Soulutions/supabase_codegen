@@ -24,6 +24,9 @@ class SpyBundleGenerator extends BundleGenerator {
       upserts.copyWith(package: 'supabase_codegen_serverpod'),
     );
     progress.complete();
+    for (final file in generatedFiles) {
+      logger.success('✅ ${file.path} ${file.status.name}');
+    }
   }
 
   /// Generate the spy.yaml files for the models provided
