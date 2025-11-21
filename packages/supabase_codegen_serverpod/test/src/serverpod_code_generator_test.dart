@@ -47,7 +47,7 @@ void main() {
       });
 
       tearDown(() {
-        // tempDir.deleteSync(recursive: true);
+        tempDir.deleteSync(recursive: true);
       });
 
       test('runs full generation creating all files', () async {
