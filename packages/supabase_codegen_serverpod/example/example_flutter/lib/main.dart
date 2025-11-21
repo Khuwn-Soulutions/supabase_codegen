@@ -20,8 +20,9 @@ void main() {
   // You can set the variable when running or building your app like this:
   // E.g. `flutter run --dart-define=SERVER_URL=https://api.example.com/`
   const serverUrlFromEnv = String.fromEnvironment('SERVER_URL');
-  final serverUrl =
-      serverUrlFromEnv.isEmpty ? 'http://$localhost:8080/' : serverUrlFromEnv;
+  final serverUrl = serverUrlFromEnv.isEmpty
+      ? 'http://$localhost:8080/'
+      : serverUrlFromEnv;
 
   client = Client(serverUrl)
     ..connectivityMonitor = FlutterConnectivityMonitor();
@@ -74,8 +75,9 @@ class MyHomePageState extends State<MyHomePage> {
         _recipe = null;
         _loading = true;
       });
-      final result =
-          await client.recipe.generateRecipe(_textEditingController.text);
+      final result = await client.recipe.generateRecipe(
+        _textEditingController.text,
+      );
       setState(() {
         _errorMessage = null;
         _recipe = result;
@@ -119,7 +121,8 @@ class MyHomePageState extends State<MyHomePage> {
                   final recipe = _recipeHistory[index];
                   return ListTile(
                     title: Text(
-                        recipe.text.substring(0, recipe.text.indexOf('\n'))),
+                      recipe.text.substring(0, recipe.text.indexOf('\n')),
+                    ),
                     subtitle: Text('${recipe.author} - ${recipe.createdAt}'),
                     onTap: () {
                       // Show the recipe in the text field
@@ -136,11 +139,11 @@ class MyHomePageState extends State<MyHomePage> {
           Expanded(
             flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const .all(16),
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
+                    padding: const .only(bottom: 16.0),
                     child: TextField(
                       controller: _textEditingController,
                       decoration: const InputDecoration(
@@ -149,7 +152,7 @@ class MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
+                    padding: const .only(bottom: 16.0),
                     child: ElevatedButton(
                       onPressed: _loading ? null : _callGenerateRecipe,
                       child: _loading
@@ -162,12 +165,12 @@ class MyHomePageState extends State<MyHomePage> {
                       child:
                           // Change the ResultDisplay to use the Recipe object
                           ResultDisplay(
-                        resultMessage: _recipe != null
-                            ? '${_recipe?.author} on ${_recipe?.createdAt}:'
-                                '\n${_recipe?.text}'
-                            : null,
-                        errorMessage: _errorMessage,
-                      ),
+                            resultMessage: _recipe != null
+                                ? '${_recipe?.author} on ${_recipe?.createdAt}:'
+                                      '\n${_recipe?.text}'
+                                : null,
+                            errorMessage: _errorMessage,
+                          ),
                     ),
                   ),
                 ],
