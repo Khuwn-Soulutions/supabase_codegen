@@ -13,7 +13,7 @@ Add the following to your pubspec.yaml
 
 ```yaml
 dependencies:
-  supabase_codegen: ^3.0.1
+  supabase_codegen: ^4.0.0-alpha.1
 ```
 
 ---
@@ -123,7 +123,7 @@ name: my_supabase_app
 description: A sample Supabase app.
 
 dependencies:
-  supabase_codegen: ^3.0.1
+  supabase_codegen: ^4.0.0-alpha.1
 
 flutter:
   assets:
