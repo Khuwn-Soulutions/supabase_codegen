@@ -20,7 +20,7 @@ extension TableConfigExtensions on TableConfig {
 /// [column] config provided
 Map<String, dynamic> parseSpyColumnMap(ColumnConfig column) {
   final isId = column.parameterName == 'id';
-  final isOptional = column.isNullable || column.hasDefault || isId;
+  final isOptional = column.isNullable || isId;
   final hasColumnAlias = column.parameterName != column.columnName;
   final rawDefaultValue = (column.columnData?.defaultValue ?? '').toString();
   final defaultValue = extractDefaultValue(
@@ -32,6 +32,9 @@ Map<String, dynamic> parseSpyColumnMap(ColumnConfig column) {
 
   return {
     'parameterName': column.parameterName,
+    // Add the lines below to `config/generator.yaml`
+    // extraClasses:
+    // - package:supabase_codegen_serverpod/json_class.dart:JsonClass
     'type': column.dartType.isDynamic ? 'JsonClass' : column.dartType,
     'question': isOptional ? '?' : '',
     'hasColumnAlias': hasColumnAlias,
