@@ -111,6 +111,9 @@ class GeneratorLockfile {
   /// Enums (Map of filename to [EnumConfig] hashCode)
   final Map<String, int> enums;
 
+  /// Get the current lockfile without the data (tables and enums)
+  GeneratorLockfile withoutData() => copyWith(tables: {}, enums: {});
+
   @override
   int get hashCode =>
       date.hashCode ^
@@ -126,8 +129,6 @@ class GeneratorLockfile {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is GeneratorLockfile &&
-          runtimeType == other.runtimeType &&
-          date == other.date &&
           package == other.package &&
           version == other.version &&
           forFlutter == other.forFlutter &&
@@ -135,4 +136,28 @@ class GeneratorLockfile {
           tag == other.tag &&
           const DeepCollectionEquality().equals(tables, other.tables) &&
           const DeepCollectionEquality().equals(enums, other.enums);
+
+  /// Creates a copy of this [GeneratorLockfile] with the given fields
+  /// replaced with the new values.]
+  GeneratorLockfile copyWith({
+    DateTime? date,
+    String? package,
+    String? version,
+    bool? forFlutter,
+    bool? barrelFiles,
+    String? tag,
+    Map<String, int>? tables,
+    Map<String, int>? enums,
+  }) {
+    return GeneratorLockfile(
+      date: date ?? this.date,
+      package: package ?? this.package,
+      version: version ?? this.version,
+      forFlutter: forFlutter ?? this.forFlutter,
+      barrelFiles: barrelFiles ?? this.barrelFiles,
+      tag: tag ?? this.tag,
+      tables: tables ?? this.tables,
+      enums: enums ?? this.enums,
+    );
+  }
 }
