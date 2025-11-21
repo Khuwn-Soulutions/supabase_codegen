@@ -1,0 +1,8 @@
+date: "2025-11-20 17:28:52.312807"
+package: supabase_codegen_serverpod
+version: 3.0.1
+forFlutter: false
+barrelFiles: false
+tables:
+  default_values: 1452540937
+  recipes: 430237957
