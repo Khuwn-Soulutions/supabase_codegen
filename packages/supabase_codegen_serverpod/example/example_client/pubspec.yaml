@@ -2,10 +2,10 @@ name: example_client
 description: Starting point for a Serverpod client.
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: '3.10.0'
 
 dependencies:
-  serverpod_client: 3.0.0-alpha.1
+  serverpod_client: 3.0.0-rc.1
 
 dependency_overrides:
   serverpod_client:
@@ -17,4 +17,4 @@ dependency_overrides:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
-      path: packages/serverpod_clientpackages/serverpod_serialization
+      path: packages/serverpod_serialization

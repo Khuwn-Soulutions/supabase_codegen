@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: supabase_codegen,serverpod,serverpod_lints,serverpod_serialization,serverpod_shared,serverpod_test
+# melos_managed_dependency_overrides: serverpod,serverpod_lints,serverpod_serialization,serverpod_shared,serverpod_test
 dependency_overrides:
   supabase_codegen:
     path: ../../../supabase_codegen
@@ -7,11 +7,6 @@ dependency_overrides:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
       path: packages/serverpod
-  serverpod_lints:
-    git:
-      url: https://github.com/Khuwn-Soulutions/serverpod.git
-      ref: feature/set-column-name-explicitly
-      path: packages/serverpod_lints
   serverpod_serialization:
     git:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
@@ -27,3 +22,8 @@ dependency_overrides:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
       path: packages/serverpod_test
+  serverpod_lints:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_lints

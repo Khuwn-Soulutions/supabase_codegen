@@ -197,6 +197,7 @@ CREATE TABLE "serverpod_session_log" (
     "error" text,
     "stackTrace" text,
     "authenticatedUserId" bigint,
+    "userId" text,
     "isOpen" boolean,
     "touched" timestamp without time zone NOT NULL
 );
@@ -241,17 +242,17 @@ ALTER TABLE ONLY "serverpod_query_log"
 -- MIGRATION VERSION FOR example
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('example', '20251020233205524', now())
+    VALUES ('example', '20251121170453620', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20251020233205524', "timestamp" = now();
+    DO UPDATE SET "version" = '20251121170453620', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('serverpod', '20240516151843329', now())
+    VALUES ('serverpod', '20250825102336032-v3-0-0', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20240516151843329', "timestamp" = now();
+    DO UPDATE SET "version" = '20250825102336032-v3-0-0', "timestamp" = now();
 
 
 COMMIT;
