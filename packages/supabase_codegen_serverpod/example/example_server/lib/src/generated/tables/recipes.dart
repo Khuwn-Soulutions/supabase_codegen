@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'package:supabase_codegen_serverpod/json_class.dart' as _i2;
 
 abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Recipe._({
@@ -19,6 +20,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.text,
     required this.ingredients,
     DateTime? createdAt,
+    this.metadata,
   }) : createdAt = createdAt ?? DateTime.now();
 
   factory Recipe({
@@ -27,6 +29,7 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required String text,
     required String ingredients,
     DateTime? createdAt,
+    _i2.JsonClass? metadata,
   }) = _RecipeImpl;
 
   factory Recipe.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -35,9 +38,12 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       author: jsonSerialization['author'] as String,
       text: jsonSerialization['text'] as String,
       ingredients: jsonSerialization['ingredients'] as String,
-      createdAt: jsonSerialization['created_at'] == null
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      metadata: jsonSerialization['metadata'] == null
           ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
+          : _i2.JsonClass.fromJson(jsonSerialization['metadata']),
     );
   }
 
@@ -54,7 +60,9 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   String ingredients;
 
-  DateTime? createdAt;
+  DateTime createdAt;
+
+  _i2.JsonClass? metadata;
 
   @override
   _i1.Table<int?> get table => t;
@@ -68,26 +76,36 @@ abstract class Recipe implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     String? text,
     String? ingredients,
     DateTime? createdAt,
+    _i2.JsonClass? metadata,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Recipe',
       if (id != null) 'id': id,
       'author': author,
       'text': text,
       'ingredients': ingredients,
-      if (createdAt != null) 'created_at': createdAt?.toJson(),
+      'createdAt': createdAt.toJson(),
+      if (metadata != null) 'metadata': metadata?.toJson(),
     };
   }
 
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Recipe',
       if (id != null) 'id': id,
       'author': author,
       'text': text,
       'ingredients': ingredients,
-      if (createdAt != null) 'created_at': createdAt?.toJson(),
+      'createdAt': createdAt.toJson(),
+      if (metadata != null)
+        'metadata':
+            // ignore: unnecessary_type_check
+            metadata is _i1.ProtocolSerialization
+            ? (metadata as _i1.ProtocolSerialization).toJsonForProtocol()
+            : metadata?.toJson(),
     };
   }
 
@@ -130,13 +148,15 @@ class _RecipeImpl extends Recipe {
     required String text,
     required String ingredients,
     DateTime? createdAt,
+    _i2.JsonClass? metadata,
   }) : super._(
-          id: id,
-          author: author,
-          text: text,
-          ingredients: ingredients,
-          createdAt: createdAt,
-        );
+         id: id,
+         author: author,
+         text: text,
+         ingredients: ingredients,
+         createdAt: createdAt,
+         metadata: metadata,
+       );
 
   /// Returns a shallow copy of this [Recipe]
   /// with some or all fields replaced by the given arguments.
@@ -147,14 +167,18 @@ class _RecipeImpl extends Recipe {
     String? author,
     String? text,
     String? ingredients,
-    Object? createdAt = _Undefined,
+    DateTime? createdAt,
+    Object? metadata = _Undefined,
   }) {
     return Recipe(
       id: id is int? ? id : this.id,
       author: author ?? this.author,
       text: text ?? this.text,
       ingredients: ingredients ?? this.ingredients,
-      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
+      createdAt: createdAt ?? this.createdAt,
+      metadata: metadata is _i2.JsonClass?
+          ? metadata
+          : this.metadata?.copyWith(),
     );
   }
 }
@@ -163,25 +187,32 @@ class RecipeUpdateTable extends _i1.UpdateTable<RecipeTable> {
   RecipeUpdateTable(super.table);
 
   _i1.ColumnValue<String, String> author(String value) => _i1.ColumnValue(
-        table.author,
-        value,
-      );
+    table.author,
+    value,
+  );
 
   _i1.ColumnValue<String, String> text(String value) => _i1.ColumnValue(
-        table.text,
-        value,
-      );
+    table.text,
+    value,
+  );
 
   _i1.ColumnValue<String, String> ingredients(String value) => _i1.ColumnValue(
-        table.ingredients,
-        value,
-      );
+    table.ingredients,
+    value,
+  );
 
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime? value) =>
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
       _i1.ColumnValue(
         table.createdAt,
         value,
       );
+
+  _i1.ColumnValue<_i2.JsonClass, _i2.JsonClass> metadata(
+    _i2.JsonClass? value,
+  ) => _i1.ColumnValue(
+    table.metadata,
+    value,
+  );
 }
 
 class RecipeTable extends _i1.Table<int?> {
@@ -203,6 +234,11 @@ class RecipeTable extends _i1.Table<int?> {
       'created_at',
       this,
       hasDefault: true,
+      fieldName: 'createdAt',
+    );
+    metadata = _i1.ColumnSerializable<_i2.JsonClass>(
+      'metadata',
+      this,
     );
   }
 
@@ -216,14 +252,17 @@ class RecipeTable extends _i1.Table<int?> {
 
   late final _i1.ColumnDateTime createdAt;
 
+  late final _i1.ColumnSerializable<_i2.JsonClass> metadata;
+
   @override
   List<_i1.Column> get columns => [
-        id,
-        author,
-        text,
-        ingredients,
-        createdAt,
-      ];
+    id,
+    author,
+    text,
+    ingredients,
+    createdAt,
+    metadata,
+  ];
 }
 
 class RecipeInclude extends _i1.IncludeObject {

@@ -10,7 +10,7 @@ fields:
   author: String
   text: String
   ingredients: String
-  createdAt: DateTime?, column=created_at, default=now
+  createdAt: DateTime, column=created_at, default=now
   metadata: JsonClass?
 
-## Date: 2025-11-21 01:34:58.190615
+## Date: 2025-11-21 12:43:19.870285

@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'package:supabase_codegen_serverpod/json_class.dart' as _i2;
 
 abstract class Recipe implements _i1.SerializableModel {
   Recipe._({
@@ -19,6 +20,7 @@ abstract class Recipe implements _i1.SerializableModel {
     required this.text,
     required this.ingredients,
     DateTime? createdAt,
+    this.metadata,
   }) : createdAt = createdAt ?? DateTime.now();
 
   factory Recipe({
@@ -27,6 +29,7 @@ abstract class Recipe implements _i1.SerializableModel {
     required String text,
     required String ingredients,
     DateTime? createdAt,
+    _i2.JsonClass? metadata,
   }) = _RecipeImpl;
 
   factory Recipe.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -35,9 +38,12 @@ abstract class Recipe implements _i1.SerializableModel {
       author: jsonSerialization['author'] as String,
       text: jsonSerialization['text'] as String,
       ingredients: jsonSerialization['ingredients'] as String,
-      createdAt: jsonSerialization['created_at'] == null
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      metadata: jsonSerialization['metadata'] == null
           ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['created_at']),
+          : _i2.JsonClass.fromJson(jsonSerialization['metadata']),
     );
   }
 
@@ -52,7 +58,9 @@ abstract class Recipe implements _i1.SerializableModel {
 
   String ingredients;
 
-  DateTime? createdAt;
+  DateTime createdAt;
+
+  _i2.JsonClass? metadata;
 
   /// Returns a shallow copy of this [Recipe]
   /// with some or all fields replaced by the given arguments.
@@ -63,15 +71,18 @@ abstract class Recipe implements _i1.SerializableModel {
     String? text,
     String? ingredients,
     DateTime? createdAt,
+    _i2.JsonClass? metadata,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Recipe',
       if (id != null) 'id': id,
       'author': author,
       'text': text,
       'ingredients': ingredients,
-      if (createdAt != null) 'created_at': createdAt?.toJson(),
+      'createdAt': createdAt.toJson(),
+      if (metadata != null) 'metadata': metadata?.toJson(),
     };
   }
 
@@ -90,13 +101,15 @@ class _RecipeImpl extends Recipe {
     required String text,
     required String ingredients,
     DateTime? createdAt,
+    _i2.JsonClass? metadata,
   }) : super._(
-          id: id,
-          author: author,
-          text: text,
-          ingredients: ingredients,
-          createdAt: createdAt,
-        );
+         id: id,
+         author: author,
+         text: text,
+         ingredients: ingredients,
+         createdAt: createdAt,
+         metadata: metadata,
+       );
 
   /// Returns a shallow copy of this [Recipe]
   /// with some or all fields replaced by the given arguments.
@@ -107,14 +120,18 @@ class _RecipeImpl extends Recipe {
     String? author,
     String? text,
     String? ingredients,
-    Object? createdAt = _Undefined,
+    DateTime? createdAt,
+    Object? metadata = _Undefined,
   }) {
     return Recipe(
       id: id is int? ? id : this.id,
       author: author ?? this.author,
       text: text ?? this.text,
       ingredients: ingredients ?? this.ingredients,
-      createdAt: createdAt is DateTime? ? createdAt : this.createdAt,
+      createdAt: createdAt ?? this.createdAt,
+      metadata: metadata is _i2.JsonClass?
+          ? metadata
+          : this.metadata?.copyWith(),
     );
   }
 }

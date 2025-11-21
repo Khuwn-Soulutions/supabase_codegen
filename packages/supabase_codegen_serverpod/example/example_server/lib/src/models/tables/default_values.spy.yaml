@@ -7,11 +7,11 @@ table: default_values
 managedMigration: false
 fields:
   id: UuidValue?, defaultPersist=random
-  defaultDateTime: DateTime?, column=default_date_time, default=now
+  defaultDateTime: DateTime, column=default_date_time, default=now
   defaultBool: bool?, column=default_bool, default=true
   defaultDouble: double?, column=default_double, default=10.5
   defaultInt: int?, column=default_int, default=10
   defaultString: String?, column=default_string, default='This is a string'
   defaultJson: JsonClass?, column=default_json
 
-## Date: 2025-11-21 00:55:49.352850
+## Date: 2025-11-21 12:43:19.870285

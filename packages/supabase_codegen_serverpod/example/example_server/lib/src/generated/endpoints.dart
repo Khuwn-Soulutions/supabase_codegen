@@ -42,25 +42,28 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'ingredients',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['recipe'] as _i2.RecipeEndpoint).generateRecipe(
-            session,
-            params['ingredients'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recipe'] as _i2.RecipeEndpoint).generateRecipe(
+                    session,
+                    params['ingredients'],
+                  ),
         ),
         'getRecipes': _i1.MethodConnector(
           name: 'getRecipes',
           params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['recipe'] as _i2.RecipeEndpoint).getRecipes(session),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['recipe'] as _i2.RecipeEndpoint).getRecipes(
+                session,
+              ),
         ),
       },
     );
@@ -75,17 +78,17 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'name',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['greeting'] as _i3.GreetingEndpoint).hello(
-            session,
-            params['name'],
-          ),
-        )
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['greeting'] as _i3.GreetingEndpoint).hello(
+                session,
+                params['name'],
+              ),
+        ),
       },
     );
   }

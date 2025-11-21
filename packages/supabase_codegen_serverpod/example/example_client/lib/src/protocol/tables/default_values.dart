@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'package:supabase_codegen_serverpod/json_class.dart' as _i2;
 
 abstract class DefaultValue implements _i1.SerializableModel {
   DefaultValue._({
@@ -20,11 +21,12 @@ abstract class DefaultValue implements _i1.SerializableModel {
     double? defaultDouble,
     int? defaultInt,
     String? defaultString,
-  })  : defaultDateTime = defaultDateTime ?? DateTime.now(),
-        defaultBool = defaultBool ?? true,
-        defaultDouble = defaultDouble ?? 10.5,
-        defaultInt = defaultInt ?? 10,
-        defaultString = defaultString ?? 'This is a string';
+    this.defaultJson,
+  }) : defaultDateTime = defaultDateTime ?? DateTime.now(),
+       defaultBool = defaultBool ?? true,
+       defaultDouble = defaultDouble ?? 10.5,
+       defaultInt = defaultInt ?? 10,
+       defaultString = defaultString ?? 'This is a string';
 
   factory DefaultValue({
     _i1.UuidValue? id,
@@ -33,6 +35,7 @@ abstract class DefaultValue implements _i1.SerializableModel {
     double? defaultDouble,
     int? defaultInt,
     String? defaultString,
+    _i2.JsonClass? defaultJson,
   }) = _DefaultValueImpl;
 
   factory DefaultValue.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -40,14 +43,16 @@ abstract class DefaultValue implements _i1.SerializableModel {
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      defaultDateTime: jsonSerialization['default_date_time'] == null
+      defaultDateTime: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['defaultDateTime'],
+      ),
+      defaultBool: jsonSerialization['defaultBool'] as bool?,
+      defaultDouble: (jsonSerialization['defaultDouble'] as num?)?.toDouble(),
+      defaultInt: jsonSerialization['defaultInt'] as int?,
+      defaultString: jsonSerialization['defaultString'] as String?,
+      defaultJson: jsonSerialization['defaultJson'] == null
           ? null
-          : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['default_date_time']),
-      defaultBool: jsonSerialization['default_bool'] as bool?,
-      defaultDouble: (jsonSerialization['default_double'] as num?)?.toDouble(),
-      defaultInt: jsonSerialization['default_int'] as int?,
-      defaultString: jsonSerialization['default_string'] as String?,
+          : _i2.JsonClass.fromJson(jsonSerialization['defaultJson']),
     );
   }
 
@@ -56,7 +61,7 @@ abstract class DefaultValue implements _i1.SerializableModel {
   /// the id will be null.
   _i1.UuidValue? id;
 
-  DateTime? defaultDateTime;
+  DateTime defaultDateTime;
 
   bool? defaultBool;
 
@@ -65,6 +70,8 @@ abstract class DefaultValue implements _i1.SerializableModel {
   int? defaultInt;
 
   String? defaultString;
+
+  _i2.JsonClass? defaultJson;
 
   /// Returns a shallow copy of this [DefaultValue]
   /// with some or all fields replaced by the given arguments.
@@ -76,17 +83,19 @@ abstract class DefaultValue implements _i1.SerializableModel {
     double? defaultDouble,
     int? defaultInt,
     String? defaultString,
+    _i2.JsonClass? defaultJson,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'DefaultValue',
       if (id != null) 'id': id?.toJson(),
-      if (defaultDateTime != null)
-        'default_date_time': defaultDateTime?.toJson(),
-      if (defaultBool != null) 'default_bool': defaultBool,
-      if (defaultDouble != null) 'default_double': defaultDouble,
-      if (defaultInt != null) 'default_int': defaultInt,
-      if (defaultString != null) 'default_string': defaultString,
+      'defaultDateTime': defaultDateTime.toJson(),
+      if (defaultBool != null) 'defaultBool': defaultBool,
+      if (defaultDouble != null) 'defaultDouble': defaultDouble,
+      if (defaultInt != null) 'defaultInt': defaultInt,
+      if (defaultString != null) 'defaultString': defaultString,
+      if (defaultJson != null) 'defaultJson': defaultJson?.toJson(),
     };
   }
 
@@ -106,14 +115,16 @@ class _DefaultValueImpl extends DefaultValue {
     double? defaultDouble,
     int? defaultInt,
     String? defaultString,
+    _i2.JsonClass? defaultJson,
   }) : super._(
-          id: id,
-          defaultDateTime: defaultDateTime,
-          defaultBool: defaultBool,
-          defaultDouble: defaultDouble,
-          defaultInt: defaultInt,
-          defaultString: defaultString,
-        );
+         id: id,
+         defaultDateTime: defaultDateTime,
+         defaultBool: defaultBool,
+         defaultDouble: defaultDouble,
+         defaultInt: defaultInt,
+         defaultString: defaultString,
+         defaultJson: defaultJson,
+       );
 
   /// Returns a shallow copy of this [DefaultValue]
   /// with some or all fields replaced by the given arguments.
@@ -121,22 +132,27 @@ class _DefaultValueImpl extends DefaultValue {
   @override
   DefaultValue copyWith({
     Object? id = _Undefined,
-    Object? defaultDateTime = _Undefined,
+    DateTime? defaultDateTime,
     Object? defaultBool = _Undefined,
     Object? defaultDouble = _Undefined,
     Object? defaultInt = _Undefined,
     Object? defaultString = _Undefined,
+    Object? defaultJson = _Undefined,
   }) {
     return DefaultValue(
       id: id is _i1.UuidValue? ? id : this.id,
-      defaultDateTime:
-          defaultDateTime is DateTime? ? defaultDateTime : this.defaultDateTime,
+      defaultDateTime: defaultDateTime ?? this.defaultDateTime,
       defaultBool: defaultBool is bool? ? defaultBool : this.defaultBool,
-      defaultDouble:
-          defaultDouble is double? ? defaultDouble : this.defaultDouble,
+      defaultDouble: defaultDouble is double?
+          ? defaultDouble
+          : this.defaultDouble,
       defaultInt: defaultInt is int? ? defaultInt : this.defaultInt,
-      defaultString:
-          defaultString is String? ? defaultString : this.defaultString,
+      defaultString: defaultString is String?
+          ? defaultString
+          : this.defaultString,
+      defaultJson: defaultJson is _i2.JsonClass?
+          ? defaultJson
+          : this.defaultJson?.copyWith(),
     );
   }
 }

@@ -72,21 +72,22 @@ class Client extends _i1.ServerpodClientShared {
       _i1.MethodCallContext,
       Object,
       StackTrace,
-    )? onFailedCall,
+    )?
+    onFailedCall,
     Function(_i1.MethodCallContext)? onSucceededCall,
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
-          host,
-          _i5.Protocol(),
-          securityContext: securityContext,
-          authenticationKeyManager: authenticationKeyManager,
-          streamingConnectionTimeout: streamingConnectionTimeout,
-          connectionTimeout: connectionTimeout,
-          onFailedCall: onFailedCall,
-          onSucceededCall: onSucceededCall,
-          disconnectStreamsOnLostInternetConnection:
-              disconnectStreamsOnLostInternetConnection,
-        ) {
+         host,
+         _i5.Protocol(),
+         securityContext: securityContext,
+         authenticationKeyManager: authenticationKeyManager,
+         streamingConnectionTimeout: streamingConnectionTimeout,
+         connectionTimeout: connectionTimeout,
+         onFailedCall: onFailedCall,
+         onSucceededCall: onSucceededCall,
+         disconnectStreamsOnLostInternetConnection:
+             disconnectStreamsOnLostInternetConnection,
+       ) {
     recipe = EndpointRecipe(this);
     greeting = EndpointGreeting(this);
   }
@@ -97,9 +98,9 @@ class Client extends _i1.ServerpodClientShared {
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
-        'recipe': recipe,
-        'greeting': greeting,
-      };
+    'recipe': recipe,
+    'greeting': greeting,
+  };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};

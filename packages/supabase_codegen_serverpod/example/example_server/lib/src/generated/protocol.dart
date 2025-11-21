@@ -15,7 +15,8 @@ import 'package:serverpod/protocol.dart' as _i2;
 import 'greeting.dart' as _i3;
 import 'tables/default_values.dart' as _i4;
 import 'tables/recipes.dart' as _i5;
-import 'package:example_server/src/generated/tables/recipes.dart' as _i6;
+import 'package:supabase_codegen_serverpod/json_class.dart' as _i6;
+import 'package:example_server/src/generated/tables/recipes.dart' as _i7;
 export 'greeting.dart';
 export 'tables/default_values.dart';
 export 'tables/recipes.dart';
@@ -44,8 +45,8 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ColumnDefinition(
           name: 'default_date_time',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: true,
-          dartType: 'DateTime?',
+          isNullable: false,
+          dartType: 'DateTime',
           columnDefault: 'CURRENT_TIMESTAMP',
         ),
         _i2.ColumnDefinition(
@@ -76,6 +77,13 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String?',
           columnDefault: '\'This is a string\'::text',
         ),
+        _i2.ColumnDefinition(
+          name: 'default_json',
+          columnType: _i2.ColumnType.json,
+          isNullable: true,
+          dartType:
+              'package:supabase_codegen_serverpod/json_class.dart:JsonClass?',
+        ),
       ],
       foreignKeys: [],
       indexes: [
@@ -86,14 +94,14 @@ class Protocol extends _i1.SerializationManagerServer {
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'id',
-            )
+            ),
           ],
           type: 'btree',
           isUnique: true,
           isPrimary: true,
-        )
+        ),
       ],
-      managed: true,
+      managed: false,
     ),
     _i2.TableDefinition(
       name: 'recipes',
@@ -129,9 +137,16 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ColumnDefinition(
           name: 'created_at',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: true,
-          dartType: 'DateTime?',
+          isNullable: false,
+          dartType: 'DateTime',
           columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'metadata',
+          columnType: _i2.ColumnType.json,
+          isNullable: true,
+          dartType:
+              'package:supabase_codegen_serverpod/json_class.dart:JsonClass?',
         ),
       ],
       foreignKeys: [],
@@ -143,17 +158,23 @@ class Protocol extends _i1.SerializationManagerServer {
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'id',
-            )
+            ),
           ],
           type: 'btree',
           isUnique: true,
           isPrimary: true,
-        )
+        ),
       ],
-      managed: true,
+      managed: false,
     ),
     ..._i2.Protocol.targetTableDefinitions,
   ];
+
+  static String? getClassNameFromObjectJson(dynamic data) {
+    if (data is! Map) return null;
+    final className = data['__className__'] as String?;
+    return className;
+  }
 
   @override
   T deserialize<T>(
@@ -161,6 +182,15 @@ class Protocol extends _i1.SerializationManagerServer {
     Type? t,
   ]) {
     t ??= T;
+
+    final dataClassName = getClassNameFromObjectJson(data);
+    if (dataClassName != null && dataClassName != t.toString()) {
+      return deserializeByClassName({
+        'className': dataClassName,
+        'data': data,
+      });
+    }
+
     if (t == _i3.Greeting) {
       return _i3.Greeting.fromJson(data) as T;
     }
@@ -179,9 +209,18 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i5.Recipe?>()) {
       return (data != null ? _i5.Recipe.fromJson(data) : null) as T;
     }
-    if (t == List<_i6.Recipe>) {
-      return (data as List).map((e) => deserialize<_i6.Recipe>(e)).toList()
+    if (t == _i1.getType<_i6.JsonClass?>()) {
+      return (data != null ? _i6.JsonClass.fromJson(data) : null) as T;
+    }
+    if (t == List<_i7.Recipe>) {
+      return (data as List).map((e) => deserialize<_i7.Recipe>(e)).toList()
           as T;
+    }
+    if (t == _i6.JsonClass) {
+      return _i6.JsonClass.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i6.JsonClass?>()) {
+      return (data != null ? _i6.JsonClass.fromJson(data) : null) as T;
     }
     try {
       return _i2.Protocol().deserialize<T>(data, t);
@@ -193,7 +232,14 @@ class Protocol extends _i1.SerializationManagerServer {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
+
+    if (data is Map<String, dynamic> && data['__className__'] is String) {
+      return (data['__className__'] as String).replaceFirst('example.', '');
+    }
+
     switch (data) {
+      case _i6.JsonClass():
+        return 'JsonClass';
       case _i3.Greeting():
         return 'Greeting';
       case _i4.DefaultValue():
@@ -213,6 +259,9 @@ class Protocol extends _i1.SerializationManagerServer {
     var dataClassName = data['className'];
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
+    }
+    if (dataClassName == 'JsonClass') {
+      return deserialize<_i6.JsonClass>(data['data']);
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_i3.Greeting>(data['data']);
