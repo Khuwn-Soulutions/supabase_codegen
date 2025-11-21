@@ -3,6 +3,7 @@
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 ![Coverage Status](./coverage_badge.svg)
+[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 
 Supabase Codegen generates type-safe Dart models from your Supabase tables automatically!
 
@@ -97,11 +98,6 @@ See [Yaml configuration](#yaml-configuration)
 Enables debug logging to provide more verbose output during the type generation.  
 Example: `dart run supabase_codegen:generate_types -d`
 
-- `-s, --[no-]skip-footer`
-
-Skip the writing of the footer in the generated files.
-Example: `dart run supabase_codegen:generate_types --skip-footer`
-
 - `-h, --help`
   
 Show command line usage options
@@ -118,7 +114,6 @@ env: .env.development # Overrides default: .env
 output: lib/models/supabase # Overrides default: supabase/types
 tag: v1 # Overrides default: ''
 debug: true # Overrides default: false
-skipFooter: true # Overrides default: false
 ```
 
 Here's an example of how to configure the options in `pubspec.yaml`:
@@ -139,7 +134,6 @@ supabase_codegen:
   output: lib/models/supabase # Overrides default: supabase/types
   tag: v1 # Overrides default: ''
   debug: true # Overrides default: false
-  skipFooter: true # Overrides default: false
 ```
 
 ### Explanation (See [Command Line Options](#command-line-options)):
@@ -148,7 +142,6 @@ supabase_codegen:
 `output`: Sets the default output folder.  
 `tag`: Sets the default tag that will be added to the generated files.  
 `debug`: Sets the default for debug logging.  
-`skipFooter`: Skip the writing of the footer in the generated files.
 
 ### Priority 
 The command line options have higher priority than the options defined in the yaml configuration.
@@ -164,7 +157,8 @@ The generator maps common PostgreSQL types to Dart types by default. You can ove
 
 | PostgreSQL type(s) | Dart type |
 | --- | --- |
-| text, varchar, char, uuid, character varying, name, bytea | String |
+| text, varchar, char, character varying, name, bytea | String |
+| uuid | UuidValue |
 | int2, int4, int8, integer, bigint | int |
 | float4, float8, decimal, numeric, double precision | double |
 | bool, boolean | bool |
@@ -291,21 +285,21 @@ class UsersRow extends SupabaseDataRow {
   /// Users Row
   UsersRow({
     required String email,
-    required UserRole role,
-    String? id,
+    UuidValue? id,
     String? accName,
     String? phoneNumber,
     List<String>? contacts,
+    UserRole? role,
     DateTime? createdAt,
   }) : super({
-          'email': supaSerialize(email),
-          'role': supaSerialize(role),
-          if (id != null) 'id': supaSerialize(id),
-          if (accName != null) 'acc_name': supaSerialize(accName),
-          if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
-          if (contacts != null) 'contacts': supaSerialize(contacts),
-          if (createdAt != null) 'created_at': supaSerialize(createdAt),
-        });
+         'email': supaSerialize(email),
+         if (id != null) 'id': supaSerialize(id),
+         if (accName != null) 'acc_name': supaSerialize(accName),
+         if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
+         if (contacts != null) 'contacts': supaSerialize(contacts),
+         if (role != null) 'role': supaSerialize(role),
+         if (createdAt != null) 'created_at': supaSerialize(createdAt),
+       });
 
   /// Users Row
   const UsersRow._(super.data);
@@ -325,8 +319,9 @@ class UsersRow extends SupabaseDataRow {
   static const String idField = 'id';
 
   /// Id
-  String get id => getField<String>(idField, defaultValue: '')!;
-  set id(String value) => setField<String>(idField, value);
+  UuidValue get id =>
+      getField<UuidValue>(idField, defaultValue: Uuid().v4obj())!;
+  set id(UuidValue value) => setField<UuidValue>(idField, value);
 
   /// Email field name
   static const String emailField = 'email';
@@ -381,22 +376,21 @@ class UsersRow extends SupabaseDataRow {
   /// overriding the provided fields
   UsersRow copyWith({
     String? email,
-    UserRole? role,
-    String? id,
+    UuidValue? id,
     String? accName,
     String? phoneNumber,
     List<String>? contacts,
+    UserRole? role,
     DateTime? createdAt,
-  }) =>
-      UsersRow.fromJson({
-        'email': email ?? data['email'],
-        'role': role?.name ?? data['role'],
-        'id': id ?? data['id'],
-        'acc_name': accName ?? data['acc_name'],
-        'phone_number': phoneNumber ?? data['phone_number'],
-        'contacts': contacts ?? data['contacts'],
-        'created_at': createdAt ?? data['created_at'],
-      });
+  }) => UsersRow.fromJson({
+    'email': supaSerialize(email) ?? data['email'],
+    'id': supaSerialize(id) ?? data['id'],
+    'acc_name': supaSerialize(accName) ?? data['acc_name'],
+    'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
+    'contacts': supaSerialize(contacts) ?? data['contacts'],
+    'role': supaSerialize(role) ?? data['role'],
+    'created_at': supaSerialize(createdAt) ?? data['created_at'],
+  });
 }
 
 ```

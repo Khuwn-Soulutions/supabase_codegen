@@ -5,9 +5,8 @@ version: 3.0.1
 repository: https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen_flutter
 resolution: workspace
 
-
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.8.0
   flutter: ">=3.24.0"
 
 dependencies:
@@ -18,7 +17,7 @@ dependencies:
   meta: ^1.16.0
   path: ^1.9.1
   supabase_codegen: ^3.0.1
-  supabase_flutter: ^2.10.1
+  supabase_flutter: ^2.10.3
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +25,11 @@ dev_dependencies:
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0
 
+dependency_overrides:
+  # Flutter test requires 1.16.0
+  meta: ^1.16.0
+  # override the test version in core package to ensure flutter test compatibility
+  test: ^1.25.15
 
 executables:
   generate_types:

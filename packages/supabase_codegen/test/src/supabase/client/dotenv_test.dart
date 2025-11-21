@@ -37,8 +37,7 @@ void main() {
         expect(result.supabaseKey, supabaseKey);
       });
 
-      test(
-          'returns supabase URL and key from env file '
+      test('returns supabase URL and key from env file '
           'when anon key is not defined but key is', () {
         // Create a temporary .env file for testing
         File(envPath).writeAsStringSync(
@@ -52,8 +51,7 @@ void main() {
         expect(result.supabaseKey, supabaseKey);
       });
 
-      test(
-          'returns supabase URL and key from env file when '
+      test('returns supabase URL and key from env file when '
           'anon key is not defined but key alias is', () {
         // Create a temporary .env file for testing
         File(envPath).writeAsStringSync(
@@ -67,12 +65,12 @@ void main() {
         expect(result.supabaseKey, supabaseKey);
       });
 
-      test(
-          'throws exception when supabase URL is missing in env file '
+      test('throws exception when supabase URL is missing in env file '
           'and platform env', () {
         // Create a temporary .env file for testing
-        File(envPath)
-            .writeAsStringSync('${supabaseEnvKeys.anonKey}=$supabaseKey');
+        File(
+          envPath,
+        ).writeAsStringSync('${supabaseEnvKeys.anonKey}=$supabaseKey');
 
         expect(
           () => dotenv.extractKeys(envPath),
@@ -86,8 +84,7 @@ void main() {
         );
       });
 
-      test(
-          'throws exception when supabase key is missing in env file '
+      test('throws exception when supabase key is missing in env file '
           'and platform env', () {
         // Create a temporary .env file for testing
         File(envPath).writeAsStringSync('${supabaseEnvKeys.url}=$supabaseUrl');
@@ -99,7 +96,7 @@ void main() {
               (e) => e.toString(),
               'message',
               contains(
-                '[GenerateTypes] Ensure that either '
+                'Ensure that either '
                 '${supabaseEnvKeys.anonKey} or ${supabaseEnvKeys.anonKey} is '
                 'set to ensure access to the database',
               ),
@@ -132,8 +129,7 @@ void main() {
         expect(result.supabaseKey, supabaseKey);
       });
 
-      test(
-          'returns supabase URL and key from platform env when '
+      test('returns supabase URL and key from platform env when '
           'anon key is not defined but key is', () {
         env.remove(supabaseEnvKeys.anonKey);
         env[supabaseEnvKeys.key] = supabaseKey;
@@ -148,8 +144,7 @@ void main() {
         env[supabaseEnvKeys.anonKey] = supabaseKey;
       });
 
-      test(
-          'returns supabase URL and key from platform env when anon key '
+      test('returns supabase URL and key from platform env when anon key '
           'is not defined but key alias is', () {
         env.remove(supabaseEnvKeys.anonKey);
         env[supabaseEnvKeys.key] = supabaseKey;

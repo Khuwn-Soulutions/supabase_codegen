@@ -5,13 +5,11 @@ import 'package:supabase_codegen/supabase_codegen.dart';
 extension DotenvExtension on DotEnv {
   /// Extract the required keys from the environment file at [envPath]
   Future<({String supabaseUrl, String supabaseKey, Map<String, String> env})>
-      extractKeys(String envPath) async {
+  extractKeys(String envPath) async {
     await load(fileName: envPath);
     final hasUrl = isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
-      throw Exception(
-        '[GenerateTypes] Missing ${supabaseEnvKeys.url} in $envPath file. ',
-      );
+      throw Exception('Missing ${supabaseEnvKeys.url} in $envPath file. ');
     }
 
     final supabaseKey = get(
@@ -20,7 +18,7 @@ extension DotenvExtension on DotEnv {
     );
     if (supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} '
+        'Ensure that either ${supabaseEnvKeys.anonKey} '
         'or ${supabaseEnvKeys.anonKey} is set to ensure access to the database',
       );
     }

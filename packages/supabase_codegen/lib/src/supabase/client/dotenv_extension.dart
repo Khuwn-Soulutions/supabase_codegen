@@ -23,7 +23,8 @@ extension DotenvExtension on DotEnv {
     if (!hasUrl) {
       return null;
     }
-    final supabaseKey = environment[supabaseEnvKeys.anonKey] ??
+    final supabaseKey =
+        environment[supabaseEnvKeys.anonKey] ??
         environment[supabaseEnvKeys.key] ??
         '';
     if (supabaseKey.isEmpty) {
@@ -42,9 +43,7 @@ extension DotenvExtension on DotEnv {
     final hasUrl = isEveryDefined([supabaseEnvKeys.url]);
     if (!hasUrl) {
       log('Unable to find env: ${File.fromUri(Uri.file(envPath)).path}');
-      throw Exception(
-        '[GenerateTypes] Missing ${supabaseEnvKeys.url} in $envPath file. ',
-      );
+      throw Exception('Missing ${supabaseEnvKeys.url} in $envPath file. ');
     }
 
     final supabaseKey = getOrElse(
@@ -53,7 +52,7 @@ extension DotenvExtension on DotEnv {
     );
     if (supabaseKey.isEmpty) {
       throw Exception(
-        '[GenerateTypes] Ensure that either ${supabaseEnvKeys.anonKey} '
+        'Ensure that either ${supabaseEnvKeys.anonKey} '
         'or ${supabaseEnvKeys.anonKey} is set to ensure access to the database',
       );
     }

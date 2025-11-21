@@ -1,11 +1,9 @@
 import 'package:latlng/latlng.dart';
 import 'package:supabase_codegen/src/supabase/database/supa_serialize.dart';
 import 'package:test/test.dart';
+import 'package:uuid/uuid.dart';
 
-enum TestEnum {
-  value1,
-  value2;
-}
+enum TestEnum { value1, value2 }
 
 void main() {
   group('supaSerialize', () {
@@ -22,14 +20,16 @@ void main() {
       const lat = 48.8584;
       const lng = 2.2945;
       final latLng = LatLng.degree(lat, lng);
-      expect(supaSerialize<LatLng>(latLng), {
-        'lat': lat,
-        'lng': lng,
-      });
+      expect(supaSerialize<LatLng>(latLng), {'lat': lat, 'lng': lng});
     });
 
     test('serializes Enums to their name', () {
       expect(supaSerialize<TestEnum>(TestEnum.value1), 'value1');
+    });
+
+    test('serializes UuidValues to string representation', () {
+      final uuidValue = const Uuid().v4obj();
+      expect(supaSerialize<UuidValue>(uuidValue), uuidValue.uuid);
     });
 
     test('serializes other types as-is', () {
@@ -113,8 +113,10 @@ void main() {
     });
 
     test('deserializes LatLng from map with latitude and longitude', () {
-      final result =
-          supaDeserialize<LatLng>({'latitude': 48.8584, 'longitude': 2.2945});
+      final result = supaDeserialize<LatLng>({
+        'latitude': 48.8584,
+        'longitude': 2.2945,
+      });
       expect(result?.latitude.degrees, 48.8584);
       expect(result?.longitude.degrees, 2.2945);
     });
@@ -130,6 +132,11 @@ void main() {
       expect(supaDeserialize<LatLng>({'lat': 48.8584}), isNull);
       expect(supaDeserialize<LatLng>({'lng': 2.2945}), isNull);
       expect(supaDeserialize<LatLng>(<dynamic, dynamic>{}), isNull);
+    });
+
+    test('deserializes UuidValue', () {
+      final uuid = const Uuid().v4obj().uuid;
+      expect(supaDeserialize<UuidValue>(uuid), UuidValue.withValidation(uuid));
     });
 
     test('deserializes String', () {

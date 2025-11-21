@@ -12,10 +12,7 @@ final Map<String, dynamic> userData = {
   UsersRow.createdAtField: DateTime.now().toIso8601String(),
 };
 
-enum UserRole {
-  admin,
-  user,
-}
+enum UserRole { admin, user }
 
 /// Users Table
 class UsersTable extends SupabaseTable<UsersRow> {
@@ -40,14 +37,14 @@ class UsersRow extends SupabaseDataRow {
     List<String>? contacts,
     DateTime? createdAt,
   }) : super({
-          'email': supaSerialize(email),
-          'role': supaSerialize(role),
-          if (id != null) 'id': supaSerialize(id),
-          if (accName != null) 'acc_name': supaSerialize(accName),
-          if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
-          if (contacts != null) 'contacts': supaSerialize(contacts),
-          if (createdAt != null) 'created_at': supaSerialize(createdAt),
-        });
+         'email': supaSerialize(email),
+         'role': supaSerialize(role),
+         if (id != null) 'id': supaSerialize(id),
+         if (accName != null) 'acc_name': supaSerialize(accName),
+         if (phoneNumber != null) 'phone_number': supaSerialize(phoneNumber),
+         if (contacts != null) 'contacts': supaSerialize(contacts),
+         if (createdAt != null) 'created_at': supaSerialize(createdAt),
+       });
 
   /// Users Row
   const UsersRow._(super.data);
@@ -125,14 +122,13 @@ class UsersRow extends SupabaseDataRow {
     String? phoneNumber,
     List<String>? contacts,
     DateTime? createdAt,
-  }) =>
-      UsersRow.fromJson({
-        'email': supaSerialize(email) ?? data['email'],
-        'role': supaSerialize(role) ?? data['role'],
-        'id': supaSerialize(id) ?? data['id'],
-        'acc_name': supaSerialize(accName) ?? data['acc_name'],
-        'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
-        'contacts': supaSerialize(contacts) ?? data['contacts'],
-        'created_at': supaSerialize(createdAt) ?? data['created_at'],
-      });
+  }) => UsersRow.fromJson({
+    'email': supaSerialize(email) ?? data['email'],
+    'role': supaSerialize(role) ?? data['role'],
+    'id': supaSerialize(id) ?? data['id'],
+    'acc_name': supaSerialize(accName) ?? data['acc_name'],
+    'phone_number': supaSerialize(phoneNumber) ?? data['phone_number'],
+    'contacts': supaSerialize(contacts) ?? data['contacts'],
+    'created_at': supaSerialize(createdAt) ?? data['created_at'],
+  });
 }

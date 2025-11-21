@@ -7,11 +7,11 @@ void main() async {
   final functions = sqlFunctions.join('\n');
 
   /// Create new migration using supabase CLI
-  final result = await Process.run(
-    'supabase',
-    ['migration', 'new', 'add_codegen_functions'],
-    runInShell: true,
-  );
+  final result = await Process.run('supabase', [
+    'migration',
+    'new',
+    'add_codegen_functions',
+  ], runInShell: true);
 
   /// Read path of migration
   final path = extractPath(result.stdout.toString());

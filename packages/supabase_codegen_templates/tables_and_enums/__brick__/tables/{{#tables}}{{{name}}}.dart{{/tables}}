@@ -1,0 +1,72 @@
+{{> header}}
+{{#tables.hasImports}}// ignore_for_file: always_use_package_imports
+{{/tables.hasImports}}
+import 'package:{{package}}/{{package}}.dart';
+
+{{#tables.importedFiles}}
+import '{{{.}}}';
+{{/tables.importedFiles}}
+
+/// {{tables.displayName}} Table
+class {{tables.tableClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}Table<{{tables.rowClass}}> {
+  /// Table Name
+  @override
+  String get tableName => '{{tables.name}}';
+
+  /// Create a [{{tables.rowClass}}] from the [data] provided
+  @override
+  {{tables.rowClass}} createRow(Map<String, dynamic> data) =>
+      {{tables.rowClass}}.fromJson(data);
+}
+
+
+/// {{tables.displayName}} constructor
+class {{tables.rowClass}} extends Supabase{{#forFlutter}}Flutter{{/forFlutter}}DataRow {
+  /// {{tables.displayName}} Row
+  {{tables.rowClass}}({
+    {{#tables.columns}}{{constructor.qualifier}}{{{dartType}}}{{constructor.question}} {{parameterName}},
+    {{/tables.columns}}
+  }) : super({
+    {{#tables.columns}}{{#constructor.isOptional}}if ({{parameterName}} != null){{/constructor.isOptional}} 
+        {{field.name}}: supaSerialize({{parameterName}}),
+    {{/tables.columns}}
+  });
+
+
+  /// {{tables.displayName}} default constructor
+  const {{tables.rowClass}}._(super.data);
+
+  /// Create $classDesc Row from a [data] map
+  factory {{tables.rowClass}}.fromJson(Map<String, dynamic> data) =>
+      {{tables.rowClass}}._(data.cleaned);
+
+  /// Get the Json representation of the {{tables.displayName}} row
+  Map<String, dynamic> toJson() => data;
+
+  /// Get the [SupabaseTable] for this row
+  @override
+  SupabaseTable get table => {{tables.tableClass}}();
+  {{#tables.columns}}
+  /// {{parameterName.titleCase()}} column name ({{columnName}})
+  static const String {{field.name}} = '{{columnName}}';
+
+  {{! Array fields}}
+  {{> table.row.field.array }}
+
+  {{! Single fields}}
+  {{> table.row.field.single}}
+
+  {{/tables.columns}}
+
+  /// Make a copy of the current [{{tables.rowClass}}]
+  /// overriding the provided fields
+  {{tables.rowClass}} copyWith({
+    {{#tables.columns}}{{{dartType}}}{{^isDynamic}}?{{/isDynamic}} {{parameterName}},
+    {{/tables.columns}}
+  }) => {{tables.rowClass}}.fromJson({
+    {{#tables.columns}}{{field.name}}: supaSerialize({{parameterName}}) ?? data[{{field.name}}],
+    {{/tables.columns}}
+  });
+}
+
+{{> footer }}

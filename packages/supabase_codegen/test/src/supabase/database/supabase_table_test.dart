@@ -7,10 +7,7 @@ void main() {
   final user = UsersRow.fromJson(userData);
   final table = UsersTable();
   const otherEmail = 'other@others.com';
-  final otherData = {
-    ...userData,
-    'email': otherEmail,
-  };
+  final otherData = {...userData, 'email': otherEmail};
 
   /// Insert data
   Future<void> insertData([Map<String, dynamic>? data]) async {
@@ -18,9 +15,8 @@ void main() {
   }
 
   /// Find the user in the database
-  Future<UsersRow?> fetchUser() => table.querySingleRow(
-        queryFn: (q) => q.eq(UsersRow.idField, user.id),
-      );
+  Future<UsersRow?> fetchUser() =>
+      table.querySingleRow(queryFn: (q) => q.eq(UsersRow.idField, user.id));
 
   group('SupabaseTable', () {
     /// Reset the mock data after each test
@@ -47,10 +43,7 @@ void main() {
       late List<UsersRow> result;
       setUp(() async {
         await insertData();
-        await insertData({
-          'id': 'other-id',
-          ...otherData,
-        });
+        await insertData({'id': 'other-id', ...otherData});
       });
 
       test('returns a list of rows', () async {
@@ -108,7 +101,6 @@ void main() {
             expect(other.data[key], isNot(user.data[key]));
             expect(other.data[key], otherEmail);
           }
-
           /// Unchanged fields
           else {
             expect(other.data.containsKey(key), isTrue);
@@ -136,10 +128,7 @@ void main() {
           queryFn: (q) => q.eq(UsersRow.idField, otherId),
         );
         expect(before, isNull);
-        await table.upsert({
-          ...otherData,
-          'id': otherId,
-        });
+        await table.upsert({...otherData, 'id': otherId});
         final after = await table.querySingleRow(
           queryFn: (q) => q.eq(UsersRow.idField, otherId),
         );
@@ -179,10 +168,7 @@ void main() {
       group('can update row', () {
         var result = <UsersRow>[];
         const newEmail = 'me@them.com';
-        final newData = {
-          ...userData,
-          UsersRow.emailField: newEmail,
-        };
+        final newData = {...userData, UsersRow.emailField: newEmail};
 
         void testUpdatedResult() {
           expect(result, isNotEmpty);

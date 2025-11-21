@@ -41,7 +41,7 @@ on:
       check_ignore:
         required: false
         type: boolean
-        default: false
+        default: true
       report_on:
         required: false
         type: string

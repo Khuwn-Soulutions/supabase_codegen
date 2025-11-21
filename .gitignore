@@ -8,6 +8,7 @@ pubspec.lock
 
 # Other folders
 .idea
+.mason
 
 # Environment files
 .env*
@@ -17,3 +18,4 @@ coverage/*
 .failed_tracker
 .flutter-plugins-dependencies
 .flutter-plugins
+.DS_Store

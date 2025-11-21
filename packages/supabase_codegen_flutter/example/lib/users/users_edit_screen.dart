@@ -75,14 +75,12 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
     final upsertData = UsersRow(
       id: widget.user?.id, // Include ID only if editing
       email: _emailController.text.trim(),
-      accName:
-          _accNameController.text.trim().isNotEmpty
-              ? _accNameController.text.trim()
-              : null,
-      phoneNumber:
-          _phoneNumberController.text.trim().isNotEmpty
-              ? _phoneNumberController.text.trim()
-              : null,
+      accName: _accNameController.text.trim().isNotEmpty
+          ? _accNameController.text.trim()
+          : null,
+      phoneNumber: _phoneNumberController.text.trim().isNotEmpty
+          ? _phoneNumberController.text.trim()
+          : null,
       role: _selectedRole!,
       contacts: _contacts,
     );
@@ -249,25 +247,22 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
                       labelText: 'UserRole *',
                       border: OutlineInputBorder(),
                     ),
-                    items:
-                        UserRole.values.map((UserRole role) {
-                          return DropdownMenuItem<UserRole>(
-                            value: role,
-                            // Capitalize first letter for display
-                            child: Text(
-                              role.name[0].toUpperCase() +
-                                  role.name.substring(1),
-                            ),
-                          );
-                        }).toList(),
+                    items: UserRole.values.map((UserRole role) {
+                      return DropdownMenuItem<UserRole>(
+                        value: role,
+                        // Capitalize first letter for display
+                        child: Text(
+                          role.name[0].toUpperCase() + role.name.substring(1),
+                        ),
+                      );
+                    }).toList(),
                     onChanged: (UserRole? newValue) {
                       setState(() {
                         _selectedRole = newValue;
                       });
                     },
-                    validator:
-                        (value) =>
-                            value == null ? 'Please select a UserRole' : null,
+                    validator: (value) =>
+                        value == null ? 'Please select a UserRole' : null,
                   ),
                   const SizedBox(height: 24),
 

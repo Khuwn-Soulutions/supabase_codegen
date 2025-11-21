@@ -2,6 +2,7 @@
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
+[![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 
 Supabase Codegen Flutter Package
 
@@ -132,7 +133,6 @@ env: .env.development # Overrides default: config.env
 output: lib/models/supabase # Overrides default: supabase/types
 tag: v1 # Overrides default: ''
 debug: true # Overrides default: false
-skipFooter: true # Overrides default: false
 ```
 
 Here's an example of how to configure the options in `pubspec.yaml`:
@@ -153,7 +153,6 @@ supabase_codegen:
   output: lib/models/supabase # Overrides default: supabase/types
   tag: v1 # Overrides default: ''
   debug: true # Overrides default: false
-  skipFooter: true # Overrides default: false
 ```
 
 ### Explanation (See [Command Line Options](#command-line-options)):
@@ -162,7 +161,6 @@ supabase_codegen:
 `output`: Sets the default output folder.
 `tag`: Sets the default tag that will be added to the generated files.
 `debug`: Sets the default for debug logging.
-`skipFooter`: Skip the writing of the footer in the generated files.
 
 ### Priority
 The command line options have higher priority than the options defined in the yaml configuration.
