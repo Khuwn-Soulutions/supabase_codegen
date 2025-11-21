@@ -5,8 +5,6 @@ import 'package:supabase_codegen_serverpod/supabase_codegen_serverpod.dart';
 class ServerpodCodeGenerator extends SupabaseCodeGenerator {
   /// Constructor
   const ServerpodCodeGenerator({
-    super.schemaGenerator = const SupabaseSchemaGenerator(
-      bundleGenerator: SpyBundleGenerator(),
-    ),
+    super.schemaGenerator = const ServerpodSchemaGenerator(),
   });
 }
