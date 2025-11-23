@@ -31,8 +31,6 @@ dependencies:
     path: ../example_client
   gpt_markdown: ^1.1.4
   serverpod_flutter: 3.0.0-rc.1
-  supabase_codegen_serverpod:
-    path: ../../ 
 
 dev_dependencies:
   flutter_lints: '>=3.0.0 <7.0.0'
@@ -55,8 +53,6 @@ dependency_overrides:
       url: https://github.com/Khuwn-Soulutions/serverpod.git
       ref: feature/set-column-name-explicitly
       path: packages/serverpod_serialization
-  supabase_codegen:
-    path: ../../../supabase_codegen 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

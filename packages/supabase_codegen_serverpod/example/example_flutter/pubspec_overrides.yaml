@@ -1,7 +1,5 @@
 # melos_managed_dependency_overrides: supabase_codegen,example_client,serverpod_client,serverpod_flutter,serverpod_serialization
 dependency_overrides:
-  supabase_codegen:
-    path: ../../../supabase_codegen
   example_client:
     path: ../example_client
   serverpod_client:
