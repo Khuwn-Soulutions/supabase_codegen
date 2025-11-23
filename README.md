@@ -4,6 +4,8 @@
 [![License: MIT][license_badge]][license_link]
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf5235675f5f4d769f959ddc797ed998)](https://app.codacy.com/gh/Khuwn-Soulutions/supabase_codegen/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+
 
 A comprehensive suite of packages for generating type-safe Dart models from Supabase databases, supporting both pure Dart and Flutter applications.
 
