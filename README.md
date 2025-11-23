@@ -68,6 +68,7 @@ Serverpod-optimized package that generates `.spy.yaml` models from Supabase tabl
    ```bash
    dart run supabase_codegen_flutter:init
    ```
+   This creates the `.supabase_codegen.yaml` configuration file.
 
 4. **Add to pubspec.yaml:**
    ```yaml
@@ -109,6 +110,7 @@ Serverpod-optimized package that generates `.spy.yaml` models from Supabase tabl
    ```bash
    dart run supabase_codegen:init
    ```
+   This creates the `.supabase_codegen.yaml` configuration file.
 
 4. **Generate types:**
    ```bash
@@ -145,6 +147,7 @@ Run this in your **Serverpod server project** (typically `my_serverpod_server`)
    ```bash
    dart run supabase_codegen_serverpod:init
    ```
+   This creates the `.supabase_codegen.yaml` configuration file.
 
 4. **Generate models:**
    ```bash

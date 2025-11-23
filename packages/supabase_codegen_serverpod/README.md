@@ -28,7 +28,7 @@ dart pub add supabase_codegen_serverpod
    ```sh
    dart run supabase_codegen_serverpod:init
    ```
-   This will help you set up your `pubspec.yaml` or `.supabase_codegen.yaml` [configuration](#yaml-configuration).
+   This will help you set up your `.supabase_codegen.yaml` [configuration](#yaml-configuration).
 
    It will also add `JsonClass` to your `config/generator.yaml` file.
    ```yaml
