@@ -34,7 +34,9 @@ Future<String?> runGenerateTypes(
         CmdOption.output,
         abbr: CmdOption.output[0],
         defaultsTo:
-            config?.outputFolder ?? defaultValues[CmdOption.output] as String,
+            config?.outputFolder != null && config!.outputFolder.isNotEmpty
+            ? config.outputFolder
+            : defaultValues[CmdOption.output] as String,
         help: 'Path to output folder',
       )
       // Tag
