@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:change_case/change_case.dart';
 import 'package:dcli/dcli.dart';
 import 'package:supabase_codegen/init/init_functions/init_functions.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
@@ -8,11 +11,29 @@ Future<void> main() => init();
 /// Initialize the configuation to be used for database type generation
 Future<void> init({
   bool forFlutter = false,
+  String? package,
   String? defaultEnvPath,
   String? defaultOutputPath,
   String? defaultTag,
   String? configPath,
 }) async {
+  /// Write the configuration to a file
+  final configFilePath =
+      configPath ?? defaultValues[CmdOption.configYaml] as String;
+
+  if (File(configFilePath).existsSync()) {
+    final overwrite = confirm(
+      yellow(
+        'Config file already exists at: $configFilePath '
+        'are you sure you want to overwrite it?',
+      ),
+      defaultValue: false,
+    );
+    if (!overwrite) {
+      exit(1);
+    }
+  }
+
   /// Set location for env file
   final env = await configureEnv(
     forFlutter: forFlutter,
@@ -31,20 +52,30 @@ Future<void> init({
   }
 
   /// Write the configuration to a file
-  final configFilePath =
-      configPath ?? defaultValues[CmdOption.configYaml] as String;
+  final configPackage = package ?? defaultPackageName;
   withOpenFile(configFilePath, (file) {
     file
-      ..write('# Supabase codegen config.')
+      ..write('# ${configPackage.toSentenceCase()} config.')
       ..append(
-        '# See https://pub.dev/packages/supabase_codegen#yaml-configuration '
+        '# See https://pub.dev/packages/$configPackage#yaml-configuration '
         'for more info',
-      )
-      ..append('${CmdOption.env}: $env')
-      ..append('${CmdOption.output}: $output');
+      );
+
+    // Add env if it is not the default
+    if (env != (defaultEnvPath ?? defaultValues[CmdOption.env] as String)) {
+      file.append('${CmdOption.env}: $env');
+    }
+
+    // Add output if it is not the default
+    if (output !=
+        (defaultOutputPath ?? defaultValues[CmdOption.output] as String)) {
+      file.append('${CmdOption.output}: $output');
+    }
 
     // Add the tag if it is not empty
-    if (tag.isNotEmpty) file.append('${CmdOption.tag}: $tag');
+    if (tag.isNotEmpty) {
+      file.append('${CmdOption.tag}: $tag');
+    }
   });
 
   // Print the config file path
