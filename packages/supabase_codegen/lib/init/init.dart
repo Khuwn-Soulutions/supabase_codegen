@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:dcli/dcli.dart';
-
 import 'package:supabase_codegen/init/init_functions/init_functions.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
 
@@ -52,5 +49,4 @@ Future<void> init({
 
   // Print the config file path
   echo(green('Config file created at: $configFilePath ✅'), newline: true);
-  exit(0);
 }
