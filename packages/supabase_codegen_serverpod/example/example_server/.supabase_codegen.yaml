@@ -1,3 +1,2 @@
-# Supabase codegen config.
-# See https://pub.dev/packages/supabase_codegen#yaml-configuration for more info
-output: lib/src/models
+# Supabase codegen serverpod config.
+# See https://pub.dev/packages/supabase_codegen_serverpod#yaml-configuration for more info
