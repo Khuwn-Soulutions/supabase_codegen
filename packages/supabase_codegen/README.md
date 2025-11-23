@@ -13,7 +13,7 @@ Add the following to your pubspec.yaml
 
 ```yaml
 dependencies:
-  supabase_codegen: ^3.0.1
+  supabase_codegen: ^4.0.0-alpha.1
 ```
 
 ---
@@ -43,6 +43,16 @@ dependencies:
 
 1. Create an [environment file](#environment-file) at the root of your project with your Supabase credentials.
 1. Add any necessary configuration for type generation. See [Yaml configuration](#yaml-configuration).
+
+## Initialization
+
+You can initialize the configuration by running the following command:
+
+```bash
+dart run supabase_codegen:init
+```
+
+This will help you set up your `.supabase_codegen.yaml` [configuration file](#yaml-configuration) interactively.
 
 ## Environment file  
 
@@ -123,7 +133,7 @@ name: my_supabase_app
 description: A sample Supabase app.
 
 dependencies:
-  supabase_codegen: ^3.0.1
+  supabase_codegen: ^4.0.0-alpha.1
 
 flutter:
   assets:
@@ -243,6 +253,16 @@ The `supabase_codegen_flutter` package includes:
 - Better integration with `supabase_flutter`
 
 For detailed Flutter usage instructions, see the [supabase_codegen_flutter documentation](https://pub.dev/packages/supabase_codegen_flutter).
+
+#### Serverpod
+> **Note:** For Serverpod projects, we recommend using the dedicated [`supabase_codegen_serverpod`](https://pub.dev/packages/supabase_codegen_serverpod) package, which generates `.spy.yaml` files directly from your Supabase schema.
+
+The `supabase_codegen_serverpod` package includes:
+- Generation of `.spy.yaml` models
+- Automatic mapping of Supabase types to Serverpod types
+- Integration with Serverpod's protocol generation
+
+For detailed Serverpod usage instructions, see the [supabase_codegen_serverpod documentation](https://pub.dev/packages/supabase_codegen_serverpod).
 
 ### Setting the client
 

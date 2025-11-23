@@ -4,12 +4,14 @@
 [![License: MIT][license_badge]][license_link]
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf5235675f5f4d769f959ddc797ed998)](https://app.codacy.com/gh/Khuwn-Soulutions/supabase_codegen/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
+
 
 A comprehensive suite of packages for generating type-safe Dart models from Supabase databases, supporting both pure Dart and Flutter applications.
 
 ## 📦 Packages
 
-This monorepo contains two main packages:
+This monorepo contains four main packages:
 
 ### [supabase_codegen](packages/supabase_codegen/)
 [![pub package](https://img.shields.io/pub/v/supabase_codegen.svg)](https://pub.dev/packages/supabase_codegen)
@@ -28,6 +30,18 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
 - Better integration with `supabase_flutter`
 - Flutter-specific client management
 
+### [supabase_codegen_serverpod](packages/supabase_codegen_serverpod/)
+[![pub package](https://img.shields.io/pub/v/supabase_codegen_serverpod.svg)](https://pub.dev/packages/supabase_codegen_serverpod)
+
+Serverpod-optimized package that generates Serverpod [database models](https://docs.serverpod.dev/concepts/database/models) from Supabase tables:
+- Generates Serverpod model files for tables and enums
+- Maps Supabase types to Serverpod types
+- Excludes internal Serverpod tables automatically
+
+### [supabase_codegen_templates](packages/supabase_codegen_templates/)
+
+Contains the [Mason](https://github.com/felangel/mason) bricks used by the other packages to generate code. This package is internal and not meant to be used directly.
+
 ## ✨ Features
 
 - **Type-Safe Models**: Automatically generates strongly-typed Dart classes from your Supabase tables
@@ -37,6 +51,7 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
 - **Custom Types**: Support for enums and custom column types
 - **Flexible Configuration**: YAML-based configuration with command-line overrides
 - **Flutter Integration**: Specialized package for Flutter development
+- **Serverpod Support**: specialized package for Serverpod development
 - **Testing Support**: Built-in mock clients for comprehensive testing
 
 ## 🚀 Quick Start
@@ -55,19 +70,25 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
    SUPABASE_ANON_KEY=your-anon-key
    ```
 
-3. **Add to pubspec.yaml:**
+3. **Initialize configuration:**
+   ```bash
+   dart run supabase_codegen_flutter:init
+   ```
+   This creates the `.supabase_codegen.yaml` configuration file.
+
+4. **Add to pubspec.yaml:**
    ```yaml
    flutter:
      assets:
        - config.env
    ```
 
-4. **Generate types:**
+5. **Generate types:**
    ```bash
    dart run supabase_codegen_flutter:generate_types
    ```
 
-5. **Use in your app:**
+6. **Use in your app:**
    ```dart
    import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
 
@@ -91,12 +112,18 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
    SUPABASE_ANON_KEY=your-anon-key
    ```
 
-3. **Generate types:**
+3. **Initialize configuration:**
+   ```bash
+   dart run supabase_codegen:init
+   ```
+   This creates the `.supabase_codegen.yaml` configuration file.
+
+4. **Generate types:**
    ```bash
    dart run supabase_codegen:generate_types
    ```
 
-4. **Use in your app:**
+5. **Use in your app:**
    ```dart
    import 'package:supabase_codegen/supabase_codegen.dart';
 
@@ -105,6 +132,37 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
      // Your app code here
    }
    ```
+
+### For Serverpod Projects
+
+Run this in your **Serverpod server project** (typically `my_serverpod_server`)
+
+1. **Install the Serverpod Codegen package:**
+   ```bash
+   dart pub add supabase_codegen_serverpod
+   ```
+
+2. **Set up your environment:**
+   Create `.env` in your project root:
+   ```env
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+3. **Initialize configuration:**
+   ```bash
+   dart run supabase_codegen_serverpod:init
+   ```
+   This creates the `.supabase_codegen.yaml` configuration file.
+
+4. **Generate models:**
+   ```bash
+   dart run supabase_codegen_serverpod:generate_types
+   ```
+
+5. **Use in your Serverpod project:**
+   The generated `.spy.yaml` files will be in `lib/src/models` (or your configured output).
+   Run `serverpod generate` to create the Dart classes.
 
 ## 🛠️ Development
 
@@ -155,6 +213,10 @@ supabase_codegen/
 │       ├── lib/                    # Source code
 │       ├── test/                   # Unit tests
 │       └── example/                # Flutter example app
+│   └── supabase_codegen_serverpod/ # Serverpod package
+│       ├── bin/                    # CLI tools
+│       ├── lib/                    # Source code
+│       └── test/                   # Unit tests
 ├── .github/
 │   └── workflows/                  # CI/CD pipelines
 └── analysis_options.yaml           # Code analysis configuration

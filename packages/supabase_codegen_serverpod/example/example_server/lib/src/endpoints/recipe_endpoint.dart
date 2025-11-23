@@ -1,0 +1,61 @@
+import 'dart:async';
+
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:example_server/src/generated/protocol.dart';
+import 'package:serverpod/serverpod.dart';
+
+/// This is the endpoint that will be used to generate a recipe using the
+/// Google Gemini API. It extends the Endpoint class and implements the
+/// generateRecipe method.
+class RecipeEndpoint extends Endpoint {
+  /// Pass in a string containing the ingredients and get a recipe back.
+  Future<Recipe> generateRecipe(Session session, String ingredients) async {
+    // Serverpod automatically loads your passwords.yaml file and makes the passwords available
+    // in the session.passwords map.
+    final geminiApiKey = session.passwords['gemini'];
+    if (geminiApiKey == null) {
+      throw Exception('Gemini API key not found');
+    }
+    final gemini = GenerativeModel(
+      model: 'gemini-2.0-flash',
+      apiKey: geminiApiKey,
+    );
+
+    // A prompt to generate a recipe, the user will provide a free text input with the ingredients
+    final prompt =
+        'Generate a recipe using the following ingredients: $ingredients, always put the title '
+        'of the recipe in the first line, and then the instructions. The recipe should be easy '
+        'to follow and include all necessary steps. Please provide a detailed recipe.';
+
+    final response = await gemini.generateContent([Content.text(prompt)]);
+
+    final responseText = response.text;
+
+    // Check if the response is empty or null
+    if (responseText == null || responseText.isEmpty) {
+      throw Exception('No response from Gemini API');
+    }
+
+    final recipe = Recipe(
+      author: 'Gemini',
+      text: responseText,
+      createdAt: DateTime.now(),
+      ingredients: ingredients,
+    );
+
+    // Save the recipe to the database, the returned recipe has the id set
+    final recipeWithId = await Recipe.db.insertRow(session, recipe);
+
+    return recipeWithId;
+  }
+
+  /// This method returns all the generated Recipe from the database.
+  Future<List<Recipe>> getRecipes(Session session) async {
+    // Get all the Recipe from the database, sorted by date.
+    return Recipe.db.find(
+      session,
+      orderBy: (t) => t.createdAt,
+      orderDescending: true,
+    );
+  }
+}

@@ -1,0 +1,34 @@
+name: supabase_codegen_serverpod
+description: A codegen library that generates models for serverpod from your Supabase tables and enums
+homepage: https://github.com/Khuwn-Soulutions/supabase_codegen
+version: 4.0.0-alpha.1
+repository: https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen_serverpod
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  change_case: ^2.2.0
+  mason: ^0.1.1
+  # Version to match flutter_test requirements
+  meta: ^1.16.0
+  path: ^1.9.1
+  pluralize: ^0.0.8
+  supabase: ^2.10.0
+  supabase_codegen: ^4.0.0-alpha.1
+  yaml: ^3.1.3
+  yaml_edit: ^2.2.2
+
+dev_dependencies:
+  mocktail: ^1.0.4
+  test: ^1.26.3
+  very_good_analysis: ^10.0.0
+
+dependency_overrides:
+  test_api: 0.7.6
+
+executables:
+  generate_types:
+  add_codegen_functions:
+  init:

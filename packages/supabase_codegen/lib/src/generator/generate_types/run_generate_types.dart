@@ -13,8 +13,7 @@ Future<String?> runGenerateTypes(
   List<String> args, {
   SupabaseCodeGenerator generator = const SupabaseCodeGenerator(),
   File? pubspecFile,
-  String? package,
-  bool forFlutter = false,
+  GeneratorConfigParams? config,
 }) async {
   try {
     /// Get the parser for the argument.
@@ -34,14 +33,17 @@ Future<String?> runGenerateTypes(
       ..addOption(
         CmdOption.output,
         abbr: CmdOption.output[0],
-        defaultsTo: defaultValues[CmdOption.output] as String,
+        defaultsTo:
+            config?.outputFolder != null && config!.outputFolder.isNotEmpty
+            ? config.outputFolder
+            : defaultValues[CmdOption.output] as String,
         help: 'Path to output folder',
       )
       // Tag
       ..addOption(
         CmdOption.tag,
         abbr: CmdOption.tag[0],
-        defaultsTo: defaultValues[CmdOption.tag] as String,
+        defaultsTo: config?.tag ?? defaultValues[CmdOption.tag] as String,
         help: 'Tag to add to generated files',
       )
       // Config yaml path
@@ -120,12 +122,12 @@ Future<String?> runGenerateTypes(
 
     /// Generate the types using the command line options
     final params = GeneratorConfigParams(
-      package: package ?? defaultPackageName,
+      package: config?.package ?? defaultPackageName,
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       tag: tag,
       barrelFiles: barrelFiles,
-      forFlutter: forFlutter,
+      forFlutter: config?.forFlutter ?? false,
       overrides: schemaOverrides,
       version: version,
     );

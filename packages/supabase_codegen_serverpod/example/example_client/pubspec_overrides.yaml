@@ -1,0 +1,12 @@
+# melos_managed_dependency_overrides: serverpod_client,serverpod_serialization
+dependency_overrides:
+  serverpod_client:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_client
+  serverpod_serialization:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_serialization

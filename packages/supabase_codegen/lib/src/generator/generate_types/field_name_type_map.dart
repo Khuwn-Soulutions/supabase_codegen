@@ -35,7 +35,7 @@ extension FieldNameTypeMapExtension on FieldNameTypeMap {
 }
 
 /// Create a map of the field name to data for that field
-Map<String, ColumnData> createFieldNameTypeMap(
+FieldNameTypeMap createFieldNameTypeMap(
   List<Map<String, dynamic>> columns, {
   TableOverrides? tableOverrides,
 }) {

@@ -1,0 +1,1 @@
+alter table "public"."default_values" add column "default_json" jsonb default '{}'::jsonb;

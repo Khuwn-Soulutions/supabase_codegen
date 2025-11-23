@@ -1,0 +1,47 @@
+name: example_server
+description: Starting point for a Serverpod server.
+# version: 1.0.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '^3.10.0'
+
+dependencies:
+  serverpod: 3.0.0-rc.1
+  google_generative_ai: ^0.4.7
+  supabase_codegen_serverpod:
+    path: ../../
+
+dev_dependencies:
+  lints: '>=3.0.0 <7.0.0'
+  serverpod_test: 3.0.0-rc.1
+  test: ^1.25.5
+
+dependency_overrides: 
+  supabase_codegen:
+    path: ../../../supabase_codegen
+  serverpod:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod
+  serverpod_serialization:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_serialization
+  serverpod_shared:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_shared
+  serverpod_test:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_test
+  serverpod_lints:
+    git:
+      url: https://github.com/Khuwn-Soulutions/serverpod.git
+      ref: feature/set-column-name-explicitly
+      path: packages/serverpod_lints

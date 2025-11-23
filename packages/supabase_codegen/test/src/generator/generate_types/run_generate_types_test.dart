@@ -292,7 +292,7 @@ void main() {
           await runGenerateTypes(
             [],
             generator: mockGenerator,
-            forFlutter: true,
+            config: GeneratorConfigParams.empty().copyWith(forFlutter: true),
           );
 
           // Assert
@@ -315,6 +315,31 @@ void main() {
             ),
           ).called(1);
         });
+      });
+
+      test('output folder if provided in the config', () async {
+        // Arrange
+        final args = <String>[];
+        const outputFolder = 'test';
+        final config = GeneratorConfigParams.empty().copyWith(
+          outputFolder: outputFolder,
+        );
+
+        // Act
+        await runGenerateTypes(args, generator: mockGenerator, config: config);
+
+        // Assert
+        verify(
+          () => mockGenerator.generateSupabaseTypes(
+            any(
+              that: isA<GeneratorConfigParams>().having(
+                (param) => param.outputFolder,
+                'outputFolder',
+                outputFolder,
+              ),
+            ),
+          ),
+        ).called(1);
       });
     });
 

@@ -18,6 +18,7 @@ class ColumnConfig {
     required this.constructor,
     required this.field,
     this.defaultValue,
+    this.columnData,
   });
 
   /// Creates an empty [ColumnConfig].
@@ -102,8 +103,12 @@ class ColumnConfig {
       parameterName: fieldName,
       constructor: constructor,
       field: field,
+      columnData: columnData,
     );
   }
+
+  /// Column data used to create [ColumnConfig]
+  final ColumnData? columnData;
 
   /// The dart type of the column.
   final String dartType;
