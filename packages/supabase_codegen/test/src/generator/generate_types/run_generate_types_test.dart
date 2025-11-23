@@ -292,7 +292,7 @@ void main() {
           await runGenerateTypes(
             [],
             generator: mockGenerator,
-            forFlutter: true,
+            config: GeneratorConfigParams.empty().copyWith(forFlutter: true),
           );
 
           // Assert
