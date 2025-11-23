@@ -82,7 +82,9 @@ class GeneratorConfig extends GeneratorConfigBase {
     'barrelFiles': barrelFiles,
     'hasTag': tag.isNotEmpty,
     // Important!!
-    // Set arrays used to generate files to null if no items to generate
+    // Arrays used to generate files must be null if there are
+    // no items to generate
+    // Needed until https://github.com/felangel/mason/pull/1610 resolved
     'tables': tables.isEmpty
         ? null
         : tables.map((table) => table.toJson()).toList(),

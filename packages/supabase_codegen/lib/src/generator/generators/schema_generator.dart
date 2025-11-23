@@ -79,6 +79,7 @@ class SupabaseSchemaGenerator {
         final file = File(enumPath);
         if (file.existsSync()) {
           file.deleteSync();
+          logger.err('❌ Deleted ${file.path}');
         }
       }
     }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
@@ -56,6 +57,9 @@ class GeneratorLockfileManager {
   processLockFile(GeneratorConfig config, {Directory? directory}) async {
     final previousLockFile = await getLockfile(directory);
     final currentLockFile = GeneratorLockfile.fromConfig(config);
+    logger
+      ..detail('Previous lockfile: ${jsonEncode(previousLockFile?.toJson())}')
+      ..detail('Current lockfile: ${jsonEncode(currentLockFile.toJson())}');
 
     // First-time generation — send full config
     if (previousLockFile == null) {
@@ -67,7 +71,14 @@ class GeneratorLockfileManager {
       return (upserts: null, deletes: null, lockfile: currentLockFile);
     }
 
+    // Non data field changes (regenerate everything)
+    if (previousLockFile.withoutData() != currentLockFile.withoutData()) {
+      logger.detail('Lockfile metadata changed');
+      return (upserts: config, deletes: null, lockfile: currentLockFile);
+    }
+
     // --- Lockfile changed ---
+    logger.detail('Data changed, diffing data');
 
     // Identify deleted tables/enums
     final deletedTables = previousLockFile.tables.keys

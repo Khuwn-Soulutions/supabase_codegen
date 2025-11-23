@@ -1,0 +1,1 @@
+alter table "public"."recipes" add column "metadata" jsonb;

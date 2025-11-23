@@ -5,6 +5,9 @@
     },
     "barrel_files": {
       "path": "packages/supabase_codegen_templates/barrel_files"
+    },
+    "serverpod": {
+      "path": "packages/supabase_codegen_templates/serverpod"
     }
   }
 }

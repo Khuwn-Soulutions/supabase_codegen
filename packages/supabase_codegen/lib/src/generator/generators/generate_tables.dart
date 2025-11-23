@@ -33,16 +33,9 @@ Future<List<TableConfig>> generateTableConfigs({
       ..detail('Table Name: $tableName')
       ..detail('Field Name Type Map: $fieldNameTypeMap');
 
-    final tableConfig = TableConfig(
-      name: tableName,
-      columns: fieldNameTypeMap.sortedEntries
-          .map(
-            (entry) => ColumnConfig.fromColumnData(
-              fieldName: entry.key,
-              columnData: entry.value,
-            ),
-          )
-          .toList(),
+    final tableConfig = TableConfig.fromFieldNameTypeMap(
+      tableName,
+      fieldNameTypeMap,
     );
     tableConfigs.add(tableConfig);
   }

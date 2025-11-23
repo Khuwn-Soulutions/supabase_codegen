@@ -33,10 +33,19 @@ const supabaseCodegenPath = 'packages/supabase_codegen';
 /// Supabase Codegen Flutter path
 const supabaseCodegenFlutterPath = 'packages/supabase_codegen_flutter';
 
+/// Supabase Codegen Serverpod path
+const supabaseCodegenServerpodPath = 'packages/supabase_codegen_serverpod';
+
+const paths = [
+  supabaseCodegenPath,
+  supabaseCodegenFlutterPath,
+  supabaseCodegenServerpodPath,
+];
+
 /// Overwrite version file
 void updateVersionFile(String version) {
   final versionFile = File(
-    '$supabaseCodegenPath/lib/src/generator/version.dart',
+    '$supabaseCodegenPath/lib/src/generator/helpers/version.dart',
   );
   final versionContents = versionFile.readAsStringSync();
   versionFile.writeAsStringSync(
@@ -50,7 +59,7 @@ void updateVersionFile(String version) {
 
 /// Overwrite the version in the pubspec.yaml file(s)
 void updatePubspecVersion(String version) {
-  for (final path in [supabaseCodegenPath, supabaseCodegenFlutterPath]) {
+  for (final path in paths) {
     final pubspecFile = File('$path/pubspec.yaml');
     final pubspecContents = pubspecFile.readAsStringSync();
     pubspecFile.writeAsStringSync(
@@ -62,16 +71,15 @@ void updatePubspecVersion(String version) {
 
 /// Overwrite the supabase_codegen version
 void updateSupabaseCodegenVersion(String version) {
-  final files = [
-    File('$supabaseCodegenPath/README.md'),
-    File('$supabaseCodegenFlutterPath/README.md'),
-    File('$supabaseCodegenFlutterPath/pubspec.yaml'),
-  ];
+  final files = paths.fold(<File>[], (files, path) {
+    files.addAll([File('$path/README.md'), File('$path/pubspec.yaml')]);
+    return files;
+  });
 
   for (final file in files) {
-    final readmeContents = file.readAsStringSync();
+    final contents = file.readAsStringSync();
     file.writeAsStringSync(
-      readmeContents.replaceAll(
+      contents.replaceAll(
         RegExp(r'supabase_codegen: \^(.+)'),
         'supabase_codegen: ^$version',
       ),

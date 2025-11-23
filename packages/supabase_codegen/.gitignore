@@ -14,3 +14,7 @@ coverage/*
 .failed_tracker
 .flutter-plugins-dependencies
 .flutter-plugins
+
+# Generated files/folders
+supabase/migrations/*_add_codegen_functions.sql
+.supabase_codegen_lock.yaml

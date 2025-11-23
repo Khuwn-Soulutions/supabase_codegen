@@ -75,7 +75,7 @@ class BundleGenerator {
 
     for (final file in generatedFiles) {
       final filePath = _replaceMustache(file.path);
-      logger.success('$filePath ${file.status.name}');
+      logger.success('✅ $filePath ${file.status.name}');
     }
   }
 

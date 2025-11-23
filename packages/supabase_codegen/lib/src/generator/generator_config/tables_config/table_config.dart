@@ -28,6 +28,22 @@ class TableConfig {
   }
   // coverage:ignore-end
 
+  /// Create a [TableConfig] from a [FieldNameTypeMap]
+  factory TableConfig.fromFieldNameTypeMap(
+    String tableName,
+    FieldNameTypeMap fieldNameTypeMap,
+  ) => TableConfig(
+    name: tableName,
+    columns: fieldNameTypeMap.sortedEntries
+        .map(
+          (entry) => ColumnConfig.fromColumnData(
+            fieldName: entry.key,
+            columnData: entry.value,
+          ),
+        )
+        .toList(),
+  );
+
   /// Display name to use for the class
   String get displayName => name.toSentenceCase().toTitleCase();
 

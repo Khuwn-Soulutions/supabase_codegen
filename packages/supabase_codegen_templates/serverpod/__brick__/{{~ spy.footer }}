@@ -1,0 +1,2 @@
+{{#hasTag}}## Tag: {{tag}}{{/hasTag}}
+## Date: {{date}}

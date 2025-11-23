@@ -1,14 +1,12 @@
 // Enums
+import 'mock_helper_functions.dart';
+
 const enumOneName = 'enum_one';
 const enumOneValues = ['value1', 'value2'];
 const enumTwoName = 'enum_two';
 const enumTwoValues = ['valueA', 'valueB'];
-final testEnumOne = enumOneValues
-    .map((value) => {'enum_name': enumOneName, 'enum_value': value})
-    .toList();
-final testEnumTwo = enumTwoValues
-    .map((value) => {'enum_name': enumTwoName, 'enum_value': value})
-    .toList();
+final testEnumOne = createEnumSchema(enumOneName, enumOneValues);
+final testEnumTwo = createEnumSchema(enumTwoName, enumTwoValues);
 
 // Tables
 final testTable = (
@@ -44,6 +42,4 @@ final testTable = (
     },
   ],
 );
-final testTableSchema = testTable.columns
-    .map((column) => {'table_name': testTable.name, ...column})
-    .toList();
+final testTableSchema = createTableSchema(testTable.name, testTable.columns);

@@ -1,6 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
 
+// coverage:ignore-file
+
 /// Client to use for loading
 SupabaseCodegenFlutterClient _client = SupabaseCodegenFlutterClient();
 
@@ -26,9 +28,7 @@ Future<SupabaseClient> loadClientFromEnv([String? envPath]) async =>
 ///
 /// If no current instance, an [AssertionError] is thrown
 @protected
-SupabaseClient loadSupabaseClient() {
-  return _client.loadSupabaseClient();
-}
+SupabaseClient loadSupabaseClient() => _client.loadSupabaseClient();
 
 /// Load the mock supabase client
 // ignore: invalid_use_of_visible_for_testing_member
