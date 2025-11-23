@@ -11,7 +11,7 @@ A comprehensive suite of packages for generating type-safe Dart models from Supa
 
 ## 📦 Packages
 
-This monorepo contains two main packages:
+This monorepo contains four main packages:
 
 ### [supabase_codegen](packages/supabase_codegen/)
 [![pub package](https://img.shields.io/pub/v/supabase_codegen.svg)](https://pub.dev/packages/supabase_codegen)
@@ -37,6 +37,10 @@ Serverpod-optimized package that generates `.spy.yaml` models from Supabase tabl
 - Generates Serverpod model files for tables and enums
 - Maps Supabase types to Serverpod types
 - Excludes internal Serverpod tables automatically
+
+### [supabase_codegen_templates](packages/supabase_codegen_templates/)
+
+Contains the [Mason](https://github.com/felangel/mason) bricks used by the other packages to generate code. This package is internal and not meant to be used directly.
 
 ## ✨ Features
 
