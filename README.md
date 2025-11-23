@@ -32,7 +32,7 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
 [![pub package](https://img.shields.io/pub/v/supabase_codegen_serverpod.svg)](https://pub.dev/packages/supabase_codegen_serverpod)
 
 Serverpod-optimized package that generates `.spy.yaml` models from Supabase tables:
-- Generates Serverpod protocol files
+- Generates Serverpod model files for tables and enums
 - Maps Supabase types to Serverpod types
 - Excludes internal Serverpod tables automatically
 

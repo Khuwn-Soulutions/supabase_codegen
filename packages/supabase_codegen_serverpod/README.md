@@ -50,7 +50,7 @@ dart run supabase_codegen_serverpod:generate_types
 
 By default, this will:
 1. Read your Supabase schema
-2. Generate corresponding `.spy.yaml` files in `lib/src/models` (or your configured output directory)
+2. Generate corresponding `.spy.yaml` files for tables and enums in `lib/src/models` (or your configured output directory)
 3. Exclude any tables starting with `serverpod`
 
 ### Configuration Options
