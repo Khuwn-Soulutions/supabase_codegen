@@ -13,9 +13,6 @@ void main() {
     late Directory tempDir;
     late File generatorConfig;
 
-    const packageLine =
-        'package: supabase_codegen_serverpod/json_class.dart:JsonClass';
-
     setUp(() {
       logger = MockLogger();
       tempDir = Directory.systemTemp.createTempSync();
@@ -33,7 +30,7 @@ void main() {
 
       verify(
         () => logger.warn(
-          '$configPath not found. Skipping extraClasses update.',
+          '⚠️ $configPath not found. Skipping extraClasses update.',
         ),
       ).called(1);
     });
@@ -54,13 +51,13 @@ void main() {
 
         final content = generatorConfig.readAsStringSync();
         expect(content, contains('extraClasses:'));
-        expect(content, contains(packageLine));
+        expect(content, contains(jsonClassImport));
         verify(() => logger.success(any())).called(1);
       });
 
       test('appends to extraClasses if key exists', () async {
         const otherPackage =
-            'package: other_package/other_class.dart:OtherClass';
+            'package:other_package/other_class.dart:OtherClass';
         generatorConfig.writeAsStringSync('''
 project: my_project
 extraClasses:
@@ -74,7 +71,7 @@ extraClasses:
 
         final content = generatorConfig.readAsStringSync();
         expect(content, contains(otherPackage));
-        expect(content, contains(packageLine));
+        expect(content, contains(jsonClassImport));
         verify(() => logger.success(any())).called(1);
       });
 
@@ -82,7 +79,7 @@ extraClasses:
         generatorConfig.writeAsStringSync('''
 project: my_project
 extraClasses:
-  - $packageLine
+  - $jsonClassImport
 ''');
 
         await addExtraClassesToGeneratorConfig(
@@ -91,9 +88,9 @@ extraClasses:
         );
 
         final content = generatorConfig.readAsStringSync();
-        final occurrences = packageLine.allMatches(content).length;
+        final occurrences = jsonClassImport.allMatches(content).length;
         expect(occurrences, 1);
-        verify(() => logger.detail(any())).called(1);
+        verify(() => logger.info(any())).called(1);
       });
 
       test(
