@@ -7,17 +7,21 @@ import 'package:yaml_edit/yaml_edit.dart';
 /// Config file path
 const configPath = 'config/generator.yaml';
 
+/// Json class import
+const jsonClassImport =
+    'package:supabase_codegen_serverpod/json_class.dart:JsonClass';
+
 /// Add extra classes to generator config
 Future<void> addExtraClassesToGeneratorConfig({
   Logger? logger,
   Directory? directory,
 }) async {
-  final log = logger ?? Logger();
-  final dir = directory ?? Directory.current;
+  final log = logger ?? Logger(); // coverage:ignore-line
+  final dir = directory ?? Directory.current; //coverage:ignore-line
   final generatorConfig = File('${dir.path}/$configPath');
 
   if (!generatorConfig.existsSync()) {
-    log.warn('$configPath not found. Skipping extraClasses update.');
+    log.warn('⚠️ $configPath not found. Skipping extraClasses update.');
     return;
   }
 
@@ -27,39 +31,30 @@ Future<void> addExtraClassesToGeneratorConfig({
     final yaml = loadYaml(content) as YamlMap;
 
     const extraClassesKey = 'extraClasses';
-    const jsonClassConfig = {
-      'package': 'supabase_codegen_serverpod/json_class.dart:JsonClass',
-    };
 
     if (!yaml.containsKey(extraClassesKey)) {
-      doc.update([extraClassesKey], [jsonClassConfig]);
+      doc.update([extraClassesKey], [jsonClassImport]);
     } else {
-      final currentClasses = yaml[extraClassesKey] as YamlList?;
-      if (currentClasses != null) {
-        final exists = currentClasses.any((element) {
-          if (element is YamlMap) {
-            return element['package'] == jsonClassConfig['package'];
-          }
-          return false;
-        });
-
-        if (!exists) {
-          doc.appendToList([extraClassesKey], jsonClassConfig);
+      final currentClasses = yaml[extraClassesKey] as YamlList;
+      final exists = currentClasses.any((element) {
+        if (element is String) {
+          return element == jsonClassImport;
         }
-      } else {
-        // If extraClasses exists but is null or not a list, overwrite
-        // Assuming it should be a list, we can initialize it.
-        doc.update([extraClassesKey], [jsonClassConfig]);
+        return false;
+      });
+
+      if (!exists) {
+        doc.appendToList([extraClassesKey], jsonClassImport);
       }
     }
 
     if (doc.edits.isNotEmpty) {
       await generatorConfig.writeAsString(doc.toString());
-      log.success('Added JsonClass to $configPath');
+      log.success('✅ Added JsonClass to $configPath');
     } else {
-      log.detail('JsonClass already exists in $configPath');
+      log.info('✅ JsonClass already exists in $configPath');
     }
   } on Exception catch (e) {
-    log.err('Failed to update $configPath: $e');
+    log.err('❌ Failed to update $configPath: $e');
   }
 }
