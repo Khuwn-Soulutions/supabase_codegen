@@ -8,6 +8,7 @@ const defaultOutputPath = 'lib/src/models';
 Future<void> main() async {
   await init(
     defaultOutputPath: defaultOutputPath,
+    package: 'supabase_codegen_serverpod',
   );
   await addExtraClassesToGeneratorConfig();
 }
