@@ -59,10 +59,14 @@ You can configure the generator via CLI arguments or YAML configuration.
 
 #### CLI Arguments
 
+- `-c, --config <path>`: Path to configuration file (default: `.supabase_codegen.yaml`)
 - `-e, --env <path>`: Path to environment file (default: `.env`)
 - `-o, --output <path>`: Output directory for generated files (default: `lib/src/models`)
 - `-t, --tag <tag>`: Optional tag to add to generated files
 - `-d, --debug`: Enable debug logging
+- `-h, --help`: Show help message
+
+See [Command Line Options](../supabase_codegen/README.md#command-line-options) in supabase_codegen for more information.
 
 #### YAML Configuration
 
@@ -74,6 +78,7 @@ supabase_codegen:
   output: lib/src/protocol
   # ... other options
 ```
+See [Yaml Configuration](../supabase_codegen/README.md#yaml-configuration) in supabase_codegen for more information.
 
 ---
 
