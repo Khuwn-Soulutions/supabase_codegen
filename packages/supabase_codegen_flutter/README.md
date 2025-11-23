@@ -47,7 +47,15 @@ flutter pub add supabase_codegen_flutter
    Note: this requires [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) with linked project
 
 1. Create an [environment file](#environment-file) at the root of your Flutter project.
-1. Add any necessary configuration for type generation. See [Yaml configuration](#yaml-configuration).
+1. Initialize the configuration by running:
+   ```bash
+   dart run supabase_codegen_flutter:init
+   ```
+   This will help you set up your `.supabase_codegen.yaml` [configuration file](#yaml-configuration) interactively.
+   
+   OR
+
+   Directly add any necessary configuration for type generation. See [Yaml configuration](#yaml-configuration).
 
 ## Environment file
 

@@ -64,19 +64,24 @@ Serverpod-optimized package that generates `.spy.yaml` models from Supabase tabl
    SUPABASE_ANON_KEY=your-anon-key
    ```
 
-3. **Add to pubspec.yaml:**
+3. **Initialize configuration:**
+   ```bash
+   dart run supabase_codegen_flutter:init
+   ```
+
+4. **Add to pubspec.yaml:**
    ```yaml
    flutter:
      assets:
        - config.env
    ```
 
-4. **Generate types:**
+5. **Generate types:**
    ```bash
    dart run supabase_codegen_flutter:generate_types
    ```
 
-5. **Use in your app:**
+6. **Use in your app:**
    ```dart
    import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
 
@@ -100,12 +105,17 @@ Serverpod-optimized package that generates `.spy.yaml` models from Supabase tabl
    SUPABASE_ANON_KEY=your-anon-key
    ```
 
-3. **Generate types:**
+3. **Initialize configuration:**
+   ```bash
+   dart run supabase_codegen:init
+   ```
+
+4. **Generate types:**
    ```bash
    dart run supabase_codegen:generate_types
    ```
 
-4. **Use in your app:**
+5. **Use in your app:**
    ```dart
    import 'package:supabase_codegen/supabase_codegen.dart';
 
@@ -117,24 +127,31 @@ Serverpod-optimized package that generates `.spy.yaml` models from Supabase tabl
 
 ### For Serverpod Projects
 
-1. **Install the Serverpod package:**
-   
-   Run this in your **Serverpod server project** (typically `my_serverpod_server`):
+Run this in your **Serverpod server project** (typically `my_serverpod_server`)
+
+1. **Install the Serverpod Codegen package:**
    ```bash
    dart pub add supabase_codegen_serverpod
    ```
 
-2. **Initialize configuration:**
+2. **Set up your environment:**
+   Create `.env` in your project root:
+   ```env
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+3. **Initialize configuration:**
    ```bash
    dart run supabase_codegen_serverpod:init
    ```
 
-3. **Generate models:**
+4. **Generate models:**
    ```bash
    dart run supabase_codegen_serverpod:generate_types
    ```
 
-4. **Use in your Serverpod project:**
+5. **Use in your Serverpod project:**
    The generated `.spy.yaml` files will be in `lib/src/models` (or your configured output).
    Run `serverpod generate` to create the Dart classes.
 
