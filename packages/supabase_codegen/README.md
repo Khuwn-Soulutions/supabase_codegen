@@ -244,6 +244,16 @@ The `supabase_codegen_flutter` package includes:
 
 For detailed Flutter usage instructions, see the [supabase_codegen_flutter documentation](https://pub.dev/packages/supabase_codegen_flutter).
 
+#### Serverpod
+> **Note:** For Serverpod projects, we recommend using the dedicated [`supabase_codegen_serverpod`](https://pub.dev/packages/supabase_codegen_serverpod) package, which generates `.spy.yaml` files directly from your Supabase schema.
+
+The `supabase_codegen_serverpod` package includes:
+- Generation of `.spy.yaml` models
+- Automatic mapping of Supabase types to Serverpod types
+- Integration with Serverpod's protocol generation
+
+For detailed Serverpod usage instructions, see the [supabase_codegen_serverpod documentation](https://pub.dev/packages/supabase_codegen_serverpod).
+
 ### Setting the client
 
 A previously created SupabaseClient can be provided to the `setClient` method to set the client for use by the [generated types](#generated-types).

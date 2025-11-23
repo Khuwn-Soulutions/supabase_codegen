@@ -4,7 +4,7 @@
 [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 [![License: MIT][license_badge]][license_link]
 
-A codegen library that generates models for serverpod from your Supabase tables and enums
+A codegen library that generates `.spy.yaml` models for [Serverpod](https://serverpod.dev/) from your Supabase tables and enums.
 
 ## Installation 💻
 
@@ -14,6 +14,65 @@ Install via `dart pub add`:
 
 ```sh
 dart pub add supabase_codegen_serverpod
+```
+
+> **Note:** This package should be installed in your **Serverpod server project** (typically `my_serverpod_server`).
+
+---
+
+## 🛠️ Setup
+
+1. **Initialize the configuration:**
+   
+   Run the init command to create the default configuration:
+   ```sh
+   dart run supabase_codegen_serverpod:init
+   ```
+   This will help you set up your `pubspec.yaml` or `.supabase_codegen.yaml` configuration.
+
+2. **Configure your environment:**
+   
+   Ensure you have your Supabase credentials in your environment file (default `.env`):
+   ```env
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+## 🚀 Usage
+
+### Generating Models
+
+To generate the Serverpod `.spy.yaml` files, run:
+
+```sh
+dart run supabase_codegen_serverpod:generate_types
+```
+
+By default, this will:
+1. Read your Supabase schema
+2. Generate corresponding `.spy.yaml` files in `lib/src/models` (or your configured output directory)
+3. Exclude any tables starting with `serverpod`
+
+### Configuration Options
+
+You can configure the generator via CLI arguments or YAML configuration.
+
+#### CLI Arguments
+
+- `-e, --env <path>`: Path to environment file (default: `.env`)
+- `-o, --output <path>`: Output directory for generated files (default: `lib/src/models`)
+- `-t, --tag <tag>`: Optional tag to add to generated files
+- `-d, --debug`: Enable debug logging
+
+#### YAML Configuration
+
+You can add configuration to `pubspec.yaml` or `.supabase_codegen.yaml`:
+
+```yaml
+supabase_codegen:
+  env: .env.development
+  output: lib/src/protocol
+  # ... other options
 ```
 
 ---

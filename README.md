@@ -28,6 +28,14 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
 - Better integration with `supabase_flutter`
 - Flutter-specific client management
 
+### [supabase_codegen_serverpod](packages/supabase_codegen_serverpod/)
+[![pub package](https://img.shields.io/pub/v/supabase_codegen_serverpod.svg)](https://pub.dev/packages/supabase_codegen_serverpod)
+
+Serverpod-optimized package that generates `.spy.yaml` models from Supabase tables:
+- Generates Serverpod protocol files
+- Maps Supabase types to Serverpod types
+- Excludes internal Serverpod tables automatically
+
 ## ✨ Features
 
 - **Type-Safe Models**: Automatically generates strongly-typed Dart classes from your Supabase tables
@@ -37,6 +45,7 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
 - **Custom Types**: Support for enums and custom column types
 - **Flexible Configuration**: YAML-based configuration with command-line overrides
 - **Flutter Integration**: Specialized package for Flutter development
+- **Serverpod Support**: specialized package for Serverpod development
 - **Testing Support**: Built-in mock clients for comprehensive testing
 
 ## 🚀 Quick Start
@@ -106,6 +115,29 @@ Flutter-optimized package that extends the core functionality with Flutter-speci
    }
    ```
 
+### For Serverpod Projects
+
+1. **Install the Serverpod package:**
+   
+   Run this in your **Serverpod server project** (typically `my_serverpod_server`):
+   ```bash
+   dart pub add supabase_codegen_serverpod
+   ```
+
+2. **Initialize configuration:**
+   ```bash
+   dart run supabase_codegen_serverpod:init
+   ```
+
+3. **Generate models:**
+   ```bash
+   dart run supabase_codegen_serverpod:generate_types
+   ```
+
+4. **Use in your Serverpod project:**
+   The generated `.spy.yaml` files will be in `lib/src/models` (or your configured output).
+   Run `serverpod generate` to create the Dart classes.
+
 ## 🛠️ Development
 
 This project uses [Melos](https://melos.invertase.dev/) for monorepo management.
@@ -155,6 +187,10 @@ supabase_codegen/
 │       ├── lib/                    # Source code
 │       ├── test/                   # Unit tests
 │       └── example/                # Flutter example app
+│   └── supabase_codegen_serverpod/ # Serverpod package
+│       ├── bin/                    # CLI tools
+│       ├── lib/                    # Source code
+│       └── test/                   # Unit tests
 ├── .github/
 │   └── workflows/                  # CI/CD pipelines
 └── analysis_options.yaml           # Code analysis configuration
