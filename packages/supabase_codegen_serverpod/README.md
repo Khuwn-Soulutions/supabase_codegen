@@ -28,7 +28,14 @@ dart pub add supabase_codegen_serverpod
    ```sh
    dart run supabase_codegen_serverpod:init
    ```
-   This will help you set up your `pubspec.yaml` or `.supabase_codegen.yaml` configuration.
+   This will help you set up your `pubspec.yaml` or `.supabase_codegen.yaml` [configuration](#yaml-configuration).
+
+   It will also add `JsonClass` to your `config/generator.yaml` file.
+   ```yaml
+   extraClasses:
+     - package:supabase_codegen_serverpod/json_class.dart:JsonClass
+   ```
+   This is required for the generated models to be able to serialize/deserialize jsonb columns.
 
 2. **Configure your environment:**
    
