@@ -93,7 +93,7 @@ The following command-line options can be used to customize the type generation 
 Specifies the path to the env file containing your Supabase credentials.
 Example: `dart run supabase_codegen_flutter:generate_types -e .env.local`
 
-- `-o, --output <output_folder>` (Default: supabase/types):
+- `-o, --output <output_folder>` (Default: lib/types):
 
 Sets the directory where the generated type files will be placed.
 Example: `dart run supabase_codegen_flutter:generate_types -o lib/models/supabase`
@@ -138,7 +138,7 @@ This allows setting default values, and you only need to override them if needed
 Example config file e.g. `.supabase_codegen.yaml`
 ```yaml
 env: .env.development # Overrides default: config.env
-output: lib/models/supabase # Overrides default: supabase/types
+output: lib/models/supabase # Overrides default: lib/types
 tag: v1 # Overrides default: ''
 debug: true # Overrides default: false
 ```
@@ -158,7 +158,7 @@ flutter:
 
 supabase_codegen:
   env: env.app # Overrides default: config.env
-  output: lib/models/supabase # Overrides default: supabase/types
+  output: lib/models/supabase # Overrides default: lib/types
   tag: v1 # Overrides default: ''
   debug: true # Overrides default: false
 ```
