@@ -4,7 +4,7 @@
 [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 [![License: MIT][license_badge]][license_link]
 
-A codegen library that generates `.spy.yaml` models for [Serverpod](https://serverpod.dev/) from your Supabase tables and enums.
+A codegen library that generates Serverpod [database models](https://docs.serverpod.dev/concepts/database/models) from your Supabase tables and enums.
 
 ## Installation 💻
 
@@ -49,7 +49,7 @@ dart pub add supabase_codegen_serverpod
 
 ### Generating Models
 
-To generate the Serverpod `.spy.yaml` files, run:
+To generate the Serverpod [database models](https://docs.serverpod.dev/concepts/database/models), run:
 
 ```sh
 dart run supabase_codegen_serverpod:generate_types
