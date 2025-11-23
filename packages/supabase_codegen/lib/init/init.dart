@@ -27,7 +27,7 @@ Future<void> init({
   final output = chooseOutputFolder(defaultOutputPath);
   echo('Output: $output', newline: true);
 
-  /// Get tag to use in header of generated files
+  /// Get tag to use in footer of generated files
   final tag = getTag(tag: defaultTag);
   if (tag.isNotEmpty) {
     echo('Tag: $tag', newline: true);
