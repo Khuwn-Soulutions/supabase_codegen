@@ -1,5 +1,10 @@
 import 'get_enum_types.dart';
+import 'get_rpc_functions.dart';
 import 'get_schema_info.dart';
 
-/// Sql Functions
-List<String> sqlFunctions = [getEnumTypes, getSchemaInfo];
+export 'get_enum_types.dart';
+export 'get_rpc_functions.dart';
+export 'get_schema_info.dart';
+
+/// List of sql functions
+const sqlFunctions = [getEnumTypes, getRpcFunctions, getSchemaInfo];
