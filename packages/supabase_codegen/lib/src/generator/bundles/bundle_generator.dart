@@ -21,6 +21,7 @@ class BundleGenerator {
   ) async {
     final progress = logger.progress('Generating Tables and Enums...');
     await generateTablesAndEnums(outputDir, upserts);
+    await generateRpcFunctions(outputDir, upserts);
     // Generate barrel files
     if (config.barrelFiles) {
       progress.update('Generating barrel files');
@@ -40,6 +41,16 @@ class BundleGenerator {
     outputDir: outputDir,
     config: config,
     bundle: tablesAndEnumsBundle,
+  );
+
+  /// Generate RPC functions into the [outputDir] with the provided [config]
+  Future<void> generateRpcFunctions(
+    Directory outputDir,
+    GeneratorConfig config,
+  ) => _generateBundle(
+    outputDir: outputDir,
+    config: config,
+    bundle: rpcFunctionsBundle,
   );
 
   /// Generate barrel files into the [outputDir] with the provided [config]
