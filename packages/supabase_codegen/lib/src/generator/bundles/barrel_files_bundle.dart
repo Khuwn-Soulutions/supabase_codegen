@@ -18,6 +18,12 @@ final barrelFilesBundle = MasonBundle.fromJson(<String, dynamic>{
       "type": "text",
     },
     {
+      "path": "rpcs/_rpcs.dart.mustache",
+      "data":
+          "e3s+IGhlYWRlciB9fQoKe3sjcnBjc319ZXhwb3J0ICd7e2Z1bmN0aW9uTmFtZX19LmRhcnQnOwp7ey9ycGNzfX0KCnt7PiBmb290ZXIgfX0=",
+      "type": "text",
+    },
+    {
       "path": "tables/_tables.dart.mustache",
       "data":
           "e3s+IGhlYWRlciB9fQoKe3sjdGFibGVzfX1leHBvcnQgJ3t7bmFtZX19LmRhcnQnOwp7ey90YWJsZXN9fQoKe3s+IGZvb3RlciB9fQo=",
