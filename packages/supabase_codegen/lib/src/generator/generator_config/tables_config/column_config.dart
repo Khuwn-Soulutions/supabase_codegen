@@ -78,16 +78,17 @@ class ColumnConfig {
     );
 
     // Field
-    final isOptionalField = dartType.isNotDynamic && isNullable && !hasDefault;
+    final defaultVal = getDefaultValue(
+      dartType,
+      defaultValue: defaultValue,
+      isEnum: isEnum,
+    );
+    final isOptionalField =
+        (dartType.isNotDynamic && isNullable && !hasDefault) ||
+        (defaultVal == DartType.nullString);
     final field = ColumnFieldConfig(
       name: '${fieldName}Field',
-      defaultValue: hasDefault
-          ? getDefaultValue(
-              dartType,
-              defaultValue: defaultValue,
-              isEnum: isEnum,
-            )
-          : '',
+      defaultValue: hasDefault ? defaultVal : '',
       genericType: isArray ? getGenericType(dartType) : '',
       question: isOptionalField ? '?' : '',
       bang: dartType.isDynamic || isOptionalField ? '' : '!',
