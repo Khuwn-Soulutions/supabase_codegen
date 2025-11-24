@@ -8,15 +8,11 @@ Future<List<RpcConfig>> generateRpcConfigs({
 }) async {
   final rpcs = await fetchRpcFunctions();
   return rpcs.map((rpc) {
-    final functionName = rpc['function_name'] as String;
-    final arguments = rpc['arguments'] as String;
-    final returnTypeRaw = rpc['return_type'] as String;
-
-    final args = parseArguments(arguments);
-    final returnType = parseReturnType(returnTypeRaw, tables: tables);
+    final args = parseArguments(rpc.arguments);
+    final returnType = parseReturnType(rpc.returnType, tables: tables);
 
     return RpcConfig(
-      functionName: functionName,
+      functionName: rpc.functionName,
       args: args,
       returnType: returnType,
     );
@@ -24,12 +20,12 @@ Future<List<RpcConfig>> generateRpcConfigs({
 }
 
 /// Fetch RPC functions from the database
-Future<List<Map<String, dynamic>>> fetchRpcFunctions() async {
+Future<List<GetRpcFunctionsResponse>> fetchRpcFunctions() async {
   final progress = logger.progress('Fetching RPC functions from database...');
   try {
-    final response = await client.rpc<List<dynamic>>('get_rpc_functions');
+    final response = await client.getRpcFunctions();
     progress.complete('Database RPC functions fetched');
-    return List<Map<String, dynamic>>.from(response);
+    return response;
   }
   // coverage:ignore-start
   on Exception catch (e) {
