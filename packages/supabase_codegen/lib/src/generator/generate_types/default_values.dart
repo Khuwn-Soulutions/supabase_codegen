@@ -36,9 +36,9 @@ String getDefaultValue(
 
   switch (dartType) {
     case DartType.int:
-      return fallbackValue ?? '0';
+      return int.tryParse(fallbackValue ?? '0')?.toString() ?? '0';
     case DartType.double:
-      return fallbackValue ?? '0.0';
+      return double.tryParse(fallbackValue ?? '0.0')?.toString() ?? '0.0';
     case DartType.bool:
       return fallbackValue ?? 'false';
     case DartType.string:
