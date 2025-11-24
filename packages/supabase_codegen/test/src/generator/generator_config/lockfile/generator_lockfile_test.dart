@@ -2,6 +2,8 @@ import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import 'lockfile_mock_data.dart';
+
 void main() {
   group('GeneratorLockfile', () {
     final date = DateTime.now();
@@ -167,6 +169,13 @@ rpcs:
         );
 
         expect(fromConfig, equals(expectedLockfile));
+      });
+
+      test('creates a lockfile equal to a previously generated lockfile', () {
+        final config = GeneratorConfig.fromJson(configJson);
+        final fromConfig = GeneratorLockfile.fromConfig(config);
+        final fromJson = GeneratorLockfile.fromJson(lockfileJson);
+        expect(fromConfig == fromJson, isTrue);
       });
     });
 
