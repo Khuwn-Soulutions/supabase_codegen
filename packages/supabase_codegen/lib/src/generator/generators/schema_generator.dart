@@ -39,10 +39,14 @@ class SupabaseSchemaGenerator {
     /// Get the table config
     final tables = await generateTableConfigs(overrides: params.overrides);
 
+    /// Get the RPC config
+    final rpcs = await generateRpcConfigs(tables: tables);
+
     final config = GeneratorConfig.fromParams(
       params: params,
       tables: tables,
       enums: enums,
+      rpcs: rpcs,
     );
     return config;
   }
