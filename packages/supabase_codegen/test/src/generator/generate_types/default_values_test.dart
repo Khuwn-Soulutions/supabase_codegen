@@ -24,7 +24,10 @@ void main() {
 
     test('when default value is provided', () {
       final expected = {
-        'int': [(defaultValue: "'1'::smallint", value: '1')],
+        'int': [
+          (defaultValue: "'1'::smallint", value: '1'),
+          (defaultValue: "nextval('tb_id_seq'::regclass)", value: '0'),
+        ],
         'double': [(defaultValue: "'0.1'::real", value: '0.1')],
         'bool': [(defaultValue: 'true', value: 'true')],
         'String': [
