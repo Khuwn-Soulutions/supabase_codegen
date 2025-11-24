@@ -1,6 +1,6 @@
 import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
-import 'package:supabase_codegen/src/generator/generate_types/get_types.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template rpc_argument_config}
 /// RPC Argument Config
@@ -60,7 +60,7 @@ class RpcArgumentConfig {
   }
 
   @override
-  int get hashCode => name.hashCode ^ type.hashCode ^ isList.hashCode;
+  int get hashCode => stableHash(name) ^ stableHash(type) ^ isList.hashCode;
 
   /// Create json representation of [RpcArgumentConfig]
   Map<String, dynamic> toJson() => {

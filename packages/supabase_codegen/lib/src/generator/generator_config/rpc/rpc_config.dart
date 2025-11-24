@@ -100,7 +100,7 @@ class RpcConfig {
 
   @override
   int get hashCode =>
-      functionName.hashCode ^
+      stableHash(functionName) ^
       const DeepCollectionEquality().hash(args) ^
       returnType.hashCode;
 

@@ -61,7 +61,7 @@ class RpcReturnTypeConfig {
 
   @override
   int get hashCode =>
-      returnType.hashCode ^ const DeepCollectionEquality().hash(fields);
+      stableHash(returnType.name) ^ const DeepCollectionEquality().hash(fields);
 
   @override
   String toString() =>

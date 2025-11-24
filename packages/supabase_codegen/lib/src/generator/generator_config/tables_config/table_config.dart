@@ -105,5 +105,5 @@ class TableConfig {
 
   @override
   int get hashCode =>
-      name.hashCode ^ const DeepCollectionEquality().hash(columns);
+      stableHash(name) ^ const DeepCollectionEquality().hash(columns);
 }
