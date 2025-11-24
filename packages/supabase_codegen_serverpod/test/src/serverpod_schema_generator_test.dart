@@ -61,6 +61,7 @@ void main() {
               );
           mockSchemaRpc(tables);
           mockEnumRpc([]);
+          mockGetRpc([]);
 
           final params = GeneratorConfigParams.empty();
 

@@ -19,3 +19,13 @@ void mockSchemaRpc(List<Map<String, String?>> schemaData) {
     (params, tables) => schemaData,
   );
 }
+
+const getRpc = 'get_rpc_functions';
+
+/// Mock the [getRpc] function
+void mockGetRpc(List<Map<String, String>> rpcData) {
+  mockSupabaseHttpClient.registerRpcFunction(
+    getRpc,
+    (params, tables) => rpcData,
+  );
+}

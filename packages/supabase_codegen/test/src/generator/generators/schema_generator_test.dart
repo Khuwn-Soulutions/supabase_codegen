@@ -41,6 +41,7 @@ void main() {
           'then returns a GeneratorConfig', () async {
         mockEnumRpc(testEnumOne);
         mockSchemaRpc(testTableSchema);
+        mockGetRpc([]);
         final params = GeneratorConfigParams.empty().copyWith(
           package: 'package',
           version: 'version',
@@ -71,44 +72,43 @@ void main() {
     });
 
     group('generate', () {
-      test(
-        'calls generateConfig and generateSchema and returns result',
-        () async {
-          // Arrange
-          mockEnumRpc(testEnumOne);
-          mockSchemaRpc(testTableSchema);
+      test('calls generateConfig, generateSchema and generateRpc '
+          'and returns result', () async {
+        // Arrange
+        mockEnumRpc(testEnumOne);
+        mockSchemaRpc(testTableSchema);
+        mockGetRpc([testRpcJson]);
 
-          final params = GeneratorConfigParams.empty();
+        final params = GeneratorConfigParams.empty();
 
-          // Mocking dependencies of generateSchema
-          when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
-            (_) async => (
-              deletes: (enums: <String>[], tables: <String>[]),
-              upserts: GeneratorConfig.empty(), // has upserts
-              lockfile: GeneratorLockfile.empty(),
-            ),
-          );
-          when(
-            () => mockBundleGenerator.generateFiles(any(), any(), any()),
-          ).thenAnswer((_) async {});
-          when(
-            () => mockLockfileManager.writeLockfile(
-              lockfile: any(named: 'lockfile'),
-            ),
-          ).thenAnswer((_) => true);
+        // Mocking dependencies of generateSchema
+        when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
+          (_) async => (
+            deletes: (enums: <String>[], tables: <String>[]),
+            upserts: GeneratorConfig.empty(), // has upserts
+            lockfile: GeneratorLockfile.empty(),
+          ),
+        );
+        when(
+          () => mockBundleGenerator.generateFiles(any(), any(), any()),
+        ).thenAnswer((_) async {});
+        when(
+          () => mockLockfileManager.writeLockfile(
+            lockfile: any(named: 'lockfile'),
+          ),
+        ).thenAnswer((_) => true);
 
-          // Act
-          final result = await generator.generate(params);
+        // Act
+        final result = await generator.generate(params);
 
-          // Assert
-          expect(result, isTrue);
-          // Verify that generateSchema's dependencies were called
-          verify(() => mockLockfileManager.processLockFile(any())).called(1);
-          verify(
-            () => mockBundleGenerator.generateFiles(any(), any(), any()),
-          ).called(1);
-        },
-      );
+        // Assert
+        expect(result, isTrue);
+        // Verify that generateSchema's dependencies were called
+        verify(() => mockLockfileManager.processLockFile(any())).called(1);
+        verify(
+          () => mockBundleGenerator.generateFiles(any(), any(), any()),
+        ).called(1);
+      });
     });
 
     group('generateSchema', () {
@@ -257,9 +257,6 @@ void main() {
       test('calls lockfileManager.writeLockfile', () {
         // Arrange
         final lockfile = GeneratorLockfile.empty();
-        // when(
-        //   () => mockLockfileManager.writeLockfile(lockfile: lockfile),
-        // ).thenReturn();
 
         // Act
         generator.writeLockFile(lockfile);

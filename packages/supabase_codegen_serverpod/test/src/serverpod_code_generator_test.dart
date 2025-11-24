@@ -137,6 +137,7 @@ void main() {
         );
         mockEnumRpc(enums);
         mockSchemaRpc(tables);
+        mockGetRpc([]);
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
           (inv) async => (
