@@ -13,4 +13,4 @@ version: 0.1.0+1
 # The following defines the environment for the current brick.
 # It includes the version of mason that the brick requires.
 environment:
-  mason: ^0.1.1
+  mason: ^0.1.2

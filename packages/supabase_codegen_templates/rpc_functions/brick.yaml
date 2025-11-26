@@ -2,7 +2,7 @@ name: rpc_functions
 description: A brick to generate Supabase RPC functions
 version: 0.1.0+1
 environment:
-  mason: "^0.1.1"
+  mason: ^0.1.2
 vars:
   rpcs:
     type: list
