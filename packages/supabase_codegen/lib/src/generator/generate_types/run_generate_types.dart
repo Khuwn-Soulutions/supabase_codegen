@@ -122,7 +122,9 @@ Future<String?> runGenerateTypes(
 
     /// Generate the types using the command line options
     final params = GeneratorConfigParams(
-      package: config?.package ?? defaultPackageName,
+      package: config != null && config.package.isNotEmpty
+          ? config.package
+          : defaultPackageName,
       envFilePath: envFilePath,
       outputFolder: outputFolder,
       tag: tag,

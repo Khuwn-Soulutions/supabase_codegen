@@ -89,6 +89,10 @@ class GeneratorLockfileManager {
         .where((e) => !currentLockFile.enums.containsKey(e))
         .toList();
 
+    final deletedRpcs = previousLockFile.rpcs.keys
+        .where((r) => !currentLockFile.rpcs.containsKey(r))
+        .toList();
+
     // Identify upserted (added or changed) tables/enums
     final upsertTableNames = currentLockFile.tables.keys
         .where((t) => previousLockFile.tables[t] != currentLockFile.tables[t])
@@ -98,8 +102,15 @@ class GeneratorLockfileManager {
         .where((e) => previousLockFile.enums[e] != currentLockFile.enums[e])
         .toList();
 
+    final upsertRpcNames = currentLockFile.rpcs.keys
+        .where((r) => previousLockFile.rpcs[r] != currentLockFile.rpcs[r])
+        .toList();
+
     // Build filtered GeneratorConfigs
-    final upserts = (upsertTableNames.isEmpty && upsertEnumNames.isEmpty)
+    final upserts =
+        (upsertTableNames.isEmpty &&
+            upsertEnumNames.isEmpty &&
+            upsertRpcNames.isEmpty)
         ? null
         : config.copyWith(
             tables: config.tables
@@ -108,9 +119,13 @@ class GeneratorLockfileManager {
             enums: config.enums
                 .where((e) => upsertEnumNames.contains(e.fileName))
                 .toList(),
+            rpcs: config.rpcs
+                .where((r) => upsertRpcNames.contains(r.functionName))
+                .toList(),
           );
 
-    final deletes = (deletedTables.isEmpty && deletedEnums.isEmpty)
+    final deletes =
+        (deletedTables.isEmpty && deletedEnums.isEmpty && deletedRpcs.isEmpty)
         ? null
         : (tables: deletedTables, enums: deletedEnums);
 

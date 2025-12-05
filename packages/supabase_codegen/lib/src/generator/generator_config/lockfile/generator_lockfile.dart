@@ -18,6 +18,7 @@ class GeneratorLockfile {
     required this.barrelFiles,
     this.tables = const {},
     this.enums = const {},
+    this.rpcs = const {},
   });
 
   /// Create an empty [GeneratorLockfile]
@@ -45,6 +46,9 @@ class GeneratorLockfile {
         enums: json['enums'] != null
             ? Map<String, int>.from(json['enums'] as Map)
             : {},
+        rpcs: json['rpcs'] != null
+            ? Map<String, int>.from(json['rpcs'] as Map)
+            : {},
       );
 
   /// Create a [GeneratorLockfile] from [yamlContent]
@@ -70,6 +74,10 @@ class GeneratorLockfile {
           enums[enumConfig.fileName] = enumConfig.hashCode;
           return enums;
         }),
+        rpcs: config.rpcs.fold(<String, int>{}, (rpcs, rpcConfig) {
+          rpcs[rpcConfig.functionName] = rpcConfig.hashCode;
+          return rpcs;
+        }),
       );
 
   /// Create json representation of [GeneratorLockfile]
@@ -82,6 +90,7 @@ class GeneratorLockfile {
     'tag': tag.isEmpty ? null : tag,
     'tables': tables.isEmpty ? null : tables,
     'enums': enums.isEmpty ? null : enums,
+    'rpcs': rpcs.isEmpty ? null : rpcs,
   }.cleaned;
 
   /// Create yaml representation of the [GeneratorLockfile]
@@ -111,8 +120,11 @@ class GeneratorLockfile {
   /// Enums (Map of filename to [EnumConfig] hashCode)
   final Map<String, int> enums;
 
+  /// RPCs (Map of function name to [RpcConfig] hashCode)
+  final Map<String, int> rpcs;
+
   /// Get the current lockfile without the data (tables and enums)
-  GeneratorLockfile withoutData() => copyWith(tables: {}, enums: {});
+  GeneratorLockfile withoutData() => copyWith(tables: {}, enums: {}, rpcs: {});
 
   @override
   int get hashCode =>
@@ -123,7 +135,8 @@ class GeneratorLockfile {
       barrelFiles.hashCode ^
       tag.hashCode ^
       const DeepCollectionEquality().hash(tables) ^
-      const DeepCollectionEquality().hash(enums);
+      const DeepCollectionEquality().hash(enums) ^
+      const DeepCollectionEquality().hash(rpcs);
 
   @override
   bool operator ==(Object other) =>
@@ -135,7 +148,8 @@ class GeneratorLockfile {
           barrelFiles == other.barrelFiles &&
           tag == other.tag &&
           const DeepCollectionEquality().equals(tables, other.tables) &&
-          const DeepCollectionEquality().equals(enums, other.enums);
+          const DeepCollectionEquality().equals(enums, other.enums) &&
+          const DeepCollectionEquality().equals(rpcs, other.rpcs);
 
   /// Creates a copy of this [GeneratorLockfile] with the given fields
   /// replaced with the new values.]
@@ -148,6 +162,7 @@ class GeneratorLockfile {
     String? tag,
     Map<String, int>? tables,
     Map<String, int>? enums,
+    Map<String, int>? rpcs,
   }) {
     return GeneratorLockfile(
       date: date ?? this.date,
@@ -158,6 +173,7 @@ class GeneratorLockfile {
       tag: tag ?? this.tag,
       tables: tables ?? this.tables,
       enums: enums ?? this.enums,
+      rpcs: rpcs ?? this.rpcs,
     );
   }
 }

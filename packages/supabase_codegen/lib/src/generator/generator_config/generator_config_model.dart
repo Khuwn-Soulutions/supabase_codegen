@@ -11,6 +11,7 @@ class GeneratorConfig extends GeneratorConfigBase {
     required super.barrelFiles,
     this.tables = const [],
     this.enums = const [],
+    this.rpcs = const [],
     DateTime? date,
   }) : date = date ?? DateTime.now();
 
@@ -42,6 +43,11 @@ class GeneratorConfig extends GeneratorConfigBase {
               (config) => EnumConfig.fromJson(config as Map<String, dynamic>),
             )
             .toList(),
+        rpcs: (json['rpcs'] as List<dynamic>? ?? [])
+            .map<RpcConfig>(
+              (config) => RpcConfig.fromJson(config as Map<String, dynamic>),
+            )
+            .toList(),
         date: json['date'] == null
             ? null
             : DateTime.parse(json['date'] as String),
@@ -53,6 +59,7 @@ class GeneratorConfig extends GeneratorConfigBase {
     required GeneratorConfigParams params,
     List<TableConfig> tables = const [],
     List<EnumConfig> enums = const [],
+    List<RpcConfig> rpcs = const [],
   }) => GeneratorConfig(
     package: params.package,
     version: params.version,
@@ -61,6 +68,7 @@ class GeneratorConfig extends GeneratorConfigBase {
     barrelFiles: params.barrelFiles,
     tables: tables,
     enums: enums,
+    rpcs: rpcs,
   );
 
   /// Date created
@@ -71,6 +79,9 @@ class GeneratorConfig extends GeneratorConfigBase {
 
   /// Enums
   final List<EnumConfig> enums;
+
+  /// RPCs
+  final List<RpcConfig> rpcs;
 
   /// Create json representation of [GeneratorConfig]
   Map<String, dynamic> toJson() => {
@@ -91,6 +102,9 @@ class GeneratorConfig extends GeneratorConfigBase {
     'enums': enums.isEmpty
         ? null
         : enums.map((config) => config.toJson()).toList(),
+    'rpcs': rpcs.isEmpty
+        ? null
+        : rpcs.map((config) => config.toJson()).toList(),
   };
 
   /// Create a copy of [GeneratorConfig] with the provided properties overridden
@@ -103,6 +117,7 @@ class GeneratorConfig extends GeneratorConfigBase {
     String? tag,
     List<TableConfig>? tables,
     List<EnumConfig>? enums,
+    List<RpcConfig>? rpcs,
   }) => GeneratorConfig(
     date: date ?? this.date,
     package: package ?? this.package,
@@ -112,5 +127,6 @@ class GeneratorConfig extends GeneratorConfigBase {
     barrelFiles: barrelFiles ?? this.barrelFiles,
     tables: tables ?? this.tables,
     enums: enums ?? this.enums,
+    rpcs: rpcs ?? this.rpcs,
   );
 }

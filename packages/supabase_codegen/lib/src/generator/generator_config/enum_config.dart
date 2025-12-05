@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:change_case/change_case.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template enum_config}
 /// A class that holds the configuration for a single enum.
@@ -84,8 +85,8 @@ class EnumConfig {
 
   @override
   int get hashCode =>
-      enumName.hashCode ^
-      formattedEnumName.hashCode ^
+      stableHash(enumName) ^
+      stableHash(formattedEnumName) ^
       const DeepCollectionEquality().hash(values);
 
   @override

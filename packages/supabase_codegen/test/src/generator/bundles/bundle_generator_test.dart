@@ -71,7 +71,6 @@ void main() {
       await bundleGenerator.generateFiles(tempDir, upserts, config);
 
       // Assert
-
       expect(
         databaseFile.existsSync(),
         isTrue,
@@ -107,9 +106,8 @@ void main() {
       ).called(1);
     });
 
-    test(
-      'generateFiles creates only tables and enums when barrelFiles is false',
-      () async {
+    group('when barrelFiles is false', () {
+      test('creates only tables and enums', () async {
         // Arrange
         final config = baseConfig.copyWith(barrelFiles: false);
         final upserts = config.copyWith();
@@ -118,7 +116,6 @@ void main() {
         await bundleGenerator.generateFiles(tempDir, upserts, config);
 
         // Assert
-
         expect(enumsDir.existsSync(), isTrue);
         expect(tablesDir.existsSync(), isTrue);
         expect(databaseFile.existsSync(), isFalse);
@@ -132,8 +129,32 @@ void main() {
         verify(
           () => mockLogger.progress('Cleaning up generated files'),
         ).called(1);
-      },
-    );
+      });
+
+      test('creates only tables if no enums are provided', () async {
+        // Arrange
+        final config = baseConfig.copyWith(enums: [], barrelFiles: false);
+        final upserts = config.copyWith();
+
+        // Act
+        await bundleGenerator.generateFiles(tempDir, upserts, config);
+
+        // Assert
+        expect(enumsDir.existsSync(), isFalse);
+        expect(tablesDir.existsSync(), isTrue);
+        expect(databaseFile.existsSync(), isFalse);
+        expect(tablesBarrelFile.existsSync(), isFalse);
+        expect(enumsBarrelFile.existsSync(), isFalse);
+
+        verify(
+          () => mockLogger.progress('Generating Tables and Enums...'),
+        ).called(1);
+        verifyNever(() => mockProgress.update('Generating barrel files'));
+        verify(
+          () => mockLogger.progress('Cleaning up generated files'),
+        ).called(1);
+      });
+    });
 
     test('cleanup process renames .mustache files and formats code', () async {
       // This test implicitly checks the behavior of private methods _cleanup,
@@ -144,12 +165,10 @@ void main() {
       final upserts = config.copyWith();
 
       // Act
-      // await overrideLogger(mockLogger, () async {
       await bundleGenerator.generateFiles(tempDir, upserts, config);
-      // });
 
       // Assert
-      // 1. Check that no .mustache files are left.
+      // 1. Check that no .mustache files are in the output folder.
       final files = tempDir.listSync(recursive: true);
       for (final entity in files) {
         if (entity is File) {
@@ -160,10 +179,19 @@ void main() {
       // 2. Check that dart format was called.
       verify(() => mockLogger.detail('Running dart format')).called(1);
 
-      // 3. Check that files were logged as success.
+      // 3. Check that files were generated with the correct extension.
+      final totalFiles = tables.length + enums.length;
+      expect(BundleGenerator.generatedFiles.length, equals(totalFiles));
+      expect(
+        BundleGenerator.generatedFiles.every(
+          (file) => file.path.endsWith('.dart'),
+        ),
+        isTrue,
+      );
+      // 4. Check that files were logged as success.
       verify(
         () => mockLogger.success(any(that: contains('.dart'))),
-      ).called(tables.length + enums.length);
+      ).called(totalFiles);
     });
   });
 }
