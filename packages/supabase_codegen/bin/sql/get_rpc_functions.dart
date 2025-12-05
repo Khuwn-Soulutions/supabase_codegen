@@ -14,7 +14,6 @@ SELECT n.nspname AS schema_name,
        pg_get_function_result(p.oid) AS return_type
 FROM pg_proc p
 JOIN pg_namespace n ON p.pronamespace = n.oid
-JOIN pg_language l ON p.prolang = l.oid
 WHERE n.nspname IN ('public')
   AND pg_get_function_result(p.oid) <> 'trigger'
 ORDER BY n.nspname, p.proname;
