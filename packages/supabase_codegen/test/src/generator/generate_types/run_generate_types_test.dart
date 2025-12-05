@@ -365,29 +365,61 @@ void main() {
         ).called(1);
       });
 
-      test('if provided in the config', () async {
-        // Arrange
-        final args = <String>[];
-        const packageName = 'test';
-        final config = GeneratorConfigParams.empty().copyWith(
-          package: packageName,
-        );
+      group('if provided in the config', () {
+        test('and non-empty then it is used', () async {
+          // Arrange
+          final args = <String>[];
+          const packageName = 'test';
+          final config = GeneratorConfigParams.empty().copyWith(
+            package: packageName,
+          );
 
-        // Act
-        await runGenerateTypes(args, generator: mockGenerator, config: config);
+          // Act
+          await runGenerateTypes(
+            args,
+            generator: mockGenerator,
+            config: config,
+          );
 
-        // Assert
-        verify(
-          () => mockGenerator.generateSupabaseTypes(
-            any(
-              that: isA<GeneratorConfigParams>().having(
-                (param) => param.package,
-                'package',
-                packageName,
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              any(
+                that: isA<GeneratorConfigParams>().having(
+                  (param) => param.package,
+                  'package',
+                  packageName,
+                ),
               ),
             ),
-          ),
-        ).called(1);
+          ).called(1);
+        });
+
+        test('and empty then the default is used', () async {
+          // Arrange
+          final args = <String>[];
+          final config = GeneratorConfigParams.empty().copyWith(package: '');
+
+          // Act
+          await runGenerateTypes(
+            args,
+            generator: mockGenerator,
+            config: config,
+          );
+
+          // Assert
+          verify(
+            () => mockGenerator.generateSupabaseTypes(
+              any(
+                that: isA<GeneratorConfigParams>().having(
+                  (param) => param.package,
+                  'package',
+                  defaultPackageName,
+                ),
+              ),
+            ),
+          ).called(1);
+        });
       });
     });
 
