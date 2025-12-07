@@ -248,6 +248,8 @@ void main() {
 
         // Field checks
         expect(config.field.bang, '');
+        expect(config.field.question, '');
+        expect(config.field.defaultValue, '');
       });
     });
   });
