@@ -1,8 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
+
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
+
+/// Enum folder
+const enumsFolder = 'enums';
+
+/// Table folder
+const tablesFolder = 'tables';
+
+/// RPC folder
+const rpcsFolder = 'rpcs';
 
 /// Generator lockfile manager
 class GeneratorLockfileManager {
@@ -50,7 +61,7 @@ class GeneratorLockfileManager {
   Future<
     ({
       GeneratorConfig? upserts,
-      ({List<String> tables, List<String> enums})? deletes,
+      List<String>? deletes,
       GeneratorLockfile lockfile,
     })
   >
@@ -80,7 +91,7 @@ class GeneratorLockfileManager {
     // --- Lockfile changed ---
     logger.detail('Data changed, diffing data');
 
-    // Identify deleted tables/enums
+    // Identify deleted files
     final deletedTables = previousLockFile.tables.keys
         .where((t) => !currentLockFile.tables.containsKey(t))
         .toList();
@@ -127,7 +138,26 @@ class GeneratorLockfileManager {
     final deletes =
         (deletedTables.isEmpty && deletedEnums.isEmpty && deletedRpcs.isEmpty)
         ? null
-        : (tables: deletedTables, enums: deletedEnums);
+        : [
+            ...deletedEnums.map(
+              (e) => path.join(
+                enumsFolder,
+                '${e.toSnakeCase()}.${config.fileType}',
+              ),
+            ),
+            ...deletedTables.map(
+              (t) => path.join(
+                tablesFolder,
+                '${t.toSnakeCase()}.${config.fileType}',
+              ),
+            ),
+            ...deletedRpcs.map(
+              (r) => path.join(
+                rpcsFolder,
+                '${r.toSnakeCase()}.${config.fileType}',
+              ),
+            ),
+          ];
 
     return (upserts: upserts, deletes: deletes, lockfile: currentLockFile);
   }

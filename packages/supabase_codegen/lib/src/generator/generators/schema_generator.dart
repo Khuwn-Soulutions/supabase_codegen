@@ -78,9 +78,9 @@ class SupabaseSchemaGenerator {
 
     // Handle deletes
     if (deletes != null) {
-      for (final enumFileName in deletes.enums) {
-        final enumPath = path.join(outputDir.path, enumFileName);
-        final file = File(enumPath);
+      for (final deletedFile in deletes) {
+        final filePath = path.join(outputDir.path, deletedFile);
+        final file = File(filePath);
         if (file.existsSync()) {
           file.deleteSync();
           logger.err('❌ Deleted ${file.path}');
