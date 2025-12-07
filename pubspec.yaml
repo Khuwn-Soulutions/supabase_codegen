@@ -16,12 +16,21 @@ workspace:
 
 dev_dependencies:
   melos: ^7.3.0
-  talker: ^5.1.0
+  talker: ^5.1.5
   very_good_analysis: ^10.0.0
 
 # Melos configuration
 melos:
   scripts:
+    generate_types:core:
+      run: |
+        cd packages/supabase_codegen && \
+        dart run --define=INCLUDE_INTERNAL_RPCS=true bin/generate_types.dart
+      description: Generate types for the codegen package.
+      packageFilters:
+        scope:
+          - supabase_codegen
+
     test:
       run: |
         melos exec -c 4 --fail-fast -- \
