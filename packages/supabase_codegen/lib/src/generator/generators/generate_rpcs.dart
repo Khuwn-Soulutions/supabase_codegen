@@ -40,13 +40,9 @@ Future<List<GetRpcFunctionsResponse>> fetchRpcFunctions() async {
 @visibleForTesting
 List<RpcArgumentConfig> parseArguments(String arguments) {
   if (arguments.isEmpty) return [];
-  // Basic parsing, might need more robust regex for complex types
+
   final argsList = arguments.split(', ');
-  final args = argsList.map((arg) {
-    final [name, typeRaw] = arg.split(' ');
-    return RpcArgumentConfig.fromNameAndRawType(name: name, rawType: typeRaw);
-  });
-  return args.toList();
+  return argsList.map(RpcArgumentConfig.fromArgString).toList();
 }
 
 /// Parse the return type for an [RpcConfig]
