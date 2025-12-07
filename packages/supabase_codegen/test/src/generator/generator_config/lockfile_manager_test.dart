@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:test/test.dart';
 
@@ -122,7 +123,10 @@ void main() {
               directory: tempDir,
             );
             expect(result.deletes, isNotNull);
-            expect(result.deletes!.tables, contains(table2.name));
+            expect(
+              result.deletes,
+              contains(path.join(tablesFolder, '${table2.name}.dart')),
+            );
           });
 
           test('a table is modified then there is an upsert', () async {
@@ -185,7 +189,10 @@ void main() {
               directory: tempDir,
             );
             expect(result.deletes, isNotNull);
-            expect(result.deletes!.enums, contains(enum2.fileName));
+            expect(
+              result.deletes,
+              contains(path.join(enumsFolder, '${enum2.fileName}.dart')),
+            );
           });
 
           test('an enum is modified then there is an upsert', () async {
@@ -247,7 +254,10 @@ void main() {
             expect(result.upserts?.enums.first.enumName, 'enum2');
 
             expect(result.deletes, isNotNull);
-            expect(result.deletes!.tables, contains(table2.name));
+            expect(
+              result.deletes,
+              contains(path.join(tablesFolder, '${table2.name}.dart')),
+            );
           });
         });
 

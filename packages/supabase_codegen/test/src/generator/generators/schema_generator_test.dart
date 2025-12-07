@@ -14,6 +14,10 @@ class MockGeneratorLockfileManager extends Mock
 class MockBundleGenerator extends Mock implements BundleGenerator {}
 
 void main() {
+  const enumFile = '$enumsFolder/my_enum.dart';
+  const tableFile = '$tablesFolder/my_table.dart';
+  const rpcFile = '$rpcsFolder/my_rpc.dart';
+
   setUpAll(() {
     registerFallbackValue(GeneratorConfig.empty());
     registerFallbackValue(GeneratorLockfile.empty());
@@ -84,7 +88,7 @@ void main() {
         // Mocking dependencies of generateSchema
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
           (_) async => (
-            deletes: (enums: <String>[], tables: <String>[]),
+            deletes: <String>[],
             upserts: GeneratorConfig.empty(), // has upserts
             lockfile: GeneratorLockfile.empty(),
           ),
@@ -185,15 +189,17 @@ void main() {
 
       test('when only deletes, deletes files and returns true', () async {
         // Arrange
-        const enumFile = 'my_enum.dart';
-        final deletes = (enums: [enumFile], tables: <String>[]);
-        final fileToDelete = File(path.join(tempDir.path, enumFile));
-        await fileToDelete.create();
-        expect(fileToDelete.existsSync(), isTrue);
+        final deletesMock = [enumFile, tableFile, rpcFile];
+
+        for (final deletePath in deletesMock) {
+          final fileToDelete = File(path.join(tempDir.path, deletePath));
+          await fileToDelete.create(recursive: true);
+          expect(fileToDelete.existsSync(), isTrue);
+        }
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
           (_) async => (
-            deletes: deletes,
+            deletes: deletesMock,
             upserts: null,
             lockfile: GeneratorLockfile.empty(),
           ),
@@ -204,7 +210,10 @@ void main() {
 
         // Assert
         expect(result, isTrue);
-        expect(fileToDelete.existsSync(), isFalse);
+        for (final deletePath in deletesMock) {
+          final fileToDelete = File(path.join(tempDir.path, deletePath));
+          expect(fileToDelete.existsSync(), isFalse);
+        }
         verifyNever(
           () => mockBundleGenerator.generateFiles(any(), any(), any()),
         );
@@ -218,10 +227,10 @@ void main() {
       test('when upserts and deletes, generates and deletes files', () async {
         // Arrange
         final upserts = GeneratorConfig.empty();
-        const enumFile = 'my_enum.dart';
-        final deletes = (enums: [enumFile], tables: <String>[]);
+
+        final deletes = [enumFile];
         final fileToDelete = File(path.join(tempDir.path, enumFile));
-        await fileToDelete.create();
+        await fileToDelete.create(recursive: true);
         expect(fileToDelete.existsSync(), isTrue);
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
