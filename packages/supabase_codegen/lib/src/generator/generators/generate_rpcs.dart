@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
-import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// Generate [RpcConfig] list
 Future<List<RpcConfig>> generateRpcConfigs({
@@ -23,7 +23,13 @@ Future<List<RpcConfig>> generateRpcConfigs({
 Future<List<GetRpcFunctionsResponse>> fetchRpcFunctions() async {
   final progress = logger.progress('Fetching RPC functions from database...');
   try {
-    final response = await client.getRpcFunctions();
+    const includeInternals = bool.fromEnvironment('INCLUDE_INTERNAL_RPCS');
+    final response = await client.getRpcFunctions(
+      // Value may be true or false, but analyzer interprets as false
+      // due to default value from bool.fromEnvironment
+      // ignore: avoid_redundant_argument_values
+      includeInternals: includeInternals,
+    );
     progress.complete('Database RPC functions fetched');
     return response;
   }
