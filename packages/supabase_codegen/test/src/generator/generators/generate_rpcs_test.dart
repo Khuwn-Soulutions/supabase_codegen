@@ -13,6 +13,18 @@ void main() {
           ],
         ),
         (
+          args: 'a integer, b integer DEFAULT 1',
+          expected: [
+            const RpcArgumentConfig(name: 'a', type: 'int', isList: false),
+            const RpcArgumentConfig(
+              name: 'b',
+              type: 'int',
+              isList: false,
+              defaultValue: '1',
+            ),
+          ],
+        ),
+        (
           args: 'arr integer[]',
           expected: [
             const RpcArgumentConfig(name: 'arr', type: 'int', isList: true),
@@ -56,6 +68,10 @@ void main() {
           expect(arguments, expected);
         });
       }
+
+      test('should throw exception for invalid arguments', () {
+        expect(() => parseArguments('invalid'), throwsException);
+      });
     });
 
     group('parseReturnType', () {
