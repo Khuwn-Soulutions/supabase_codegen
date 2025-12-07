@@ -18,6 +18,7 @@ class ServerpodSchemaGenerator extends SupabaseSchemaGenerator {
     // Remove serverpod tables
     return config.copyWith(
       barrelFiles: false,
+      fileType: 'spy.yaml',
       tables: config.tables
           .where((table) => !table.name.startsWith('serverpod'))
           .toList(),
