@@ -1,1 +1,1 @@
-{{{paramType}}} {{parameterName}}
+{{{paramType}}}{{#hasDefault}}?{{/hasDefault}} {{parameterName}}

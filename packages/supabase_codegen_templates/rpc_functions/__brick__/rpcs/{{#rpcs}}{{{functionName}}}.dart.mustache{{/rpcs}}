@@ -10,13 +10,13 @@ import 'package:supabase/supabase.dart';
 extension {{rpcs.className}}Rpc on SupabaseClient {
   /// {{rpcs.functionName.titleCase()}}
   Future<{{{rpcs.returnsTypeName}}}> {{rpcs.methodName}}({{#rpcs.hasArgs}} { {{/rpcs.hasArgs}}
-    {{#rpcs.args}}required {{> argument }},
+    {{#rpcs.args}}{{^hasDefault}}required {{/hasDefault}}{{> argument }},
     {{/rpcs.args}}
   {{#rpcs.hasArgs}} } {{/rpcs.hasArgs}}) async {
     final response = await rpc<dynamic>(
       '{{rpcs.functionName}}',
       {{#rpcs.hasArgs}}params: {
-        {{#rpcs.args}}'{{name}}': {{parameterName}},
+        {{#rpcs.args}}{{#hasDefault}}if({{parameterName}} != null) {{/hasDefault}}'{{name}}': {{parameterName}},
         {{/rpcs.args}}
       },{{/rpcs.hasArgs}}
     );
