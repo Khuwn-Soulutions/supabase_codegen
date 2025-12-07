@@ -8,7 +8,7 @@ final barrelFilesBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "database.dart.mustache",
       "data":
-          "e3s+IGhlYWRlcn19CmV4cG9ydCAnZW51bXMvX2VudW1zLmRhcnQnOwpleHBvcnQgJ3RhYmxlcy9fdGFibGVzLmRhcnQnOwoKe3s+IGZvb3Rlcn19",
+          "e3s+IGhlYWRlcn19CmV4cG9ydCAnZW51bXMvX2VudW1zLmRhcnQnOwpleHBvcnQgJ3JwY3MvX3JwY3MuZGFydCc7CmV4cG9ydCAndGFibGVzL190YWJsZXMuZGFydCc7Cgp7ez4gZm9vdGVyfX0=",
       "type": "text",
     },
     {
@@ -46,7 +46,7 @@ final barrelFilesBundle = MasonBundle.fromJson(<String, dynamic>{
   "name": "barrel_files",
   "description": "Brick to generate barrel files for Supabase Codegen",
   "version": "0.1.0+1",
-  "environment": {"mason": "^0.1.1"},
+  "environment": {"mason": "^0.1.2"},
   "readme": {
     "path": "README.md",
     "data":

@@ -46,11 +46,11 @@ final tablesAndEnumsBundle = MasonBundle.fromJson(<String, dynamic>{
   "name": "tables_and_enums",
   "description": "Brick to generate tables and enums for Supabase Codegen",
   "version": "0.1.0+1",
-  "environment": {"mason": "^0.1.1"},
+  "environment": {"mason": "^0.1.2"},
   "readme": {
     "path": "README.md",
     "data":
-        "IyBUYWJsZXMgYW5kIEVudW1zCgpbIVtQb3dlcmVkIGJ5IE1hc29uXShodHRwczovL2ltZy5zaGllbGRzLmlvL2VuZHBvaW50P3VybD1odHRwcyUzQSUyRiUyRnRpbnl1cmwuY29tJTJGbWFzb24tYmFkZ2UpXShodHRwczovL2dpdGh1Yi5jb20vZmVsYW5nZWwvbWFzb24pCgpBIGJyaWNrIHVzZWQgdG8gZ2VuZXJhdGUgbW9kZWwgY2xhc3NlcyBmb3IgU3VwYWJhc2UgdGFibGVzIGFuZCBlbnVtcyBieSBbc3VwYWJhc2VfY29kZWdlbl0oaHR0cHM6Ly9wdWIuZGV2L3BhY2thZ2VzL3N1cGFiYXNlX2NvZGVnZW4pCgpfR2VuZXJhdGVkIGJ5IFttYXNvbl1bMV0g8J+nsV8K",
+        "IyBUYWJsZXMgYW5kIEVudW1zCgpbIVtQb3dlcmVkIGJ5IE1hc29uXShodHRwczovL2ltZy5zaGllbGRzLmlvL2VuZHBvaW50P3VybD1odHRwcyUzQSUyRiUyRnRpbnl1cmwuY29tJTJGbWFzb24tYmFkZ2UpXShodHRwczovL2dpdGh1Yi5jb20vZmVsYW5nZWwvbWFzb24pCgpBIGJyaWNrIHVzZWQgdG8gZ2VuZXJhdGUgbW9kZWwgY2xhc3NlcyBmb3IgU3VwYWJhc2UgdGFibGVzIGFuZCBlbnVtcyBieSBbc3VwYWJhc2VfY29kZWdlbl0oaHR0cHM6Ly9wdWIuZGV2L3BhY2thZ2VzL3N1cGFiYXNlX2NvZGVnZW4pCgpfR2VuZXJhdGVkIGJ5IFttYXNvbl1bMV0g8J+nsV8KClsxXTogaHR0cHM6Ly9naXRodWIuY29tL2ZlbGFuZ2VsL21hc29uCg==",
     "type": "text",
   },
   "changelog": {
