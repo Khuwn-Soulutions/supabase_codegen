@@ -141,7 +141,7 @@ void main() {
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
           (inv) async => (
-            deletes: (enums: <String>[], tables: <String>[]),
+            deletes: <String>[],
             upserts: inv.positionalArguments.first as GeneratorConfig,
             lockfile: GeneratorLockfile.empty(),
           ),
