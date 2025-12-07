@@ -40,8 +40,15 @@ class GetRpcFunctionsResponse {
 /// RPC extension for get_rpc_functions rpc
 extension GetRpcFunctionsRpc on SupabaseClient {
   /// Get Rpc Functions
-  Future<List<GetRpcFunctionsResponse>> getRpcFunctions() async {
-    final response = await rpc<dynamic>('get_rpc_functions');
+  Future<List<GetRpcFunctionsResponse>> getRpcFunctions({
+    bool? includeInternals,
+  }) async {
+    final response = await rpc<dynamic>(
+      'get_rpc_functions',
+      params: {
+        if (includeInternals != null) 'include_internals': includeInternals,
+      },
+    );
 
     return (response as List)
         .map((e) => GetRpcFunctionsResponse.fromJson(e as Map<String, dynamic>))

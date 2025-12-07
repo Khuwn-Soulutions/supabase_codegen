@@ -5,4 +5,4 @@ export 'get_enum_types.dart';
 export 'get_rpc_functions.dart';
 export 'get_schema_info.dart';
 
-// Date: 2025-11-23 23:11:18.268274
+// Date: 2025-12-07 14:29:31.689525
