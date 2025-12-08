@@ -291,5 +291,91 @@ void main() {
         ).called(1);
       });
     });
+
+    group('parseBarrelFileConfig', () {
+      test('when no changes, returns null', () {
+        final config = GeneratorConfig.empty();
+        final result = generator.parseBarrelFileConfig(config: config);
+        expect(result, isNull);
+      });
+
+      test('when upserts present, returns config with modified sections', () {
+        final table = TableConfig.fromJson(const {
+          'name': 'users',
+          'columns': <Map<String, dynamic>>[],
+        });
+        final config = GeneratorConfig.empty().copyWith(tables: [table]);
+        final upserts = GeneratorConfig.empty().copyWith(tables: [table]);
+
+        final result = generator.parseBarrelFileConfig(
+          config: config,
+          upserts: upserts,
+        );
+
+        expect(result, isNotNull);
+        expect(result!.tables, hasLength(1));
+        expect(result.tables.first.name, 'users');
+        expect(result.enums, isEmpty);
+        expect(result.rpcs, isEmpty);
+      });
+
+      test(
+        'when deletes present in folder, returns config with modified sections',
+        () {
+          final table = TableConfig.fromJson(const {
+            'name': 'users',
+            'columns': <Map<String, dynamic>>[],
+          });
+          final config = GeneratorConfig.empty().copyWith(tables: [table]);
+          final deletes = ['tables/old_table.dart'];
+
+          final result = generator.parseBarrelFileConfig(
+            config: config,
+            deletes: deletes,
+          );
+
+          expect(result, isNotNull);
+          expect(result!.tables, hasLength(1));
+          expect(result.enums, isEmpty);
+          expect(result.rpcs, isEmpty);
+        },
+      );
+
+      test('when deletes not in folder, returns null', () {
+        final config = GeneratorConfig.empty();
+        final deletes = ['root_file.dart'];
+
+        final result = generator.parseBarrelFileConfig(
+          config: config,
+          deletes: deletes,
+        );
+
+        expect(result, isNull);
+      });
+
+      test('preserves other config properties', () {
+        final table = TableConfig.fromJson(const {
+          'name': 'users',
+          'columns': <Map<String, dynamic>>[],
+        });
+        const package = 'my_pkg';
+        const tag = '1.2.3';
+        final config = GeneratorConfig.empty().copyWith(
+          tables: [table],
+          package: package,
+          tag: tag,
+        );
+        final upserts = GeneratorConfig.empty().copyWith(tables: [table]);
+
+        final result = generator.parseBarrelFileConfig(
+          config: config,
+          upserts: upserts,
+        );
+
+        expect(result, isNotNull);
+        expect(result!.package, package);
+        expect(result.tag, tag);
+      });
+    });
   });
 }
