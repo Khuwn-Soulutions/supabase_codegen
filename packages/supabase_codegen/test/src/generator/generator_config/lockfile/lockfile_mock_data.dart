@@ -20,10 +20,7 @@ final configJson = {
     {
       'functionName': 'my_rpc',
       'args': <Map<String, dynamic>>[],
-      'returnType': {
-        'returnType': 'scalar',
-        'fields': <Map<String, dynamic>>[],
-      },
+      'returnType': {'type': 'scalar', 'fields': <Map<String, dynamic>>[]},
     },
   ],
 };

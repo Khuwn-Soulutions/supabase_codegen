@@ -29,9 +29,7 @@ class RpcConfig {
         .map((e) => RpcArgumentConfig.fromJson(e as Map<String, dynamic>))
         .toList(),
     returnType: RpcReturnTypeConfig.fromJson(
-      // Fallback to rpcReturnType to handle map produced by the toJson method
-      // which aliases returnType as rpcReturnType
-      (json['returnType'] ?? json['rpcReturnType']) as Map<String, dynamic>,
+      json['returnType'] as Map<String, dynamic>,
     ),
   );
 
@@ -86,7 +84,7 @@ class RpcConfig {
     'className': className,
     'hasArgs': hasArgs,
     'args': args.map((x) => x.toJson()).toList(),
-    'rpcReturnType': returnType.toJson(),
+    'returnType': returnType.toJson(),
     'returnsClassName': returnsClassName,
     'returnsTypeName': returnsTypeName,
   };

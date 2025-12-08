@@ -51,7 +51,7 @@ void main() {
       expect(json['className'], 'TestFunction');
       expect(json['hasArgs'], true);
       expect(json['args'], hasLength(1));
-      expect(json['rpcReturnType'], isNotNull);
+      expect(json['returnType'], isNotNull);
       expect(json['returnsClassName'], 'String');
       expect(json['returnsTypeName'], 'String');
     });
