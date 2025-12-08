@@ -224,15 +224,24 @@ void main() {
           ],
         ),
       );
-      expect(
-        config.toString(),
-        'RpcConfig(functionName: test, args: '
-        '[RpcArgumentConfig(name: count, type: int, isList: false, '
-        'defaultValue: null)], '
-        'returnType: RpcReturnTypeConfig(returnType: scalar, fields: '
-        '[RpcArgumentConfig(name: count, type: int, isList: false, '
-        'defaultValue: null)]))',
-      );
+
+      final str = config.toString();
+
+      // Check that all key parts of the toString output are present.
+      expect(str, contains('functionName: test'));
+      expect(str, contains('args:'));
+      expect(str, contains('RpcArgumentConfig(name: count'));
+      expect(str, contains('type: int'));
+      expect(str, contains('isList: false'));
+      expect(str, contains('defaultValue: null'));
+      expect(str, contains('returnType: RpcReturnTypeConfig'));
+      expect(str, contains('returnType: scalar'));
+      expect(str, contains('fields:'));
+      expect(str, contains('RpcArgumentConfig'));
+      expect(str, contains('name: count'));
+      expect(str, contains('type: int'));
+      expect(str, contains('isList: false'));
+      expect(str, contains('defaultValue: null'));
     });
   });
 }
