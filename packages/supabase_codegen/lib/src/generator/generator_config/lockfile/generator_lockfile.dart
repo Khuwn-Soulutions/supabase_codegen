@@ -175,4 +175,13 @@ class GeneratorLockfile {
       rpcs: rpcs ?? this.rpcs,
     );
   }
+
+  /// Return string representation of the [GeneratorLockfile]
+  @override
+  String toString() {
+    return 'GeneratorLockfile(date: $date, package: $package, '
+        'version: $version, forFlutter: $forFlutter, '
+        'barrelFiles: $barrelFiles, tag: $tag, tables: $tables, enums: $enums, '
+        'rpcs: $rpcs)';
+  }
 }
