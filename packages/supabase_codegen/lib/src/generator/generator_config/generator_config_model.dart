@@ -87,29 +87,34 @@ class GeneratorConfig extends GeneratorConfigBase {
   final List<RpcConfig> rpcs;
 
   /// Create json representation of [GeneratorConfig]
-  Map<String, dynamic> toJson() => {
-    'date': date.toString(),
-    'package': package,
-    'version': version,
-    'forFlutter': forFlutter,
-    'tag': tag,
-    'barrelFiles': barrelFiles,
-    'fileType': fileType,
-    'hasTag': tag.isNotEmpty,
-    // Important!!
-    // Arrays used to generate files must be null if there are
-    // no items to generate
-    // Needed until https://github.com/felangel/mason/pull/1610 resolved
-    'tables': tables.isEmpty
-        ? null
-        : tables.map((table) => table.toJson()).toList(),
-    'enums': enums.isEmpty
-        ? null
-        : enums.map((config) => config.toJson()).toList(),
-    'rpcs': rpcs.isEmpty
-        ? null
-        : rpcs.map((config) => config.toJson()).toList(),
-  };
+  Map<String, dynamic> toJson() {
+    final hasTables = tables.isNotEmpty;
+    final hasEnums = enums.isNotEmpty;
+    final hasRpcs = rpcs.isNotEmpty;
+    return {
+      'date': date.toString(),
+      'package': package,
+      'version': version,
+      'forFlutter': forFlutter,
+      'tag': tag,
+      'barrelFiles': barrelFiles,
+      'fileType': fileType,
+      'hasTag': tag.isNotEmpty,
+      // Important!!
+      // Arrays used to generate files must be null if there are
+      // no items to generate
+      'tables': hasTables
+          ? tables.map((table) => table.toJson()).toList()
+          : null,
+      'hasTables': hasTables,
+      'enums': hasEnums
+          ? enums.map((config) => config.toJson()).toList()
+          : null,
+      'hasEnums': hasEnums,
+      'rpcs': hasRpcs ? rpcs.map((config) => config.toJson()).toList() : null,
+      'hasRpcs': hasRpcs,
+    };
+  }
 
   /// Create a copy of [GeneratorConfig] with the provided properties overridden
   GeneratorConfig copyWith({
