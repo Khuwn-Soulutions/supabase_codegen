@@ -79,7 +79,7 @@ void main() {
         (
           returnType: 'TABLE(enum_name text, enum_value text)',
           expected: const RpcReturnTypeConfig(
-            returnType: RpcReturnType.table,
+            type: RpcReturnType.table,
             fields: [
               RpcArgumentConfig(
                 name: 'enum_name',
@@ -97,7 +97,7 @@ void main() {
         (
           returnType: 'integer',
           expected: const RpcReturnTypeConfig(
-            returnType: RpcReturnType.scalar,
+            type: RpcReturnType.scalar,
             fields: [
               RpcArgumentConfig(name: 'integer', type: 'int', isList: false),
             ],
@@ -106,7 +106,7 @@ void main() {
         (
           returnType: 'jsonb',
           expected: const RpcReturnTypeConfig(
-            returnType: RpcReturnType.scalar,
+            type: RpcReturnType.scalar,
             fields: [
               RpcArgumentConfig(name: 'jsonb', type: 'dynamic', isList: false),
             ],
@@ -115,7 +115,7 @@ void main() {
         (
           returnType: 'boolean',
           expected: const RpcReturnTypeConfig(
-            returnType: RpcReturnType.scalar,
+            type: RpcReturnType.scalar,
             fields: [
               RpcArgumentConfig(name: 'boolean', type: 'bool', isList: false),
             ],
@@ -124,7 +124,7 @@ void main() {
         (
           returnType: 'SETOF users',
           expected: const RpcReturnTypeConfig(
-            returnType: RpcReturnType.setOf,
+            type: RpcReturnType.setOf,
             fields: [
               RpcArgumentConfig(name: 'users', type: 'Users', isList: true),
             ],
@@ -133,7 +133,7 @@ void main() {
         (
           returnType: 'SETOF unknown',
           expected: const RpcReturnTypeConfig(
-            returnType: RpcReturnType.setOf,
+            type: RpcReturnType.setOf,
             fields: [
               RpcArgumentConfig(name: 'unknown', type: 'dynamic', isList: true),
             ],

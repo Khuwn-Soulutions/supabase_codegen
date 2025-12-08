@@ -17,7 +17,7 @@ void main() {
           {'name': 'arg1', 'type': 'int', 'isList': false},
         ],
         'returnType': {
-          'returnType': 'scalar',
+          'type': 'scalar',
           'fields': [
             {'name': 'result', 'type': 'String', 'isList': false},
           ],
@@ -29,7 +29,7 @@ void main() {
       expect(config.functionName, 'test_function');
       expect(config.args, hasLength(1));
       expect(config.args.first.name, 'arg1');
-      expect(config.returnType.returnType, RpcReturnType.scalar);
+      expect(config.returnType.type, RpcReturnType.scalar);
     });
 
     test('toJson returns correct json map', () {
@@ -37,7 +37,7 @@ void main() {
         functionName: 'test_function',
         args: [RpcArgumentConfig(name: 'arg1', type: 'int', isList: false)],
         returnType: RpcReturnTypeConfig(
-          returnType: RpcReturnType.scalar,
+          type: RpcReturnType.scalar,
           fields: [
             RpcArgumentConfig(name: 'result', type: 'String', isList: false),
           ],
@@ -87,7 +87,7 @@ void main() {
           functionName: 'get_users',
           args: [],
           returnType: RpcReturnTypeConfig(
-            returnType: RpcReturnType.table,
+            type: RpcReturnType.table,
             fields: [],
           ),
         );
@@ -99,7 +99,7 @@ void main() {
           functionName: 'get_users',
           args: [],
           returnType: RpcReturnTypeConfig(
-            returnType: RpcReturnType.setOf,
+            type: RpcReturnType.setOf,
             fields: [
               RpcArgumentConfig(name: 'user', type: 'User', isList: false),
             ],
@@ -113,7 +113,7 @@ void main() {
           functionName: 'get_dynamics',
           args: [],
           returnType: RpcReturnTypeConfig(
-            returnType: RpcReturnType.setOf,
+            type: RpcReturnType.setOf,
             fields: [],
           ),
         );
@@ -125,7 +125,7 @@ void main() {
           functionName: 'get_count',
           args: [],
           returnType: RpcReturnTypeConfig(
-            returnType: RpcReturnType.scalar,
+            type: RpcReturnType.scalar,
             fields: [
               RpcArgumentConfig(name: 'count', type: 'int', isList: false),
             ],
@@ -141,7 +141,7 @@ void main() {
           functionName: 'get_count',
           args: [],
           returnType: RpcReturnTypeConfig(
-            returnType: RpcReturnType.scalar,
+            type: RpcReturnType.scalar,
             fields: [
               RpcArgumentConfig(name: 'count', type: 'int', isList: false),
             ],
@@ -155,7 +155,7 @@ void main() {
           functionName: 'get_users',
           args: [],
           returnType: RpcReturnTypeConfig(
-            returnType: RpcReturnType.table,
+            type: RpcReturnType.table,
             fields: [],
           ),
         );
@@ -166,7 +166,7 @@ void main() {
     test('supports value equality using == and hashCode', () {
       const arg = RpcArgumentConfig(name: 'count', type: 'int', isList: false);
       const returnType = RpcReturnTypeConfig(
-        returnType: RpcReturnType.scalar,
+        type: RpcReturnType.scalar,
         fields: [RpcArgumentConfig(name: 'count', type: 'int', isList: false)],
       );
       const config1 = RpcConfig(
@@ -194,7 +194,7 @@ void main() {
     test('copyWith creates a new instance with updated values', () {
       const arg = RpcArgumentConfig(name: 'count', type: 'int', isList: false);
       const returnType = RpcReturnTypeConfig(
-        returnType: RpcReturnType.scalar,
+        type: RpcReturnType.scalar,
         fields: [RpcArgumentConfig(name: 'count', type: 'int', isList: false)],
       );
       const config = RpcConfig(
@@ -215,7 +215,7 @@ void main() {
         functionName: 'test',
         args: [arg],
         returnType: RpcReturnTypeConfig(
-          returnType: RpcReturnType.scalar,
+          type: RpcReturnType.scalar,
           fields: [
             RpcArgumentConfig(name: 'count', type: 'int', isList: false),
           ],
@@ -232,7 +232,7 @@ void main() {
       expect(str, contains('isList: false'));
       expect(str, contains('defaultValue: null'));
       expect(str, contains('returnType: RpcReturnTypeConfig'));
-      expect(str, contains('returnType: scalar'));
+      expect(str, contains('type: scalar'));
       expect(str, contains('fields:'));
       expect(str, contains('RpcArgumentConfig'));
       expect(str, contains('name: count'));

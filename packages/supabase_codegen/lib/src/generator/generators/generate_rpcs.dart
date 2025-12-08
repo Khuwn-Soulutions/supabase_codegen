@@ -87,5 +87,5 @@ RpcReturnTypeConfig parseReturnType(
       fields.add(RpcArgumentConfig.fromNameAndRawType(rawType: content));
   }
 
-  return RpcReturnTypeConfig(returnType: returnType, fields: fields);
+  return RpcReturnTypeConfig(type: returnType, fields: fields);
 }
