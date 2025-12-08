@@ -32,10 +32,11 @@ class RpcArgumentConfig {
   }) {
     const arraySuffix = '[]';
     final isList = rawType.endsWith(arraySuffix);
-    final type = getBaseDartType(rawType.replaceAll(arraySuffix, ''));
+    final baseType = rawType.replaceAll(arraySuffix, '');
+    final type = getBaseDartType(baseType);
 
     return RpcArgumentConfig(
-      name: name ?? rawType,
+      name: name ?? baseType,
       type: type,
       isList: isList,
       defaultValue: defaultValue,
