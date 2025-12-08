@@ -27,7 +27,7 @@ class RpcArgumentConfig {
   /// Create [RpcArgumentConfig] from [name] and [rawType]
   factory RpcArgumentConfig.fromNameAndRawType({
     required String rawType,
-    String name = '',
+    String? name,
     String? defaultValue,
   }) {
     const arraySuffix = '[]';
@@ -35,7 +35,7 @@ class RpcArgumentConfig {
     final type = getBaseDartType(rawType.replaceAll(arraySuffix, ''));
 
     return RpcArgumentConfig(
-      name: name,
+      name: name ?? rawType,
       type: type,
       isList: isList,
       defaultValue: defaultValue,
