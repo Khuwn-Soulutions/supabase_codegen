@@ -26,8 +26,8 @@ class RpcArgumentConfig {
 
   /// Create [RpcArgumentConfig] from [name] and [rawType]
   factory RpcArgumentConfig.fromNameAndRawType({
-    required String name,
     required String rawType,
+    String name = '',
     String? defaultValue,
   }) {
     const arraySuffix = '[]';

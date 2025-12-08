@@ -62,6 +62,7 @@ RpcReturnTypeConfig parseReturnType(
   switch (returnType) {
     case RpcReturnType.table:
       fields.addAll(parseArguments(content));
+
     case RpcReturnType.setOf:
       final table = tables.firstWhereOrNull((table) => table.name == content);
       // No table found, set to dynamic
@@ -81,10 +82,9 @@ RpcReturnTypeConfig parseReturnType(
           ),
         );
       }
+
     case RpcReturnType.scalar:
-      fields.add(
-        RpcArgumentConfig.fromNameAndRawType(name: content, rawType: content),
-      );
+      fields.add(RpcArgumentConfig.fromNameAndRawType(rawType: content));
   }
 
   return RpcReturnTypeConfig(returnType: returnType, fields: fields);
