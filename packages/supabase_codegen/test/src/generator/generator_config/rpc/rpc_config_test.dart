@@ -161,6 +161,20 @@ void main() {
         );
         expect(config.returnsTypeName, 'List<GetUsersResponse>');
       });
+
+      test('returns correct string for SETOF return type', () {
+        const config = RpcConfig(
+          functionName: 'get_users',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.setOf,
+            fields: [
+              RpcArgumentConfig(name: 'user', type: 'User', isList: true),
+            ],
+          ),
+        );
+        expect(config.returnsTypeName, 'List<User>');
+      });
     });
 
     test('supports value equality using == and hashCode', () {
