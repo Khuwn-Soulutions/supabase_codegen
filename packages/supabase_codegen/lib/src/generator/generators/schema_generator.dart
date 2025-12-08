@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
@@ -90,7 +91,11 @@ class SupabaseSchemaGenerator {
         final file = File(filePath);
         if (file.existsSync()) {
           file.deleteSync();
-          logger.err('❌ Deleted ${file.path}');
+          final fileLink = link(
+            message: file.path,
+            uri: Uri.directory(path.join(Directory.current.path, file.path)),
+          );
+          logger.info('❌ Deleted: $fileLink');
         }
       }
     }
