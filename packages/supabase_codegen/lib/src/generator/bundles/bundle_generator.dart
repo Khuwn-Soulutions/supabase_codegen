@@ -16,16 +16,19 @@ class BundleGenerator {
   /// Generate files to the [outputDir]
   Future<void> generateFiles(
     Directory outputDir,
-    GeneratorConfig upserts,
-    GeneratorConfig config,
+    GeneratorConfig? upserts,
+    GeneratorConfig? barrelConfig,
   ) async {
     final progress = logger.progress('Generating Tables and Enums...');
-    await generateTablesAndEnums(outputDir, upserts);
-    await generateRpcFunctions(outputDir, upserts);
+    if (upserts != null) {
+      await generateTablesAndEnums(outputDir, upserts);
+      await generateRpcFunctions(outputDir, upserts);
+    }
+
     // Generate barrel files
-    if (config.barrelFiles) {
+    if (barrelConfig?.barrelFiles ?? false) {
       progress.update('Generating barrel files');
-      await generateBarrelFiles(outputDir, config);
+      await generateBarrelFiles(outputDir, barrelConfig!);
     }
     progress.complete('Types generated successfully');
 
