@@ -1,7 +1,4 @@
-import 'package:supabase_codegen/src/generator/generator_config/rpc/rpc_argument_config.dart';
-import 'package:supabase_codegen/src/generator/generator_config/rpc/rpc_config.dart';
-import 'package:supabase_codegen/src/generator/generator_config/rpc/rpc_return_config.dart';
-import 'package:supabase_codegen/src/generator/generator_config/rpc/rpc_return_type.dart';
+import 'package:supabase_codegen/src/generator/generator_config/rpc/rpc.dart';
 import 'package:test/test.dart';
 
 void main() {
