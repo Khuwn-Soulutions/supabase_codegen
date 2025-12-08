@@ -60,9 +60,12 @@ class RpcConfig {
   };
 
   /// Type name returned
-  String get returnsTypeName => returnType.type == RpcReturnType.scalar
-      ? returnType.fields.firstOrNull?.paramType ?? ''
-      : 'List<$returnsClassName>';
+  String get returnsTypeName => switch (returnType.type) {
+    RpcReturnType.table => 'List<$returnsClassName>',
+    RpcReturnType.setOf =>
+      'List<${returnType.fields.firstOrNull?.type ?? 'dynamic'}>',
+    RpcReturnType.scalar => returnType.fields.firstOrNull?.paramType ?? '',
+  };
 
   /// Copy [RpcConfig] with new values
   RpcConfig copyWith({
