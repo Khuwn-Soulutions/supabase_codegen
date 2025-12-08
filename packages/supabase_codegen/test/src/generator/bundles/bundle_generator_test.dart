@@ -27,15 +27,20 @@ void main() {
         values: ['active', 'inactive'],
       ),
     ];
+    final rpcs = [
+      RpcConfig.empty().copyWith(functionName: 'get_rpc_functions', args: []),
+    ];
     final baseConfig = GeneratorConfig.empty().copyWith(
       tables: tables,
       enums: enums,
+      rpcs: rpcs,
     );
     late File databaseFile;
     late Directory enumsDir;
     late Directory tablesDir;
     late File tablesBarrelFile;
     late File enumsBarrelFile;
+    late File rpcsBarrelFile;
 
     setUp(() {
       mockLogger = MockLogger();
@@ -54,6 +59,7 @@ void main() {
       tablesDir = Directory(p.join(tempDir.path, 'tables'));
       tablesBarrelFile = File(p.join(tempDir.path, 'tables/_tables.dart'));
       enumsBarrelFile = File(p.join(tempDir.path, 'enums/_enums.dart'));
+      rpcsBarrelFile = File(p.join(tempDir.path, 'rpcs/_rpcs.dart'));
     });
 
     tearDown(() {
@@ -61,7 +67,7 @@ void main() {
       BundleGenerator.generatedFiles.clear();
     });
 
-    test('generateFiles creates tables, enums, and barrel files '
+    test('generateFiles creates tables, enums, rpcs, and barrel files '
         'when barrelFiles is true', () async {
       // Arrange
       final config = baseConfig.copyWith(barrelFiles: true);
@@ -96,6 +102,11 @@ void main() {
         isTrue,
         reason: 'enums barrel file should exist',
       );
+      expect(
+        rpcsBarrelFile.existsSync(),
+        isTrue,
+        reason: 'rpcs barrel file should exist',
+      );
 
       verify(
         () => mockLogger.progress('Generating Tables and Enums...'),
@@ -107,7 +118,7 @@ void main() {
     });
 
     group('when barrelFiles is false', () {
-      test('creates only tables and enums', () async {
+      test('creates only rpcs, tables and enums', () async {
         // Arrange
         final config = baseConfig.copyWith(barrelFiles: false);
         final upserts = config.copyWith();
@@ -121,6 +132,7 @@ void main() {
         expect(databaseFile.existsSync(), isFalse);
         expect(tablesBarrelFile.existsSync(), isFalse);
         expect(enumsBarrelFile.existsSync(), isFalse);
+        expect(rpcsBarrelFile.existsSync(), isFalse);
 
         verify(
           () => mockLogger.progress('Generating Tables and Enums...'),
@@ -131,9 +143,13 @@ void main() {
         ).called(1);
       });
 
-      test('creates only tables if no enums are provided', () async {
+      test('creates only tables if no enums or rpcs are provided', () async {
         // Arrange
-        final config = baseConfig.copyWith(enums: [], barrelFiles: false);
+        final config = baseConfig.copyWith(
+          enums: [],
+          rpcs: [],
+          barrelFiles: false,
+        );
         final upserts = config.copyWith();
 
         // Act
@@ -145,6 +161,7 @@ void main() {
         expect(databaseFile.existsSync(), isFalse);
         expect(tablesBarrelFile.existsSync(), isFalse);
         expect(enumsBarrelFile.existsSync(), isFalse);
+        expect(rpcsBarrelFile.existsSync(), isFalse);
 
         verify(
           () => mockLogger.progress('Generating Tables and Enums...'),
@@ -180,17 +197,16 @@ void main() {
       verify(() => mockLogger.detail('Running dart format')).called(1);
 
       // 3. Check that files were generated with the correct extension.
-      final totalFiles = tables.length + enums.length;
-      expect(BundleGenerator.generatedFiles.length, equals(totalFiles));
+      final totalFiles = tables.length + enums.length + rpcs.length;
+      final generatedFiles = BundleGenerator.generatedFiles;
+      expect(generatedFiles.length, equals(totalFiles));
       expect(
-        BundleGenerator.generatedFiles.every(
-          (file) => file.path.endsWith('.dart'),
-        ),
+        generatedFiles.every((file) => file.path.endsWith(dartFileType)),
         isTrue,
       );
       // 4. Check that files were logged as success.
       verify(
-        () => mockLogger.success(any(that: contains('.dart'))),
+        () => mockLogger.success(any(that: contains(dartFileType))),
       ).called(totalFiles);
     });
   });
