@@ -3,7 +3,10 @@ import 'package:test/test.dart';
 // Import the generated test helper file, it contains everything you need.
 import 'test_tools/serverpod_test_tools.dart';
 
-const skip = true;
+const skip = bool.fromEnvironment(
+  'SKIP_GREETING_INTEGRATION_TEST',
+  defaultValue: true,
+);
 
 void main() {
   if (skip) return;
