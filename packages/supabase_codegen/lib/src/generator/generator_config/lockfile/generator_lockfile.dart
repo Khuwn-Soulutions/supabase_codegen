@@ -123,7 +123,7 @@ class GeneratorLockfile {
   /// RPCs (Map of function name to [RpcConfig] hashCode)
   final Map<String, int> rpcs;
 
-  /// Get the current lockfile without the data (tables and enums)
+  /// Get the current lockfile without the data (tables, rpcs and enums)
   GeneratorLockfile withoutData() => copyWith(tables: {}, enums: {}, rpcs: {});
 
   @override
