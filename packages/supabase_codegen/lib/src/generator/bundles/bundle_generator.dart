@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:mason/mason.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template bundle_generator}
@@ -87,9 +89,14 @@ class BundleGenerator {
 
     cleanup.complete('Generated files cleaned up successfully');
 
-    for (final file in generatedFiles) {
+    for (final (index, file) in generatedFiles.indexed) {
       final filePath = _replaceMustache(file.path);
-      logger.success('✅ $filePath ${file.status.name}');
+      generatedFiles[index] = file.copyWith(path: filePath);
+      final fileLink = link(
+        message: filePath,
+        uri: Uri.directory(path.join(Directory.current.path, filePath)),
+      );
+      logger.success('✅ ${file.status.name.toCapitalCase()}: $fileLink');
     }
   }
 
