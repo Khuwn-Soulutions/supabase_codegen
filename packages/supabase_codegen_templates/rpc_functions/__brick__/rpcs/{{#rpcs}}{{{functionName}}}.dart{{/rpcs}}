@@ -1,9 +1,9 @@
 {{> header}}
 
 import 'package:supabase/supabase.dart';
-{{#rpcs.rpcReturnType.returnsSetOf}}import 'package:supabase_codegen/supabase_codegen.dart';{{/rpcs.rpcReturnType.returnsSetOf}}
+{{#rpcs.returnType.returnsSetOf}}import 'package:supabase_codegen/supabase_codegen.dart';{{/rpcs.returnType.returnsSetOf}}
 
-{{#rpcs.rpcReturnType.returnsTable}}{{> return_table }}{{/rpcs.rpcReturnType.returnsTable}}
+{{#rpcs.returnType.returnsTable}}{{> return_table }}{{/rpcs.returnType.returnsTable}}
 
 
 /// RPC extension for {{rpcs.functionName}} rpc
@@ -21,11 +21,11 @@ extension {{rpcs.className}}Rpc on SupabaseClient {
       },{{/rpcs.hasArgs}}
     );
 
-    {{#rpcs.rpcReturnType.returnsScalar}}
+    {{#rpcs.returnType.returnsScalar}}
     return response as {{{rpcs.returnsTypeName}}};
-    {{/rpcs.rpcReturnType.returnsScalar}}
-    {{^rpcs.rpcReturnType.returnsScalar}}
+    {{/rpcs.returnType.returnsScalar}}
+    {{^rpcs.returnType.returnsScalar}}
     return (response as List).map((e) => {{rpcs.returnsClassName}}.fromJson(e as Map<String, dynamic>)).toList();
-    {{/rpcs.rpcReturnType.returnsScalar}}
+    {{/rpcs.returnType.returnsScalar}}
   }
 }
