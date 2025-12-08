@@ -56,7 +56,8 @@ class RpcConfig {
   /// Class name returned
   String get returnsClassName => switch (returnType.returnType) {
     RpcReturnType.table => '${className}Response',
-    RpcReturnType.setOf => 'List<${returnType.fields.first.type}>',
+    RpcReturnType.setOf =>
+      'List<${returnType.fields.firstOrNull?.type ?? 'dynamic'}>',
     RpcReturnType.scalar => returnType.fields.firstOrNull?.paramType ?? '',
   };
 
