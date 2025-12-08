@@ -1,4 +1,4 @@
-import 'package:supabase_codegen/supabase_codegen_generator.dart';
+import 'package:supabase_codegen/src/generator/generator.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -136,6 +136,24 @@ void main() {
             type: RpcReturnType.setOf,
             fields: [
               RpcArgumentConfig(name: 'unknown', type: 'dynamic', isList: true),
+            ],
+          ),
+        ),
+        (
+          returnType: 'integer[]',
+          expected: const RpcReturnTypeConfig(
+            type: RpcReturnType.scalar,
+            fields: [
+              RpcArgumentConfig(name: 'integer', type: 'int', isList: true),
+            ],
+          ),
+        ),
+        (
+          returnType: 'text[]',
+          expected: const RpcReturnTypeConfig(
+            type: RpcReturnType.scalar,
+            fields: [
+              RpcArgumentConfig(name: 'text', type: 'String', isList: true),
             ],
           ),
         ),
