@@ -1,4 +1,4 @@
-/// Remote procedure call return tyoe
+/// Remote procedure call return type
 enum RpcReturnType {
   /// Table return type
   table(pattern: r'TABLE\((.*)\)'),
