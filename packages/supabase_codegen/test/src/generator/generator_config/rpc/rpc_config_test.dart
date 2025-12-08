@@ -99,14 +99,28 @@ void main() {
 
       test('returns correct string for SETOF return type', () {
         const config = RpcConfig(
-          functionName: 'get_ids',
+          functionName: 'get_users',
           args: [],
           returnType: RpcReturnTypeConfig(
             returnType: RpcReturnType.setOf,
-            fields: [RpcArgumentConfig(name: 'id', type: 'int', isList: false)],
+            fields: [
+              RpcArgumentConfig(name: 'user', type: 'User', isList: false),
+            ],
           ),
         );
-        expect(config.returnsClassName, 'List<int>');
+        expect(config.returnsClassName, 'List<User>');
+      });
+      test('returns correct string for SETOF return type '
+          'when the fields list is empty', () {
+        const config = RpcConfig(
+          functionName: 'get_dynamics',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            returnType: RpcReturnType.setOf,
+            fields: [],
+          ),
+        );
+        expect(config.returnsClassName, 'List<dynamic>');
       });
 
       test('returns correct string for SCALAR return type', () {
