@@ -48,5 +48,5 @@ final testRpcJson = {
   'schema_name': 'public',
   'function_name': 'test_function',
   'arguments': 'arg1 int, arg2 text',
-  'return_type': 'String',
+  'return_type': 'text',
 };
