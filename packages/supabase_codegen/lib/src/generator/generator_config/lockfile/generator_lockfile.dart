@@ -128,7 +128,6 @@ class GeneratorLockfile {
 
   @override
   int get hashCode =>
-      date.hashCode ^
       package.hashCode ^
       version.hashCode ^
       forFlutter.hashCode ^
