@@ -22,6 +22,35 @@ final configJson = {
       'args': <Map<String, dynamic>>[],
       'returnType': {'type': 'scalar', 'fields': <Map<String, dynamic>>[]},
     },
+    {
+      'functionName': 'rpc_with_args',
+      'args': [
+        {'name': 'param1', 'type': 'text', 'isList': false},
+        {'name': 'param2', 'type': 'integer', 'isList': true},
+      ],
+      'returnType': {'type': 'scalar', 'fields': <Map<String, dynamic>>[]},
+    },
+    {
+      'functionName': 'rpc_array_return',
+      'args': <Map<String, dynamic>>[],
+      'returnType': {
+        'type': 'scalar',
+        'isList': true,
+        'fields': <Map<String, dynamic>>[],
+      },
+    },
+    {
+      'functionName': 'rpc_table_return',
+      'args': <Map<String, dynamic>>[],
+      'returnType': {
+        'type': 'table',
+        'fields': [
+          {'name': 'col1', 'type': 'text', 'isList': false},
+          {'name': 'col2', 'type': 'integer', 'isList': false},
+        ],
+        'isList': true,
+      },
+    },
   ],
 };
 
@@ -34,5 +63,10 @@ final lockfileJson = {
   'tag': 'test_tag',
   'tables': {'my_table': 1328570872},
   'enums': {'my_enum': 2619322029},
-  'rpcs': {'my_rpc': 2649842866},
+  'rpcs': {
+    'my_rpc': 2649842866,
+    'rpc_with_args': 769154930,
+    'rpc_array_return': 2817707040,
+    'rpc_table_return': 2081508374,
+  },
 };

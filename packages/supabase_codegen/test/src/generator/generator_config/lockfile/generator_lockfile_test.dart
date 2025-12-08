@@ -175,7 +175,7 @@ rpcs:
         final config = GeneratorConfig.fromJson(configJson);
         final fromConfig = GeneratorLockfile.fromConfig(config);
         final fromJson = GeneratorLockfile.fromJson(lockfileJson);
-        expect(fromConfig == fromJson, isTrue);
+        expect(fromConfig, equals(fromJson));
       });
     });
 
