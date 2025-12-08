@@ -213,9 +213,11 @@ void main() {
       expect(
         config.toString(),
         'RpcConfig(functionName: test, args: '
-        '[RpcArgumentConfig(name: count, type: int, isList: false)], '
+        '[RpcArgumentConfig(name: count, type: int, isList: false, '
+        'defaultValue: null)], '
         'returnType: RpcReturnTypeConfig(returnType: scalar, fields: '
-        '[RpcArgumentConfig(name: count, type: int, isList: false)]))',
+        '[RpcArgumentConfig(name: count, type: int, isList: false, '
+        'defaultValue: null)]))',
       );
     });
   });

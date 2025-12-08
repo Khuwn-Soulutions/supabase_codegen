@@ -196,7 +196,7 @@ void main() {
 
         // Field checks
         expect(config.field.defaultValue, DartType.nullString);
-        expect(config.field.question, '?');
+        expect(config.field.question, '');
       });
 
       test('serial int field', () {

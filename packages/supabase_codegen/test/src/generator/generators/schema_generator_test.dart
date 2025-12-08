@@ -177,7 +177,7 @@ void main() {
           () => mockBundleGenerator.generateFiles(
             any(that: isA<Directory>()),
             upserts,
-            any(that: isA<GeneratorConfig>()),
+            any(that: isA<GeneratorConfig?>()),
           ),
         ).called(1);
         verify(
@@ -214,9 +214,9 @@ void main() {
           final fileToDelete = File(path.join(tempDir.path, deletePath));
           expect(fileToDelete.existsSync(), isFalse);
         }
-        verifyNever(
+        verify(
           () => mockBundleGenerator.generateFiles(any(), any(), any()),
-        );
+        ).called(1);
         verify(
           () => mockLockfileManager.writeLockfile(
             lockfile: any(named: 'lockfile'),
