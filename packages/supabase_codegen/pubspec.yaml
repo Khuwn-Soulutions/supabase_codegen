@@ -37,6 +37,3 @@ executables:
   generate_types:
   add_codegen_functions:
   init:
-
-supabase_codegen:
-  output: example/generated

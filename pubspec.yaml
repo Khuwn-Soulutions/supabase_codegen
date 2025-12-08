@@ -20,7 +20,7 @@ melos:
     generate_types:core:
       run: |
         cd packages/supabase_codegen && \
-        dart run --define=INCLUDE_INTERNAL_RPCS=true bin/generate_types.dart
+        dart run --define=INCLUDE_INTERNAL_RPCS=true bin/generate_types.dart --output=example/generated
       description: Generate types for the codegen package.
       packageFilters:
         scope:
