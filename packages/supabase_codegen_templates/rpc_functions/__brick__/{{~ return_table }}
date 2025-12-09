@@ -10,7 +10,7 @@ class {{rpcs.returnsClassName}} {
 
   /// Create [{{rpcs.returnsClassName}}] from [json]
   factory {{rpcs.returnsClassName}}.fromJson(Map<String, dynamic> json) => {{rpcs.returnsClassName}}(
-    {{#rpcs.returnType.fields}}{{parameterName}}: json['{{name}}'] as {{paramType}},
+    {{#rpcs.returnType.fields}}{{parameterName}}: json['{{name}}'] as {{paramType}}? ?? {{{defaultValue}}},
     {{/rpcs.returnType.fields}}
   );
 
