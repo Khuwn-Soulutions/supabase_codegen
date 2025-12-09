@@ -22,14 +22,14 @@ class GetSchemaInfoResponse {
   /// Create [GetSchemaInfoResponse] from [json]
   factory GetSchemaInfoResponse.fromJson(Map<String, dynamic> json) =>
       GetSchemaInfoResponse(
-        tableName: json['table_name'] as String,
-        columnName: json['column_name'] as String,
-        dataType: json['data_type'] as String,
-        udtName: json['udt_name'] as String,
-        isNullable: json['is_nullable'] as String,
-        columnDefault: json['column_default'] as String,
-        isArray: json['is_array'] as bool,
-        elementType: json['element_type'] as String,
+        tableName: json['table_name'] as String? ?? '',
+        columnName: json['column_name'] as String? ?? '',
+        dataType: json['data_type'] as String? ?? '',
+        udtName: json['udt_name'] as String? ?? '',
+        isNullable: json['is_nullable'] as String? ?? '',
+        columnDefault: json['column_default'] as String? ?? '',
+        isArray: json['is_array'] as bool? ?? false,
+        elementType: json['element_type'] as String? ?? '',
       );
 
   /// Table Name
@@ -61,10 +61,8 @@ class GetSchemaInfoResponse {
 extension GetSchemaInfoRpc on SupabaseClient {
   /// Get Schema Info
   Future<List<GetSchemaInfoResponse>> getSchemaInfo() async {
-    final response = await rpc<dynamic>('get_schema_info');
+    final response = await rpc<List<Map<String, dynamic>>>('get_schema_info');
 
-    return (response as List)
-        .map((e) => GetSchemaInfoResponse.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return response.map(GetSchemaInfoResponse.fromJson).toList();
   }
 }

@@ -13,8 +13,8 @@ class GetEnumTypesResponse {
   /// Create [GetEnumTypesResponse] from [json]
   factory GetEnumTypesResponse.fromJson(Map<String, dynamic> json) =>
       GetEnumTypesResponse(
-        enumName: json['enum_name'] as String,
-        enumValue: json['enum_value'] as String,
+        enumName: json['enum_name'] as String? ?? '',
+        enumValue: json['enum_value'] as String? ?? '',
       );
 
   /// Enum Name
@@ -28,10 +28,8 @@ class GetEnumTypesResponse {
 extension GetEnumTypesRpc on SupabaseClient {
   /// Get Enum Types
   Future<List<GetEnumTypesResponse>> getEnumTypes() async {
-    final response = await rpc<dynamic>('get_enum_types');
+    final response = await rpc<List<Map<String, dynamic>>>('get_enum_types');
 
-    return (response as List)
-        .map((e) => GetEnumTypesResponse.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return response.map(GetEnumTypesResponse.fromJson).toList();
   }
 }

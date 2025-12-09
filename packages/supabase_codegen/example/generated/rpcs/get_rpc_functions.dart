@@ -18,10 +18,10 @@ class GetRpcFunctionsResponse {
   /// Create [GetRpcFunctionsResponse] from [json]
   factory GetRpcFunctionsResponse.fromJson(Map<String, dynamic> json) =>
       GetRpcFunctionsResponse(
-        schemaName: json['schema_name'] as String,
-        functionName: json['function_name'] as String,
-        arguments: json['arguments'] as String,
-        returnType: json['return_type'] as String,
+        schemaName: json['schema_name'] as String? ?? '',
+        functionName: json['function_name'] as String? ?? '',
+        arguments: json['arguments'] as String? ?? '',
+        returnType: json['return_type'] as String? ?? '',
       );
 
   /// Schema Name
@@ -43,15 +43,13 @@ extension GetRpcFunctionsRpc on SupabaseClient {
   Future<List<GetRpcFunctionsResponse>> getRpcFunctions({
     bool? includeInternals,
   }) async {
-    final response = await rpc<dynamic>(
+    final response = await rpc<List<Map<String, dynamic>>>(
       'get_rpc_functions',
       params: {
         if (includeInternals != null) 'include_internals': includeInternals,
       },
     );
 
-    return (response as List)
-        .map((e) => GetRpcFunctionsResponse.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return response.map(GetRpcFunctionsResponse.fromJson).toList();
   }
 }
