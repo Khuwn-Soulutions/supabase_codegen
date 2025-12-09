@@ -1,7 +1,9 @@
 {{> header}}
 
 import 'package:supabase/supabase.dart';
-{{#rpcs.returnType.returnsSetOf}}import 'package:supabase_codegen/supabase_codegen.dart';{{/rpcs.returnType.returnsSetOf}}
+{{#rpcs.returnType.returnsSetOf}}// Relative import of table
+// ignore_for_file: relative_imports
+import '../tables/{{rpcs.returnsBaseType.snakeCase()}}.dart';{{/rpcs.returnType.returnsSetOf}}
 
 {{#rpcs.returnType.returnsTable}}{{> return_table }}{{/rpcs.returnType.returnsTable}}
 
@@ -12,20 +14,16 @@ extension {{rpcs.className}}Rpc on SupabaseClient {
   Future<{{{rpcs.returnsTypeName}}}> {{rpcs.methodName}}({{#rpcs.hasArgs}} { {{/rpcs.hasArgs}}
     {{#rpcs.args}}{{^hasDefault}}required {{/hasDefault}}{{> argument }},
     {{/rpcs.args}}
-  {{#rpcs.hasArgs}} } {{/rpcs.hasArgs}}) async {
-    final response = await rpc<dynamic>(
-      '{{rpcs.functionName}}',
-      {{#rpcs.hasArgs}}params: {
-        {{#rpcs.args}}{{#hasDefault}}if({{parameterName}} != null) {{/hasDefault}}'{{name}}': {{parameterName}},
-        {{/rpcs.args}}
-      },{{/rpcs.hasArgs}}
-    );
+  {{#rpcs.hasArgs}} } {{/rpcs.hasArgs}})
+    {{! Use arrow return for scalar return types }}
+    {{#rpcs.returnType.returnsScalar}} => rpc<{{{rpcs.returnsTypeName}}}>{{> rpc_function_body }}
+    {{/rpcs.returnType.returnsScalar}}
 
-    {{#rpcs.returnType.returnsScalar}}
-    return response as {{{rpcs.returnsTypeName}}};
-    {{/rpcs.returnType.returnsScalar}}
-    {{^rpcs.returnType.returnsScalar}}
-    return (response as List).map((e) => {{rpcs.returnsClassName}}.fromJson(e as Map<String, dynamic>)).toList();
-    {{/rpcs.returnType.returnsScalar}}
+    {{! Use async for set of return types }}
+    {{^rpcs.returnType.returnsScalar}} async {
+    final response = await rpc<List<Map<String, dynamic>>>{{> rpc_function_body }}
+    
+    return response.map({{rpcs.returnsClassName}}.fromJson).toList();
   }
+    {{/rpcs.returnType.returnsScalar}}
 }
