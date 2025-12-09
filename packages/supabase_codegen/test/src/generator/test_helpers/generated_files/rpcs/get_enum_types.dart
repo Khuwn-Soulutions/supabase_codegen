@@ -13,8 +13,8 @@ class GetEnumTypesResponse {
   /// Create [GetEnumTypesResponse] from [json]
   factory GetEnumTypesResponse.fromJson(Map<String, dynamic> json) =>
       GetEnumTypesResponse(
-        enumName: json['enum_name'] as String,
-        enumValue: json['enum_value'] as String,
+        enumName: json['enum_name'] as String? ?? '',
+        enumValue: json['enum_value'] as String? ?? '',
       );
 
   /// Enum Name
