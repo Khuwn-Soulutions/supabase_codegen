@@ -47,6 +47,6 @@ final testTableSchema = createTableSchema(testTable.name, testTable.columns);
 final testRpcJson = {
   'schema_name': 'public',
   'function_name': 'test_function',
-  'arguments': 'arg1 int, arg2 text',
+  'arguments': 'arg1 integer, arg2 text',
   'return_type': 'text',
 };
