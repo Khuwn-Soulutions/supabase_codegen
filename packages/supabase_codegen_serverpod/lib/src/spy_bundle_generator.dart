@@ -18,7 +18,8 @@ class SpyBundleGenerator extends BundleGenerator {
   Future<void> generateFiles(
     Directory outputDir,
     GeneratorConfig? upserts, [
-    GeneratorConfig? barrelConfig,
+    // Unused: Serverpod generates yaml files, not barrel files
+    GeneratorConfig? _,
   ]) async {
     final progress = logger.progress('Generating Spy Files...');
     if (upserts == null) return;
