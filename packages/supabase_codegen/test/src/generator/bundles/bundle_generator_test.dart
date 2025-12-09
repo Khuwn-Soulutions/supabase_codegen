@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:test/test.dart';
 
+import '../test_helpers/mock_data.dart';
+
 // Mocks
 class MockLogger extends Mock implements Logger {}
 
@@ -18,7 +20,59 @@ void main() {
     late MockProgress mockProgress;
     late Directory tempDir;
     final tables = [
-      TableConfig(name: 'users', columns: [ColumnConfig.empty()]),
+      TableConfig(
+        name: 'users',
+        columns: [
+          ColumnConfig.fromColumnData(
+            fieldName: 'id',
+            columnData: (
+              dartType: 'int',
+              isNullable: false,
+              hasDefault: false,
+              defaultValue: null,
+              columnName: 'id',
+              isArray: false,
+              isEnum: false,
+            ),
+          ),
+          ColumnConfig.fromColumnData(
+            fieldName: 'name',
+            columnData: (
+              dartType: 'String',
+              isNullable: true,
+              hasDefault: true,
+              defaultValue: 'some default',
+              columnName: 'name',
+              isArray: false,
+              isEnum: false,
+            ),
+          ),
+          ColumnConfig.fromColumnData(
+            fieldName: 'createdAt',
+            columnData: (
+              dartType: 'DateTime',
+              isNullable: false,
+              hasDefault: true,
+              defaultValue: 'now()',
+              columnName: 'created_at',
+              isArray: false,
+              isEnum: false,
+            ),
+          ),
+          ColumnConfig.fromColumnData(
+            fieldName: 'tags',
+            columnData: (
+              dartType: 'List<String>',
+              isNullable: true,
+              hasDefault: false,
+              defaultValue: null,
+              columnName: 'tags',
+              isArray: true,
+              isEnum: false,
+            ),
+          ),
+        ],
+      ),
     ];
     final enums = [
       const EnumConfig(
@@ -208,6 +262,84 @@ void main() {
       verify(
         () => mockLogger.success(any(that: contains(dartFileType))),
       ).called(totalFiles);
+    });
+
+    group('when files are generated', () {
+      late List<File> expectedFiles;
+
+      setUp(() async {
+        final rpcs = testRpcFunctionsData
+            .map(
+              (json) => RpcConfig(
+                functionName: json['function_name'] ?? '',
+                args: parseArguments(json['arguments'] ?? ''),
+                returnType: parseReturnType(
+                  json['return_type'] ?? '',
+                  tables: tables,
+                ),
+              ),
+            )
+            .toList();
+
+        // Arrange
+        final config = baseConfig.copyWith(
+          barrelFiles: true,
+          rpcs: rpcs,
+          package: defaultPackageName,
+        );
+        final upserts = config.copyWith();
+
+        expectedFiles = [
+          databaseFile,
+          enumsBarrelFile,
+          tablesBarrelFile,
+          rpcsBarrelFile,
+          for (final table in tables)
+            File(p.join(tablesDir.path, '${table.name}.dart')),
+          for (final enumConfig in enums)
+            File(p.join(enumsDir.path, '${enumConfig.fileName}.dart')),
+          for (final rpc in rpcs)
+            File(p.join(tempDir.path, rpcsFolder, '${rpc.functionName}.dart')),
+        ];
+
+        // Act
+        await bundleGenerator.generateFiles(tempDir, upserts, config);
+      });
+
+      test('generates expected file names', () async {
+        // Assert
+        for (final file in expectedFiles) {
+          expect(
+            file.existsSync(),
+            isTrue,
+            reason: '${file.path} should exist',
+          );
+        }
+      });
+
+      test('generates expected file contents', () async {
+        // Function to remove date line from file contents
+        String withoutDateLine(String contents) =>
+            contents.replaceAll(RegExp(r'\s*// Date:.*\n'), '');
+
+        // Assert
+        for (final file in expectedFiles) {
+          final relativePath = file.path.replaceFirst(
+            tempDir.path,
+            'test/src/generator/test_helpers/generated_files',
+          );
+          final expectedFile = File(relativePath);
+          expect(
+            expectedFile.existsSync(),
+            isTrue,
+            reason: '${expectedFile.path} should exist',
+          );
+          expect(
+            withoutDateLine(file.readAsStringSync()),
+            withoutDateLine(expectedFile.readAsStringSync()),
+          );
+        }
+      });
     });
   });
 }
