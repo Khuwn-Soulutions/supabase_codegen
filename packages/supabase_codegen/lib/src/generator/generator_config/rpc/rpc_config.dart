@@ -51,20 +51,26 @@ class RpcConfig {
   /// Return type config
   final RpcReturnTypeConfig returnType;
 
+  /// Base Type Returned
+  String get returnsBaseType => switch (returnType.type) {
+    RpcReturnType.table => '${className}Response',
+    RpcReturnType.setOf => returnType.fields.firstOrNull?.type ?? 'dynamic',
+    RpcReturnType.scalar => returnType.fields.firstOrNull?.paramType ?? '',
+  };
+
   /// Class name returned
   String get returnsClassName => switch (returnType.type) {
-    RpcReturnType.table => '${className}Response',
     RpcReturnType.setOf =>
-      'List<${returnType.fields.firstOrNull?.type ?? 'dynamic'}>',
-    RpcReturnType.scalar => returnType.fields.firstOrNull?.paramType ?? '',
+      returnType.fields.firstOrNull?.type != null
+          ? '${returnType.fields.firstOrNull!.type}Row'
+          : 'dynamic',
+    _ => returnsBaseType,
   };
 
   /// Type name returned
   String get returnsTypeName => switch (returnType.type) {
-    RpcReturnType.table => 'List<$returnsClassName>',
-    RpcReturnType.setOf =>
-      'List<${returnType.fields.firstOrNull?.type ?? 'dynamic'}>',
-    RpcReturnType.scalar => returnType.fields.firstOrNull?.paramType ?? '',
+    RpcReturnType.scalar => returnsBaseType,
+    _ => 'List<$returnsClassName>',
   };
 
   /// Copy [RpcConfig] with new values
@@ -88,6 +94,7 @@ class RpcConfig {
     'hasArgs': hasArgs,
     'args': args.map((x) => x.toJson()).toList(),
     'returnType': returnType.toJson(),
+    'returnsBaseType': returnsBaseType,
     'returnsClassName': returnsClassName,
     'returnsTypeName': returnsTypeName,
   };

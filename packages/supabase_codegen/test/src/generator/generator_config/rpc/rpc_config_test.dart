@@ -52,6 +52,7 @@ void main() {
       expect(json['hasArgs'], true);
       expect(json['args'], hasLength(1));
       expect(json['returnType'], isNotNull);
+      expect(json['returnsBaseType'], 'String');
       expect(json['returnsClassName'], 'String');
       expect(json['returnsTypeName'], 'String');
     });
@@ -79,6 +80,69 @@ void main() {
       });
     });
 
+    group('returnsBaseType', () {
+      test('returns correct string for TABLE return type', () {
+        const config = RpcConfig(
+          functionName: 'get_users',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.table,
+            fields: [],
+          ),
+        );
+        expect(config.returnsBaseType, 'GetUsersResponse');
+      });
+
+      test('returns correct string for SETOF return type', () {
+        const config = RpcConfig(
+          functionName: 'get_users',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.setOf,
+            fields: [RpcFieldConfig(name: 'user', type: 'User', isList: false)],
+          ),
+        );
+        expect(config.returnsBaseType, 'User');
+      });
+
+      test('returns correct string for SETOF return type '
+          'when the fields list is empty', () {
+        const config = RpcConfig(
+          functionName: 'get_dynamics',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.setOf,
+            fields: [],
+          ),
+        );
+        expect(config.returnsBaseType, 'dynamic');
+      });
+
+      test('returns correct string for SCALAR return type', () {
+        const config = RpcConfig(
+          functionName: 'get_count',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.scalar,
+            fields: [RpcFieldConfig(name: 'count', type: 'int', isList: false)],
+          ),
+        );
+        expect(config.returnsBaseType, 'int');
+      });
+
+      test('returns correct string for SCALAR array return type', () {
+        const config = RpcConfig(
+          functionName: 'get_counts',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.scalar,
+            fields: [RpcFieldConfig(name: 'count', type: 'int', isList: true)],
+          ),
+        );
+        expect(config.returnsBaseType, 'List<int>');
+      });
+    });
+
     group('returnsClassName', () {
       test('returns correct string for TABLE return type', () {
         const config = RpcConfig(
@@ -101,7 +165,7 @@ void main() {
             fields: [RpcFieldConfig(name: 'user', type: 'User', isList: false)],
           ),
         );
-        expect(config.returnsClassName, 'List<User>');
+        expect(config.returnsClassName, 'UserRow');
       });
       test('returns correct string for SETOF return type '
           'when the fields list is empty', () {
@@ -113,7 +177,7 @@ void main() {
             fields: [],
           ),
         );
-        expect(config.returnsClassName, 'List<dynamic>');
+        expect(config.returnsClassName, 'dynamic');
       });
 
       test('returns correct string for SCALAR return type', () {
@@ -126,6 +190,18 @@ void main() {
           ),
         );
         expect(config.returnsClassName, 'int');
+      });
+
+      test('returns correct string for SCALAR array return type', () {
+        const config = RpcConfig(
+          functionName: 'get_counts',
+          args: [],
+          returnType: RpcReturnTypeConfig(
+            type: RpcReturnType.scalar,
+            fields: [RpcFieldConfig(name: 'count', type: 'int', isList: true)],
+          ),
+        );
+        expect(config.returnsClassName, 'List<int>');
       });
     });
 
@@ -163,7 +239,7 @@ void main() {
             fields: [RpcFieldConfig(name: 'user', type: 'User', isList: true)],
           ),
         );
-        expect(config.returnsTypeName, 'List<User>');
+        expect(config.returnsTypeName, 'List<UserRow>');
       });
     });
 
