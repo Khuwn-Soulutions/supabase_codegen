@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:mason/mason.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template bundle_generator}
@@ -16,20 +18,24 @@ class BundleGenerator {
   /// Generate files to the [outputDir]
   Future<void> generateFiles(
     Directory outputDir,
-    GeneratorConfig upserts,
-    GeneratorConfig config,
+    GeneratorConfig? upserts,
+    GeneratorConfig? barrelConfig,
   ) async {
     final progress = logger.progress('Generating Tables and Enums...');
-    await generateTablesAndEnums(outputDir, upserts);
+    if (upserts != null) {
+      await generateTablesAndEnums(outputDir, upserts);
+      await generateRpcFunctions(outputDir, upserts);
+    }
+
     // Generate barrel files
-    if (config.barrelFiles) {
+    if (barrelConfig?.barrelFiles ?? false) {
       progress.update('Generating barrel files');
-      await generateBarrelFiles(outputDir, config);
+      await generateBarrelFiles(outputDir, barrelConfig!);
     }
     progress.complete('Types generated successfully');
 
     // Run post generation clean up process
-    await _cleanup(outputDir);
+    await cleanup(outputDir);
   }
 
   /// Generate tables and enums into the [outputDir] with the provided [config]
@@ -40,6 +46,16 @@ class BundleGenerator {
     outputDir: outputDir,
     config: config,
     bundle: tablesAndEnumsBundle,
+  );
+
+  /// Generate RPC functions into the [outputDir] with the provided [config]
+  Future<void> generateRpcFunctions(
+    Directory outputDir,
+    GeneratorConfig config,
+  ) => _generateBundle(
+    outputDir: outputDir,
+    config: config,
+    bundle: rpcFunctionsBundle,
   );
 
   /// Generate barrel files into the [outputDir] with the provided [config]
@@ -65,7 +81,7 @@ class BundleGenerator {
   }
 
   /// Run post generation clean up process
-  Future<void> _cleanup(Directory outputDir) async {
+  Future<void> cleanup(Directory outputDir) async {
     final cleanup = logger.progress('Cleaning up generated files');
 
     _ensureFileExtension(outputDir);
@@ -73,9 +89,14 @@ class BundleGenerator {
 
     cleanup.complete('Generated files cleaned up successfully');
 
-    for (final file in generatedFiles) {
+    for (final (index, file) in generatedFiles.indexed) {
       final filePath = _replaceMustache(file.path);
-      logger.success('✅ $filePath ${file.status.name}');
+      generatedFiles[index] = file.copyWith(path: filePath);
+      final fileLink = link(
+        message: filePath,
+        uri: Uri.directory(path.join(Directory.current.path, filePath)),
+      );
+      logger.success('✅ ${file.status.name.toCapitalCase()}: $fileLink');
     }
   }
 

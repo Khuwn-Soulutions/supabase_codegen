@@ -9,6 +9,7 @@ abstract class GeneratorConfigBase {
     required this.forFlutter,
     required this.tag,
     required this.barrelFiles,
+    this.fileType = dartFileType,
   });
 
   /// Package name
@@ -25,4 +26,10 @@ abstract class GeneratorConfigBase {
 
   /// Tag
   final String tag;
+
+  /// File type
+  final String fileType;
 }
+
+/// Dart file type
+const dartFileType = 'dart';

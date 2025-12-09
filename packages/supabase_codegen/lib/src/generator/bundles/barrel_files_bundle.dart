@@ -8,17 +8,23 @@ final barrelFilesBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "database.dart.mustache",
       "data":
-          "e3s+IGhlYWRlcn19CmV4cG9ydCAnZW51bXMvX2VudW1zLmRhcnQnOwpleHBvcnQgJ3RhYmxlcy9fdGFibGVzLmRhcnQnOwoKe3s+IGZvb3Rlcn19",
+          "e3s+IGhlYWRlcn19CmV4cG9ydCAnZW51bXMvX2VudW1zLmRhcnQnOwpleHBvcnQgJ3JwY3MvX3JwY3MuZGFydCc7CmV4cG9ydCAndGFibGVzL190YWJsZXMuZGFydCc7Cgp7ez4gZm9vdGVyfX0=",
       "type": "text",
     },
     {
-      "path": "enums/_enums.dart.mustache",
+      "path": "{{#hasEnums}}enums{{/hasEnums}}/_enums.dart.mustache",
       "data":
           "e3s+IGhlYWRlcn19Cgp7eyNlbnVtc319ZXhwb3J0ICd7e2VudW1OYW1lLnNuYWtlQ2FzZSgpfX0uZGFydCc7Cnt7L2VudW1zfX0KCnt7PiBmb290ZXIgfX0=",
       "type": "text",
     },
     {
-      "path": "tables/_tables.dart.mustache",
+      "path": "{{#hasRpcs}}rpcs{{/hasRpcs}}/_rpcs.dart.mustache",
+      "data":
+          "e3s+IGhlYWRlciB9fQoKe3sjcnBjc319ZXhwb3J0ICd7e2Z1bmN0aW9uTmFtZX19LmRhcnQnOwp7ey9ycGNzfX0KCnt7PiBmb290ZXIgfX0=",
+      "type": "text",
+    },
+    {
+      "path": "{{#hasTables}}tables{{/hasTables}}/_tables.dart.mustache",
       "data":
           "e3s+IGhlYWRlciB9fQoKe3sjdGFibGVzfX1leHBvcnQgJ3t7bmFtZX19LmRhcnQnOwp7ey90YWJsZXN9fQoKe3s+IGZvb3RlciB9fQo=",
       "type": "text",
@@ -40,7 +46,7 @@ final barrelFilesBundle = MasonBundle.fromJson(<String, dynamic>{
   "name": "barrel_files",
   "description": "Brick to generate barrel files for Supabase Codegen",
   "version": "0.1.0+1",
-  "environment": {"mason": "^0.1.1"},
+  "environment": {"mason": "^0.1.2"},
   "readme": {
     "path": "README.md",
     "data":

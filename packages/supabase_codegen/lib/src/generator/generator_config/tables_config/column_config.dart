@@ -84,8 +84,8 @@ class ColumnConfig {
       isEnum: isEnum,
     );
     final isOptionalField =
-        (dartType.isNotDynamic && isNullable && !hasDefault) ||
-        (defaultVal == DartType.nullString);
+        dartType.isNotDynamic &&
+        ((isNullable && !hasDefault) || (defaultVal == DartType.nullString));
     final field = ColumnFieldConfig(
       name: '${fieldName}Field',
       defaultValue: hasDefault ? defaultVal : '',

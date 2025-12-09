@@ -9,7 +9,7 @@ const templatesFolder = 'packages/supabase_codegen_templates';
 const outputFoler = 'packages/supabase_codegen/lib/src/generator/bundles';
 
 /// Bricks
-const bricks = ['tables_and_enums', 'barrel_files'];
+const bricks = ['tables_and_enums', 'barrel_files', 'rpc_functions'];
 
 /// Bundle the mason bricks
 void main(List<String> args) async {

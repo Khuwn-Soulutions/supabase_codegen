@@ -15,18 +15,19 @@ class SpyBundleGenerator extends BundleGenerator {
   @override
   Future<void> generateFiles(
     Directory outputDir,
-    GeneratorConfig upserts, [
-    GeneratorConfig? config,
+    GeneratorConfig? upserts, [
+    // Unused: Serverpod generates yaml files, not barrel files
+    GeneratorConfig? _,
   ]) async {
     final progress = logger.progress('Generating Spy Files...');
-    await generateSpyFiles(
-      outputDir,
-      upserts.copyWith(package: 'supabase_codegen_serverpod'),
-    );
+    if (upserts == null) return;
+
+    await generateSpyFiles(outputDir, upserts);
+    await generateRpcFunctions(outputDir, upserts);
     progress.complete();
-    for (final file in generatedFiles) {
-      logger.success('✅ ${file.path} ${file.status.name}');
-    }
+
+    // Run post generation clean up process
+    await cleanup(outputDir);
   }
 
   /// Generate the spy.yaml files for the models provided
