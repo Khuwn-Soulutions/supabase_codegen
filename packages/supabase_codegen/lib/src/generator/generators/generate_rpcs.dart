@@ -44,11 +44,11 @@ Future<List<GetRpcFunctionsResponse>> fetchRpcFunctions() async {
 
 /// Parse the [arguments] for an [RpcConfig]
 @visibleForTesting
-List<RpcArgumentConfig> parseArguments(String arguments) {
+List<RpcFieldConfig> parseArguments(String arguments) {
   if (arguments.isEmpty) return [];
 
   final argsList = arguments.split(', ');
-  return argsList.map(RpcArgumentConfig.fromArgString).toList();
+  return argsList.map(RpcFieldConfig.fromArgString).toList();
 }
 
 /// Parse the return type for an [RpcConfig]
@@ -58,7 +58,7 @@ RpcReturnTypeConfig parseReturnType(
   List<TableConfig> tables = const [],
 }) {
   final (:returnType, :content) = RpcReturnType.parse(returnTypeRaw);
-  final fields = <RpcArgumentConfig>[];
+  final fields = <RpcFieldConfig>[];
   switch (returnType) {
     case RpcReturnType.table:
       fields.addAll(parseArguments(content));
@@ -69,22 +69,18 @@ RpcReturnTypeConfig parseReturnType(
       if (table == null) {
         logger.warn('Table $content not found, setting to dynamic');
         fields.add(
-          RpcArgumentConfig(name: content, type: 'dynamic', isList: true),
+          RpcFieldConfig(name: content, type: 'dynamic', isList: true),
         );
       }
       // Table found, set to table class name
       else {
         fields.add(
-          RpcArgumentConfig(
-            name: table.name,
-            type: table.className,
-            isList: true,
-          ),
+          RpcFieldConfig(name: table.name, type: table.className, isList: true),
         );
       }
 
     case RpcReturnType.scalar:
-      fields.add(RpcArgumentConfig.fromNameAndRawType(rawType: content));
+      fields.add(RpcFieldConfig.fromNameAndRawType(rawType: content));
   }
 
   return RpcReturnTypeConfig(type: returnType, fields: fields);

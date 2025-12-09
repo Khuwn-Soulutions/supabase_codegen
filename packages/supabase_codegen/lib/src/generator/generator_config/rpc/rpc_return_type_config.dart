@@ -16,7 +16,7 @@ class RpcReturnTypeConfig {
       RpcReturnTypeConfig(
         type: RpcReturnType.values.byName(json['type'] as String),
         fields: (json['fields'] as List<dynamic>? ?? [])
-            .map((e) => RpcArgumentConfig.fromJson(e as Map<String, dynamic>))
+            .map((e) => RpcFieldConfig.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
 
@@ -28,7 +28,7 @@ class RpcReturnTypeConfig {
   final RpcReturnType type;
 
   /// Fields to generate return type
-  final List<RpcArgumentConfig> fields;
+  final List<RpcFieldConfig> fields;
 
   @override
   bool operator ==(Object other) {
@@ -52,7 +52,7 @@ class RpcReturnTypeConfig {
   /// Copy [RpcReturnTypeConfig] with new values
   RpcReturnTypeConfig copyWith({
     RpcReturnType? type,
-    List<RpcArgumentConfig>? fields,
+    List<RpcFieldConfig>? fields,
   }) {
     return RpcReturnTypeConfig(
       type: type ?? this.type,

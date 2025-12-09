@@ -8,15 +8,15 @@ void main() {
         (
           args: 'a integer, b integer',
           expected: [
-            const RpcArgumentConfig(name: 'a', type: 'int', isList: false),
-            const RpcArgumentConfig(name: 'b', type: 'int', isList: false),
+            const RpcFieldConfig(name: 'a', type: 'int', isList: false),
+            const RpcFieldConfig(name: 'b', type: 'int', isList: false),
           ],
         ),
         (
           args: 'a integer, b integer DEFAULT 1',
           expected: [
-            const RpcArgumentConfig(name: 'a', type: 'int', isList: false),
-            const RpcArgumentConfig(
+            const RpcFieldConfig(name: 'a', type: 'int', isList: false),
+            const RpcFieldConfig(
               name: 'b',
               type: 'int',
               isList: false,
@@ -27,23 +27,19 @@ void main() {
         (
           args: 'arr integer[]',
           expected: [
-            const RpcArgumentConfig(name: 'arr', type: 'int', isList: true),
+            const RpcFieldConfig(name: 'arr', type: 'int', isList: true),
           ],
         ),
         (
           args: 'parts text[]',
           expected: [
-            const RpcArgumentConfig(
-              name: 'parts',
-              type: 'String',
-              isList: true,
-            ),
+            const RpcFieldConfig(name: 'parts', type: 'String', isList: true),
           ],
         ),
         (
           args: 'payload jsonb',
           expected: [
-            const RpcArgumentConfig(
+            const RpcFieldConfig(
               name: 'payload',
               type: 'dynamic',
               isList: false,
@@ -53,7 +49,7 @@ void main() {
         (
           args: 'encoded_base64 text',
           expected: [
-            const RpcArgumentConfig(
+            const RpcFieldConfig(
               name: 'encoded_base64',
               type: 'String',
               isList: false,
@@ -81,16 +77,8 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.table,
             fields: [
-              RpcArgumentConfig(
-                name: 'enum_name',
-                type: 'String',
-                isList: false,
-              ),
-              RpcArgumentConfig(
-                name: 'enum_value',
-                type: 'String',
-                isList: false,
-              ),
+              RpcFieldConfig(name: 'enum_name', type: 'String', isList: false),
+              RpcFieldConfig(name: 'enum_value', type: 'String', isList: false),
             ],
           ),
         ),
@@ -99,7 +87,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
             fields: [
-              RpcArgumentConfig(name: 'integer', type: 'int', isList: false),
+              RpcFieldConfig(name: 'integer', type: 'int', isList: false),
             ],
           ),
         ),
@@ -108,7 +96,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
             fields: [
-              RpcArgumentConfig(name: 'jsonb', type: 'dynamic', isList: false),
+              RpcFieldConfig(name: 'jsonb', type: 'dynamic', isList: false),
             ],
           ),
         ),
@@ -117,7 +105,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
             fields: [
-              RpcArgumentConfig(name: 'boolean', type: 'bool', isList: false),
+              RpcFieldConfig(name: 'boolean', type: 'bool', isList: false),
             ],
           ),
         ),
@@ -126,7 +114,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.setOf,
             fields: [
-              RpcArgumentConfig(name: 'users', type: 'Users', isList: true),
+              RpcFieldConfig(name: 'users', type: 'Users', isList: true),
             ],
           ),
         ),
@@ -135,7 +123,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.setOf,
             fields: [
-              RpcArgumentConfig(name: 'unknown', type: 'dynamic', isList: true),
+              RpcFieldConfig(name: 'unknown', type: 'dynamic', isList: true),
             ],
           ),
         ),
@@ -144,7 +132,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
             fields: [
-              RpcArgumentConfig(name: 'integer', type: 'int', isList: true),
+              RpcFieldConfig(name: 'integer', type: 'int', isList: true),
             ],
           ),
         ),
@@ -153,7 +141,7 @@ void main() {
           expected: const RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
             fields: [
-              RpcArgumentConfig(name: 'text', type: 'String', isList: true),
+              RpcFieldConfig(name: 'text', type: 'String', isList: true),
             ],
           ),
         ),

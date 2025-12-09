@@ -18,7 +18,7 @@ class RpcConfig {
   /// Create empty [RpcConfig]
   factory RpcConfig.empty() => RpcConfig(
     functionName: '',
-    args: const <RpcArgumentConfig>[],
+    args: const <RpcFieldConfig>[],
     returnType: RpcReturnTypeConfig.empty(),
   );
 
@@ -26,7 +26,7 @@ class RpcConfig {
   factory RpcConfig.fromJson(Map<String, dynamic> json) => RpcConfig(
     functionName: json['functionName'] as String,
     args: (json['args'] as List<dynamic>? ?? [])
-        .map((e) => RpcArgumentConfig.fromJson(e as Map<String, dynamic>))
+        .map((e) => RpcFieldConfig.fromJson(e as Map<String, dynamic>))
         .toList(),
     returnType: RpcReturnTypeConfig.fromJson(
       json['returnType'] as Map<String, dynamic>,
@@ -46,7 +46,7 @@ class RpcConfig {
   bool get hasArgs => args.isNotEmpty;
 
   /// Arguments
-  final List<RpcArgumentConfig> args;
+  final List<RpcFieldConfig> args;
 
   /// Return type config
   final RpcReturnTypeConfig returnType;
@@ -70,7 +70,7 @@ class RpcConfig {
   /// Copy [RpcConfig] with new values
   RpcConfig copyWith({
     String? functionName,
-    List<RpcArgumentConfig>? args,
+    List<RpcFieldConfig>? args,
     RpcReturnTypeConfig? returnType,
   }) {
     return RpcConfig(

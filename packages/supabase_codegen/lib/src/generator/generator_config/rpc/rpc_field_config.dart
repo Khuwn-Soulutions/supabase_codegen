@@ -2,30 +2,29 @@ import 'package:change_case/change_case.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
-/// {@template rpc_argument_config}
-/// RPC Argument Config
+/// {@template rpc_field_config}
+/// RPC Field Config
 /// {@endtemplate}
 @immutable
-class RpcArgumentConfig {
-  /// {@macro rpc_argument_config}
-  const RpcArgumentConfig({
+class RpcFieldConfig {
+  /// {@macro rpc_field_config}
+  const RpcFieldConfig({
     required this.name,
     required this.type,
     required this.isList,
     this.defaultValue,
   });
 
-  /// Create [RpcArgumentConfig] from [json]
-  factory RpcArgumentConfig.fromJson(Map<String, dynamic> json) =>
-      RpcArgumentConfig(
-        name: json['name'] as String,
-        type: json['type'] as String,
-        isList: json['isList'] as bool,
-        defaultValue: json['defaultValue'] as String?,
-      );
+  /// Create [RpcFieldConfig] from [json]
+  factory RpcFieldConfig.fromJson(Map<String, dynamic> json) => RpcFieldConfig(
+    name: json['name'] as String,
+    type: json['type'] as String,
+    isList: json['isList'] as bool,
+    defaultValue: json['defaultValue'] as String?,
+  );
 
-  /// Create [RpcArgumentConfig] from [name] and [rawType]
-  factory RpcArgumentConfig.fromNameAndRawType({
+  /// Create [RpcFieldConfig] from [name] and [rawType]
+  factory RpcFieldConfig.fromNameAndRawType({
     required String rawType,
     String? name,
     String? defaultValue,
@@ -35,7 +34,7 @@ class RpcArgumentConfig {
     final baseType = rawType.replaceAll(arraySuffix, '');
     final type = getBaseDartType(baseType);
 
-    return RpcArgumentConfig(
+    return RpcFieldConfig(
       name: name ?? baseType,
       type: type,
       isList: isList,
@@ -43,11 +42,11 @@ class RpcArgumentConfig {
     );
   }
 
-  /// Create [RpcArgumentConfig] from String representation of [arg]
+  /// Create [RpcFieldConfig] from String representation of [arg]
   ///
   /// Expected format: "name type [DEFAULT value]"
   /// Example: "param1 int", "param2 int DEFAULT 0", "param3 text[]"
-  factory RpcArgumentConfig.fromArgString(String arg) {
+  factory RpcFieldConfig.fromArgString(String arg) {
     final regex = RegExp(r'^(\S+)\s+(\S+)(?:\s+DEFAULT\s+(.+))?$');
     final match = regex.firstMatch(arg);
 
@@ -60,7 +59,7 @@ class RpcArgumentConfig {
     final name = match.group(1)!;
     final typeRaw = match.group(2)!;
     final defaultValue = match.group(3);
-    return RpcArgumentConfig.fromNameAndRawType(
+    return RpcFieldConfig.fromNameAndRawType(
       name: name,
       rawType: typeRaw,
       defaultValue: defaultValue,
@@ -89,7 +88,7 @@ class RpcArgumentConfig {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is RpcArgumentConfig &&
+    return other is RpcFieldConfig &&
         other.name == name &&
         other.type == type &&
         other.isList == isList &&
@@ -103,7 +102,7 @@ class RpcArgumentConfig {
       isList.hashCode ^
       stableHash(defaultValue ?? '');
 
-  /// Create json representation of [RpcArgumentConfig]
+  /// Create json representation of [RpcFieldConfig]
   Map<String, dynamic> toJson() => {
     'name': name,
     'parameterName': parameterName,
@@ -114,10 +113,10 @@ class RpcArgumentConfig {
     'defaultValue': defaultValue,
   };
 
-  /// String representation of [RpcArgumentConfig]
+  /// String representation of [RpcFieldConfig]
   @override
   String toString() =>
-      'RpcArgumentConfig('
+      'RpcFieldConfig('
       'name: $name, '
       'type: $type, '
       'isList: $isList, '

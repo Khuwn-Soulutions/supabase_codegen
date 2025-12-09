@@ -35,11 +35,11 @@ void main() {
     test('toJson returns correct json map', () {
       const config = RpcConfig(
         functionName: 'test_function',
-        args: [RpcArgumentConfig(name: 'arg1', type: 'int', isList: false)],
+        args: [RpcFieldConfig(name: 'arg1', type: 'int', isList: false)],
         returnType: RpcReturnTypeConfig(
           type: RpcReturnType.scalar,
           fields: [
-            RpcArgumentConfig(name: 'result', type: 'String', isList: false),
+            RpcFieldConfig(name: 'result', type: 'String', isList: false),
           ],
         ),
       );
@@ -68,9 +68,7 @@ void main() {
     group('hasArgs', () {
       test('returns true if args is not empty', () {
         final config = RpcConfig.empty().copyWith(
-          args: [
-            const RpcArgumentConfig(name: 'a', type: 'int', isList: false),
-          ],
+          args: [const RpcFieldConfig(name: 'a', type: 'int', isList: false)],
         );
         expect(config.hasArgs, true);
       });
@@ -100,9 +98,7 @@ void main() {
           args: [],
           returnType: RpcReturnTypeConfig(
             type: RpcReturnType.setOf,
-            fields: [
-              RpcArgumentConfig(name: 'user', type: 'User', isList: false),
-            ],
+            fields: [RpcFieldConfig(name: 'user', type: 'User', isList: false)],
           ),
         );
         expect(config.returnsClassName, 'List<User>');
@@ -126,9 +122,7 @@ void main() {
           args: [],
           returnType: RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
-            fields: [
-              RpcArgumentConfig(name: 'count', type: 'int', isList: false),
-            ],
+            fields: [RpcFieldConfig(name: 'count', type: 'int', isList: false)],
           ),
         );
         expect(config.returnsClassName, 'int');
@@ -142,9 +136,7 @@ void main() {
           args: [],
           returnType: RpcReturnTypeConfig(
             type: RpcReturnType.scalar,
-            fields: [
-              RpcArgumentConfig(name: 'count', type: 'int', isList: false),
-            ],
+            fields: [RpcFieldConfig(name: 'count', type: 'int', isList: false)],
           ),
         );
         expect(config.returnsTypeName, 'int');
@@ -168,9 +160,7 @@ void main() {
           args: [],
           returnType: RpcReturnTypeConfig(
             type: RpcReturnType.setOf,
-            fields: [
-              RpcArgumentConfig(name: 'user', type: 'User', isList: true),
-            ],
+            fields: [RpcFieldConfig(name: 'user', type: 'User', isList: true)],
           ),
         );
         expect(config.returnsTypeName, 'List<User>');
@@ -178,10 +168,10 @@ void main() {
     });
 
     test('supports value equality using == and hashCode', () {
-      const arg = RpcArgumentConfig(name: 'count', type: 'int', isList: false);
+      const arg = RpcFieldConfig(name: 'count', type: 'int', isList: false);
       const returnType = RpcReturnTypeConfig(
         type: RpcReturnType.scalar,
-        fields: [RpcArgumentConfig(name: 'count', type: 'int', isList: false)],
+        fields: [RpcFieldConfig(name: 'count', type: 'int', isList: false)],
       );
       const config1 = RpcConfig(
         functionName: 'test',
@@ -206,10 +196,10 @@ void main() {
     });
 
     test('copyWith creates a new instance with updated values', () {
-      const arg = RpcArgumentConfig(name: 'count', type: 'int', isList: false);
+      const arg = RpcFieldConfig(name: 'count', type: 'int', isList: false);
       const returnType = RpcReturnTypeConfig(
         type: RpcReturnType.scalar,
-        fields: [RpcArgumentConfig(name: 'count', type: 'int', isList: false)],
+        fields: [RpcFieldConfig(name: 'count', type: 'int', isList: false)],
       );
       const config = RpcConfig(
         functionName: 'test',
@@ -224,15 +214,13 @@ void main() {
     });
 
     test('toString returns correct string', () {
-      const arg = RpcArgumentConfig(name: 'count', type: 'int', isList: false);
+      const arg = RpcFieldConfig(name: 'count', type: 'int', isList: false);
       const config = RpcConfig(
         functionName: 'test',
         args: [arg],
         returnType: RpcReturnTypeConfig(
           type: RpcReturnType.scalar,
-          fields: [
-            RpcArgumentConfig(name: 'count', type: 'int', isList: false),
-          ],
+          fields: [RpcFieldConfig(name: 'count', type: 'int', isList: false)],
         ),
       );
 
@@ -241,14 +229,14 @@ void main() {
       // Check that all key parts of the toString output are present.
       expect(str, contains('functionName: test'));
       expect(str, contains('args:'));
-      expect(str, contains('RpcArgumentConfig(name: count'));
+      expect(str, contains('RpcFieldConfig(name: count'));
       expect(str, contains('type: int'));
       expect(str, contains('isList: false'));
       expect(str, contains('defaultValue: null'));
       expect(str, contains('returnType: RpcReturnTypeConfig'));
       expect(str, contains('type: scalar'));
       expect(str, contains('fields:'));
-      expect(str, contains('RpcArgumentConfig'));
+      expect(str, contains('RpcFieldConfig'));
       expect(str, contains('name: count'));
       expect(str, contains('type: int'));
       expect(str, contains('isList: false'));
