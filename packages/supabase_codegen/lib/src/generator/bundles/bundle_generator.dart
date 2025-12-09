@@ -35,7 +35,7 @@ class BundleGenerator {
     progress.complete('Types generated successfully');
 
     // Run post generation clean up process
-    await _cleanup(outputDir);
+    await cleanup(outputDir);
   }
 
   /// Generate tables and enums into the [outputDir] with the provided [config]
@@ -81,7 +81,7 @@ class BundleGenerator {
   }
 
   /// Run post generation clean up process
-  Future<void> _cleanup(Directory outputDir) async {
+  Future<void> cleanup(Directory outputDir) async {
     final cleanup = logger.progress('Cleaning up generated files');
 
     _ensureFileExtension(outputDir);

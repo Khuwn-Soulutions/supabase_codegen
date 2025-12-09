@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:change_case/change_case.dart';
 import 'package:mason/mason.dart';
-import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:supabase_codegen_serverpod/supabase_codegen_serverpod.dart';
 
@@ -24,18 +22,12 @@ class SpyBundleGenerator extends BundleGenerator {
     final progress = logger.progress('Generating Spy Files...');
     if (upserts == null) return;
 
-    await generateSpyFiles(
-      outputDir,
-      upserts.copyWith(package: 'supabase_codegen_serverpod'),
-    );
+    await generateSpyFiles(outputDir, upserts);
+    await generateRpcFunctions(outputDir, upserts);
     progress.complete();
-    for (final file in generatedFiles) {
-      final fileLink = link(
-        message: file.path,
-        uri: Uri.directory(path.join(Directory.current.path, file.path)),
-      );
-      logger.info('✅ ${file.status.name.toCapitalCase()}: $fileLink');
-    }
+
+    // Run post generation clean up process
+    await cleanup(outputDir);
   }
 
   /// Generate the spy.yaml files for the models provided
