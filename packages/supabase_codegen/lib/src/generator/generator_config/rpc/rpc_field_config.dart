@@ -57,11 +57,11 @@ class RpcFieldConfig {
     }
 
     final name = match.group(1)!;
-    final typeRaw = match.group(2)!;
+    final rawType = match.group(2)!;
     final defaultValue = match.group(3);
     return RpcFieldConfig.fromNameAndRawType(
       name: name,
-      rawType: typeRaw,
+      rawType: rawType,
       defaultValue: defaultValue,
     );
   }
@@ -80,6 +80,16 @@ class RpcFieldConfig {
 
   /// Default value
   final String? defaultValue;
+
+  /// Has default value
+  bool get hasDefault => defaultValue != null;
+
+  /// Default value (for json)
+  String get defaultValueJson {
+    if (hasDefault) return defaultValue!;
+
+    return isList ? '[]' : getDefaultValue(type);
+  }
 
   /// Parameter type
   String get paramType => isList ? 'List<$type>' : type;
@@ -110,7 +120,7 @@ class RpcFieldConfig {
     'paramType': paramType,
     'isList': isList,
     'hasDefault': defaultValue != null,
-    'defaultValue': defaultValue,
+    'defaultValue': defaultValueJson,
   };
 
   /// String representation of [RpcFieldConfig]
