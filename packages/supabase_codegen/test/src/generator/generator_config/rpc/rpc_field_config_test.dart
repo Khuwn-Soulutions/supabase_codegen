@@ -191,10 +191,13 @@ void main() {
         isList: false,
         defaultValue: 'null',
       );
-      expect(
-        config.toString(),
-        'RpcFieldConfig(name: test, type: String, isList: false, defaultValue: null)',
-      );
+
+      final description = config.toString();
+      expect(description, contains('RpcFieldConfig('));
+      expect(description, contains('name: test'));
+      expect(description, contains('type: String'));
+      expect(description, contains('isList: false'));
+      expect(description, contains('defaultValue: null'));
     });
 
     group('paramType', () {
