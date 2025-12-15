@@ -349,8 +349,8 @@ void main() {
     });
 
     test('when file generation fails, error propagated', () async {
-      // Act
-      expect(
+      // Act & Assert - error is thrown
+      await expectLater(
         () => bundleGenerator.generateFiles(
           tempDir,
           baseConfig,
@@ -360,11 +360,7 @@ void main() {
         throwsA(isA<Error>()),
       );
 
-      await Future<void>.delayed(
-        const Duration(milliseconds: 100),
-      ); // Allow async operations to complete
-
-      // Assert
+      // Assert - progress was marked as failed
       verify(
         () => mockProgress.fail(any(that: contains('Generation failed'))),
       ).called(1);

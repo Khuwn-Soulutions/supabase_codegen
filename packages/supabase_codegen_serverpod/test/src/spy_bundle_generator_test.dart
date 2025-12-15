@@ -190,17 +190,13 @@ void main() {
         });
 
         test('if generation fails', () async {
-          // Act
-          expect(
+          // Act & Assert
+          await expectLater(
             () => generateTables(tables, generated: List.unmodifiable([])),
             throwsA(isA<Error>()),
           );
 
-          await Future<void>.delayed(
-            const Duration(milliseconds: 100),
-          ); // Allow async operations to complete
-
-          // Assert
+          // Assert - progress was marked as failed
           verify(
             () => mockProgress.fail(any(that: contains('Generation failed'))),
           ).called(1);
