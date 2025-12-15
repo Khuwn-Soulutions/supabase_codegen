@@ -77,7 +77,7 @@ class MessagesRow extends SupabaseDataRow {
 
   /// Created At
   DateTime get createdAt =>
-      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+      getField<DateTime>(createdAtField, defaultValue: DateTime(2000))!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
   /// Message Type column name (message_type)

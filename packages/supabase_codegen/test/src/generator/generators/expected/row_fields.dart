@@ -25,7 +25,7 @@ const expectedRowFields = '''
   static const String createdAtField = 'created_at';
 
   /// Created At
-  DateTime get createdAt => getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+  DateTime get createdAt => getField<DateTime>(createdAtField, defaultValue: DateTime(2000))!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
   /// Is Nullable field name
