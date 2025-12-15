@@ -15,7 +15,7 @@ class BundleGenerator {
 
   /// Generated files
   @visibleForTesting
-  static late List<GeneratedFile> generatedFiles;
+  static List<GeneratedFile> generatedFiles = [];
 
   /// Generate files to the [outputDir]
   ///
