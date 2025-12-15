@@ -32,7 +32,7 @@ class UsersRow extends SupabaseDataRow {
   /// Users default constructor
   const UsersRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [UsersRow] from a [data] map
   factory UsersRow.fromJson(Map<String, dynamic> data) =>
       UsersRow._(data.cleaned);
 

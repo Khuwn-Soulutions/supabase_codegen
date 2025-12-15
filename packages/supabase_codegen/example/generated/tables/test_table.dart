@@ -27,7 +27,7 @@ class TestTableRow extends SupabaseDataRow {
   /// Test Table default constructor
   const TestTableRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [TestTableRow] from a [data] map
   factory TestTableRow.fromJson(Map<String, dynamic> data) =>
       TestTableRow._(data.cleaned);
 

@@ -51,7 +51,7 @@ class TestGenerateRow extends SupabaseDataRow {
   /// Test Generate default constructor
   const TestGenerateRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [TestGenerateRow] from a [data] map
   factory TestGenerateRow.fromJson(Map<String, dynamic> data) =>
       TestGenerateRow._(data.cleaned);
 
