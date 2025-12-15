@@ -1,10 +1,16 @@
 import 'dart:io';
 
 import 'package:change_case/change_case.dart';
+import 'package:mason/mason.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:supabase_codegen_serverpod/src/spy_bundle_generator.dart';
 import 'package:test/test.dart';
+
+class MockLogger extends Mock implements Logger {}
+
+class MockProgress extends Mock implements Progress {}
 
 void main() {
   createVerboseLogger();
@@ -14,10 +20,30 @@ void main() {
     late Directory enumsDir;
     late Directory tablesDir;
     late SpyBundleGenerator codeGenerator;
+    late MockProgress mockProgress;
+    final tables = {
+      'students': [
+        {
+          'column_name': 'id',
+          'data_type': 'integer',
+          'is_nullable': 'NO',
+          'column_default': "nextval('students_id_seq'::regclass)",
+          'udt_name': 'int4',
+        },
+        {
+          'column_name': 'name',
+          'data_type': 'text',
+          'is_nullable': 'YES',
+          'column_default': null,
+          'udt_name': 'text',
+        },
+      ],
+    };
 
     Future<void> generateTables(
-      Map<String, List<Map<String, String?>>> schema,
-    ) async {
+      Map<String, List<Map<String, String?>>> schema, {
+      List<GeneratedFile>? generated,
+    }) async {
       final tableConfigs = schema.entries
           .map(
             (entry) => TableConfig.fromFieldNameTypeMap(
@@ -33,11 +59,16 @@ void main() {
         tempDir,
         upserts,
         null,
+        generated,
       );
     }
 
     setUp(() {
-      logger = testLogger;
+      logger = MockLogger();
+      mockProgress = MockProgress();
+      when(() => logger.progress(any())).thenReturn(
+        mockProgress,
+      );
       codeGenerator = const SpyBundleGenerator();
       tempDir = Directory.systemTemp.createTempSync(
         'supabase_codegen_serverpod_test',
@@ -51,7 +82,7 @@ void main() {
     });
 
     group('generateFiles', () {
-      test('creates correct files and content from provided map', () async {
+      test('creates enums file', () async {
         const enumName = 'my_values';
         const values = ['val1', 'val2'];
         final enumConfig = EnumConfig(
@@ -65,7 +96,6 @@ void main() {
         await codeGenerator.generateFiles(
           tempDir,
           upserts,
-          null,
         );
 
         const fileName = 'my_values.spy.yaml';
@@ -85,24 +115,6 @@ void main() {
       test(
         'creates file with classname singular version of table name',
         () async {
-          final tables = {
-            'students': [
-              {
-                'column_name': 'id',
-                'data_type': 'integer',
-                'is_nullable': 'NO',
-                'column_default': "nextval('students_id_seq'::regclass)",
-                'udt_name': 'int4',
-              },
-              {
-                'column_name': 'name',
-                'data_type': 'text',
-                'is_nullable': 'YES',
-                'column_default': null,
-                'udt_name': 'text',
-              },
-            ],
-          };
           await generateTables(tables);
           final tableFile = File(
             path.join(
@@ -118,38 +130,20 @@ void main() {
         },
       );
 
-      test('creates correct files and content from provided map', () async {
-        final tables = {
-          'my_table': [
-            {
-              'column_name': 'id',
-              'data_type': 'integer',
-              'is_nullable': 'NO',
-              'column_default': "nextval('my_table_id_seq'::regclass)",
-              'udt_name': 'int4',
-            },
-            {
-              'column_name': 'name',
-              'data_type': 'text',
-              'is_nullable': 'YES',
-              'column_default': null,
-              'udt_name': 'text',
-            },
-          ],
-        };
+      test('creates tables file', () async {
         await generateTables(tables);
 
         final tableFile = File(
           path.join(
             tablesDir.path,
-            'my_table.spy.yaml',
+            'students.spy.yaml',
           ),
         );
         expect(tableFile.existsSync(), isTrue);
 
         final content = await tableFile.readAsString();
-        expect(content, contains('class: MyTable'));
-        expect(content, contains('table: my_table'));
+        expect(content, contains('class: Student'));
+        expect(content, contains('table: students'));
         expect(content, contains('fields:'));
         expect(content, contains('  id: int?'));
         expect(content, contains('  name: String?'));
@@ -180,6 +174,29 @@ void main() {
 
         final content = await tableFile.readAsString();
         expect(content, contains('createdAt: DateTime, column=created_at'));
+      });
+
+      group('fails', () {
+        test('if no upserts', () async {
+          await codeGenerator.generateFiles(
+            tempDir,
+            null,
+          );
+          verify(
+            () => mockProgress.fail(
+              any(that: contains('No upserts config provided')),
+            ),
+          ).called(1);
+        });
+
+        test('if generation fails', () async {
+          await generateTables(tables, generated: List.unmodifiable([]));
+          verify(
+            () => mockProgress.fail(
+              any(that: contains('Generation failed')),
+            ),
+          ).called(1);
+        });
       });
     });
   });
