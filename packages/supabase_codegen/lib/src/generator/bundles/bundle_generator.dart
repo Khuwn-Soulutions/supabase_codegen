@@ -18,6 +18,9 @@ class BundleGenerator {
   static late List<GeneratedFile> generatedFiles;
 
   /// Generate files to the [outputDir]
+  ///
+  /// The [generated] parameter is for testing only and allows tests to
+  /// inject a pre-populated or empty list to verify error handling.
   Future<void> generateFiles(
     Directory outputDir,
     GeneratorConfig? upserts, [
