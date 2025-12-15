@@ -95,7 +95,7 @@ void main() {
         );
         when(
           () => mockBundleGenerator.generateFiles(any(), any(), any()),
-        ).thenAnswer((_) async {});
+        ).thenAnswer((_) async => []);
         when(
           () => mockLockfileManager.writeLockfile(
             lockfile: any(named: 'lockfile'),
@@ -122,7 +122,7 @@ void main() {
         tempDir = Directory.systemTemp.createTempSync();
         when(
           () => mockBundleGenerator.generateFiles(any(), any(), any()),
-        ).thenAnswer((_) async {});
+        ).thenAnswer((_) async => []);
       });
 
       tearDown(() {
