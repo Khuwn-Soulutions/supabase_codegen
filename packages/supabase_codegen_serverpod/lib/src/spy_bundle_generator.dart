@@ -20,7 +20,10 @@ class SpyBundleGenerator extends BundleGenerator {
     GeneratorConfig? _,
   ) async {
     final progress = logger.progress('Generating Spy Files...');
-    if (upserts == null) return;
+    if (upserts == null) {
+      logger.info('No upserts config provided, skipping Spy file generation');
+      return;
+    }
 
     await generateSpyFiles(outputDir, upserts);
     await generateRpcFunctions(outputDir, upserts);
