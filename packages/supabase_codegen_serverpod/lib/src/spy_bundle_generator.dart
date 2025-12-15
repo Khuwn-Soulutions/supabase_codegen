@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mason/mason.dart';
+import 'package:meta/meta.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:supabase_codegen_serverpod/supabase_codegen_serverpod.dart';
 
@@ -10,27 +11,36 @@ class SpyBundleGenerator extends BundleGenerator {
   const SpyBundleGenerator();
 
   /// Generated files
+  @visibleForTesting
   static List<GeneratedFile> generatedFiles = [];
 
   @override
   Future<void> generateFiles(
     Directory outputDir,
-    GeneratorConfig? upserts,
+    GeneratorConfig? upserts, [
     // Unused: Serverpod generates yaml files, not barrel files
     GeneratorConfig? _,
-  ) async {
+    List<GeneratedFile>? generated,
+  ]) async {
     final progress = logger.progress('Generating Spy Files...');
     if (upserts == null) {
-      logger.info('No upserts config provided, skipping Spy file generation');
+      progress.fail('No upserts config provided. Skipping Spy file generation');
       return;
     }
 
-    await generateSpyFiles(outputDir, upserts);
-    await generateRpcFunctions(outputDir, upserts);
-    progress.complete();
+    try {
+      await generateSpyFiles(outputDir, upserts);
+      await generateRpcFunctions(outputDir, upserts);
 
-    // Run post generation clean up process
-    await cleanup(outputDir);
+      // Run post generation clean up process
+      await cleanup(outputDir);
+      progress.complete();
+    }
+    // Catch all exceptions and errors
+    // ignore: avoid_catches_without_on_clauses
+    catch (e) {
+      progress.fail('Generation failed: $e');
+    }
   }
 
   /// Generate the spy.yaml files for the models provided
