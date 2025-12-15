@@ -82,7 +82,11 @@ void main() {
       ),
     ];
     final rpcs = [
-      RpcConfig.empty().copyWith(functionName: 'get_rpc_functions', args: []),
+      RpcConfig(
+        functionName: 'get_rpc_functions',
+        args: const <RpcFieldConfig>[],
+        returnType: RpcReturnTypeConfig.empty(),
+      ),
     ];
     final baseConfig = GeneratorConfig.empty().copyWith(
       tables: tables,
@@ -235,7 +239,11 @@ void main() {
       final upserts = config.copyWith();
 
       // Act
-      await bundleGenerator.generateFiles(tempDir, upserts, config);
+      final generatedFiles = await bundleGenerator.generateFiles(
+        tempDir,
+        upserts,
+        config,
+      );
 
       // Assert
       // 1. Check that no .mustache files are in the output folder.
@@ -251,7 +259,6 @@ void main() {
 
       // 3. Check that files were generated with the correct extension.
       final totalFiles = tables.length + enums.length + rpcs.length;
-      final generatedFiles = BundleGenerator.generatedFiles;
       expect(generatedFiles.length, equals(totalFiles));
       expect(
         generatedFiles.every((file) => file.path.endsWith(dartFileType)),
@@ -341,17 +348,21 @@ void main() {
       });
     });
 
-    test('when file generation fails, logs error message', () async {
-      final config = baseConfig.copyWith(barrelFiles: true);
-      final upserts = config.copyWith();
-
+    test('when file generation fails, error propagated', () async {
       // Act
-      await bundleGenerator.generateFiles(
-        tempDir,
-        upserts,
-        config,
-        List.unmodifiable([]),
+      expect(
+        () => bundleGenerator.generateFiles(
+          tempDir,
+          baseConfig,
+          baseConfig,
+          List.unmodifiable([]),
+        ),
+        throwsA(isA<Error>()),
       );
+
+      await Future<void>.delayed(
+        const Duration(milliseconds: 100),
+      ); // Allow async operations to complete
 
       // Assert
       verify(
