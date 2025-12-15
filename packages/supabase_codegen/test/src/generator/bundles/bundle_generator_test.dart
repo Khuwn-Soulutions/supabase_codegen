@@ -118,7 +118,6 @@ void main() {
 
     tearDown(() {
       tempDir.deleteSync(recursive: true);
-      BundleGenerator.generatedFiles.clear();
     });
 
     test('generateFiles creates tables, enums, rpcs, and barrel files '
@@ -340,6 +339,24 @@ void main() {
           );
         }
       });
+    });
+
+    test('when file generation fails, logs error message', () async {
+      final config = baseConfig.copyWith(barrelFiles: true);
+      final upserts = config.copyWith();
+
+      // Act
+      await bundleGenerator.generateFiles(
+        tempDir,
+        upserts,
+        config,
+        List.unmodifiable([]),
+      );
+
+      // Assert
+      verify(
+        () => mockProgress.fail(any(that: contains('Generation failed'))),
+      ).called(1);
     });
   });
 }
