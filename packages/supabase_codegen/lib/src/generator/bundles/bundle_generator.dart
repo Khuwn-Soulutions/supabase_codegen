@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:change_case/change_case.dart';
 import 'package:mason/mason.dart';
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
@@ -13,29 +14,39 @@ class BundleGenerator {
   const BundleGenerator();
 
   /// Generated files
-  static List<GeneratedFile> generatedFiles = [];
+  @visibleForTesting
+  static late List<GeneratedFile> generatedFiles;
 
   /// Generate files to the [outputDir]
   Future<void> generateFiles(
     Directory outputDir,
-    GeneratorConfig? upserts,
+    GeneratorConfig? upserts, [
     GeneratorConfig? barrelConfig,
-  ) async {
+    List<GeneratedFile>? generated,
+  ]) async {
+    generatedFiles = generated ?? [];
     final progress = logger.progress('Generating Tables and Enums...');
-    if (upserts != null) {
-      await generateTablesAndEnums(outputDir, upserts);
-      await generateRpcFunctions(outputDir, upserts);
-    }
+    try {
+      if (upserts != null) {
+        await generateTablesAndEnums(outputDir, upserts);
+        await generateRpcFunctions(outputDir, upserts);
+      }
 
-    // Generate barrel files
-    if (barrelConfig?.barrelFiles ?? false) {
-      progress.update('Generating barrel files');
-      await generateBarrelFiles(outputDir, barrelConfig!);
-    }
-    progress.complete('Types generated successfully');
+      // Generate barrel files
+      if (barrelConfig?.barrelFiles ?? false) {
+        progress.update('Generating barrel files');
+        await generateBarrelFiles(outputDir, barrelConfig!);
+      }
+      progress.complete('Types generated successfully');
 
-    // Run post generation clean up process
-    await cleanup(outputDir);
+      // Run post generation clean up process
+      await cleanup(outputDir);
+    }
+    // Catch all exceptions and errors
+    // ignore: avoid_catches_without_on_clauses
+    catch (e) {
+      progress.fail('Generation failed: $e');
+    }
   }
 
   /// Generate tables and enums into the [outputDir] with the provided [config]
