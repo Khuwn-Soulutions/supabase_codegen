@@ -40,7 +40,7 @@ void main() {
       ],
     };
 
-    Future<void> generateTables(
+    Future<List<GeneratedFile>> generateTables(
       Map<String, List<Map<String, String?>>> schema, {
       List<GeneratedFile>? generated,
     }) async {
@@ -55,7 +55,7 @@ void main() {
       final upserts = GeneratorConfig.empty().copyWith(
         tables: tableConfigs,
       );
-      await codeGenerator.generateFiles(
+      return codeGenerator.generateFiles(
         tempDir,
         upserts,
         null,
@@ -190,11 +190,19 @@ void main() {
         });
 
         test('if generation fails', () async {
-          await generateTables(tables, generated: List.unmodifiable([]));
+          // Act
+          expect(
+            () => generateTables(tables, generated: List.unmodifiable([])),
+            throwsA(isA<Error>()),
+          );
+
+          await Future<void>.delayed(
+            const Duration(milliseconds: 100),
+          ); // Allow async operations to complete
+
+          // Assert
           verify(
-            () => mockProgress.fail(
-              any(that: contains('Generation failed')),
-            ),
+            () => mockProgress.fail(any(that: contains('Generation failed'))),
           ).called(1);
         });
       });
