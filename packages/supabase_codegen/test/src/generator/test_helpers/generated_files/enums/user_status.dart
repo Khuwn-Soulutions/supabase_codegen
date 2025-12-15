@@ -9,5 +9,3 @@ enum UserStatus {
   /// inactive
   inactive,
 }
-
-// Date: 2025-12-09 14:05:05.178011

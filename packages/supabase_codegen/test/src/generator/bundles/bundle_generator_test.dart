@@ -319,7 +319,7 @@ void main() {
       test('generates expected file contents', () async {
         // Function to remove date line from file contents
         String withoutDateLine(String contents) =>
-            contents.replaceAll(RegExp(r'\s*// Date:.*\n'), '');
+            contents.replaceAll(RegExp(r'\s*// Date:.*\n'), '').trim();
 
         // Assert
         for (final file in expectedFiles) {

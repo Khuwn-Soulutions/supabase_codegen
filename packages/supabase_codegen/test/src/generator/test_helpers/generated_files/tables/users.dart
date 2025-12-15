@@ -86,5 +86,3 @@ class UsersRow extends SupabaseDataRow {
     tagsField: supaSerialize(tags) ?? data[tagsField],
   });
 }
-
-// Date: 2025-12-09 14:43:28.148430
