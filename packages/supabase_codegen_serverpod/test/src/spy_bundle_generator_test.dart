@@ -32,6 +32,7 @@ void main() {
       await codeGenerator.generateFiles(
         tempDir,
         upserts,
+        null,
       );
     }
 
@@ -64,6 +65,7 @@ void main() {
         await codeGenerator.generateFiles(
           tempDir,
           upserts,
+          null,
         );
 
         const fileName = 'my_values.spy.yaml';
