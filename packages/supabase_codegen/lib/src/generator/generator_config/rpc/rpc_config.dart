@@ -73,6 +73,12 @@ class RpcConfig {
     _ => 'List<$returnsClassName>',
   };
 
+  /// Returns true if the RPC returns a list of scalar values
+  bool get returnsScalarList =>
+      returnType.type == RpcReturnType.scalar &&
+      returnType.fields.isNotEmpty &&
+      returnType.fields.first.isList == true;
+
   /// Copy [RpcConfig] with new values
   RpcConfig copyWith({
     String? functionName,
@@ -97,6 +103,7 @@ class RpcConfig {
     'returnsBaseType': returnsBaseType,
     'returnsClassName': returnsClassName,
     'returnsTypeName': returnsTypeName,
+    'returnsScalarList': returnsScalarList,
   };
 
   @override
