@@ -308,7 +308,7 @@ void main() {
             File(p.join(tempDir.path, rpcsFolder, '${rpc.functionName}.dart')),
         ];
 
-        // Act
+        // Act (generate files before each test in this group)
         await bundleGenerator.generateFiles(tempDir, upserts, config);
       });
 
