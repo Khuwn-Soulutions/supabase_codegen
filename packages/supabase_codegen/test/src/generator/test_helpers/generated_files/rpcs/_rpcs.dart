@@ -4,6 +4,7 @@
 export 'add_numbers.dart';
 export 'concat_texts.dart';
 export 'get_enum_types.dart';
+export 'get_tags.dart';
 export 'get_user_summary.dart';
 export 'greet_person.dart';
 export 'list_users.dart';

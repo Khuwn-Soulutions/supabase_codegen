@@ -72,6 +72,12 @@ final testRpcFunctionsData = [
   },
   {
     'schema_name': 'public',
+    'function_name': 'get_tags',
+    'arguments': 'entity_id integer',
+    'return_type': 'text[]',
+  },
+  {
+    'schema_name': 'public',
     'function_name': 'get_user_summary',
     'arguments':
         'min_logins integer DEFAULT 0, role_filter text DEFAULT NULL, '
