@@ -38,7 +38,7 @@ class UsersRow extends SupabaseDataRow {
          if (createdAt != null) createdAtField: supaSerialize(createdAt),
        });
 
-  /// Users default constructor
+  /// Users private constructor from data map
   const UsersRow._(super.data);
 
   /// Create [UsersRow] from a [data] map

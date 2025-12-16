@@ -37,7 +37,7 @@ class MessagesRow extends SupabaseDataRow {
          if (messageType != null) messageTypeField: supaSerialize(messageType),
        });
 
-  /// Messages default constructor
+  /// Messages private constructor from data map
   const MessagesRow._(super.data);
 
   /// Create Messages Row from a [data] map

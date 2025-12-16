@@ -24,7 +24,7 @@ class TestTableRow extends SupabaseDataRow {
         if (jsonValues != null) jsonValuesField: supaSerialize(jsonValues),
       });
 
-  /// Test Table default constructor
+  /// Test Table private constructor from data map
   const TestTableRow._(super.data);
 
   /// Create [TestTableRow] from a [data] map

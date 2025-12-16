@@ -48,7 +48,7 @@ class TestGenerateRow extends SupabaseDataRow {
          if (timestamp != null) timestampField: supaSerialize(timestamp),
        });
 
-  /// Test Generate default constructor
+  /// Test Generate private constructor from data map
   const TestGenerateRow._(super.data);
 
   /// Create [TestGenerateRow] from a [data] map
