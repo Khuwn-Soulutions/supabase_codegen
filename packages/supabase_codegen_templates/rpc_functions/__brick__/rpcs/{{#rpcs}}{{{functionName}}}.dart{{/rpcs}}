@@ -14,9 +14,21 @@ extension {{rpcs.className}}Rpc on SupabaseClient {
   Future<{{{rpcs.returnsTypeName}}}> {{rpcs.methodName}}({{#rpcs.hasArgs}} { {{/rpcs.hasArgs}}
     {{#rpcs.args}}{{^hasDefault}}required {{/hasDefault}}{{> argument }},
     {{/rpcs.args}}
-  {{#rpcs.hasArgs}} } {{/rpcs.hasArgs}})
-    {{! Use arrow return for scalar return types }}
-    {{#rpcs.returnType.returnsScalar}} => rpc<{{{rpcs.returnsTypeName}}}>{{> rpc_function_body }}
+  {{#rpcs.hasArgs}} } {{/rpcs.hasArgs}}){{#rpcs.returnType.returnsScalar}} 
+
+    {{! Use arrow return for non-list scalar return types }}
+    {{^rpcs.returnsScalarList}}
+    => rpc<{{{rpcs.returnsTypeName}}}>{{> rpc_function_body }}
+    {{/rpcs.returnsScalarList}}
+
+    {{! Use async for list of scalar return types }}
+    {{#rpcs.returnsScalarList}} async {
+    final response = await rpc<List<dynamic>>{{> rpc_function_body }}
+    
+    return {{{rpcs.returnsBaseType}}}.from(response); 
+  }
+    {{/rpcs.returnsScalarList}}
+
     {{/rpcs.returnType.returnsScalar}}
 
     {{! Use async for set of return types }}
