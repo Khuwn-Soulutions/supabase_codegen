@@ -1,6 +1,5 @@
 import 'package:dotenv/dotenv.dart';
 import 'package:meta/meta.dart';
-import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Supabase Codegen Client
