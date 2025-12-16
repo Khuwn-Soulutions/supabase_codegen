@@ -15,7 +15,7 @@ class TestTableTable extends SupabaseTable<TestTableRow> {
       TestTableRow.fromJson(data);
 }
 
-/// Test Table constructor
+/// Test Table Row
 class TestTableRow extends SupabaseDataRow {
   /// Test Table Row
   TestTableRow({required int id, dynamic jsonValues})

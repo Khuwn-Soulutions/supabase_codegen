@@ -15,7 +15,7 @@ class TestGenerateTable extends SupabaseTable<TestGenerateRow> {
       TestGenerateRow.fromJson(data);
 }
 
-/// Test Generate constructor
+/// Test Generate Row
 class TestGenerateRow extends SupabaseDataRow {
   /// Test Generate Row
   TestGenerateRow({

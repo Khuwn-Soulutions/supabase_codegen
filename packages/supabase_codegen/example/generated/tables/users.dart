@@ -17,7 +17,7 @@ class UsersTable extends SupabaseTable<UsersRow> {
   UsersRow createRow(Map<String, dynamic> data) => UsersRow.fromJson(data);
 }
 
-/// Users constructor
+/// Users Row
 class UsersRow extends SupabaseDataRow {
   /// Users Row
   UsersRow({

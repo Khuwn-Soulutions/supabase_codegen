@@ -18,7 +18,7 @@ class MessagesTable extends SupabaseTable<MessagesRow> {
       MessagesRow.fromJson(data);
 }
 
-/// Messages constructor
+/// Messages Row
 class MessagesRow extends SupabaseDataRow {
   /// Messages Row
   MessagesRow({
@@ -40,7 +40,7 @@ class MessagesRow extends SupabaseDataRow {
   /// Messages default constructor
   const MessagesRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create Messages Row from a [data] map
   factory MessagesRow.fromJson(Map<String, dynamic> data) =>
       MessagesRow._(data.cleaned);
 
