@@ -46,6 +46,11 @@ Future<void> bundleBricks({
   }
 
   // Format the generated code
-  await Process.run('dart', ['format', outputFolder]);
+  final formatOutput = await Process.run('dart', ['format', outputFolder]);
+  logger.info(formatOutput.stdout);
+  if (formatOutput.exitCode != 0) {
+    logger.error('Failed to format output: ${formatOutput.stderr}');
+    exit(formatOutput.exitCode);
+  }
   logger.info('Formatted generated bricks in $outputFolder');
 }
