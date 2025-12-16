@@ -192,7 +192,11 @@ void main() {
         test('if generation fails', () async {
           // Act & Assert
           await expectLater(
-            () => generateTables(tables, generated: List.unmodifiable([])),
+            () => generateTables(
+              tables,
+              // Unmodifiable list triggers generation failure
+              generated: List.unmodifiable([]),
+            ),
             throwsA(isA<Error>()),
           );
 

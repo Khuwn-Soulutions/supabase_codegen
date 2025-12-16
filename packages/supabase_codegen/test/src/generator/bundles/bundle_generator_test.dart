@@ -355,6 +355,7 @@ void main() {
           tempDir,
           baseConfig,
           baseConfig,
+          // unmodifiable list triggers generation failure
           List.unmodifiable([]),
         ),
         throwsA(isA<Error>()),
