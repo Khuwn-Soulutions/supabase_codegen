@@ -1,0 +1,2 @@
+{{#isList}}(raw[{{fieldName}}] as List<dynamic>?)?.cast<{{baseType}}>() ?? const []{{/isList}}
+{{^isList}}raw[{{fieldName}}]{{^isDynamic}}as {{baseType}}? ?? {{{defaultValue}}}{{/isDynamic}}{{/isList}}

@@ -1,6 +1,6 @@
 {{> header}}
 
-import 'package:supabase/supabase.dart';
+import 'package:{{package}}/{{package}}.dart';
 {{#rpcs.returnType.returnsSetOf}}// Relative import of table
 // ignore_for_file: relative_imports
 import '../tables/{{rpcs.returnsBaseType.snakeCase()}}.dart';{{/rpcs.returnType.returnsSetOf}}
