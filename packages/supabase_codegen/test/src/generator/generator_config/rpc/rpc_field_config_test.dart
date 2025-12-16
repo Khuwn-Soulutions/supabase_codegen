@@ -142,21 +142,51 @@ void main() {
       });
     });
 
-    test('toJson returns correct map', () {
-      const config = RpcFieldConfig(
-        name: 'test',
-        type: 'int',
-        isList: true,
-        defaultValue: '0',
-      );
-      final json = config.toJson();
-      expect(json['name'], 'test');
-      expect(json['parameterName'], 'test');
-      expect(json['baseType'], 'int');
-      expect(json['paramType'], 'List<int>');
-      expect(json['isList'], true);
-      expect(json['hasDefault'], true);
-      expect(json['defaultValue'], '0');
+    group('toJson returns correct map', () {
+      test('for array', () {
+        const config = RpcFieldConfig(name: 'test', type: 'int', isList: true);
+        final json = config.toJson();
+        expect(json['name'], 'test');
+        expect(json['parameterName'], 'test');
+        expect(json['baseType'], 'int');
+        expect(json['paramType'], 'List<int>');
+        expect(json['isList'], true);
+        expect(json['hasDefault'], false);
+        expect(json['defaultValue'], '[]');
+      });
+
+      test('for scalar', () {
+        const config = RpcFieldConfig(
+          name: 'test',
+          type: 'String',
+          isList: false,
+          defaultValue: 'null',
+        );
+        final json = config.toJson();
+        expect(json['name'], 'test');
+        expect(json['parameterName'], 'test');
+        expect(json['baseType'], 'String');
+        expect(json['paramType'], 'String');
+        expect(json['isList'], false);
+        expect(json['hasDefault'], true);
+        expect(json['defaultValue'], 'null');
+      });
+
+      test('for dynamic', () {
+        const config = RpcFieldConfig(
+          name: 'test',
+          type: 'dynamic',
+          isList: false,
+        );
+        final json = config.toJson();
+        expect(json['name'], 'test');
+        expect(json['parameterName'], 'test');
+        expect(json['baseType'], 'dynamic');
+        expect(json['paramType'], 'dynamic');
+        expect(json['isList'], false);
+        expect(json['hasDefault'], false);
+        expect(json['defaultValue'], 'null');
+      });
     });
 
     test('equality', () {
