@@ -46,6 +46,6 @@ Future<void> bundleBricks({
   }
 
   // Format the generated code
-  Process.runSync('dart', ['format', outputFolder]);
+  await Process.run('dart', ['format', outputFolder]);
   logger.info('Formatted generated bricks in $outputFolder');
 }
