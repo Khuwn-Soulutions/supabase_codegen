@@ -1,4 +1,5 @@
 import 'package:mason_logger/mason_logger.dart';
+import 'package:supabase/supabase.dart';
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// A list of dictionaries (`Map<String, dynamic>`)
