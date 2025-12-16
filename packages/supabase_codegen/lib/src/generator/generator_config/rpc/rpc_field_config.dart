@@ -72,6 +72,9 @@ class RpcFieldConfig {
   /// Parameter name
   String get parameterName => name.toCamelCase();
 
+  /// Field name
+  String get fieldName => '${parameterName}Field';
+
   /// Argument type
   final String type;
 
@@ -93,6 +96,9 @@ class RpcFieldConfig {
 
   /// Parameter type
   String get paramType => isList ? 'List<$type>' : type;
+
+  /// Is the type dynamic
+  bool get isDynamic => type == 'dynamic';
 
   @override
   bool operator ==(Object other) {
@@ -116,9 +122,11 @@ class RpcFieldConfig {
   Map<String, dynamic> toJson() => {
     'name': name,
     'parameterName': parameterName,
+    'fieldName': fieldName,
     'baseType': type,
     'paramType': paramType,
     'isList': isList,
+    'isDynamic': isDynamic,
     'hasDefault': defaultValue != null,
     'defaultValue': defaultValueJson,
   };
