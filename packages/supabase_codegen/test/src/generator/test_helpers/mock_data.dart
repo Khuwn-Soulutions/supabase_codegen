@@ -72,6 +72,15 @@ final testRpcFunctionsData = [
   },
   {
     'schema_name': 'public',
+    'function_name': 'get_user_summary',
+    'arguments':
+        'min_logins integer DEFAULT 0, role_filter text DEFAULT NULL, '
+        'limit_count integer DEFAULT 50, offset_count integer DEFAULT 0',
+    'return_type':
+        'TABLE(email text, login_count integer, roles text[], profile jsonb)',
+  },
+  {
+    'schema_name': 'public',
     'function_name': 'greet_person',
     'arguments': 'payload jsonb',
     'return_type': 'text',
