@@ -62,7 +62,7 @@ class RpcConfig {
   String get returnsClassName => switch (returnType.type) {
     RpcReturnType.setOf =>
       returnType.fields.firstOrNull?.type != null
-          ? '${returnType.fields.firstOrNull!.type}Row'
+          ? '${returnType.fields.first.type}Row'
           : 'dynamic',
     _ => returnsBaseType,
   };
