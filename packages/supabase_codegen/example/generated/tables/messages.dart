@@ -40,7 +40,7 @@ class MessagesRow extends SupabaseDataRow {
   /// Messages private constructor from data map
   const MessagesRow._(super.data);
 
-  /// Create Messages Row from a [data] map
+  /// Create [MessagesRow] from a [data] map
   factory MessagesRow.fromJson(Map<String, dynamic> data) =>
       MessagesRow._(data.cleaned);
 
