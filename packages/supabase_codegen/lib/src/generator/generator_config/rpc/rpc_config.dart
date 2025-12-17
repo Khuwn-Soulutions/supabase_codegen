@@ -78,7 +78,7 @@ class RpcConfig {
   bool get returnsScalarList =>
       returnType.type == RpcReturnType.scalar &&
       returnType.fields.isNotEmpty &&
-      returnType.fields.first.isList == true;
+      returnType.fields.first.isList;
 
   /// Copy [RpcConfig] with new values
   RpcConfig copyWith({
