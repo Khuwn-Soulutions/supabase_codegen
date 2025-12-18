@@ -1,16 +1,105 @@
 import 'dart:io';
 
+import 'package:dcli/dcli.dart' as dcli;
+import 'package:mason/mason.dart' as mason;
+import 'package:mason_logger/mason_logger.dart';
+import 'package:path/path.dart';
+
 import 'sql/sql.dart';
 
-void main() async {
-  /// Variable to store sql functions
-  final functions = sqlFunctions.join('\n');
+/// Add codegen functions migration name
+const _addFunctions = 'add_codegen_functions';
 
+/// Update codegen functions migration name
+/// Used when migration with [_addFunctions] already exists
+const _updateFunctions = 'update_codegen_functions';
+
+/// Working directory for migrations
+const _migrationsDirectory = './supabase/migrations';
+
+/// Logger for output
+final logger = mason.Logger();
+
+void main() async {
+  await checkMigration();
+}
+
+/// Check for migration to apply to add or update codegen functions
+Future<void> checkMigration() async {
+  final result = await getMigration();
+  if (result == null) {
+    logger.info('No migration to apply.');
+    return;
+  }
+
+  final (:migration, :name) = result;
+  logger.detail(dcli.green('Migration to add/update: $name'));
+  await addCodegenFunctionsMigration(migration: migration, name: name);
+  logger.success('Migration created please apply to your database.');
+
+  exit(0);
+}
+
+/// Get migration to apply to add or update codegen functions
+Future<({String migration, String name})?> getMigration() async {
+  final files =
+      dcli
+          .find(
+            '*($_addFunctions|$_updateFunctions).sql',
+            workingDirectory: _migrationsDirectory,
+          )
+          .toList()
+        ..sort();
+  logger
+    ..detail('Found migrations:')
+    ..detail(files.map(relative).join('\n'));
+  final migrationName = files.isNotEmpty ? _updateFunctions : _addFunctions;
+  logger.detail('Using migration name: $migrationName');
+
+  /// Variable to store sql functions
+  final allFunctions = sqlFunctions.toList();
+
+  /// Check all migrations for changes
+  for (final file in files) {
+    /// Read contents of latest migration
+    final contents = File(file).readAsStringSync();
+
+    /// Remove functions that exist in migration from [allFunctions]
+    final functions = allFunctions.toList();
+    for (final function in functions) {
+      if (contents.contains(function.trim())) {
+        allFunctions.remove(function);
+      }
+    }
+
+    // If no new functions to add, exit
+    if (allFunctions.isEmpty) {
+      logger.info(
+        dcli.green('No function changes detected since latest migration.'),
+      );
+      return null;
+    }
+  }
+
+  logger.info(dcli.yellow('Function changes detected since latest migration.'));
+
+  /// The migration to add/update
+  final migration = allFunctions.join('\n');
+
+  logger.detail('Migration found to be applied: $migration');
+  return (migration: migration, name: migrationName);
+}
+
+/// Add codegen functions migration
+Future<void> addCodegenFunctionsMigration({
+  required String migration,
+  String name = _addFunctions,
+}) async {
   /// Create new migration using supabase CLI
   final result = await Process.run('supabase', [
     'migration',
     'new',
-    'add_codegen_functions',
+    name,
   ], runInShell: true);
 
   /// Read path of migration
@@ -18,11 +107,12 @@ void main() async {
   if (path.isEmpty) return;
 
   /// Write the sql functions to migration file
-  File(path).writeAsStringSync(functions);
+  path.write(migration);
 
   // Print result to shell
   // ignore: avoid_print
-  print('Migration file created at: $path');
+  final pathLink = link(uri: Uri.file(path), message: path);
+  logger.info('Migration file created at: $pathLink');
 }
 
 /// Extract the path from the given [input]
