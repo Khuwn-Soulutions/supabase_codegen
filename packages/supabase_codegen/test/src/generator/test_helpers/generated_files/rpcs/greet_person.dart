@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for greet_person rpc
-extension GreetPersonRpc on SupabaseClient {
+extension GreetPersonRpc on SupabaseCodegenFunctions {
   /// Greet Person
   Future<String> greetPerson({required dynamic payload}) =>
       rpc<String>('greet_person', params: {'payload': payload});

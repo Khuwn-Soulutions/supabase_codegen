@@ -41,7 +41,7 @@ class GetUserSummaryResponse extends RpcTableResponse {
 }
 
 /// RPC extension for get_user_summary rpc
-extension GetUserSummaryRpc on SupabaseClient {
+extension GetUserSummaryRpc on SupabaseCodegenFunctions {
   /// Get User Summary
   Future<List<GetUserSummaryResponse>> getUserSummary({
     int? minLogins,

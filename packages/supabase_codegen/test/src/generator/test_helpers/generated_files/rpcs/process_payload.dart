@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for process_payload rpc
-extension ProcessPayloadRpc on SupabaseClient {
+extension ProcessPayloadRpc on SupabaseCodegenFunctions {
   /// Process Payload
   Future<dynamic> processPayload({required dynamic payload}) =>
       rpc<dynamic>('process_payload', params: {'payload': payload});

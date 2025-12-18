@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for get_tags rpc
-extension GetTagsRpc on SupabaseClient {
+extension GetTagsRpc on SupabaseCodegenFunctions {
   /// Get Tags
   Future<List<String>> getTags({required int entityId}) async {
     final response = await rpc<List<dynamic>>(

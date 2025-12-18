@@ -7,7 +7,7 @@ import 'package:supabase_codegen/supabase_codegen.dart';
 import '../tables/users.dart';
 
 /// RPC extension for list_users rpc
-extension ListUsersRpc on SupabaseClient {
+extension ListUsersRpc on SupabaseCodegenFunctions {
   /// List Users
   Future<List<UsersRow>> listUsers() async {
     final response = await rpc<List<Map<String, dynamic>>>('list_users');

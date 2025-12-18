@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for reverse_int_array rpc
-extension ReverseIntArrayRpc on SupabaseClient {
+extension ReverseIntArrayRpc on SupabaseCodegenFunctions {
   /// Reverse Int Array
   Future<List<int>> reverseIntArray({required List<int> inputArray}) async {
     final response = await rpc<List<dynamic>>(

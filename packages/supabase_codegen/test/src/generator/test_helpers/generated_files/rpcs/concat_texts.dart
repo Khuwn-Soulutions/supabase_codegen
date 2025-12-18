@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for concat_texts rpc
-extension ConcatTextsRpc on SupabaseClient {
+extension ConcatTextsRpc on SupabaseCodegenFunctions {
   /// Concat Texts
   Future<String> concatTexts({required List<String> parts}) =>
       rpc<String>('concat_texts', params: {'parts': parts});

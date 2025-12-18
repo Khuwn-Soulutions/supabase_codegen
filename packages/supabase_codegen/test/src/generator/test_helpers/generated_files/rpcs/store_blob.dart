@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for store_blob rpc
-extension StoreBlobRpc on SupabaseClient {
+extension StoreBlobRpc on SupabaseCodegenFunctions {
   /// Store Blob
   Future<bool> storeBlob({required String encodedBase64}) =>
       rpc<bool>('store_blob', params: {'encoded_base64': encodedBase64});

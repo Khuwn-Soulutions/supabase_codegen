@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for add_numbers rpc
-extension AddNumbersRpc on SupabaseClient {
+extension AddNumbersRpc on SupabaseCodegenFunctions {
   /// Add Numbers
   Future<int> addNumbers({required int a, required int b}) =>
       rpc<int>('add_numbers', params: {'a': a, 'b': b});

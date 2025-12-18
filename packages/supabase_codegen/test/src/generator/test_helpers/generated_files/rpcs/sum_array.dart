@@ -4,7 +4,7 @@
 import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// RPC extension for sum_array rpc
-extension SumArrayRpc on SupabaseClient {
+extension SumArrayRpc on SupabaseCodegenFunctions {
   /// Sum Array
   Future<int> sumArray({required List<int> arr}) =>
       rpc<int>('sum_array', params: {'arr': arr});
