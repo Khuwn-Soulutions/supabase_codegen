@@ -9,7 +9,7 @@ import '../tables/{{rpcs.returnsBaseType.snakeCase()}}.dart';{{/rpcs.returnType.
 
 
 /// RPC extension for {{rpcs.functionName}} rpc
-extension {{rpcs.className}}Rpc on SupabaseClient {
+extension {{rpcs.className}}Rpc on SupabaseCodegenFunctions {
   /// {{rpcs.functionName.titleCase()}}
   Future<{{{rpcs.returnsTypeName}}}> {{rpcs.methodName}}({{#rpcs.hasArgs}} { {{/rpcs.hasArgs}}
     {{#rpcs.args}}{{^hasDefault}}required {{/hasDefault}}{{> argument }},
