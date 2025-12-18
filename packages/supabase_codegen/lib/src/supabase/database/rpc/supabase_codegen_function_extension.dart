@@ -15,7 +15,7 @@ import 'package:supabase/supabase.dart';
 /// Example:
 /// ```dart
 /// final client = SupabaseClient(url, key);
-/// final result = await client.functions.someGeneratedRpcMethod();
+/// final result = await client.fn.someGeneratedRpcMethod();
 /// ```
 class SupabaseCodegenFunctions {
   /// Creates a [SupabaseCodegenFunctions] instance with the given [rpc] method.
@@ -25,7 +25,7 @@ class SupabaseCodegenFunctions {
   /// Supabase database.
   ///
   /// This constructor is typically not called directly by users, but rather
-  /// through the [SupabaseClient.functions] getter.
+  /// through the [SupabaseClient.fn] getter.
   const SupabaseCodegenFunctions(this.rpc);
 
   /// The underlying RPC method used to call stored procedures in the database.
@@ -64,8 +64,8 @@ final _functionsExpando = Expando<SupabaseCodegenFunctions>();
 /// final client = SupabaseClient(url, key);
 ///
 /// // Access generated RPC functions through functions
-/// final users = await client.functions.getActiveUsers();
-/// final stats = await client.functions.calculateStatistics(year: 2024);
+/// final users = await client.fn.getActiveUsers();
+/// final stats = await client.fn.calculateStatistics(year: 2024);
 /// ```
 extension SupabaseCodegenFunctionsExtension on SupabaseClient {
   /// Gets the [SupabaseCodegenFunctions] instance for this client.
@@ -86,7 +86,7 @@ extension SupabaseCodegenFunctionsExtension on SupabaseClient {
   /// final client = SupabaseClient(url, key);
   ///
   /// // Use the functions getter to call generated methods
-  /// await client.functions.someGeneratedMethod();
+  /// await client.fn.someGeneratedMethod();
   /// ```
   SupabaseCodegenFunctions get fn {
     return _functionsExpando[this] ??= SupabaseCodegenFunctions(rpc);
