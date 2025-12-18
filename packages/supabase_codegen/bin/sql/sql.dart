@@ -7,4 +7,4 @@ export 'get_rpc_functions.dart';
 export 'get_schema_info.dart';
 
 /// List of sql functions
-const sqlFunctions = [getEnumTypes, getRpcFunctions, getSchemaInfo];
+final sqlFunctions = [getEnumTypes, getRpcFunctions, getSchemaInfo];

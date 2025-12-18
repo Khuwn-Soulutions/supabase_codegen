@@ -1,5 +1,13 @@
-const getEnumTypes = r'''
-CREATE OR REPLACE FUNCTION public.get_enum_types()
+import 'codegen_sql_function.dart';
+
+final _fn = 'public.${CodegenSqlFunction.getEnumTypes.name}';
+
+/// Function to get enum types
+final getEnumTypes =
+    '''
+CREATE OR REPLACE FUNCTION $_fn()
+'''
+    r'''
 RETURNS TABLE (
     enum_name text,
     enum_value text
@@ -23,10 +31,12 @@ BEGIN
         e.enumsortorder;
 END;
 $$;
+'''
+    '''
 
 --- Revoke access to the function
-REVOKE EXECUTE ON FUNCTION public.get_enum_types FROM public, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION $_fn FROM public, anon, authenticated;
 
 -- Grant access to the function
-GRANT EXECUTE ON FUNCTION public.get_enum_types TO service_role;
+GRANT EXECUTE ON FUNCTION $_fn TO service_role;
 ''';
