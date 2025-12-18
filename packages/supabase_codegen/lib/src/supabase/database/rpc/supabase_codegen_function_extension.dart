@@ -25,7 +25,7 @@ class SupabaseCodegenFunctions {
   /// Supabase database.
   ///
   /// This constructor is typically not called directly by users, but rather
-  /// through the [SupabaseClient.fn] getter.
+  /// through the [SupabaseClient] instance's `fn` getter.
   const SupabaseCodegenFunctions(this.rpc);
 
   /// The underlying RPC method used to call stored procedures in the database.
