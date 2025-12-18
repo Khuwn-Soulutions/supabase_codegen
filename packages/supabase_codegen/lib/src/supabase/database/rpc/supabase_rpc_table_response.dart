@@ -12,7 +12,7 @@ abstract class RpcTableResponse {
   final Map<String, dynamic> _json;
 
   /// Raw access (advanced users)
-  Map<String, dynamic> get raw => _json;
+  Map<String, dynamic> get raw => Map.unmodifiable(_json);
 
   /// Check if a field is null
   bool isNull(String field) =>
