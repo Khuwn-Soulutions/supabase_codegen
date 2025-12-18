@@ -36,8 +36,6 @@ Future<void> checkMigration() async {
   logger.detail(dcli.green('Migration to add/update: $name'));
   await addCodegenFunctionsMigration(migration: migration, name: name);
   logger.success('Migration created please apply to your database.');
-
-  exit(0);
 }
 
 /// Get migration to apply to add or update codegen functions
