@@ -64,7 +64,7 @@ class GetSchemaInfoResponse extends RpcTableResponse {
 }
 
 /// RPC extension for get_schema_info rpc
-extension GetSchemaInfoRpc on SupabaseClient {
+extension GetSchemaInfoRpc on SupabaseCodegenFunctions {
   /// Get Schema Info
   Future<List<GetSchemaInfoResponse>> getSchemaInfo() async {
     final response = await rpc<List<Map<String, dynamic>>>('get_schema_info');

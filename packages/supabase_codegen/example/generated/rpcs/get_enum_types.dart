@@ -28,7 +28,7 @@ class GetEnumTypesResponse extends RpcTableResponse {
 }
 
 /// RPC extension for get_enum_types rpc
-extension GetEnumTypesRpc on SupabaseClient {
+extension GetEnumTypesRpc on SupabaseCodegenFunctions {
   /// Get Enum Types
   Future<List<GetEnumTypesResponse>> getEnumTypes() async {
     final response = await rpc<List<Map<String, dynamic>>>('get_enum_types');

@@ -40,7 +40,7 @@ class GetRpcFunctionsResponse extends RpcTableResponse {
 }
 
 /// RPC extension for get_rpc_functions rpc
-extension GetRpcFunctionsRpc on SupabaseClient {
+extension GetRpcFunctionsRpc on SupabaseCodegenFunctions {
   /// Get Rpc Functions
   Future<List<GetRpcFunctionsResponse>> getRpcFunctions({
     bool? includeInternals,
