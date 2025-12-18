@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dcli/dcli.dart' as dcli;
-import 'package:mason/mason.dart' as mason;
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
+import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 import 'sql/sql.dart';
 
@@ -16,9 +16,6 @@ const _updateFunctions = 'update_codegen_functions';
 
 /// Working directory for migrations
 const _migrationsDirectory = './supabase/migrations';
-
-/// Logger for output
-final logger = mason.Logger();
 
 void main() async {
   await checkMigration();
@@ -102,7 +99,13 @@ Future<void> addCodegenFunctionsMigration({
 
   /// Read path of migration
   final path = extractPath(result.stdout.toString());
-  if (path.isEmpty) return;
+  if (path.isEmpty) {
+    logger
+      ..err('Failed to extract migration path from CLI output.')
+      ..detail('CLI stdout: ${result.stdout}')
+      ..detail('CLI stderr: ${result.stderr}');
+    return;
+  }
 
   /// Write the sql functions to migration file
   path.write(migration);
