@@ -3,6 +3,14 @@ import 'add_codegen_functions.dart';
 
 /// Main function
 void main(List<String> args) async {
-  await checkMigration();
-  await runGenerateTypes(args, config: GeneratorConfigParams.empty());
+  try {
+    await checkMigration();
+    await runGenerateTypes(args, config: GeneratorConfigParams.empty());
+  }
+  // Catch and log any errors or exceptions
+  // ignore: avoid_catches_without_on_clauses
+  catch (e) {
+    // Log the error message
+    logger.err('Error while generating types: $e');
+  }
 }
