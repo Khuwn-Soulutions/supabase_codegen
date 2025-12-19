@@ -51,7 +51,7 @@ final _functionsExpando = Expando<SupabaseCodegenFunctions>();
 /// Extension on [SupabaseClient] that provides access to
 /// generated RPC functions.
 ///
-/// This extension adds a [functions] getter to all [SupabaseClient] instances,
+/// This extension adds a [fn] getter to all [SupabaseClient] instances,
 /// which serves as an access point for codegen-generated RPC function methods.
 ///
 /// The extension uses lazy initialization to create a single
@@ -63,7 +63,7 @@ final _functionsExpando = Expando<SupabaseCodegenFunctions>();
 /// ```dart
 /// final client = SupabaseClient(url, key);
 ///
-/// // Access generated RPC functions through functions
+/// // Access generated RPC functions through fn
 /// final users = await client.fn.getActiveUsers();
 /// final stats = await client.fn.calculateStatistics(year: 2024);
 /// ```
@@ -85,7 +85,7 @@ extension SupabaseCodegenFunctionsExtension on SupabaseClient {
   /// ```dart
   /// final client = SupabaseClient(url, key);
   ///
-  /// // Use the functions getter to call generated methods
+  /// // Use the fn getter to call generated methods
   /// await client.fn.someGeneratedMethod();
   /// ```
   SupabaseCodegenFunctions get fn {
