@@ -16,5 +16,6 @@ coverage/*
 .flutter-plugins
 
 # Generated files/folders
-supabase/migrations/*_add_codegen_functions.sql
+supabase/migrations/*_codegen_functions.sql
 .supabase_codegen_lock.yaml
+tmp_gen/

@@ -10,7 +10,7 @@ void main() {
         DartType.double: '0.0',
         DartType.bool: 'false',
         DartType.string: "''",
-        DartType.dateTime: 'DateTime.now()',
+        DartType.dateTime: 'DateTime(2000)',
         DartType.uuidValue: 'const Uuid().v4obj()',
         DartType.dynamic: DartType.nullString,
         'List<String>': 'const <String>[]',
@@ -44,10 +44,10 @@ void main() {
           ),
           (
             defaultValue: "(now() AT TIME ZONE 'utc'::text)",
-            value: 'DateTime.now()',
+            value: 'DateTime(2000)',
           ),
-          (defaultValue: "(now()'::text)", value: 'DateTime.now()'),
-          (defaultValue: 'CURRENT_TIMESTAMP', value: 'DateTime.now()'),
+          (defaultValue: "(now()'::text)", value: 'DateTime(2000)'),
+          (defaultValue: 'CURRENT_TIMESTAMP', value: 'DateTime(2000)'),
         ],
         'dynamic': [
           (defaultValue: "'{}'::jsonb", value: '{}'),

@@ -1,5 +1,13 @@
-const getSchemaInfo = r'''
-CREATE OR REPLACE FUNCTION public.get_schema_info()
+import 'codegen_sql_function.dart';
+
+final _fn = 'public.${CodegenSqlFunction.getSchemaInfo.name}';
+
+/// Function to get schema information for all tables in the public schema.
+final getSchemaInfo =
+    '''
+CREATE OR REPLACE FUNCTION $_fn()
+'''
+    r'''
 RETURNS TABLE (
     table_name text,
     column_name text,
@@ -40,10 +48,12 @@ BEGIN
         c.ordinal_position;
 END;
 $$;
+'''
+    '''
 
 --- Revoke access to the function
-REVOKE EXECUTE ON FUNCTION public.get_schema_info FROM public, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION $_fn FROM public, anon, authenticated;
 
 -- Grant access to the function
-GRANT EXECUTE ON FUNCTION public.get_schema_info TO service_role;
+GRANT EXECUTE ON FUNCTION $_fn TO service_role;
 ''';

@@ -18,7 +18,7 @@ class MessagesTable extends SupabaseTable<MessagesRow> {
       MessagesRow.fromJson(data);
 }
 
-/// Messages constructor
+/// Messages Row
 class MessagesRow extends SupabaseDataRow {
   /// Messages Row
   MessagesRow({
@@ -37,10 +37,10 @@ class MessagesRow extends SupabaseDataRow {
          if (messageType != null) messageTypeField: supaSerialize(messageType),
        });
 
-  /// Messages default constructor
+  /// Messages private constructor from data map
   const MessagesRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [MessagesRow] from a [data] map
   factory MessagesRow.fromJson(Map<String, dynamic> data) =>
       MessagesRow._(data.cleaned);
 
@@ -77,7 +77,7 @@ class MessagesRow extends SupabaseDataRow {
 
   /// Created At
   DateTime get createdAt =>
-      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+      getField<DateTime>(createdAtField, defaultValue: DateTime(2000))!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
   /// Message Type column name (message_type)
@@ -106,4 +106,4 @@ class MessagesRow extends SupabaseDataRow {
   });
 }
 
-// Date: 2025-11-21 01:24:48.199973
+// Date: 2025-12-07 14:29:31.689525

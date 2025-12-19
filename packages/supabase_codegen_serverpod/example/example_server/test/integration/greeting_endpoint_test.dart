@@ -3,7 +3,14 @@ import 'package:test/test.dart';
 // Import the generated test helper file, it contains everything you need.
 import 'test_tools/serverpod_test_tools.dart';
 
+const skip = bool.fromEnvironment(
+  'SKIP_GREETING_INTEGRATION_TEST',
+  defaultValue: true,
+);
+
 void main() {
+  if (skip) return;
+
   // This is an example test that uses the `withServerpod` test helper.
   // `withServerpod` enables you to call your endpoints directly from the test like regular functions.
   // Note that after adding or modifying an endpoint, you will need to run

@@ -17,7 +17,7 @@ class UsersTable extends SupabaseTable<UsersRow> {
   UsersRow createRow(Map<String, dynamic> data) => UsersRow.fromJson(data);
 }
 
-/// Users constructor
+/// Users Row
 class UsersRow extends SupabaseDataRow {
   /// Users Row
   UsersRow({
@@ -38,10 +38,10 @@ class UsersRow extends SupabaseDataRow {
          if (createdAt != null) createdAtField: supaSerialize(createdAt),
        });
 
-  /// Users default constructor
+  /// Users private constructor from data map
   const UsersRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [UsersRow] from a [data] map
   factory UsersRow.fromJson(Map<String, dynamic> data) =>
       UsersRow._(data.cleaned);
 
@@ -105,7 +105,7 @@ class UsersRow extends SupabaseDataRow {
 
   /// Created At
   DateTime get createdAt =>
-      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+      getField<DateTime>(createdAtField, defaultValue: DateTime(2000))!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
   /// Make a copy of the current [UsersRow]
@@ -129,4 +129,4 @@ class UsersRow extends SupabaseDataRow {
   });
 }
 
-// Date: 2025-11-21 01:24:48.199973
+// Date: 2025-12-07 14:29:31.689525

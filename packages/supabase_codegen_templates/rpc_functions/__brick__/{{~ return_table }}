@@ -1,0 +1,19 @@
+/// {@template {{rpcs.returnsClassName}}}
+/// {{rpcs.functionName}} rpc function response
+/// {@endtemplate}
+class {{rpcs.returnsClassName}} extends RpcTableResponse {
+  /// {@macro {{rpcs.returnsClassName}}}
+  const {{rpcs.returnsClassName}}._(super.json);
+
+  /// Create [{{rpcs.returnsClassName}}] from [json]
+  factory {{rpcs.returnsClassName}}.fromJson(Map<String, dynamic> json) 
+    => {{rpcs.returnsClassName}}._(json);
+
+  {{#rpcs.returnType.fields}}
+  /// {{name.titleCase()}} field name
+  static const String {{fieldName}} = '{{name}}';
+
+  /// {{name.titleCase()}}
+  {{{paramType}}} get {{parameterName}} => {{> fromJson}};
+  {{/rpcs.returnType.fields}}
+}

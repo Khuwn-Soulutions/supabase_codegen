@@ -15,7 +15,7 @@ class TestTableTable extends SupabaseTable<TestTableRow> {
       TestTableRow.fromJson(data);
 }
 
-/// Test Table constructor
+/// Test Table Row
 class TestTableRow extends SupabaseDataRow {
   /// Test Table Row
   TestTableRow({required int id, dynamic jsonValues})
@@ -24,10 +24,10 @@ class TestTableRow extends SupabaseDataRow {
         if (jsonValues != null) jsonValuesField: supaSerialize(jsonValues),
       });
 
-  /// Test Table default constructor
+  /// Test Table private constructor from data map
   const TestTableRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [TestTableRow] from a [data] map
   factory TestTableRow.fromJson(Map<String, dynamic> data) =>
       TestTableRow._(data.cleaned);
 
@@ -61,4 +61,4 @@ class TestTableRow extends SupabaseDataRow {
       });
 }
 
-// Date: 2025-11-21 01:24:48.199973
+// Date: 2025-12-07 14:29:31.689525

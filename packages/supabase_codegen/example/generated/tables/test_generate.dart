@@ -15,7 +15,7 @@ class TestGenerateTable extends SupabaseTable<TestGenerateRow> {
       TestGenerateRow.fromJson(data);
 }
 
-/// Test Generate constructor
+/// Test Generate Row
 class TestGenerateRow extends SupabaseDataRow {
   /// Test Generate Row
   TestGenerateRow({
@@ -48,10 +48,10 @@ class TestGenerateRow extends SupabaseDataRow {
          if (timestamp != null) timestampField: supaSerialize(timestamp),
        });
 
-  /// Test Generate default constructor
+  /// Test Generate private constructor from data map
   const TestGenerateRow._(super.data);
 
-  /// Create $classDesc Row from a [data] map
+  /// Create [TestGenerateRow] from a [data] map
   factory TestGenerateRow.fromJson(Map<String, dynamic> data) =>
       TestGenerateRow._(data.cleaned);
 
@@ -83,7 +83,7 @@ class TestGenerateRow extends SupabaseDataRow {
 
   /// Created At
   DateTime get createdAt =>
-      getField<DateTime>(createdAtField, defaultValue: DateTime.now())!;
+      getField<DateTime>(createdAtField, defaultValue: DateTime(2000))!;
   set createdAt(DateTime value) => setField<DateTime>(createdAtField, value);
 
   /// Is Nullable column name (is_nullable)
@@ -199,4 +199,4 @@ class TestGenerateRow extends SupabaseDataRow {
   });
 }
 
-// Date: 2025-11-21 01:24:48.199973
+// Date: 2025-12-07 14:29:31.689525

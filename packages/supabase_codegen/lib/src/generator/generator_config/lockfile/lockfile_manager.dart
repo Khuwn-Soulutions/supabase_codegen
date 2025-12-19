@@ -1,8 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
+
 import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
+
+/// Enum folder
+const enumsFolder = 'enums';
+
+/// Table folder
+const tablesFolder = 'tables';
+
+/// RPC folder
+const rpcsFolder = 'rpcs';
 
 /// Generator lockfile manager
 class GeneratorLockfileManager {
@@ -50,7 +61,7 @@ class GeneratorLockfileManager {
   Future<
     ({
       GeneratorConfig? upserts,
-      ({List<String> tables, List<String> enums})? deletes,
+      List<String>? deletes,
       GeneratorLockfile lockfile,
     })
   >
@@ -80,13 +91,17 @@ class GeneratorLockfileManager {
     // --- Lockfile changed ---
     logger.detail('Data changed, diffing data');
 
-    // Identify deleted tables/enums
+    // Identify deleted files
     final deletedTables = previousLockFile.tables.keys
         .where((t) => !currentLockFile.tables.containsKey(t))
         .toList();
 
     final deletedEnums = previousLockFile.enums.keys
         .where((e) => !currentLockFile.enums.containsKey(e))
+        .toList();
+
+    final deletedRpcs = previousLockFile.rpcs.keys
+        .where((r) => !currentLockFile.rpcs.containsKey(r))
         .toList();
 
     // Identify upserted (added or changed) tables/enums
@@ -98,8 +113,15 @@ class GeneratorLockfileManager {
         .where((e) => previousLockFile.enums[e] != currentLockFile.enums[e])
         .toList();
 
+    final upsertRpcNames = currentLockFile.rpcs.keys
+        .where((r) => previousLockFile.rpcs[r] != currentLockFile.rpcs[r])
+        .toList();
+
     // Build filtered GeneratorConfigs
-    final upserts = (upsertTableNames.isEmpty && upsertEnumNames.isEmpty)
+    final upserts =
+        (upsertTableNames.isEmpty &&
+            upsertEnumNames.isEmpty &&
+            upsertRpcNames.isEmpty)
         ? null
         : config.copyWith(
             tables: config.tables
@@ -108,11 +130,34 @@ class GeneratorLockfileManager {
             enums: config.enums
                 .where((e) => upsertEnumNames.contains(e.fileName))
                 .toList(),
+            rpcs: config.rpcs
+                .where((r) => upsertRpcNames.contains(r.functionName))
+                .toList(),
           );
 
-    final deletes = (deletedTables.isEmpty && deletedEnums.isEmpty)
+    final deletes =
+        (deletedTables.isEmpty && deletedEnums.isEmpty && deletedRpcs.isEmpty)
         ? null
-        : (tables: deletedTables, enums: deletedEnums);
+        : [
+            ...deletedEnums.map(
+              (e) => path.join(
+                enumsFolder,
+                '${e.toSnakeCase()}.${config.fileType}',
+              ),
+            ),
+            ...deletedTables.map(
+              (t) => path.join(
+                tablesFolder,
+                '${t.toSnakeCase()}.${config.fileType}',
+              ),
+            ),
+            ...deletedRpcs.map(
+              (r) => path.join(
+                rpcsFolder,
+                '${r.toSnakeCase()}.${config.fileType}',
+              ),
+            ),
+          ];
 
     return (upserts: upserts, deletes: deletes, lockfile: currentLockFile);
   }

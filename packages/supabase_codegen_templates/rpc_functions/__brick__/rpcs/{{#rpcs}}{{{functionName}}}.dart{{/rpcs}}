@@ -1,0 +1,41 @@
+{{> header}}
+
+import 'package:{{package}}/{{package}}.dart';
+{{#rpcs.returnType.returnsSetOf}}// Relative import of table
+// ignore_for_file: relative_imports
+import '../tables/{{rpcs.returnsBaseType.snakeCase()}}.dart';{{/rpcs.returnType.returnsSetOf}}
+
+{{#rpcs.returnType.returnsTable}}{{> return_table }}{{/rpcs.returnType.returnsTable}}
+
+
+/// RPC extension for {{rpcs.functionName}} rpc
+extension {{rpcs.className}}Rpc on SupabaseCodegenFunctions {
+  /// {{rpcs.functionName.titleCase()}}
+  Future<{{{rpcs.returnsTypeName}}}> {{rpcs.methodName}}({{#rpcs.hasArgs}} { {{/rpcs.hasArgs}}
+    {{#rpcs.args}}{{^hasDefault}}required {{/hasDefault}}{{> argument }},
+    {{/rpcs.args}}
+  {{#rpcs.hasArgs}} } {{/rpcs.hasArgs}}){{#rpcs.returnType.returnsScalar}} 
+
+    {{! Use arrow return for non-list scalar return types }}
+    {{^rpcs.returnsScalarList}}
+    => rpc<{{{rpcs.returnsTypeName}}}>{{> rpc_function_body }}
+    {{/rpcs.returnsScalarList}}
+
+    {{! Use async for list of scalar return types }}
+    {{#rpcs.returnsScalarList}} async {
+    final response = await rpc<List<dynamic>>{{> rpc_function_body }}
+    
+    return {{{rpcs.returnsBaseType}}}.from(response); 
+  }
+    {{/rpcs.returnsScalarList}}
+
+    {{/rpcs.returnType.returnsScalar}}
+
+    {{! Use async for set of return types }}
+    {{^rpcs.returnType.returnsScalar}} async {
+    final response = await rpc<List<Map<String, dynamic>>>{{> rpc_function_body }}
+    
+    return response.map({{rpcs.returnsClassName}}.fromJson).toList();
+  }
+    {{/rpcs.returnType.returnsScalar}}
+}

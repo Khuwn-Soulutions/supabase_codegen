@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:change_case/change_case.dart';
 import 'package:mason/mason.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// {@template bundle_generator}
@@ -10,30 +12,49 @@ class BundleGenerator {
   /// {@macro bundle_generator}
   const BundleGenerator();
 
-  /// Generated files
-  static List<GeneratedFile> generatedFiles = [];
-
   /// Generate files to the [outputDir]
-  Future<void> generateFiles(
+  ///
+  /// The [generated] parameter is for testing only and allows tests to
+  /// inject a pre-populated or empty list to verify error handling.
+  Future<List<GeneratedFile>> generateFiles(
     Directory outputDir,
-    GeneratorConfig upserts,
-    GeneratorConfig config,
-  ) async {
+    GeneratorConfig? upserts, [
+    GeneratorConfig? barrelConfig,
+    List<GeneratedFile>? generated,
+  ]) async {
+    final generatedFiles = generated ?? [];
     final progress = logger.progress('Generating Tables and Enums...');
-    await generateTablesAndEnums(outputDir, upserts);
-    // Generate barrel files
-    if (config.barrelFiles) {
-      progress.update('Generating barrel files');
-      await generateBarrelFiles(outputDir, config);
-    }
-    progress.complete('Types generated successfully');
+    try {
+      if (upserts != null) {
+        final tablesAndEnums = await generateTablesAndEnums(outputDir, upserts);
+        generatedFiles.addAll(tablesAndEnums);
+        final rpcFunctions = await generateRpcFunctions(outputDir, upserts);
+        generatedFiles.addAll(rpcFunctions);
+      }
 
-    // Run post generation clean up process
-    await _cleanup(outputDir);
+      // Generate barrel files
+      if (barrelConfig?.barrelFiles ?? false) {
+        progress.update('Generating barrel files');
+        final barrelFiles = await generateBarrelFiles(outputDir, barrelConfig!);
+        generatedFiles.addAll(barrelFiles);
+      }
+      progress.complete('Types generated successfully');
+
+      // Run post generation clean up process
+      await cleanup(outputDir, generatedFiles: generatedFiles);
+    }
+    // Catch all exceptions and errors
+    // ignore: avoid_catches_without_on_clauses
+    catch (e) {
+      progress.fail('Generation failed: $e');
+      rethrow;
+    }
+
+    return generatedFiles;
   }
 
   /// Generate tables and enums into the [outputDir] with the provided [config]
-  Future<void> generateTablesAndEnums(
+  Future<List<GeneratedFile>> generateTablesAndEnums(
     Directory outputDir,
     GeneratorConfig config,
   ) => _generateBundle(
@@ -42,8 +63,18 @@ class BundleGenerator {
     bundle: tablesAndEnumsBundle,
   );
 
+  /// Generate RPC functions into the [outputDir] with the provided [config]
+  Future<List<GeneratedFile>> generateRpcFunctions(
+    Directory outputDir,
+    GeneratorConfig config,
+  ) => _generateBundle(
+    outputDir: outputDir,
+    config: config,
+    bundle: rpcFunctionsBundle,
+  );
+
   /// Generate barrel files into the [outputDir] with the provided [config]
-  Future<void> generateBarrelFiles(
+  Future<List<GeneratedFile>> generateBarrelFiles(
     Directory outputDir,
     GeneratorConfig config,
   ) => _generateBundle(
@@ -53,19 +84,21 @@ class BundleGenerator {
   );
 
   /// Generate the [bundle] into the [outputDir] with the provided [config]
-  Future<void> _generateBundle({
+  Future<List<GeneratedFile>> _generateBundle({
     required Directory outputDir,
     required GeneratorConfig config,
     required MasonBundle bundle,
   }) async {
     final generator = await MasonGenerator.fromBundle(bundle);
     final target = DirectoryGeneratorTarget(outputDir);
-    final files = await generator.generate(target, vars: config.toJson());
-    generatedFiles.addAll(files);
+    return generator.generate(target, vars: config.toJson());
   }
 
   /// Run post generation clean up process
-  Future<void> _cleanup(Directory outputDir) async {
+  Future<void> cleanup(
+    Directory outputDir, {
+    List<GeneratedFile> generatedFiles = const [],
+  }) async {
     final cleanup = logger.progress('Cleaning up generated files');
 
     _ensureFileExtension(outputDir);
@@ -73,9 +106,14 @@ class BundleGenerator {
 
     cleanup.complete('Generated files cleaned up successfully');
 
-    for (final file in generatedFiles) {
+    for (final (index, file) in generatedFiles.indexed) {
       final filePath = _replaceMustache(file.path);
-      logger.success('✅ $filePath ${file.status.name}');
+      generatedFiles[index] = file.copyWith(path: filePath);
+      final fileLink = link(
+        message: filePath,
+        uri: Uri.file(path.join(Directory.current.path, filePath)),
+      );
+      logger.success('✅ ${file.status.name.toCapitalCase()}: $fileLink');
     }
   }
 

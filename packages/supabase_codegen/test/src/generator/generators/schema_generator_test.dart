@@ -14,6 +14,10 @@ class MockGeneratorLockfileManager extends Mock
 class MockBundleGenerator extends Mock implements BundleGenerator {}
 
 void main() {
+  const enumFile = '$enumsFolder/my_enum.dart';
+  const tableFile = '$tablesFolder/my_table.dart';
+  const rpcFile = '$rpcsFolder/my_rpc.dart';
+
   setUpAll(() {
     registerFallbackValue(GeneratorConfig.empty());
     registerFallbackValue(GeneratorLockfile.empty());
@@ -41,6 +45,7 @@ void main() {
           'then returns a GeneratorConfig', () async {
         mockEnumRpc(testEnumOne);
         mockSchemaRpc(testTableSchema);
+        mockGetRpc([]);
         final params = GeneratorConfigParams.empty().copyWith(
           package: 'package',
           version: 'version',
@@ -71,44 +76,43 @@ void main() {
     });
 
     group('generate', () {
-      test(
-        'calls generateConfig and generateSchema and returns result',
-        () async {
-          // Arrange
-          mockEnumRpc(testEnumOne);
-          mockSchemaRpc(testTableSchema);
+      test('calls generateConfig, generateSchema and generateRpc '
+          'and returns result', () async {
+        // Arrange
+        mockEnumRpc(testEnumOne);
+        mockSchemaRpc(testTableSchema);
+        mockGetRpc([testRpcJson]);
 
-          final params = GeneratorConfigParams.empty();
+        final params = GeneratorConfigParams.empty();
 
-          // Mocking dependencies of generateSchema
-          when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
-            (_) async => (
-              deletes: (enums: <String>[], tables: <String>[]),
-              upserts: GeneratorConfig.empty(), // has upserts
-              lockfile: GeneratorLockfile.empty(),
-            ),
-          );
-          when(
-            () => mockBundleGenerator.generateFiles(any(), any(), any()),
-          ).thenAnswer((_) async {});
-          when(
-            () => mockLockfileManager.writeLockfile(
-              lockfile: any(named: 'lockfile'),
-            ),
-          ).thenAnswer((_) => true);
+        // Mocking dependencies of generateSchema
+        when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
+          (_) async => (
+            deletes: <String>[],
+            upserts: GeneratorConfig.empty(), // has upserts
+            lockfile: GeneratorLockfile.empty(),
+          ),
+        );
+        when(
+          () => mockBundleGenerator.generateFiles(any(), any(), any()),
+        ).thenAnswer((_) async => []);
+        when(
+          () => mockLockfileManager.writeLockfile(
+            lockfile: any(named: 'lockfile'),
+          ),
+        ).thenAnswer((_) => true);
 
-          // Act
-          final result = await generator.generate(params);
+        // Act
+        final result = await generator.generate(params);
 
-          // Assert
-          expect(result, isTrue);
-          // Verify that generateSchema's dependencies were called
-          verify(() => mockLockfileManager.processLockFile(any())).called(1);
-          verify(
-            () => mockBundleGenerator.generateFiles(any(), any(), any()),
-          ).called(1);
-        },
-      );
+        // Assert
+        expect(result, isTrue);
+        // Verify that generateSchema's dependencies were called
+        verify(() => mockLockfileManager.processLockFile(any())).called(1);
+        verify(
+          () => mockBundleGenerator.generateFiles(any(), any(), any()),
+        ).called(1);
+      });
     });
 
     group('generateSchema', () {
@@ -118,7 +122,7 @@ void main() {
         tempDir = Directory.systemTemp.createTempSync();
         when(
           () => mockBundleGenerator.generateFiles(any(), any(), any()),
-        ).thenAnswer((_) async {});
+        ).thenAnswer((_) async => []);
       });
 
       tearDown(() {
@@ -173,7 +177,7 @@ void main() {
           () => mockBundleGenerator.generateFiles(
             any(that: isA<Directory>()),
             upserts,
-            any(that: isA<GeneratorConfig>()),
+            any(that: isA<GeneratorConfig?>()),
           ),
         ).called(1);
         verify(
@@ -185,15 +189,17 @@ void main() {
 
       test('when only deletes, deletes files and returns true', () async {
         // Arrange
-        const enumFile = 'my_enum.dart';
-        final deletes = (enums: [enumFile], tables: <String>[]);
-        final fileToDelete = File(path.join(tempDir.path, enumFile));
-        await fileToDelete.create();
-        expect(fileToDelete.existsSync(), isTrue);
+        final deletesMock = [enumFile, tableFile, rpcFile];
+
+        for (final deletePath in deletesMock) {
+          final fileToDelete = File(path.join(tempDir.path, deletePath));
+          await fileToDelete.create(recursive: true);
+          expect(fileToDelete.existsSync(), isTrue);
+        }
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
           (_) async => (
-            deletes: deletes,
+            deletes: deletesMock,
             upserts: null,
             lockfile: GeneratorLockfile.empty(),
           ),
@@ -204,10 +210,13 @@ void main() {
 
         // Assert
         expect(result, isTrue);
-        expect(fileToDelete.existsSync(), isFalse);
-        verifyNever(
+        for (final deletePath in deletesMock) {
+          final fileToDelete = File(path.join(tempDir.path, deletePath));
+          expect(fileToDelete.existsSync(), isFalse);
+        }
+        verify(
           () => mockBundleGenerator.generateFiles(any(), any(), any()),
-        );
+        ).called(1);
         verify(
           () => mockLockfileManager.writeLockfile(
             lockfile: any(named: 'lockfile'),
@@ -218,10 +227,10 @@ void main() {
       test('when upserts and deletes, generates and deletes files', () async {
         // Arrange
         final upserts = GeneratorConfig.empty();
-        const enumFile = 'my_enum.dart';
-        final deletes = (enums: [enumFile], tables: <String>[]);
+
+        final deletes = [enumFile];
         final fileToDelete = File(path.join(tempDir.path, enumFile));
-        await fileToDelete.create();
+        await fileToDelete.create(recursive: true);
         expect(fileToDelete.existsSync(), isTrue);
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
@@ -257,9 +266,6 @@ void main() {
       test('calls lockfileManager.writeLockfile', () {
         // Arrange
         final lockfile = GeneratorLockfile.empty();
-        // when(
-        //   () => mockLockfileManager.writeLockfile(lockfile: lockfile),
-        // ).thenReturn();
 
         // Act
         generator.writeLockFile(lockfile);
@@ -283,6 +289,92 @@ void main() {
         verify(
           () => mockLockfileManager.writeLockfile(lockfile: lockfile),
         ).called(1);
+      });
+    });
+
+    group('parseBarrelFileConfig', () {
+      test('when no changes, returns null', () {
+        final config = GeneratorConfig.empty();
+        final result = generator.parseBarrelFileConfig(config: config);
+        expect(result, isNull);
+      });
+
+      test('when upserts present, returns config with modified sections', () {
+        final table = TableConfig.fromJson(const {
+          'name': 'users',
+          'columns': <Map<String, dynamic>>[],
+        });
+        final config = GeneratorConfig.empty().copyWith(tables: [table]);
+        final upserts = GeneratorConfig.empty().copyWith(tables: [table]);
+
+        final result = generator.parseBarrelFileConfig(
+          config: config,
+          upserts: upserts,
+        );
+
+        expect(result, isNotNull);
+        expect(result!.tables, hasLength(1));
+        expect(result.tables.first.name, 'users');
+        expect(result.enums, isEmpty);
+        expect(result.rpcs, isEmpty);
+      });
+
+      test(
+        'when deletes present in folder, returns config with modified sections',
+        () {
+          final table = TableConfig.fromJson(const {
+            'name': 'users',
+            'columns': <Map<String, dynamic>>[],
+          });
+          final config = GeneratorConfig.empty().copyWith(tables: [table]);
+          final deletes = ['tables/old_table.dart'];
+
+          final result = generator.parseBarrelFileConfig(
+            config: config,
+            deletes: deletes,
+          );
+
+          expect(result, isNotNull);
+          expect(result!.tables, hasLength(1));
+          expect(result.enums, isEmpty);
+          expect(result.rpcs, isEmpty);
+        },
+      );
+
+      test('when deletes not in folder, returns null', () {
+        final config = GeneratorConfig.empty();
+        final deletes = ['root_file.dart'];
+
+        final result = generator.parseBarrelFileConfig(
+          config: config,
+          deletes: deletes,
+        );
+
+        expect(result, isNull);
+      });
+
+      test('preserves other config properties', () {
+        final table = TableConfig.fromJson(const {
+          'name': 'users',
+          'columns': <Map<String, dynamic>>[],
+        });
+        const package = 'my_pkg';
+        const tag = '1.2.3';
+        final config = GeneratorConfig.empty().copyWith(
+          tables: [table],
+          package: package,
+          tag: tag,
+        );
+        final upserts = GeneratorConfig.empty().copyWith(tables: [table]);
+
+        final result = generator.parseBarrelFileConfig(
+          config: config,
+          upserts: upserts,
+        );
+
+        expect(result, isNotNull);
+        expect(result!.package, package);
+        expect(result.tag, tag);
       });
     });
   });

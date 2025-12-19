@@ -13,6 +13,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
     required super.forFlutter,
     required super.tag,
     required super.barrelFiles,
+    super.fileType = dartFileType,
     this.overrides = const {},
   });
 
@@ -37,6 +38,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
         forFlutter: json['forFlutter'] as bool,
         tag: json['tag'] as String,
         barrelFiles: json['barrelFiles'] as bool,
+        fileType: json['fileType'] as String? ?? dartFileType,
         overrides: SchemaOverrides.from(
           json['overrides'] as Map<String, dynamic>? ?? {},
         ),
@@ -62,6 +64,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
     'forFlutter': forFlutter,
     'tag': tag,
     'barrelFiles': barrelFiles,
+    'fileType': fileType,
     'hasTag': tag.isNotEmpty,
     'overrides': overrides,
   };
@@ -76,6 +79,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
     String? version,
     bool? forFlutter,
     bool? barrelFiles,
+    String? fileType,
     String? tag,
     List<TableConfig>? tables,
     List<EnumConfig>? enums,
@@ -88,6 +92,7 @@ class GeneratorConfigParams extends GeneratorConfigBase {
     forFlutter: forFlutter ?? this.forFlutter,
     tag: tag ?? this.tag,
     barrelFiles: barrelFiles ?? this.barrelFiles,
+    fileType: fileType ?? this.fileType,
     overrides: overrides ?? this.overrides,
   );
 }

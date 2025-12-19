@@ -120,8 +120,10 @@ void main() {
           ...createEnumSchema('my_values', ['value1', 'value2']),
           ...createEnumSchema('choices', ['a', 'b', 'c']),
         ];
-        final enumsDir = Directory(path.join(tempDir.path, 'enums'));
-        final tablesDir = Directory(path.join(tempDir.path, 'tables'));
+
+        final enumsDir = Directory(path.join(tempDir.path, enumsFolder));
+        final tablesDir = Directory(path.join(tempDir.path, tablesFolder));
+
         final codeGenerator = ServerpodCodeGenerator(
           schemaGenerator: SupabaseSchemaGenerator(
             bundleGenerator: const SpyBundleGenerator(),
@@ -137,10 +139,11 @@ void main() {
         );
         mockEnumRpc(enums);
         mockSchemaRpc(tables);
+        mockGetRpc([testRpcJson]);
 
         when(() => mockLockfileManager.processLockFile(any())).thenAnswer(
           (inv) async => (
-            deletes: (enums: <String>[], tables: <String>[]),
+            deletes: <String>[],
             upserts: inv.positionalArguments.first as GeneratorConfig,
             lockfile: GeneratorLockfile.empty(),
           ),

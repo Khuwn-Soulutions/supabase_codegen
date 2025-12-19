@@ -9,28 +9,42 @@ class SpyBundleGenerator extends BundleGenerator {
   /// Constructor
   const SpyBundleGenerator();
 
-  /// Generated files
-  static List<GeneratedFile> generatedFiles = [];
-
   @override
-  Future<void> generateFiles(
+  Future<List<GeneratedFile>> generateFiles(
     Directory outputDir,
-    GeneratorConfig upserts, [
-    GeneratorConfig? config,
+    GeneratorConfig? upserts, [
+    // Unused: Serverpod generates yaml files, not barrel files
+    GeneratorConfig? _,
+    List<GeneratedFile>? generated,
   ]) async {
+    final generatedFiles = generated ?? [];
     final progress = logger.progress('Generating Spy Files...');
-    await generateSpyFiles(
-      outputDir,
-      upserts.copyWith(package: 'supabase_codegen_serverpod'),
-    );
-    progress.complete();
-    for (final file in generatedFiles) {
-      logger.success('✅ ${file.path} ${file.status.name}');
+    if (upserts == null) {
+      progress.fail('No upserts config provided. Skipping Spy file generation');
+      return generatedFiles;
     }
+
+    try {
+      final spyFiles = await generateSpyFiles(outputDir, upserts);
+      generatedFiles.addAll(spyFiles);
+      final rpcFiles = await generateRpcFunctions(outputDir, upserts);
+      generatedFiles.addAll(rpcFiles);
+
+      // Run post generation clean up process
+      await cleanup(outputDir, generatedFiles: generatedFiles);
+      progress.complete();
+    }
+    // Catch all exceptions and errors
+    catch (e) {
+      progress.fail('Generation failed: $e');
+      rethrow;
+    }
+
+    return generatedFiles;
   }
 
   /// Generate the spy.yaml files for the models provided
-  Future<void> generateSpyFiles(
+  Future<List<GeneratedFile>> generateSpyFiles(
     Directory outputDir,
     GeneratorConfig config,
   ) async {
@@ -38,10 +52,9 @@ class SpyBundleGenerator extends BundleGenerator {
     final target = DirectoryGeneratorTarget(outputDir);
     final serverpodJson = config.toServerpodJson();
     logger.detail('Serverpod Json: $serverpodJson');
-    final files = await generator.generate(
+    return generator.generate(
       target,
       vars: serverpodJson,
     );
-    generatedFiles.addAll(files);
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase/supabase.dart';
@@ -39,10 +40,14 @@ class SupabaseSchemaGenerator {
     /// Get the table config
     final tables = await generateTableConfigs(overrides: params.overrides);
 
+    /// Get the RPC config
+    final rpcs = await generateRpcConfigs(tables: tables);
+
     final config = GeneratorConfig.fromParams(
       params: params,
       tables: tables,
       enums: enums,
+      rpcs: rpcs,
     );
     return config;
   }
@@ -67,19 +72,30 @@ class SupabaseSchemaGenerator {
     // Output Directory
     final outputDir = Directory(outputFolder);
 
-    // Handle upserts
-    if (upserts != null) {
-      await bundleGenerator.generateFiles(outputDir, upserts, config);
-    }
+    // Parse barrel file config
+    final barrelConfig = config.barrelFiles
+        ? parseBarrelFileConfig(
+            config: config,
+            upserts: upserts,
+            deletes: deletes,
+          )
+        : null;
+
+    // Generate files
+    await bundleGenerator.generateFiles(outputDir, upserts, barrelConfig);
 
     // Handle deletes
     if (deletes != null) {
-      for (final enumFileName in deletes.enums) {
-        final enumPath = path.join(outputDir.path, enumFileName);
-        final file = File(enumPath);
+      for (final deletedFile in deletes) {
+        final filePath = path.join(outputDir.path, deletedFile);
+        final file = File(filePath);
         if (file.existsSync()) {
           file.deleteSync();
-          logger.err('❌ Deleted ${file.path}');
+          final fileLink = link(
+            message: file.path,
+            uri: Uri.directory(path.join(Directory.current.path, file.path)),
+          );
+          logger.info('❌ Deleted: $fileLink');
         }
       }
     }
@@ -88,6 +104,52 @@ class SupabaseSchemaGenerator {
     writeLockFile(lockfile);
 
     return true;
+  }
+
+  /// Parse barrel file config
+  GeneratorConfig? parseBarrelFileConfig({
+    required GeneratorConfig config,
+    GeneratorConfig? upserts,
+    List<String>? deletes,
+  }) {
+    final upsertedConfig = upserts ?? GeneratorConfig.empty();
+    final deletedFiles = deletes ?? <String>[];
+
+    // Identify what has been upserted
+    final tablesModified = upsertedConfig.tables.isNotEmpty;
+    final rpcsModified = upsertedConfig.rpcs.isNotEmpty;
+    final enumsModified = upsertedConfig.enums.isNotEmpty;
+
+    // Determine if there are no upserts or deletes
+    final noUpserts = !tablesModified && !rpcsModified && !enumsModified;
+    final noDeletes = deletedFiles.isEmpty;
+
+    // Stop if no changes
+    if (noUpserts && noDeletes) return null;
+
+    // Identify if a file was deleted in a folder
+    bool deleteInFolder(String folder) {
+      return deletedFiles.any((file) => file.startsWith(folder));
+    }
+
+    final modified = (
+      tables: tablesModified || deleteInFolder(tablesFolder),
+      rpcs: rpcsModified || deleteInFolder(rpcsFolder),
+      enums: enumsModified || deleteInFolder(enumsFolder),
+    );
+
+    // Stop if no modifications detected
+    if (!modified.tables && !modified.rpcs && !modified.enums) {
+      return null;
+    }
+
+    // Filter the config to include tables, rpcs and enums
+    // if they were modified
+    return config.copyWith(
+      tables: modified.tables ? null : <TableConfig>[],
+      rpcs: modified.rpcs ? null : <RpcConfig>[],
+      enums: modified.enums ? null : <EnumConfig>[],
+    );
   }
 
   /// Write the generator lockfile (to the project root)

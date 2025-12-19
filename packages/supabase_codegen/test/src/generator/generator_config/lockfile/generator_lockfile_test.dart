@@ -2,6 +2,8 @@ import 'package:supabase_codegen/supabase_codegen_generator.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
+import 'lockfile_mock_data.dart';
+
 void main() {
   group('GeneratorLockfile', () {
     final date = DateTime.now();
@@ -12,6 +14,7 @@ void main() {
     const barrelFiles = true;
     final tables = {'my_table': 12345};
     final enums = {'my_enum': 54321};
+    final rpcs = {'my_rpc': 67890};
 
     final lockfile = GeneratorLockfile(
       date: date,
@@ -22,6 +25,7 @@ void main() {
       barrelFiles: barrelFiles,
       tables: tables,
       enums: enums,
+      rpcs: rpcs,
     );
 
     test('can be instantiated', () {
@@ -38,6 +42,7 @@ void main() {
         expect(emptyLockfile.barrelFiles, isFalse);
         expect(emptyLockfile.tables, isEmpty);
         expect(emptyLockfile.enums, isEmpty);
+        expect(emptyLockfile.rpcs, isEmpty);
       });
     });
 
@@ -52,6 +57,7 @@ void main() {
           'barrelFiles': barrelFiles,
           'tables': tables,
           'enums': enums,
+          'rpcs': rpcs,
         };
         final fromJson = GeneratorLockfile.fromJson(json);
         expect(fromJson, equals(lockfile));
@@ -66,6 +72,7 @@ void main() {
           'barrelFiles': barrelFiles,
           'tables': tables,
           'enums': enums,
+          'rpcs': rpcs,
         };
         final fromJson = GeneratorLockfile.fromJson(json);
         expect(fromJson.tag, isEmpty);
@@ -79,6 +86,7 @@ void main() {
           'forFlutter': forFlutter,
           'barrelFiles': barrelFiles,
           'enums': enums,
+          'rpcs': rpcs,
         };
         final fromJson = GeneratorLockfile.fromJson(json);
         expect(fromJson.tables, isEmpty);
@@ -92,6 +100,7 @@ void main() {
           'forFlutter': forFlutter,
           'barrelFiles': barrelFiles,
           'tables': tables,
+          'rpcs': rpcs,
         };
         final fromJson = GeneratorLockfile.fromJson(json);
         expect(fromJson.enums, isEmpty);
@@ -112,6 +121,8 @@ tables:
   my_table: 12345
 enums:
   my_enum: 54321
+rpcs:
+  my_rpc: 67890
 ''';
         final fromYaml = GeneratorLockfile.fromYaml(yaml);
         expect(fromYaml, equals(lockfile));
@@ -126,6 +137,11 @@ enums:
           formattedEnumName: 'MyEnum',
           values: ['a', 'b'],
         );
+        final rpcConfig = RpcConfig(
+          functionName: 'my_rpc',
+          args: const [],
+          returnType: RpcReturnTypeConfig.empty(),
+        );
         final config = GeneratorConfig(
           date: date,
           package: package,
@@ -135,6 +151,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: [tableConfig],
           enums: [enumConfig],
+          rpcs: [rpcConfig],
         );
 
         final fromConfig = GeneratorLockfile.fromConfig(config);
@@ -148,9 +165,17 @@ enums:
           barrelFiles: barrelFiles,
           tables: {'my_table': tableConfig.hashCode},
           enums: {'my_enum': enumConfig.hashCode},
+          rpcs: {'my_rpc': rpcConfig.hashCode},
         );
 
         expect(fromConfig, equals(expectedLockfile));
+      });
+
+      test('creates a lockfile equal to a previously generated lockfile', () {
+        final config = GeneratorConfig.fromJson(configJson);
+        final fromConfig = GeneratorLockfile.fromConfig(config);
+        final fromJson = GeneratorLockfile.fromJson(lockfileJson);
+        expect(fromConfig, equals(fromJson));
       });
     });
 
@@ -166,6 +191,7 @@ enums:
           'tag': tag,
           'tables': tables,
           'enums': enums,
+          'rpcs': rpcs,
         };
         for (final key in expectedJson.keys) {
           expect(json.containsKey(key), isTrue);
@@ -187,6 +213,7 @@ enums:
           'tag': tag,
           'tables': tables,
           'enums': enums,
+          'rpcs': rpcs,
         };
         for (final key in expectedJson.keys) {
           expect(decodedYaml.containsKey(key), isTrue);
@@ -206,6 +233,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: tables,
           enums: enums,
+          rpcs: rpcs,
         );
         final lockfile2 = GeneratorLockfile(
           date: date,
@@ -216,6 +244,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: tables,
           enums: enums,
+          rpcs: rpcs,
         );
         expect(lockfile1.hashCode, equals(lockfile2.hashCode));
       });
@@ -232,6 +261,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: tables,
           enums: enums,
+          rpcs: rpcs,
         );
         final lockfile2 = GeneratorLockfile(
           date: date,
@@ -242,6 +272,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: tables,
           enums: enums,
+          rpcs: rpcs,
         );
         expect(lockfile1, equals(lockfile2));
       });
@@ -256,6 +287,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: tables,
           enums: enums,
+          rpcs: rpcs,
         );
         final lockfile2 = GeneratorLockfile(
           date: date,
@@ -266,6 +298,7 @@ enums:
           barrelFiles: barrelFiles,
           tables: tables,
           enums: enums,
+          rpcs: rpcs,
         );
         expect(lockfile1, isNot(equals(lockfile2)));
       });

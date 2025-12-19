@@ -46,7 +46,7 @@ String getDefaultValue(
     case DartType.dateTime:
       return DateTime.tryParse(fallbackValue ?? '') != null
           ? "DateTime.parse('$fallbackValue')"
-          : 'DateTime.now()';
+          : 'DateTime(2000)';
     case DartType.uuidValue:
       return switch (defaultValue) {
         'gen_random_uuid()' => 'const Uuid().v4obj()',
