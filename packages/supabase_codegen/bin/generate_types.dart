@@ -14,7 +14,7 @@ void main(List<String> args) async {
   catch (e, stackTrace) {
     // Log the error message
     logger
-      ..err('Error while generating types: $e')
+      ..err('Code generation failed: $e')
       ..detail('Stack trace:\n$stackTrace');
     exit(1);
   }
