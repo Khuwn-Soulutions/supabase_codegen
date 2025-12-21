@@ -16,4 +16,13 @@ class {{rpcs.returnsClassName}} extends RpcTableResponse {
   /// {{name.titleCase()}}
   {{{paramType}}} get {{parameterName}} => {{> fromJson}};
   {{/rpcs.returnType.fields}}
+
+  /// Return String representation of [{{rpcs.returnsClassName}}]
+  @override
+  String toString() {
+    return '''
+{{rpcs.returnsClassName}}({{#rpcs.returnType.fields}}
+  ${{fieldName}}: ${{parameterName}},{{/rpcs.returnType.fields}}
+)''';
+  }
 }
