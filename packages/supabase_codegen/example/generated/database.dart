@@ -4,4 +4,4 @@ export 'enums/_enums.dart';
 export 'rpcs/_rpcs.dart';
 export 'tables/_tables.dart';
 
-// Date: 2025-12-07 14:29:31.689525
+// Date: 2025-12-21 12:25:30.031948

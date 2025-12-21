@@ -21,7 +21,7 @@ class TestTableRow extends SupabaseDataRow {
   TestTableRow({required int id, dynamic jsonValues})
     : super({
         idField: supaSerialize(id),
-        if (jsonValues != null) jsonValuesField: supaSerialize(jsonValues),
+        jsonValuesField: ?supaSerialize(jsonValues),
       });
 
   /// Test Table private constructor from data map
@@ -61,4 +61,4 @@ class TestTableRow extends SupabaseDataRow {
       });
 }
 
-// Date: 2025-12-07 14:29:31.689525
+// Date: 2025-12-21 12:22:45.666499

@@ -30,12 +30,12 @@ class UsersRow extends SupabaseDataRow {
     DateTime? createdAt,
   }) : super({
          emailField: supaSerialize(email),
-         if (id != null) idField: supaSerialize(id),
-         if (accName != null) accNameField: supaSerialize(accName),
-         if (phoneNumber != null) phoneNumberField: supaSerialize(phoneNumber),
-         if (contacts != null) contactsField: supaSerialize(contacts),
-         if (role != null) roleField: supaSerialize(role),
-         if (createdAt != null) createdAtField: supaSerialize(createdAt),
+         idField: ?supaSerialize(id),
+         accNameField: ?supaSerialize(accName),
+         phoneNumberField: ?supaSerialize(phoneNumber),
+         contactsField: ?supaSerialize(contacts),
+         roleField: ?supaSerialize(role),
+         createdAtField: ?supaSerialize(createdAt),
        });
 
   /// Users private constructor from data map
@@ -129,4 +129,4 @@ class UsersRow extends SupabaseDataRow {
   });
 }
 
-// Date: 2025-12-07 14:29:31.689525
+// Date: 2025-12-21 12:22:45.666499

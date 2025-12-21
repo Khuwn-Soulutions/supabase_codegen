@@ -29,12 +29,10 @@ class MessagesRow extends SupabaseDataRow {
     MessageTypes? messageType,
   }) : super({
          idField: supaSerialize(id),
-
          senderField: supaSerialize(sender),
-
          receiverField: supaSerialize(receiver),
-         if (createdAt != null) createdAtField: supaSerialize(createdAt),
-         if (messageType != null) messageTypeField: supaSerialize(messageType),
+         createdAtField: ?supaSerialize(createdAt),
+         messageTypeField: ?supaSerialize(messageType),
        });
 
   /// Messages private constructor from data map
@@ -106,4 +104,4 @@ class MessagesRow extends SupabaseDataRow {
   });
 }
 
-// Date: 2025-12-07 14:29:31.689525
+// Date: 2025-12-21 12:22:45.666499

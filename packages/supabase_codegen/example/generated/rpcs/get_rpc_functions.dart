@@ -47,9 +47,7 @@ extension GetRpcFunctionsRpc on SupabaseCodegenFunctions {
   }) async {
     final response = await rpc<List<Map<String, dynamic>>>(
       'get_rpc_functions',
-      params: {
-        if (includeInternals != null) 'include_internals': includeInternals,
-      },
+      params: {'include_internals': ?includeInternals},
     );
 
     return response.map(GetRpcFunctionsResponse.fromJson).toList();

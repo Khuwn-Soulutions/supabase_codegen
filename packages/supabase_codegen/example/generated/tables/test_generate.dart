@@ -34,18 +34,18 @@ class TestGenerateRow extends SupabaseDataRow {
     DateTime? timestamp,
   }) : super({
          isNotNullableField: supaSerialize(isNotNullable),
-         if (id != null) idField: supaSerialize(id),
-         if (createdAt != null) createdAtField: supaSerialize(createdAt),
-         if (isNullable != null) isNullableField: supaSerialize(isNullable),
-         if (isArray != null) isArrayField: supaSerialize(isArray),
-         if (isInt != null) isIntField: supaSerialize(isInt),
-         if (isDouble != null) isDoubleField: supaSerialize(isDouble),
-         if (isBool != null) isBoolField: supaSerialize(isBool),
-         if (isJson != null) isJsonField: supaSerialize(isJson),
-         if (dateCol != null) dateColField: supaSerialize(dateCol),
-         if (isString != null) isStringField: supaSerialize(isString),
-         if (numArray != null) numArrayField: supaSerialize(numArray),
-         if (timestamp != null) timestampField: supaSerialize(timestamp),
+         idField: ?supaSerialize(id),
+         createdAtField: ?supaSerialize(createdAt),
+         isNullableField: ?supaSerialize(isNullable),
+         isArrayField: ?supaSerialize(isArray),
+         isIntField: ?supaSerialize(isInt),
+         isDoubleField: ?supaSerialize(isDouble),
+         isBoolField: ?supaSerialize(isBool),
+         isJsonField: ?supaSerialize(isJson),
+         dateColField: ?supaSerialize(dateCol),
+         isStringField: ?supaSerialize(isString),
+         numArrayField: ?supaSerialize(numArray),
+         timestampField: ?supaSerialize(timestamp),
        });
 
   /// Test Generate private constructor from data map
@@ -199,4 +199,4 @@ class TestGenerateRow extends SupabaseDataRow {
   });
 }
 
-// Date: 2025-12-07 14:29:31.689525
+// Date: 2025-12-21 12:22:45.666499
