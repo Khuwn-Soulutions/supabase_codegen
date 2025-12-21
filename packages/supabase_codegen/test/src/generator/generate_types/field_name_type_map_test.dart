@@ -38,12 +38,16 @@ void main() {
 
     test('should return an empty map when given an empty list', () {
       final columns = <Map<String, dynamic>>[];
-      final result = createFieldNameTypeMap(columns);
+      final result = createFieldNameTypeMap(
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
+      );
       expect(result, isEmpty);
     });
 
     test('should correctly map columns to ColumnData', () {
-      final result = createFieldNameTypeMap(columns);
+      final result = createFieldNameTypeMap(
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
+      );
 
       expect(result.length, equals(4));
 
@@ -89,7 +93,9 @@ void main() {
         },
       ];
 
-      final result = createFieldNameTypeMap(columns);
+      final result = createFieldNameTypeMap(
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
+      );
 
       expect(result.length, equals(1));
       const enumField = 'enumField';
@@ -115,7 +121,9 @@ void main() {
         },
       ];
 
-      final result = createFieldNameTypeMap(columns);
+      final result = createFieldNameTypeMap(
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
+      );
 
       const columnField = 'columnWithUnderscores';
       expect(result.containsKey(columnField), isTrue);
@@ -140,7 +148,9 @@ void main() {
         },
       ];
 
-      final result = createFieldNameTypeMap(columns);
+      final result = createFieldNameTypeMap(
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
+      );
 
       expect(result['notAnEnum']?.isEnum, isFalse);
     });
@@ -148,7 +158,7 @@ void main() {
     test('given tableOverrides then applies overrides', () {
       final tableOverrides = {'name': const ColumnOverride(isNullable: true)};
       final result = createFieldNameTypeMap(
-        columns,
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
         tableOverrides: tableOverrides,
       );
 
@@ -173,7 +183,7 @@ void main() {
       'column_default': null,
     };
     test('given no entries then returns empty list', () {
-      final unsorted = createFieldNameTypeMap(<Map<String, dynamic>>[]);
+      final unsorted = createFieldNameTypeMap(<GetSchemaInfoResponse>[]);
       final sorted = unsorted.sortedEntries;
 
       expect(sorted, isEmpty);
@@ -181,7 +191,10 @@ void main() {
 
     test('given an optional entry followed by a required entry '
         'then required entry is first', () {
-      final unsorted = createFieldNameTypeMap([optionalColumn, requiredColumn]);
+      final unsorted = createFieldNameTypeMap([
+        GetSchemaInfoResponse.fromJson(optionalColumn),
+        GetSchemaInfoResponse.fromJson(requiredColumn),
+      ]);
       final sorted = unsorted.sortedEntries;
 
       expect(sorted[0].key, equals(requiredColumn['column_name']));
@@ -190,7 +203,10 @@ void main() {
 
     test('given an required entry followed by a optional entry '
         'then required order is unchanged', () {
-      final unsorted = createFieldNameTypeMap([requiredColumn, optionalColumn]);
+      final unsorted = createFieldNameTypeMap([
+        GetSchemaInfoResponse.fromJson(requiredColumn),
+        GetSchemaInfoResponse.fromJson(optionalColumn),
+      ]);
       final sorted = unsorted.sortedEntries;
 
       expect(sorted[0].key, equals(requiredColumn['column_name']));
@@ -198,7 +214,9 @@ void main() {
     });
 
     test('given unsorted entries then sorts entries', () {
-      final unsorted = createFieldNameTypeMap(columns);
+      final unsorted = createFieldNameTypeMap(
+        columns.map(GetSchemaInfoResponse.fromJson).toList(),
+      );
       final sorted = unsorted.sortedEntries;
 
       expect(sorted.length, equals(unsorted.length));

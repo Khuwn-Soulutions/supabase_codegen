@@ -12,7 +12,7 @@ void main() {
     });
 
     /// Get the schema tables for the given [schemaData]
-    Future<Map<String, List<Map<String, dynamic>>>> getSchemaTablesFor(
+    Future<Map<String, List<GetSchemaInfoResponse>>> getSchemaTablesFor(
       List<Map<String, String>> schemaData,
     ) async {
       mockSchemaRpc(schemaData);
@@ -29,7 +29,7 @@ void main() {
       expect(result.length, equals(2));
       expect(result['table1']?.length, equals(2));
       expect(result['table2']?.length, equals(1));
-      expect(result['table1']?[0]['column_name'], equals('col1'));
+      expect(result['table1']?[0].columnName, equals('col1'));
     });
 
     test('should throw an exception when response is empty', () async {
@@ -62,7 +62,9 @@ void main() {
     ];
 
     const tableName = 'table1';
-    final tables = {tableName: columns};
+    final tables = {
+      tableName: columns.map(GetSchemaInfoResponse.fromJson).toList(),
+    };
 
     test('should generate table configs', () async {
       final result = await generateTableConfigs(tables: tables);

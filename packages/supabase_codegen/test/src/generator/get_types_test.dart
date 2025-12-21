@@ -38,10 +38,12 @@ void main() {
           final dartType = entry.key;
           for (final postgresType in entry.value) {
             expect(
-              getDartType({
-                'data_type': postgresType,
-                'udt_name': postgresType,
-              }),
+              getDartType(
+                GetSchemaInfoResponse.fromJson({
+                  'data_type': postgresType,
+                  'udt_name': postgresType,
+                }),
+              ),
               equals(dartType),
             );
           }
@@ -51,43 +53,82 @@ void main() {
 
     test('returns correct Dart type for array types', () {
       expect(
-        getDartType({'data_type': 'int4', 'udt_name': '_int4'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'int4',
+            'udt_name': '_int4',
+          }),
+        ),
         equals('List<int>'),
       );
       expect(
-        getDartType({'data_type': 'text', 'udt_name': '_text'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'text',
+            'udt_name': '_text',
+          }),
+        ),
         equals('List<String>'),
       );
       expect(
-        getDartType({'data_type': 'bool', 'udt_name': '_bool'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'bool',
+            'udt_name': '_bool',
+          }),
+        ),
         equals('List<bool>'),
       );
       expect(
-        getDartType({
-          'data_type': 'user-defined',
-          'udt_name': '_some_enum',
-          'element_type': 'some_enum',
-        }),
-        equals('List<String>'),
-      );
-      expect(getDartType({'data_type': 'integer[]'}), equals('List<int>'));
-      expect(
-        getDartType({'data_type': 'ARRAY', 'element_type': 'text'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'user-defined',
+            'udt_name': '_some_enum',
+            'element_type': 'some_enum',
+          }),
+        ),
         equals('List<String>'),
       );
       expect(
-        getDartType({'data_type': 'varchar', 'is_array': true}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {'data_type': 'integer[]'}),
+        ),
+        equals('List<int>'),
+      );
+      expect(
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'ARRAY',
+            'element_type': 'text',
+          }),
+        ),
+        equals('List<String>'),
+      );
+      expect(
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'varchar',
+            'is_array': true,
+          }),
+        ),
         equals('List<String>'),
       );
     });
 
     test('returns ${DartType.string} for unknown types', () {
       expect(
-        getDartType({'data_type': 'unknown_type'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {'data_type': 'unknown_type'}),
+        ),
         equals(DartType.string),
       );
       expect(
-        getDartType({'data_type': 'unknown_array', 'udt_name': '_unknown'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'unknown_array',
+            'udt_name': '_unknown',
+          }),
+        ),
         equals('List<${DartType.string}>'),
       );
     });
@@ -95,7 +136,12 @@ void main() {
     test('returns enum name when formattedEnums contains udt_name', () {
       formattedEnums['test_enum'] = 'TestEnum';
       expect(
-        getDartType({'data_type': 'user-defined', 'udt_name': 'test_enum'}),
+        getDartType(
+          GetSchemaInfoResponse.fromJson(const {
+            'data_type': 'user-defined',
+            'udt_name': 'test_enum',
+          }),
+        ),
         equals('TestEnum'),
       );
       formattedEnums.clear();
@@ -118,7 +164,12 @@ void main() {
     test('returns correct enum name when udt_name is in formattedEnums', () {
       formattedEnums['test_enum'] = 'TestEnum';
       expect(
-        getBaseDartType('user-defined', column: {'udt_name': 'test_enum'}),
+        getBaseDartType(
+          'user-defined',
+          column: GetSchemaInfoResponse.fromJson(const {
+            'udt_name': 'test_enum',
+          }),
+        ),
         equals('TestEnum'),
       );
       formattedEnums.clear();
