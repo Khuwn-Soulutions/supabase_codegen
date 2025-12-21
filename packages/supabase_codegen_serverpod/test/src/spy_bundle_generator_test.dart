@@ -48,7 +48,9 @@ void main() {
           .map(
             (entry) => TableConfig.fromFieldNameTypeMap(
               entry.key,
-              createFieldNameTypeMap(entry.value),
+              createFieldNameTypeMap(
+                entry.value.map(GetSchemaInfoResponse.fromJson).toList(),
+              ),
             ),
           )
           .toList();
