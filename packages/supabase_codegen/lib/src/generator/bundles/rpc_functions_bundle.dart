@@ -44,7 +44,7 @@ final rpcFunctionsBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "{{~ rpc_function_body }}",
       "data":
-          "KAogICd7e3JwY3MuZnVuY3Rpb25OYW1lfX0nLAogIHt7I3JwY3MuaGFzQXJnc319cGFyYW1zOiB7CiAgICB7eyNycGNzLmFyZ3N9fXt7I2hhc0RlZmF1bHR9fWlmKHt7cGFyYW1ldGVyTmFtZX19ICE9IG51bGwpIHt7L2hhc0RlZmF1bHR9fSd7e25hbWV9fSc6IHt7cGFyYW1ldGVyTmFtZX19LAogICAge3svcnBjcy5hcmdzfX0KICB9LHt7L3JwY3MuaGFzQXJnc319Cik7",
+          "KAogICd7e3JwY3MuZnVuY3Rpb25OYW1lfX0nLAogIHt7I3JwY3MuaGFzQXJnc319cGFyYW1zOiB7CiAgICB7eyNycGNzLmFyZ3N9fSd7e25hbWV9fSc6IHt7I2hhc0RlZmF1bHR9fT97ey9oYXNEZWZhdWx0fX17e3BhcmFtZXRlck5hbWV9fSwKICAgIHt7L3JwY3MuYXJnc319CiAgfSx7ey9ycGNzLmhhc0FyZ3N9fQopOw==",
       "type": "text",
     },
   ],
