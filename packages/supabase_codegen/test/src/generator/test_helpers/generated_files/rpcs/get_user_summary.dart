@@ -52,10 +52,10 @@ extension GetUserSummaryRpc on SupabaseCodegenFunctions {
     final response = await rpc<List<Map<String, dynamic>>>(
       'get_user_summary',
       params: {
-        if (minLogins != null) 'min_logins': minLogins,
-        if (roleFilter != null) 'role_filter': roleFilter,
-        if (limitCount != null) 'limit_count': limitCount,
-        if (offsetCount != null) 'offset_count': offsetCount,
+        'min_logins': ?minLogins,
+        'role_filter': ?roleFilter,
+        'limit_count': ?limitCount,
+        'offset_count': ?offsetCount,
       },
     );
 
