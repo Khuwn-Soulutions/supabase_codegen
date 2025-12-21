@@ -61,6 +61,22 @@ class GetSchemaInfoResponse extends RpcTableResponse {
 
   /// Element Type
   String get elementType => raw[elementTypeField] as String? ?? '';
+
+  /// Return String representation of [GetSchemaInfoResponse]
+  @override
+  String toString() {
+    return '''
+GetSchemaInfoResponse(
+  $tableNameField: $tableName,
+  $columnNameField: $columnName,
+  $dataTypeField: $dataType,
+  $udtNameField: $udtName,
+  $isNullableField: $isNullable,
+  $columnDefaultField: $columnDefault,
+  $isArrayField: $isArray,
+  $elementTypeField: $elementType,
+)''';
+  }
 }
 
 /// RPC extension for get_schema_info rpc

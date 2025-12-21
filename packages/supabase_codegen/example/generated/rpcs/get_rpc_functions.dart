@@ -37,6 +37,18 @@ class GetRpcFunctionsResponse extends RpcTableResponse {
 
   /// Return Type
   String get returnType => raw[returnTypeField] as String? ?? '';
+
+  /// Return String representation of [GetRpcFunctionsResponse]
+  @override
+  String toString() {
+    return '''
+GetRpcFunctionsResponse(
+  $schemaNameField: $schemaName,
+  $functionNameField: $functionName,
+  $argumentsField: $arguments,
+  $returnTypeField: $returnType,
+)''';
+  }
 }
 
 /// RPC extension for get_rpc_functions rpc
