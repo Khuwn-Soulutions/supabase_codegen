@@ -36,23 +36,23 @@ extension FieldNameTypeMapExtension on FieldNameTypeMap {
 
 /// Create a map of the field name to data for that field
 FieldNameTypeMap createFieldNameTypeMap(
-  List<Map<String, dynamic>> columns, {
+  List<GetSchemaInfoResponse> columns, {
   TableOverrides? tableOverrides,
 }) {
   /// Store a map of the column name to type
   final fieldNameTypeMap = <String, ColumnData>{};
   for (final column in columns) {
-    final columnName = column['column_name'] as String;
+    final columnName = column.columnName;
     final columnOverride = tableOverrides?[columnName];
     final fieldName = columnName.toCamelCase();
     final dartType = columnOverride?.dataType ?? getDartType(column);
-    final isNullable =
-        columnOverride?.isNullable ?? (column['is_nullable'] as String).isYes;
+    final isNullable = columnOverride?.isNullable ?? column.isNullable.isYes;
     final isArray = dartType.startsWith('List<');
     final defaultValue =
-        columnOverride?.columnDefault ?? column['column_default'];
+        columnOverride?.columnDefault ??
+        column.raw[GetSchemaInfoResponse.columnDefaultField];
     final hasDefault = defaultValue != null;
-    final isEnum = formattedEnums[column['udt_name']] != null;
+    final isEnum = formattedEnums[column.udtName] != null;
 
     final columnData = (
       dartType: dartType,

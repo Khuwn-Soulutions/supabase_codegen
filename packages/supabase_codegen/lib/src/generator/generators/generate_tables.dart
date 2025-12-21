@@ -1,4 +1,5 @@
 import 'package:supabase_codegen/src/generator/generator.dart';
+import 'package:supabase_codegen/supabase_codegen.dart';
 
 /// Schema tables
 typedef SchemaTables =
@@ -7,7 +8,7 @@ typedef SchemaTables =
       String,
 
       /// Columns
-      List<Map<String, dynamic>>
+      List<GetSchemaInfoResponse>
     >;
 
 /// Generate the [TableConfig] using the provided [overrides]
@@ -47,10 +48,8 @@ Future<List<TableConfig>> generateTableConfigs({
 Future<SchemaTables> getSchemaTables() async {
   // Get table information from Supabase
   final progress = logger.progress('Fetching tables from database...');
-  final response = await client.rpc<List<dynamic>>('get_schema_info');
-
   // Modified to handle direct List response
-  final schemaData = List<Map<String, dynamic>>.from(response);
+  final schemaData = await client.fn.getSchemaInfo();
 
   if (schemaData.isEmpty) {
     const message = 'Failed to fetch schema tables: Empty response';
@@ -59,9 +58,9 @@ Future<SchemaTables> getSchemaTables() async {
   }
 
   // Group columns by table
-  final tables = <String, List<Map<String, dynamic>>>{};
+  final tables = <String, List<GetSchemaInfoResponse>>{};
   for (final column in schemaData) {
-    final tableName = column['table_name'] as String;
+    final tableName = column.tableName;
 
     if (!tableName.startsWith('_')) {
       tables[tableName] = [...tables[tableName] ?? [], column];
