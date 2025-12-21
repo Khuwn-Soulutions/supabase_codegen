@@ -1,7 +1,7 @@
 (
   '{{rpcs.functionName}}',
   {{#rpcs.hasArgs}}params: {
-    {{#rpcs.args}}{{#hasDefault}}if({{parameterName}} != null) {{/hasDefault}}'{{name}}': {{parameterName}},
+    {{#rpcs.args}}'{{name}}': {{#hasDefault}}?{{/hasDefault}}{{parameterName}},
     {{/rpcs.args}}
   },{{/rpcs.hasArgs}}
 );
