@@ -340,10 +340,11 @@ void main() {
             isTrue,
             reason: '${expectedFile.path} should exist',
           );
-          expect(
-            withoutDateLine(file.readAsStringSync()),
-            withoutDateLine(expectedFile.readAsStringSync()),
+          final fileWithoutDate = withoutDateLine(file.readAsStringSync());
+          final expectedFileWithoutDate = withoutDateLine(
+            expectedFile.readAsStringSync(),
           );
+          expect(fileWithoutDate, expectedFileWithoutDate);
         }
       });
     });

@@ -1,4 +1,5 @@
 import 'package:change_case/change_case.dart';
+import 'package:supabase_codegen/supabase_codegen.dart';
 import 'package:supabase_codegen/supabase_codegen_generator.dart';
 
 /// Generate enums list
@@ -53,9 +54,7 @@ Future<Map<String, List<String>>> fetchEnums() async {
   try {
     // Query to get all enum types and their values
     logger.detail('Executing RPC call to get_enum_types...');
-    final response = await client.rpc<List<dynamic>>('get_enum_types');
-
-    final enumData = List<Map<String, dynamic>>.from(response);
+    final enumData = await client.fn.getEnumTypes();
 
     logger
       ..detail('Raw enum response data:')
@@ -66,8 +65,8 @@ Future<Map<String, List<String>>> fetchEnums() async {
     // Process the response data
     logger.detail('Processing enum types:');
     for (final row in enumData) {
-      final enumName = row['enum_name'] as String;
-      final enumValue = (row['enum_value'] as String).replaceAll('/', '_');
+      final enumName = row.enumName;
+      final enumValue = row.enumValue.replaceAll('/', '_');
 
       logger.detail('  Found enum: $enumName with value: $enumValue');
 

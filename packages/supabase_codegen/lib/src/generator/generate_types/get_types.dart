@@ -1,16 +1,16 @@
 import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Get the dart type for the provided [column]
-String getDartType(Map<String, dynamic> column) {
-  final postgresType = (column['data_type'] as String).toLowerCase();
-  final udtName = column['udt_name'] as String? ?? '';
+String getDartType(GetSchemaInfoResponse column) {
+  final postgresType = column.dataType.toLowerCase();
+  final udtName = column.udtName;
 
   // Improved array detection
   final isArray =
       udtName.startsWith('_') ||
       postgresType.endsWith('[]') ||
       postgresType.toUpperCase() == 'ARRAY' ||
-      column['is_array'] == true;
+      column.isArray == true;
 
   // Get array type
   if (isArray) return _getArrayType(udtName, column, postgresType);
@@ -25,17 +25,14 @@ String getDartType(Map<String, dynamic> column) {
 /// Get the array type
 String _getArrayType(
   String udtName,
-  Map<String, dynamic> column,
+  GetSchemaInfoResponse column,
   String postgresType,
 ) {
   String baseType;
   if (udtName.startsWith('_')) {
     baseType = getBaseDartType(udtName.substring(1), column: column);
-  } else if (column['element_type'] != null) {
-    baseType = getBaseDartType(
-      column['element_type'] as String,
-      column: column,
-    );
+  } else if (column.elementType.isNotEmpty) {
+    baseType = getBaseDartType(column.elementType, column: column);
   } else {
     baseType = getBaseDartType(
       postgresType.replaceAll('[]', ''),
@@ -47,7 +44,7 @@ String _getArrayType(
 
 /// Get the base dart type for the [postgresType]
 /// considering the provided [column] data
-String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
+String getBaseDartType(String postgresType, {GetSchemaInfoResponse? column}) {
   switch (postgresType) {
     /// String
     case 'text':
@@ -96,7 +93,7 @@ String getBaseDartType(String postgresType, {Map<String, dynamic>? column}) {
 
     /// Enum
     case 'user-defined':
-      return (column != null ? formattedEnums[column['udt_name']] : null) ??
+      return (column != null ? formattedEnums[column.udtName] : null) ??
           DartType.string; // For enums
 
     /// Default

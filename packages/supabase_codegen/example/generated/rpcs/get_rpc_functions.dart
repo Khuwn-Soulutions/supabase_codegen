@@ -37,6 +37,18 @@ class GetRpcFunctionsResponse extends RpcTableResponse {
 
   /// Return Type
   String get returnType => raw[returnTypeField] as String? ?? '';
+
+  /// Return String representation of [GetRpcFunctionsResponse]
+  @override
+  String toString() {
+    return '''
+GetRpcFunctionsResponse(
+  $schemaNameField: $schemaName,
+  $functionNameField: $functionName,
+  $argumentsField: $arguments,
+  $returnTypeField: $returnType,
+)''';
+  }
 }
 
 /// RPC extension for get_rpc_functions rpc
@@ -47,9 +59,7 @@ extension GetRpcFunctionsRpc on SupabaseCodegenFunctions {
   }) async {
     final response = await rpc<List<Map<String, dynamic>>>(
       'get_rpc_functions',
-      params: {
-        if (includeInternals != null) 'include_internals': includeInternals,
-      },
+      params: {'include_internals': ?includeInternals},
     );
 
     return response.map(GetRpcFunctionsResponse.fromJson).toList();

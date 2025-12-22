@@ -25,6 +25,16 @@ class GetEnumTypesResponse extends RpcTableResponse {
 
   /// Enum Value
   String get enumValue => raw[enumValueField] as String? ?? '';
+
+  /// Return String representation of [GetEnumTypesResponse]
+  @override
+  String toString() {
+    return '''
+GetEnumTypesResponse(
+  $enumNameField: $enumName,
+  $enumValueField: $enumValue,
+)''';
+  }
 }
 
 /// RPC extension for get_enum_types rpc

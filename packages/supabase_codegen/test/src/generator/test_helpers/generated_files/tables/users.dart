@@ -24,9 +24,9 @@ class UsersRow extends SupabaseDataRow {
     List<String>? tags,
   }) : super({
          idField: supaSerialize(id),
-         if (name != null) nameField: supaSerialize(name),
-         if (createdAt != null) createdAtField: supaSerialize(createdAt),
-         if (tags != null) tagsField: supaSerialize(tags),
+         nameField: ?supaSerialize(name),
+         createdAtField: ?supaSerialize(createdAt),
+         tagsField: ?supaSerialize(tags),
        });
 
   /// Users private constructor from data map
