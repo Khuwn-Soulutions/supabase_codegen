@@ -38,6 +38,18 @@ class GetUserSummaryResponse extends RpcTableResponse {
 
   /// Profile
   dynamic get profile => raw[profileField];
+
+  /// Return String representation of [GetUserSummaryResponse]
+  @override
+  String toString() {
+    return '''
+GetUserSummaryResponse(
+  $emailField: $email,
+  $loginCountField: $loginCount,
+  $rolesField: $roles,
+  $profileField: $profile,
+)''';
+  }
 }
 
 /// RPC extension for get_user_summary rpc
