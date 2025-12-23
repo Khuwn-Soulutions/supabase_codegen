@@ -65,8 +65,8 @@ dart run supabase_codegen:generate_types
 
 Before using the generated types, you must initialize the client.
 
-<Tabs items={['From Env', 'Manual', 'Existing Client']}>
-  <Tab id="from-env">
+<Tabs groupId="client-config">
+  <TabItem label="From Env" value="from-env">
     ```dart
     import 'package:supabase_codegen/supabase_codegen.dart';
 
@@ -75,8 +75,8 @@ Before using the generated types, you must initialize the client.
     }
     ```
 
-  </Tab>
-  <Tab id="manual">
+  </TabItem>
+  <TabItem label="Manual" value="manual">
     ```dart
     import 'package:supabase_codegen/supabase_codegen.dart';
 
@@ -85,8 +85,8 @@ Before using the generated types, you must initialize the client.
     }
     ```
 
-  </Tab>
-  <Tab id="existing">
+  </TabItem>
+  <TabItem label="Existing Client" value="existing">
     ```dart
     import 'package:supabase_codegen/supabase_codegen.dart';
 
@@ -95,5 +95,5 @@ Before using the generated types, you must initialize the client.
     }
     ```
 
-  </Tab>
+  </TabItem>
 </Tabs>
