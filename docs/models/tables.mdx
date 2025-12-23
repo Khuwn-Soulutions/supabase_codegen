@@ -1,0 +1,94 @@
+---
+title: Tables
+description: Detailed guide on generated table and row classes for type-safe database access.
+showPageTitle: false
+---
+
+# Tables
+
+Supabase Codegen generates two main classes for each table:
+
+1.  **Table Class**: Handles database operations (insert, query, update, delete).
+2.  **Row Class**: Represents a typed record from that table.
+
+<Hero
+  title="Tables & Rows"
+  description="Fully typed database access with built-in CRUD operations."
+  icon="table"
+/>
+
+## Feature Overview
+
+- **Typed Rows**: Full IntelliSense for all column names and types.
+- **Null Safety**: Correctly reflects database nullability.
+- **Default Values**: Field getters fallback to database default values.
+- **CRUD Operations**: High-level methods for common operations.
+
+## Examples
+
+### Table and Row Definition
+
+<Accordion title="View Generated Code Example">
+For a table `profiles` with columns `id (uuid)`, `email (text)`, and `bio (text, nullable)`:
+
+```dart
+class ProfilesTable extends SupabaseTable<ProfilesRow> {
+  @override
+  String get tableName => 'profiles';
+
+  @override
+  ProfilesRow createRow(Map<String, dynamic> data) => ProfilesRow.fromJson(data);
+}
+
+class ProfilesRow extends SupabaseDataRow {
+  ProfilesRow({
+    required String email,
+    UuidValue? id,
+    String? bio,
+  }) : super({
+         'email': supaSerialize(email),
+         if (id != null) 'id': supaSerialize(id),
+         if (bio != null) 'bio': supaSerialize(bio),
+       });
+
+  factory ProfilesRow.fromJson(Map<String, dynamic> data) =>
+      ProfilesRow._(data.cleaned);
+
+  // Getters & Setters
+  String get email => getField<String>('email')!;
+  set email(String value) => setField<String>('email', value);
+
+  String? get bio => getField<String>('bio');
+  set bio(String? value) => setField<String>('bio', value);
+}
+```
+
+</Accordion>
+
+### Usage: CRUD Operations
+
+```dart
+final profilesTable = ProfilesTable();
+
+// INSERT
+final newProfile = await profilesTable.insert({
+  ProfilesRow.emailField: 'hello@world.com',
+  ProfilesRow.bioField: 'Software Engineer',
+});
+
+// QUERY
+final profile = await profilesTable.querySingleRow(
+  queryFn: (q) => q.eq(ProfilesRow.emailField, 'hello@world.com'),
+);
+
+// UPDATE
+await profilesTable.update(
+  row: profile.copyWith(bio: 'Senior Software Engineer'),
+  matchingRows: (q) => q.eq(ProfilesRow.idField, profile.id),
+);
+```
+
+<Tip>
+  Use `copyWith` to easily create updated versions of your row objects before
+  calling `update`.
+</Tip>

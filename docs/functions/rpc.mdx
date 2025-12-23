@@ -1,0 +1,64 @@
+---
+title: RPC Functions
+description: Type-safe extensions for calling your Supabase database functions.
+showPageTitle: false
+---
+
+# RPC Functions
+
+Supabase Codegen automatically generates type-safe extensions for your Supabase RPC functions.
+
+<Hero
+  title="RPC Extensions"
+  description="Call your database functions like native Dart methods."
+  icon="function"
+/>
+
+## Feature Overview
+
+- **Extension-based**: RPCs are added as extensions on `SupabaseCodegenFunctions`.
+- **Type-safe Parameters**: Function parameters are mapped to Dart types.
+- **Typed Responses**: Automatic handling of simple and complex return types.
+
+## Examples
+
+### Simple RPC
+
+For `add_numbers(a int, b int) returns int`:
+
+```dart
+// Usage
+final result = await supabase.functions.addNumbers(a: 5, b: 10);
+print(result); // 15
+```
+
+### Complex RPC (Table Returns)
+
+For `get_user_summary(min_logins int) returns table(...)`:
+
+<Accordion title="View Generated Response Model">
+```dart
+class GetUserSummaryResponse extends RpcTableResponse {
+  const GetUserSummaryResponse._(super.json);
+
+factory GetUserSummaryResponse.fromJson(Map<String, dynamic> json) =>
+GetUserSummaryResponse.\_(json);
+
+String get email => raw['email'] as String? ?? '';
+int get loginCount => raw['login_count'] as int? ?? 0;
+}
+
+````
+</Accordion>
+
+```dart
+final summaries = await supabase.functions.getUserSummary(minLogins: 5);
+for (final summary in summaries) {
+  print('${summary.email}: ${summary.loginCount}');
+}
+````
+
+<Info>
+  Internal Supabase RPCs (like `get_schema_info`) are excluded by default for
+  security and clarity.
+</Info>
