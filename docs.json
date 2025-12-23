@@ -1,10 +1,6 @@
 {
   "name": "Supabase Codegen",
   "description": "Generate type-safe Dart models from your Supabase database.",
-  "logo": {
-    "light": "https://raw.githubusercontent.com/Khuwn-Soulutions/supabase_codegen/main/assets/logo.png",
-    "dark": "https://raw.githubusercontent.com/Khuwn-Soulutions/supabase_codegen/main/assets/logo.png"
-  },
   "favicon": "https://raw.githubusercontent.com/Khuwn-Soulutions/supabase_codegen/main/assets/logo.png",
   "theme": {
     "primary": "#3ECF8E"
