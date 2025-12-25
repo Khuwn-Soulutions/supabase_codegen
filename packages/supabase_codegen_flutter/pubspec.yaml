@@ -32,5 +32,6 @@ dependency_overrides:
   test: ^1.25.15
 
 executables:
+  init:
   generate_types:
   add_codegen_functions:
