@@ -39,8 +39,7 @@ GetUserSummaryResponse.\_(json);
 String get email => raw['email'] as String? ?? '';
 int get loginCount => raw['login_count'] as int? ?? 0;
 }
-
-````
+```
 </Accordion>
 
 ```dart
@@ -48,7 +47,7 @@ final summaries = await supabase.functions.getUserSummary(minLogins: 5);
 for (final summary in summaries) {
   print('${summary.email}: ${summary.loginCount}');
 }
-````
+```
 
 <Info>
   RPC function generation is currently limited to the 'public' schema only.
