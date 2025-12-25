@@ -5,7 +5,7 @@ import 'package:supabase_codegen_flutter/src/default_env.dart';
 const defaultOutputPath = 'lib/types';
 
 /// Call the supabase_codegen init with relevant environment
-void main() => init(
+void main() => initializeConfiguration(
   forFlutter: true,
   defaultEnvPath: defaultEnvFile,
   defaultOutputPath: defaultOutputPath,

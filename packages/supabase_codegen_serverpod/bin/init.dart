@@ -6,7 +6,7 @@ const defaultOutputPath = 'lib/src/models';
 
 /// Call the supabase_codegen init with relevant environment
 Future<void> main() async {
-  await init(
+  await initializeConfiguration(
     defaultOutputPath: defaultOutputPath,
     package: 'supabase_codegen_serverpod',
   );

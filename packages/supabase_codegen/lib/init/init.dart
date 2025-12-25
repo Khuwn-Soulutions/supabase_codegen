@@ -6,10 +6,10 @@ import 'package:supabase_codegen/init/init_functions/init_functions.dart';
 import 'package:supabase_codegen/src/generator/generator.dart';
 
 /// Main function export
-Future<void> main() => init();
+Future<void> main() => initializeConfiguration();
 
 /// Initialize the configuation to be used for database type generation
-Future<void> init({
+Future<void> initializeConfiguration({
   bool forFlutter = false,
   String? package,
   String? defaultEnvPath,
