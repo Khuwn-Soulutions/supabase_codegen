@@ -92,6 +92,16 @@ Future<void> addCodegenFunctionsMigration({
     name,
   ], runInShell: true);
 
+  /// Check if CLI command succeeded
+  if (result.exitCode != 0) {
+    logger
+      ..err('Supabase CLI failed to create migration.')
+      ..detail('Exit code: ${result.exitCode}')
+      ..detail('CLI stdout: ${result.stdout}')
+      ..detail('CLI stderr: ${result.stderr}');
+    return;
+  }
+
   /// Read path of migration
   final path = extractPath(result.stdout.toString());
   if (path.isEmpty) {
