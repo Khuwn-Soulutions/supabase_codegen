@@ -52,7 +52,7 @@ Future<({String migration, String name})?> getMigration() async {
   /// Check all migrations for changes
   for (final file in files) {
     /// Read contents of latest migration
-    final contents = File(file).readAsStringSync();
+    final contents = await File(file).readAsString();
 
     /// Remove functions that exist in migration from [allFunctions]
     final functions = allFunctions.toList();
