@@ -1,0 +1,62 @@
+---
+title: Enums
+description: How Supabase codegen maps Postgres enums to native Dart enums.
+showPageTitle: false
+modified: 2025-12-25T22:42:33.805Z
+---
+
+Supabase Codegen generates Dart `enum` types for your user-defined PostgreSQL enum types.
+
+## Feature Overview
+
+- **Automatic Mapping**: Postgres enums are mapped to Dart enums.
+- **Serialization**: Built-in support for serializing enums to/from strings.
+- **Default Values**: Correctly handles database-level default values.
+
+## Examples
+
+### Enum Definition
+
+For a Postgres enum type `user_role` with values `admin`, `user`, and `moderator`:
+
+```dart
+enum UserRole {
+  admin,
+  user,
+  moderator,
+}
+```
+
+### Usage in Tables
+
+When a table column uses an enum type, the generated row class uses that enum:
+
+```dart
+class UsersRow extends SupabaseDataRow {
+  UserRole get role =>
+      getField<UserRole>(
+        'role',
+        enumValues: UserRole.values,
+        defaultValue: UserRole.user,
+      )!;
+
+  set role(UserRole value) => setField<UserRole>('role', value);
+}
+```
+
+### Direct Usage
+
+<CodeGroup>
+  ```dart 
+  // By name 
+  final parsedRole = UserRole.values.byName("moderator"); 
+  
+  // To string 
+  print(UserRole.admin.name); // "admin" 
+  ```
+</CodeGroup>
+
+<Warning>
+  If you add a new value to an enum in Supabase, you **must** re-run
+  `generate_types` to update the Dart `enum` definition.
+</Warning>

@@ -1,0 +1,68 @@
+---
+title: Migration Guide (v3 to v4)
+description: Step-by-step guide to migrating your project from Supabase Codegen v3 to v4.
+---
+
+# Migration Guide (v3 to v4)
+
+This guide outlines the changes and steps required to migrate your project from `supabase_codegen` v3 to v4.
+
+<Info>
+  Version 4 introduces several internal refinements and better support for
+  monorepos through the Dart Workspace feature.
+</Info>
+
+## Breaking Changes
+
+### 1. Monorepo / Workspace Support
+
+Version 4 is designed to work with Dart 3.8+ workspaces. If you are using a monorepo, ensure your root `pubspec.yaml` has the `workspace` property set.
+
+### 2. Dependency Updates
+
+- `supabase` has been updated to `^2.10.0`.
+- `uuid` has been updated to `^4.5.1`.
+
+<Warning>
+  If you have direct dependencies on these packages, you may need to update your
+  `pubspec.yaml` to match to avoid version conflicts.
+</Warning>
+
+## New Features
+
+- **Improved Initialization**: The `init` command is now more interactive and better at detecting your project type (Flutter vs. Pure Dart).
+- **Talker Logger**: Internal logging now uses the `talker` package, improving consistency and WASM compatibility.
+
+## Steps to Migrate
+
+<Steps>
+### Update Dependencies
+Update your dependency in `pubspec.yaml`:
+```yaml
+dependencies:
+  supabase_codegen: ^4.0.0
+```
+
+### Fetch Packages
+
+Run the following command in your terminal:
+
+```bash
+dart pub get
+# or
+flutter pub get
+```
+
+### Re-generate Types
+
+Re-run the generation command to ensure all generated files are up to date:
+
+```bash
+dart run supabase_codegen:generate_types
+```
+
+### Handle JSON Columns
+
+If you encounter any issues with `jsonb` columns, ensure you are using the `dynamic` type as specified in the v3 to v4 mapping.
+
+</Steps>

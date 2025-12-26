@@ -1,0 +1,84 @@
+---
+title: Serverpod
+description: Generate Serverpod database models from your Supabase schema.
+showPageTitle: false
+---
+
+The `supabase_codegen_serverpod` package generates Serverpod [database models](https://docs.serverpod.dev/concepts/database/models) (`.spy.yaml` files) from your Supabase schema.
+
+## Installation
+
+Add the package to your **Serverpod server project** (e.g., `my_server_server`):
+
+```bash
+dart pub add supabase_codegen_serverpod
+```
+
+## Setup
+
+<Steps>
+### Json Class Configuration
+The generator requires a helper class to handle `jsonb` columns. Run:
+```bash
+dart run supabase_codegen_serverpod:init
+```
+
+### Generator Config
+
+The `init` command automatically adds the following to your `config/generator.yaml`:
+
+```yaml
+extraClasses:
+  - package:supabase_codegen_serverpod/json_class.dart:JsonClass
+```
+
+### Environment File
+
+Place your Supabase credentials in a `.env` file:
+
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+```
+
+</Steps>
+
+## CLI Usage
+
+Generate Serverpod models:
+
+```bash
+dart run supabase_codegen_serverpod:generate_types
+```
+
+<Info>
+  By default, files are generated in `lib/src/models`. You can change this using
+  the `-o` or `--output` flag.
+</Info>
+
+## Working with Models
+
+Once the `.spy.yaml` files are generated, run the Serverpod generator to create the Dart classes:
+
+```bash
+serverpod generate
+```
+
+### Type Mapping
+
+Supabase types are automatically mapped to Serverpod types:
+
+| Postgres       | Serverpod   |
+| -------------- | ----------- |
+| `text`, `uuid` | `String`    |
+| `int4`, `int8` | `int`       |
+| `bool`         | `bool`      |
+| `jsonb`        | `JsonClass` |
+| `timestamp`    | `DateTime`  |
+
+### Exclusions
+
+<Info>
+  By default, the generator excludes any tables starting with `serverpod` to
+  avoid conflicts with Serverpod's internal database structure.
+</Info>

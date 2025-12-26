@@ -1,4 +1,4 @@
-import 'codegen_sql_function.dart';
+import 'package:supabase_codegen/migrations/sql/codegen_sql_function.dart';
 
 final _fn = 'public.${CodegenSqlFunction.getSchemaInfo.name}';
 

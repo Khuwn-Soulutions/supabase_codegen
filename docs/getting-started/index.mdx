@@ -1,0 +1,101 @@
+---
+title: Introduction
+description: Learn how to get started with Supabase Codegen in your Dart or Flutter project.
+showPageTitle: false
+---
+
+A comprehensive suite of packages for generating type-safe Dart models from Supabase databases, supporting pure Dart, Flutter, and Serverpod applications.
+
+## Packages
+
+<CardGroup cols="1">
+  <Card
+    title="Core Dart"
+    description="The base package for pure Dart and server-side projects."
+    href="/environments/core"
+    icon="code"
+  />
+  <Card
+    title="Flutter"
+    description="Optimized for Flutter with automatic environment loading."
+    href="/environments/flutter"
+    icon="mobile"
+  />
+  <Card
+    title="Serverpod"
+    description="Generate .spy.yaml models for Serverpod integration."
+    href="/environments/serverpod"
+    icon="server"
+  />
+</CardGroup>
+
+## Quick Start
+
+### 1. Install
+
+Add the appropriate package to your `pubspec.yaml`:
+
+<Tabs groupId="project-type">
+  <TabItem label="Flutter" value="flutter">
+    ```yaml 
+    dependencies: 
+      supabase_codegen_flutter: ^4.0.0 
+    ```
+  </TabItem>
+  <TabItem label="Pure Dart" value="pure-dart">
+    ```yaml 
+    dependencies: 
+      supabase_codegen: ^4.0.0 
+    ```
+  </TabItem>
+  <TabItem label="Serverpod" value="serverpod">
+    ```yaml 
+    dependencies: 
+      supabase_codegen_serverpod: ^4.0.0 
+    ```
+  </TabItem>
+</Tabs>
+
+### 2. Initialize
+
+Run the initialization command to create a `.supabase_codegen.yaml` file:
+
+<Tabs groupId="project-type">
+  <TabItem label="Flutter" value="flutter">
+    ```bash 
+    dart run supabase_codegen_flutter:init 
+    ```
+  </TabItem>
+  <TabItem label="Pure Dart" value="pure-dart">
+    ```bash 
+    dart run supabase_codegen:init 
+    ```
+  </TabItem>
+  <TabItem label="Serverpod" value="serverpod">
+    ```bash 
+    dart run supabase_codegen_serverpod:init 
+    ```
+  </TabItem>
+</Tabs>
+
+### 3. Generate
+
+Generate your types with a single command:
+
+<Tabs groupId="project-type">
+  <TabItem label="Flutter" value="flutter">
+    ```bash 
+    dart run supabase_codegen_flutter:generate_types 
+    ```
+  </TabItem>
+  <TabItem label="Pure Dart" value="pure-dart">
+    ```bash 
+    dart run supabase_codegen:generate_types 
+    ```
+  </TabItem>
+  <TabItem label="Serverpod" value="serverpod">
+    ```bash 
+    dart run supabase_codegen_serverpod:generate_types 
+    ```
+  </TabItem>
+</Tabs>

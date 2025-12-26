@@ -1,0 +1,109 @@
+{
+  "name": "Supabase Codegen",
+  "description": "Generate type-safe Dart models from your Supabase database.",
+  "favicon": "https://raw.githubusercontent.com/Khuwn-Soulutions/supabase_codegen/main/assets/logo.png",
+  "theme": {
+    "primary": "#3ECF8E"
+  },
+  "social": {
+    "github": "Khuwn-Soulutions/supabase_codegen"
+  },
+  "header": {
+    "showName": true,
+    "showThemeToggle": true,
+    "showGitHubCard": true,
+    "links": [
+      {
+        "title": "Pub.dev",
+        "href": "https://pub.dev/packages/supabase_codegen"
+      }
+    ]
+  },
+  "anchors": [
+    {
+      "title": "GitHub Repo",
+      "icon": "github",
+      "href": "https://github.com/Khuwn-Soulutions/supabase_codegen"
+    }
+  ],
+  "sidebar": [
+    {
+      "group": "General",
+      "pages": [
+        {
+          "title": "Welcome",
+          "href": "/"
+        }
+      ]
+    },
+    {
+      "group": "Getting Started",
+      "pages": [
+        {
+          "title": "Introduction",
+          "href": "/getting-started"
+        },
+        {
+          "title": "Migration Guide (v3 to v4)",
+          "href": "/getting-started/migration-v3-to-v4"
+        }
+      ]
+    },
+    {
+      "group": "Environments",
+      "pages": [
+        {
+          "title": "Core Dart",
+          "href": "/environments/core"
+        },
+        {
+          "title": "Flutter",
+          "href": "/environments/flutter"
+        },
+        {
+          "title": "Serverpod",
+          "href": "/environments/serverpod"
+        }
+      ]
+    },
+    {
+      "group": "Models",
+      "pages": [
+        {
+          "title": "Tables",
+          "href": "/models/tables"
+        },
+        {
+          "title": "Enums",
+          "href": "/models/enums"
+        }
+      ]
+    },
+    {
+      "group": "Functions",
+      "pages": [
+        {
+          "title": "RPC Functions",
+          "href": "/functions/rpc"
+        }
+      ]
+    },
+    {
+      "group": "Packages",
+      "pages": [
+        {
+          "title": "Core Dart",
+          "href": "https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen"
+        },
+        {
+          "title": "Flutter",
+          "href": "https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen_flutter"
+        },
+        {
+          "title": "Serverpod",
+          "href": "https://github.com/Khuwn-Soulutions/supabase_codegen/tree/main/packages/supabase_codegen_serverpod"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+---
+title: Core Dart
+description: Using Supabase Codegen in pure Dart or server-side applications.
+---
+
+# Core Dart
+
+The `supabase_codegen` package is the base library for generating type-safe models in pure Dart projects. It's ideal for server-side Dart, CLI tools, or any non-Flutter/non-Serverpod environment.
+
+## Installation
+
+Add the package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  supabase_codegen: ^4.0.0
+```
+
+## Setup
+
+<Steps>
+### SQL Functions
+Ensure your Supabase database has the necessary helper functions. Run:
+```bash
+dart run supabase_codegen:add_codegen_functions
+```
+Then apply the migration with the Supabase CLI.
+
+### Environment File
+
+Create a `.env` file in your project root:
+
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Initialization
+
+Create your configuration file:
+
+```bash
+dart run supabase_codegen:init
+```
+
+</Steps>
+
+## CLI Usage
+
+Generate your models by running:
+
+```bash
+dart run supabase_codegen:generate_types
+```
+
+### Options
+
+| Flag           | Description                         | Default          |
+| -------------- | ----------------------------------- | ---------------- |
+| `-o, --output` | Set the output directory            | `supabase/types` |
+| `-e, --env`    | Path to the environment file        | `.env`           |
+| `-t, --tag`    | Add a custom tag to generated files | `''`             |
+
+## Client Configuration
+
+Before using the generated types, you must initialize the client.
+
+<Tabs groupId="client-config">
+  <TabItem label="From Env" value="from-env">
+    ```dart
+    import 'package:supabase_codegen/supabase_codegen.dart';
+
+    void main() async {
+      await loadClientFromEnv();
+    }
+    ```
+
+  </TabItem>
+  <TabItem label="Manual" value="manual">
+    ```dart
+    import 'package:supabase_codegen/supabase_codegen.dart';
+
+    void main() async {
+      await createClient('https://my.supabase.com...', 'my-key');
+    }
+    ```
+
+  </TabItem>
+  <TabItem label="Existing Client" value="existing">
+    ```dart
+    import 'package:supabase_codegen/supabase_codegen.dart';
+
+    void main() async {
+      setClient(myExistingClient);
+    }
+    ```
+
+  </TabItem>
+</Tabs>

@@ -1,0 +1,86 @@
+---
+title: Flutter
+description: Optimized Supabase Codegen for Flutter with automatic environment loading.
+showPageTitle: false
+---
+
+The `supabase_codegen_flutter` package is optimized for Flutter development, providing automatic environment loading and convenient service getters.
+
+## Installation
+
+Add the package to your Flutter project:
+
+```bash
+flutter pub add supabase_codegen_flutter
+```
+
+## Setup
+
+<Steps>
+### Environment File
+Create a `config.env` file in your project root (default for Flutter):
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Pubspec Assets
+
+Add `config.env` to your `pubspec.yaml`:
+
+```yaml
+flutter:
+  assets:
+    - config.env
+```
+
+### Initialization
+
+```bash
+dart run supabase_codegen_flutter:init
+```
+
+</Steps>
+
+## CLI Usage
+
+Generate models optimized for Flutter:
+
+```bash
+dart run supabase_codegen_flutter:generate_types
+```
+
+## Integration & Service Getters
+
+`supabase_codegen_flutter` provides a global `supabase` instance and specific clients for each service.
+
+<Info>
+  The `loadClientFromEnv()` function automatically loads from `config.env` and
+  initializes Supabase for you.
+</Info>
+
+```dart
+import 'package:supabase_codegen_flutter/supabase_codegen_flutter.dart';
+
+void main() async {
+  await loadClientFromEnv();
+  runApp(const MyApp());
+}
+
+// Access services anywhere
+final auth = authClient;
+final storage = storageClient;
+final functions = functionsClient;
+final realtime = realtimeClient;
+```
+
+## Using Generated Tables
+
+Generated tables in Flutter inherit from `SupabaseFlutterTable`, providing seamless integration with the Flutter client.
+
+```dart
+final usersTable = UsersTable();
+
+// All queries use the pre-initialized Flutter client
+final users = await usersTable.queryRows();
+```
