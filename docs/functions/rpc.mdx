@@ -8,47 +8,191 @@ Supabase Codegen automatically generates type-safe extensions for your Supabase 
 
 ## Feature Overview
 
-- **Extension-based**: RPCs are added as extensions on `SupabaseCodegenFunctions`.
-- **Type-safe Parameters**: Function parameters are mapped to Dart types.
-- **Typed Responses**: Automatic handling of simple and complex return types.
+- **Extension-based**: RPCs are added as extensions on `SupabaseCodegenFunctions` which is exposed as `fn` on the Supabase client instance.
+- **Type-safe Parameters**: Function parameters are mapped to Dart types. Parameters with default values are optional.
+- **Typed Responses**: Automatic typing of return types.
 
 ## Examples
 
-### Simple RPC
-
-For `add_numbers(a int, b int) returns int`:
-
-```dart
-// Usage
-final result = await supabase.functions.addNumbers(a: 5, b: 10);
-print(result); // 15
+<Accordion title="Returning scalar">
+#### SQL Query
+```sql
+create or replace function add_numbers(a integer, b integer)
+returns integer
+language sql
+as $$
+  select a + b;
+$$;
 ```
 
-### Complex RPC (Table Returns)
-
-For `get_user_summary(min_logins int) returns table(...)`:
-
-<Accordion title="View Generated Response Model">
+#### Generated Dart Code
 ```dart
-class GetUserSummaryResponse extends RpcTableResponse {
-  const GetUserSummaryResponse._(super.json);
+import 'package:supabase_codegen/supabase_codegen.dart';
 
-factory GetUserSummaryResponse.fromJson(Map<String, dynamic> json) =>
-GetUserSummaryResponse.\_(json);
-
-String get email => raw['email'] as String? ?? '';
-int get loginCount => raw['login_count'] as int? ?? 0;
+extension AddNumbersRpc on SupabaseCodegenFunctions {
+  /// Add Numbers
+  Future<int> addNumbers({required int a, required int b}) =>
+      rpc<int>('add_numbers', params: {'a': a, 'b': b});
 }
+```
+
+#### Dart Usage
+```dart
+final result = await supabase.fn.addNumbers(a: 5, b: 10);
+print(result); // 15
 ```
 </Accordion>
 
+<Accordion title="Returning table">
+#### SQL Query
+```sql
+create or replace function get_user_summary(min_logins integer, role_filter text, limit_count integer, offset_count integer)
+returns table(email text, login_count integer, roles text[], profile jsonb)
+language sql
+as $$
+  select email, login_count, roles, profile
+  from auth.users
+  where login_count >= min_logins
+    and roles @> ARRAY[role_filter]
+  limit limit_count
+  offset offset_count;
+$$;
+```
+
+#### Generated Dart Code
+
 ```dart
-final summaries = await supabase.functions.getUserSummary(minLogins: 5);
+import 'package:supabase_codegen/supabase_codegen.dart';
+
+/// {@template GetUserSummaryResponse}
+/// get_user_summary rpc function response
+/// {@endtemplate}
+class GetUserSummaryResponse extends RpcTableResponse {
+  /// {@macro GetUserSummaryResponse}
+  const GetUserSummaryResponse._(super.json);
+
+  /// Create [GetUserSummaryResponse] from [json]
+  factory GetUserSummaryResponse.fromJson(Map<String, dynamic> json) =>
+      GetUserSummaryResponse._(json);
+
+  /// Email field name
+  static const String emailField = 'email';
+
+  /// Email
+  String get email => raw[emailField] as String? ?? '';
+
+  /// Login Count field name
+  static const String loginCountField = 'login_count';
+
+  /// Login Count
+  int get loginCount => raw[loginCountField] as int? ?? 0;
+
+  /// Roles field name
+  static const String rolesField = 'roles';
+
+  /// Roles
+  List<String> get roles =>
+      (raw[rolesField] as List<dynamic>?)?.cast<String>() ?? const [];
+
+  /// Profile field name
+  static const String profileField = 'profile';
+
+  /// Profile
+  dynamic get profile => raw[profileField];
+
+  /// Return String representation of [GetUserSummaryResponse]
+  @override
+  String toString() {
+    return '''
+GetUserSummaryResponse(
+  $emailField: $email,
+  $loginCountField: $loginCount,
+  $rolesField: $roles,
+  $profileField: $profile,
+)''';
+  }
+}
+
+/// RPC extension for get_user_summary rpc
+extension GetUserSummaryRpc on SupabaseCodegenFunctions {
+  /// Get User Summary
+  Future<List<GetUserSummaryResponse>> getUserSummary({
+    int? minLogins,
+    String? roleFilter,
+    int? limitCount,
+    int? offsetCount,
+  }) async {
+    final response = await rpc<List<Map<String, dynamic>>>(
+      'get_user_summary',
+      params: {
+        'min_logins': ?minLogins,
+        'role_filter': ?roleFilter,
+        'limit_count': ?limitCount,
+        'offset_count': ?offsetCount,
+      },
+    );
+
+    return response.map(GetUserSummaryResponse.fromJson).toList();
+  }
+}
+```
+
+#### Dart Usage
+
+```dart
+final summaries = await supabase.fn.getUserSummary(
+  minLogins: 5,
+  roleFilter: 'admin',
+  limitCount: 10,
+);
 for (final summary in summaries) {
   print('${summary.email}: ${summary.loginCount}');
 }
 ```
+</Accordion>
 
+<Accordion title="Returning database tables">
+#### SQL Query
+```sql
+create or replace function list_users()
+returns setof users
+language sql
+as $$
+  select * from users;
+$$;
+```
+
+#### Generated Dart Code
+
+```dart
+import 'package:supabase_codegen/supabase_codegen.dart';
+// Relative import of table
+// ignore_for_file: relative_imports
+import '../tables/users.dart';
+
+/// RPC extension for list_users rpc
+extension ListUsersRpc on SupabaseCodegenFunctions {
+  /// List Users
+  Future<List<UsersRow>> listUsers() async {
+    final response = await rpc<List<Map<String, dynamic>>>('list_users');
+
+    return response.map(UsersRow.fromJson).toList();
+  }
+}
+```
+
+#### Dart Usage
+
+```dart
+final users = await supabase.fn.listUsers();
+for (final user in users) {
+  print('${user.id}: ${user.name}');
+}
+```
+</Accordion>
+
+
+## Notes
 <Info>
   RPC function generation is currently limited to the 'public' schema only.
 </Info>
