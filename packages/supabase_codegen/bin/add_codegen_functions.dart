@@ -119,7 +119,7 @@ Future<void> addCodegenFunctionsMigration({
 /// Extract the path from the given [input]
 String extractPath(String input) {
   // Define a regular expression to match the path
-  final pathRegExp = RegExp(r'\b\w+/\w+/\d+_\w+\.sql\b');
+  final pathRegExp = RegExp(r'\b\w+[/\\]\w+[/\\]\d+_\w+\.sql\b');
 
   // Find the match in the input string
   final Match? match = pathRegExp.firstMatch(input);
