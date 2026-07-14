@@ -10,7 +10,7 @@ workspace:
   - packages/supabase_codegen_serverpod
 
 dev_dependencies:
-  melos: ^7.3.0
+  melos: ^8.2.2
   talker: ^5.1.5
   very_good_analysis: ^10.0.0
 
